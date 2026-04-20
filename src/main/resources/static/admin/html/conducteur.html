@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parc Auto — Ajouter Conducteur</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/conducteur.css">
+</head>
+<body>
+
+<div class="shell">
+
+    <aside class="sidebar" id="sidebar">
+
+        <a href="#" class="sb-brand">
+            <div class="brand-icon"><i class="bi bi-car-front-fill"></i></div>
+            <div class="brand-text">
+                <strong>Parc Auto</strong>
+                <small>Gestion de flotte</small>
+            </div>
+        </a>
+
+        <div class="sb-body">
+
+            <div class="sb-section">Principal</div>
+
+            <div class="nav-item">
+                <a href="dashboard.html" class="nav-link"
+                   data-tip="Dashboard" data-page="Dashboard">
+                    <span class="ni"><i class="bi bi-speedometer2"></i></span>
+                    <span class="nt">Dashboard<small class="nt-sub">Vue générale</small></span>
+                </a>
+            </div>
+
+            <div class="sb-section">Gestion</div>
+
+            <div class="nav-item">
+                <a href="conducteur.html" class="nav-link active"
+                   data-tip="Conducteurs" data-page="Conducteurs">
+        <span class="ni">
+          <i class="bi bi-person-badge"></i>
+          <span class="pulse p-green"></span>
+        </span>
+                    <span class="nt">Conducteurs<small class="nt-sub">18 actifs</small></span>
+                    <span class="nb nb-blue">18</span>
+                </a>
+            </div>
+
+            <div class="nav-item">
+                <a href="vehicule.html" class="nav-link"
+                   data-tip="Véhicules" data-page="Véhicules">
+        <span class="ni">
+          <i class="bi bi-truck"></i>
+          <span class="pulse p-amber"></span>
+        </span>
+                    <span class="nt">Véhicules<small class="nt-sub">24 en flotte</small></span>
+                    <span class="nb nb-blue">24</span>
+                </a>
+            </div>
+
+            <div class="nav-item">
+                <a href="#" class="nav-link"
+                   data-tip="Suivi GPS" data-page="Suivi GPS">
+        <span class="ni">
+          <i class="bi bi-geo-alt"></i>
+          <span class="pulse p-green"></span>
+        </span>
+                    <span class="nt">Suivi GPS<small class="nt-sub">3 en déplacement</small></span>
+                    <span class="nb nb-green" style="background:rgba(34,197,94,0.1); color:#15803d; border-color:rgba(34,197,94,0.2);">LIVE</span>
+                </a>
+            </div>
+
+            <div class="sb-hr"></div>
+            <div class="sb-section">Interventions</div>
+
+            <div class="nav-item">
+                <a href="#" class="nav-link"
+                   data-tip="Réparation" data-page="Réparation">
+        <span class="ni">
+          <i class="bi bi-wrench-adjustable"></i>
+          <span class="pulse p-amber"></span>
+        </span>
+                    <span class="nt">Réparation<small class="nt-sub">5 en cours</small></span>
+                    <span class="nb nb-amber">5</span>
+                </a>
+            </div>
+
+            <div class="nav-item">
+                <a href="#" class="nav-link"
+                   data-tip="Accident" data-page="Accident">
+        <span class="ni">
+          <i class="bi bi-exclamation-triangle"></i>
+          <span class="pulse p-red"></span>
+        </span>
+                    <span class="nt">Accident<small class="nt-sub">3 ce mois</small></span>
+                    <span class="nb nb-red">3</span>
+                </a>
+            </div>
+
+            <div class="nav-item">
+                <a href="#" class="nav-link"
+                   data-tip="Dépannage" data-page="Dépannage">
+                    <span class="ni"><i class="bi bi-cone-striped"></i></span>
+                    <span class="nt">Dépannage<small class="nt-sub">Interventions terrain</small></span>
+                </a>
+            </div>
+
+            <div class="nav-item">
+                <a href="#" class="nav-link"
+                   data-tip="Vidange" data-page="Vidange">
+                    <span class="ni"><i class="bi bi-droplet-half"></i></span>
+                    <span class="nt">Vidange<small class="nt-sub">7 planifiées</small></span>
+                    <span class="nb nb-blue">7</span>
+                </a>
+            </div>
+
+            <div class="sb-hr"></div>
+            <div class="sb-section">Données</div>
+
+            <div class="nav-item">
+                <a href="#" class="nav-link"
+                   data-tip="Archivage" data-page="Archivage">
+                    <span class="ni"><i class="bi bi-archive"></i></span>
+                    <span class="nt">Archivage<small class="nt-sub">Documents & historique</small></span>
+                </a>
+            </div>
+
+        </div>
+
+        <div class="sb-foot">
+            <div class="profile-row" id="profileRow">
+                <div class="profile-av">AD</div>
+                <div class="profile-info">
+                    <b>Administrateur</b>
+                    <small>admin@parcauto.ma</small>
+                </div>
+                <i class="bi bi-three-dots-vertical profile-more"></i>
+
+                <div class="profile-popup" id="profilePopup" onclick="event.stopPropagation()">
+                    <div class="pp-head">
+                        <div class="pp-av">AD</div>
+                        <div>
+                            <b>Administrateur</b>
+                            <small>admin@parcauto.ma</small>
+                        </div>
+                    </div>
+                    <a href="#" class="pp-link"><i class="bi bi-person-gear"></i> Mon profil</a>
+                    <a href="#" class="pp-link"><i class="bi bi-building"></i> Entreprise</a>
+                    <a href="#" class="pp-link"><i class="bi bi-gear"></i> Paramètres</a>
+                    <div class="pp-hr"></div>
+                    <div class="pp-link" id="themeToggleBtn">
+                        <i class="bi bi-moon-stars" id="themeIcon"></i>
+                        <span id="themeText">Mode sombre</span>
+                    </div>
+                    <div class="pp-hr"></div>
+                    <a href="#" class="pp-link pp-logout"><i class="bi bi-box-arrow-right"></i> Déconnexion</a>
+                </div>
+            </div>
+        </div>
+
+    </aside>
+
+    <div class="overlay" id="overlay" onclick="closeMobile()"></div>
+
+    <button class="mob-toggle" onclick="openMobile()">
+        <i class="bi bi-list"></i>
+    </button>
+
+    <div class="main" id="main">
+        <div class="page">
+            <div class="w-100 d-flex flex-column align-items-center">
+                <div class="form-card">
+                <h2 class="page-title">Ajouter un Conducteur</h2>
+                <p class="page-subtitle">Veuillez remplir les informations du nouveau conducteur.</p>
+                
+                <form>
+                    <!-- Drag and drop profile upload -->
+                    <div class="upload-circle" id="profileUploadArea">
+                        <i class="bi bi-cloud-arrow-up"></i>
+                        <span>Glissez et déposez une photo ici ou cliquez</span>
+                        <img src="" id="profilePreview" alt="Profile Preview">
+                        <input type="file" id="profileImageInput" accept="image/*" style="display:none;">
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Nom</label>
+                            <input type="text" class="form-control" placeholder="Ex: Dupont" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Prénom</label>
+                            <input type="text" class="form-control" placeholder="Ex: Jean" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Date de naissance</label>
+                            <input type="date" class="form-control" required>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" placeholder="jean.dupont@example.com" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Téléphone</label>
+                            <input type="tel" class="form-control" placeholder="+212 6 00 00 00 00" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Numéro de Permis</label>
+                            <input type="text" class="form-control" placeholder="Ex: 12345678/90" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Validité du Permis</label>
+                            <input type="date" class="form-control" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Date d'embauche</label>
+                            <input type="date" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Mot de passe provisoire</label>
+                            <input type="password" class="form-control" placeholder="Mot de passe" required>
+                        </div>
+
+                        <div class="col-12 mt-4">
+                            <h6 class="fw-bold text-primary mb-3"><i class="bi bi-file-earmark-pdf"></i> Documents Joints (Archivage OCR)</h6>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Scan Carte d'Identité (CIN)</label>
+                            <input type="file" class="form-control" accept=".pdf,image/*">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Scan Permis de Conduire</label>
+                            <input type="file" class="form-control" accept=".pdf,image/*">
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+                        <button type="button" class="btn btn-light">Annuler</button>
+                        <button type="submit" class="btn btn-primary">Enregistrer le conducteur</button>
+                    </div>
+                </form>
+
+                </div>
+
+                <!-- Liste des conducteurs -->
+                <div class="form-card mt-4" style="animation-delay: 0.2s;">
+                    <h2 class="page-title">Conducteurs Enregistrés</h2>
+                    <p class="page-subtitle">Aperçu rapide des chauffeurs actuellement inscrits dans la flotte.</p>
+                    
+                    <div class="table-responsive mt-3">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th scope="col" class="border-0 rounded-start">Profil</th>
+                                    <th scope="col" class="border-0">Conducteur</th>
+                                    <th scope="col" class="border-0">Email</th>
+                                    <th scope="col" class="border-0">Téléphone</th>
+                                    <th scope="col" class="border-0">Statut</th>
+                                    <th scope="col" class="border-0 rounded-end">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="border-bottom-0">
+                                        <div class="profile-av" style="width: 34px; height: 34px; border-radius: 9px; font-size: 0.75rem;">JD</div>
+                                    </td>
+                                    <td class="border-bottom-0"><span class="fw-semibold text-dark">Jean Dupont</span></td>
+                                    <td class="border-bottom-0 text-muted">jean.dupont@example.com</td>
+                                    <td class="border-bottom-0 text-muted">+212 6 12 34 56 78</td>
+                                    <td class="border-bottom-0"><span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-2">Disponible</span></td>
+                                    <td class="border-bottom-0">
+                                        <button class="btn btn-sm btn-light text-primary border-0" data-bs-toggle="modal" data-bs-target="#editDriverModal" title="Voir/Modifier"><i class="bi bi-pencil-square"></i></button>
+                                        <button class="btn btn-sm btn-light text-danger border-0"><i class="bi bi-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="border-bottom-0">
+                                        <div class="profile-av" style="width: 34px; height: 34px; border-radius: 9px; font-size: 0.75rem; background: linear-gradient(135deg, #f59e0b, #d97706);">KA</div>
+                                    </td>
+                                    <td class="border-bottom-0"><span class="fw-semibold text-dark">Karim Alaoui</span></td>
+                                    <td class="border-bottom-0 text-muted">k.alaoui@example.com</td>
+                                    <td class="border-bottom-0 text-muted">+212 6 98 76 54 32</td>
+                                    <td class="border-bottom-0"><span class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 rounded-pill px-2">En Mission</span></td>
+                                    <td class="border-bottom-0">
+                                        <button class="btn btn-sm btn-light text-primary border-0" data-bs-toggle="modal" data-bs-target="#editDriverModal" title="Voir/Modifier"><i class="bi bi-pencil-square"></i></button>
+                                        <button class="btn btn-sm btn-light text-danger border-0"><i class="bi bi-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="border-bottom-0">
+                                        <div class="profile-av" style="width: 34px; height: 34px; border-radius: 9px; font-size: 0.75rem; background: linear-gradient(135deg, #ef4444, #b91c1c);">MB</div>
+                                    </td>
+                                    <td class="border-bottom-0"><span class="fw-semibold text-dark">Mounir Benali</span></td>
+                                    <td class="border-bottom-0 text-muted">m.benali@example.com</td>
+                                    <td class="border-bottom-0 text-muted">+212 6 11 22 33 44</td>
+                                    <td class="border-bottom-0"><span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 rounded-pill px-2">En Congé</span></td>
+                                    <td class="border-bottom-0">
+                                        <button class="btn btn-sm btn-light text-primary border-0" data-bs-toggle="modal" data-bs-target="#editDriverModal" title="Voir/Modifier"><i class="bi bi-pencil-square"></i></button>
+                                        <button class="btn btn-sm btn-light text-danger border-0"><i class="bi bi-trash"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Modal Détails & Modification Conducteur -->
+<div class="modal fade" id="editDriverModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header border-bottom-0 pb-0">
+                <h5 class="modal-title fw-bold">Détails & Modification du Conducteur</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <label class="form-label text-muted">Statut Actuel</label>
+                            <select class="form-select fw-bold">
+                                <option value="disponible" selected>🟢 Disponible</option>
+                                <option value="mission">🟠 En Mission</option>
+                                <option value="conge">🔴 En Congé</option>
+                                <option value="suspendu">⚫ Suspendu</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">Nom</label>
+                            <input type="text" class="form-control" value="Dupont">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">Prénom</label>
+                            <input type="text" class="form-control" value="Jean">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">Email</label>
+                            <input type="email" class="form-control" value="jean.dupont@example.com">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">Téléphone</label>
+                            <input type="tel" class="form-control" value="+212 6 12 34 56 78">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">Numéro de Permis</label>
+                            <input type="text" class="form-control" value="12345678/90">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">Validité du Permis</label>
+                            <input type="date" class="form-control" value="2030-12-31">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-top-0 pt-0 mt-3">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-primary">Enregistrer les modifications</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/conducteur.js"></script>
+</body>
+</html>
