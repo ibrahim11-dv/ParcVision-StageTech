@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mon Profil — Espace Conducteur · ParcVision</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/conducteur-style.css">
+</head>
+<body>
+<div class="shell">
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sidebar" id="sidebar">
+  <a href="dashboard.html" class="sb-brand">
+    <div class="brand-icon"><i class="bi bi-car-front-fill"></i></div>
+    <div class="brand-text"><strong>ParcVision</strong><small>Espace Conducteur</small></div>
+  </a>
+  <div class="sb-body">
+    <div class="sb-section">Navigation</div>
+    <div class="nav-item"><a href="dashboard.html" class="nav-link"><span class="ni"><i class="bi bi-grid-fill"></i></span><span class="nt">Tableau de bord<small class="nt-sub">Vue d'ensemble</small></span></a></div>
+    <div class="nav-item"><a href="mission.html" class="nav-link"><span class="ni"><i class="bi bi-signpost-2-fill"></i></span><span class="nt">Mes Missions<small class="nt-sub">1 active · 2 nouvelles</small></span><span class="nb">2</span></a></div>
+    <div class="nav-item"><a href="historique.html" class="nav-link"><span class="ni"><i class="bi bi-clock-history"></i></span><span class="nt">Historique<small class="nt-sub">42 missions</small></span></a></div>
+    <div class="sb-section">Opérations</div>
+    <div class="nav-item"><a href="incident.html" class="nav-link"><span class="ni"><i class="bi bi-exclamation-octagon-fill"></i></span><span class="nt">Signaler Incident<small class="nt-sub">Panne ou accident</small></span></a></div>
+    <div class="nav-item"><a href="documents.html" class="nav-link"><span class="ni"><i class="bi bi-file-earmark-text-fill"></i></span><span class="nt">Mes Documents<small class="nt-sub">Permis · Contrat</small></span></a></div>
+    <div class="sb-section">Compte</div>
+    <div class="nav-item"><a href="notifications.html" class="nav-link"><span class="ni"><i class="bi bi-bell-fill"></i></span><span class="nt">Notifications<small class="nt-sub">2 non lues</small></span><span class="nb">2</span></a></div>
+    <div class="nav-item"><a href="profil.html" class="nav-link active"><span class="ni"><i class="bi bi-person-fill"></i></span><span class="nt">Mon Profil<small class="nt-sub">Jean Dupont</small></span></a></div>
+  </div>
+  <div class="sb-foot">
+    <div class="profile-row" id="profileRow">
+      <div class="profile-av">JD</div>
+      <div class="profile-info"><b>Jean Dupont</b><small>Conducteur #482</small></div>
+      <i class="bi bi-three-dots-vertical profile-more"></i>
+      <div class="profile-popup" id="profilePopup">
+        <div class="pp-head">Mon compte</div>
+        <a href="profil.html" class="pp-link"><i class="bi bi-person-circle"></i> Mon Profil</a>
+        <a href="documents.html" class="pp-link"><i class="bi bi-file-earmark-text"></i> Mes Documents</a>
+        <div class="pp-link" id="themeToggleBtn"><i data-theme-icon class="bi bi-moon-stars-fill"></i><span data-theme-text>Mode sombre</span></div>
+        <hr style="margin:6px 0;border-color:var(--border-color)">
+        <a href="#" class="pp-link" style="color:var(--danger)"><i class="bi bi-box-arrow-right"></i> Déconnexion</a>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<div class="overlay" id="overlay"></div>
+<button class="mob-toggle" id="mobToggle"><i class="bi bi-list"></i></button>
+
+<main class="main">
+  <header class="top-bar">
+    <div class="topbar-left">
+      <button id="mobToggleInner" class="btn-icon d-lg-none"><i class="bi bi-list"></i></button>
+      <span id="statusBadge" class="badge-status status-en-mission">En mission</span>
+    </div>
+    <div class="topbar-right">
+      <div class="clock-pill d-none d-md-flex"><i class="bi bi-clock-fill text-accent"></i><span data-clock>00:00</span></div>
+      <a href="notifications.html"><button class="notif-btn"><i class="bi bi-bell-fill"></i><span class="notif-badge">2</span></button></a>
+    </div>
+  </header>
+
+  <div class="content">
+    <div class="page-header">
+      <div class="page-header-title">
+        <h2>Mon <span class="text-accent">Profil</span></h2>
+        <p>Informations personnelles et paramètres du compte</p>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <!-- LEFT: Profile Card -->
+      <div class="col-lg-4">
+        <div class="card text-center" style="padding:32px 24px">
+          <!-- Avatar -->
+          <div style="width:90px;height:90px;background:linear-gradient(135deg,#1e293b,#2563eb);border-radius:22px;display:flex;align-items:center;justify-content:center;font-family:'Outfit',sans-serif;font-weight:800;font-size:2rem;color:white;margin:0 auto 16px;box-shadow:0 8px 24px rgba(37,99,235,0.3)">JD</div>
+          <h4 style="font-family:'Outfit',sans-serif;font-weight:800;margin-bottom:4px">Jean Dupont</h4>
+          <div style="color:var(--text-muted);font-size:.875rem;margin-bottom:12px">Conducteur Professionnel · #482</div>
+          <div style="display:flex;justify-content:center;margin-bottom:20px">
+            <span class="badge-status status-en-mission">En mission</span>
+          </div>
+
+          <!-- Stats -->
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px">
+            <div style="background:var(--gray-50);border-radius:12px;padding:12px 6px">
+              <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:1.3rem;color:var(--accent)">42</div>
+              <div style="font-size:.68rem;color:var(--text-muted);text-transform:uppercase;margin-top:2px">Missions</div>
+            </div>
+            <div style="background:var(--gray-50);border-radius:12px;padding:12px 6px">
+              <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:1.3rem;color:var(--success)">4.9</div>
+              <div style="font-size:.68rem;color:var(--text-muted);text-transform:uppercase;margin-top:2px">Note</div>
+            </div>
+            <div style="background:var(--gray-50);border-radius:12px;padding:12px 6px">
+              <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:1.1rem;color:var(--text-main)">3 ans</div>
+              <div style="font-size:.68rem;color:var(--text-muted);text-transform:uppercase;margin-top:2px">Ancienneté</div>
+            </div>
+          </div>
+
+          <!-- Quick links -->
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <a href="documents.html"><button class="btn-ghost" style="width:100%;justify-content:center"><i class="bi bi-file-earmark-text"></i> Mes Documents</button></a>
+            <a href="historique.html"><button class="btn-ghost" style="width:100%;justify-content:center"><i class="bi bi-clock-history"></i> Mon Historique</button></a>
+            <button class="btn-prim danger" style="width:100%;justify-content:center" onclick="showToast('Déconnexion en cours...','warning')"><i class="bi bi-box-arrow-right"></i> Se déconnecter</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Info & Settings -->
+      <div class="col-lg-8">
+        <div class="row g-4">
+          <!-- Personal Info -->
+          <div class="col-12">
+            <div class="card">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+                <div class="card-title" style="margin-bottom:0"><div class="card-title-icon"><i class="bi bi-person-fill"></i></div>INFORMATIONS PERSONNELLES</div>
+                <button class="btn-ghost" style="font-size:.82rem;padding:7px 14px" onclick="toggleEditMode()"><i class="bi bi-pencil-fill me-1"></i>Modifier</button>
+              </div>
+              <div id="profileView">
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <div style="margin-bottom:14px">
+                      <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted);margin-bottom:4px">Prénom</div>
+                      <div style="font-weight:600;font-size:.9rem">Jean</div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div style="margin-bottom:14px">
+                      <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted);margin-bottom:4px">Nom</div>
+                      <div style="font-weight:600;font-size:.9rem">Dupont</div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div style="margin-bottom:14px">
+                      <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted);margin-bottom:4px">Date de naissance</div>
+                      <div style="font-weight:600;font-size:.9rem">15 Mars 1985</div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div style="margin-bottom:14px">
+                      <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted);margin-bottom:4px">CIN</div>
+                      <div style="font-weight:600;font-size:.9rem">BK-247836</div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div style="margin-bottom:14px">
+                      <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted);margin-bottom:4px">Téléphone</div>
+                      <div style="font-weight:600;font-size:.9rem">+212 612 345 678</div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div style="margin-bottom:14px">
+                      <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted);margin-bottom:4px">Email</div>
+                      <div style="font-weight:600;font-size:.9rem">jean.dupont@parcvision.ma</div>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div>
+                      <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted);margin-bottom:4px">Adresse</div>
+                      <div style="font-weight:600;font-size:.9rem">12 Rue Ibn Rochd, Casablanca 20250</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Edit form (hidden by default) -->
+              <form id="profileEdit" style="display:none" onsubmit="saveProfile(event)">
+                <div class="row g-3">
+                  <div class="col-md-6"><div class="form-group"><label class="form-label">Prénom</label><input type="text" class="form-control-custom" value="Jean"></div></div>
+                  <div class="col-md-6"><div class="form-group"><label class="form-label">Nom</label><input type="text" class="form-control-custom" value="Dupont"></div></div>
+                  <div class="col-md-6"><div class="form-group"><label class="form-label">Téléphone</label><input type="tel" class="form-control-custom" value="+212 612 345 678"></div></div>
+                  <div class="col-md-6"><div class="form-group"><label class="form-label">Email</label><input type="email" class="form-control-custom" value="jean.dupont@parcvision.ma"></div></div>
+                  <div class="col-12"><div class="form-group"><label class="form-label">Adresse</label><input type="text" class="form-control-custom" value="12 Rue Ibn Rochd, Casablanca 20250"></div></div>
+                  <div class="col-12">
+                    <div style="display:flex;gap:10px">
+                      <button type="button" class="btn-ghost" onclick="toggleEditMode()">Annuler</button>
+                      <button type="submit" class="btn-prim"><i class="bi bi-check2-circle"></i> Enregistrer</button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Professional Info -->
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-title"><div class="card-title-icon"><i class="bi bi-briefcase-fill"></i></div>INFORMATIONS PROFESSIONNELLES</div>
+              <div style="display:flex;flex-direction:column;gap:0">
+                <div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px dashed var(--border-color)">
+                  <span style="font-size:.82rem;color:var(--text-muted)">Matricule</span>
+                  <span style="font-weight:700;font-size:.875rem">#482</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px dashed var(--border-color)">
+                  <span style="font-size:.82rem;color:var(--text-muted)">Poste</span>
+                  <span style="font-weight:700;font-size:.875rem">Conducteur C</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px dashed var(--border-color)">
+                  <span style="font-size:.82rem;color:var(--text-muted)">Contrat</span>
+                  <span style="font-weight:700;font-size:.875rem">CDI</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px dashed var(--border-color)">
+                  <span style="font-size:.82rem;color:var(--text-muted)">Ancienneté</span>
+                  <span style="font-weight:700;font-size:.875rem">3 ans</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;padding:9px 0">
+                  <span style="font-size:.82rem;color:var(--text-muted)">Véhicule affecté</span>
+                  <span style="font-weight:700;font-size:.875rem">2458·A·7</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Security -->
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-title"><div class="card-title-icon" style="background:var(--danger-soft);color:var(--danger)"><i class="bi bi-shield-lock-fill"></i></div>SÉCURITÉ</div>
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <button class="btn-ghost" style="justify-content:start;gap:12px" onclick="showToast('Lien de réinitialisation envoyé par email','success')">
+                  <i class="bi bi-key-fill" style="color:var(--accent)"></i>
+                  <span>Changer le mot de passe</span>
+                </button>
+                <button class="btn-ghost" style="justify-content:start;gap:12px" onclick="showToast('Code de vérification envoyé par SMS','info')">
+                  <i class="bi bi-phone-fill" style="color:var(--success)"></i>
+                  <span>Vérifier mon téléphone</span>
+                </button>
+                <button class="btn-ghost" style="justify-content:start;gap:12px;border-color:rgba(239,68,68,0.3);color:var(--danger)" onclick="showToast('Toutes les sessions ont été fermées','warning')">
+                  <i class="bi bi-power"></i>
+                  <span>Déconnecter tous les appareils</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Preferences -->
+          <div class="col-12">
+            <div class="card">
+              <div class="card-title"><div class="card-title-icon"><i class="bi bi-gear-fill"></i></div>PRÉFÉRENCES</div>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--gray-50);border-radius:var(--radius-sm)">
+                    <div>
+                      <div style="font-weight:600;font-size:.875rem">Notifications push</div>
+                      <div style="font-size:.75rem;color:var(--text-muted)">Alertes missions et documents</div>
+                    </div>
+                    <div style="position:relative;width:44px;height:24px;cursor:pointer" onclick="toggleSwitch(this)">
+                      <div style="width:44px;height:24px;background:var(--accent);border-radius:12px;transition:.3s" id="sw1"></div>
+                      <div style="position:absolute;top:2px;right:2px;width:20px;height:20px;background:white;border-radius:50%;transition:.3s;box-shadow:0 2px 4px rgba(0,0,0,0.2)" id="sw1-knob"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--gray-50);border-radius:var(--radius-sm)">
+                    <div>
+                      <div style="font-weight:600;font-size:.875rem">Mode sombre</div>
+                      <div style="font-size:.75rem;color:var(--text-muted)">Interface en thème sombre</div>
+                    </div>
+                    <button class="btn-ghost" style="padding:5px 12px;font-size:.78rem" onclick="toggleTheme()">Basculer</button>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--gray-50);border-radius:var(--radius-sm)">
+                    <div>
+                      <div style="font-weight:600;font-size:.875rem">Alertes expiration docs</div>
+                      <div style="font-size:.75rem;color:var(--text-muted)">Rappel 30 jours avant</div>
+                    </div>
+                    <div style="position:relative;width:44px;height:24px;cursor:pointer" onclick="toggleSwitch(this)">
+                      <div style="width:44px;height:24px;background:var(--accent);border-radius:12px" id="sw2"></div>
+                      <div style="position:absolute;top:2px;right:2px;width:20px;height:20px;background:white;border-radius:50%;box-shadow:0 2px 4px rgba(0,0,0,0.2)" id="sw2-knob"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--gray-50);border-radius:var(--radius-sm)">
+                    <div>
+                      <div style="font-weight:600;font-size:.875rem">Langue</div>
+                      <div style="font-size:.75rem;color:var(--text-muted)">Interface et notifications</div>
+                    </div>
+                    <select class="form-select-custom" style="width:auto;padding:5px 10px;font-size:.78rem" onchange="showToast('Langue mise à jour','success')">
+                      <option>Français</option>
+                      <option>العربية</option>
+                      <option>English</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/dashboard.js"></script>
+<script>
+function toggleEditMode() {
+    const view = document.getElementById('profileView');
+    const edit = document.getElementById('profileEdit');
+    const isEditing = edit.style.display !== 'none';
+    view.style.display = isEditing ? '' : 'none';
+    edit.style.display = isEditing ? 'none' : '';
+}
+function saveProfile(e) {
+    e.preventDefault();
+    showToast('Profil mis à jour avec succès!', 'success');
+    toggleEditMode();
+}
+function toggleSwitch(container) {
+    const bg    = container.querySelector('div:first-child');
+    const knob  = container.querySelector('div:last-child');
+    const isOn  = bg.style.background === 'var(--accent)' || bg.style.background.includes('var(--accent)');
+    bg.style.background = isOn ? 'var(--gray-300)' : 'var(--accent)';
+    knob.style.right = isOn ? 'auto' : '2px';
+    knob.style.left  = isOn ? '2px'  : 'auto';
+    showToast(isOn ? 'Option désactivée' : 'Option activée', isOn ? 'warning' : 'success');
+}
+</script>
+</body>
+</html>

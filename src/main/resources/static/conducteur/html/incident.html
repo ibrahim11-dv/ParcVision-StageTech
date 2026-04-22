@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Signaler un Incident — Espace Conducteur · ParcVision</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/conducteur-style.css">
+</head>
+<body>
+<div class="shell">
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <a href="dashboard.html" class="sb-brand">
+    <div class="brand-icon"><i class="bi bi-car-front-fill"></i></div>
+    <div class="brand-text"><strong>ParcVision</strong><small>Espace Conducteur</small></div>
+  </a>
+  <div class="sb-body">
+    <div class="sb-section">Navigation</div>
+    <div class="nav-item"><a href="dashboard.html" class="nav-link"><span class="ni"><i class="bi bi-grid-fill"></i></span><span class="nt">Tableau de bord<small class="nt-sub">Vue d'ensemble</small></span></a></div>
+    <div class="nav-item"><a href="mission.html" class="nav-link"><span class="ni"><i class="bi bi-signpost-2-fill"></i></span><span class="nt">Mes Missions<small class="nt-sub">1 active · 2 nouvelles</small></span><span class="nb">2</span></a></div>
+    <div class="nav-item"><a href="historique.html" class="nav-link"><span class="ni"><i class="bi bi-clock-history"></i></span><span class="nt">Historique<small class="nt-sub">42 missions</small></span></a></div>
+    <div class="sb-section">Opérations</div>
+    <div class="nav-item"><a href="incident.html" class="nav-link active"><span class="ni"><i class="bi bi-exclamation-octagon-fill"></i></span><span class="nt">Signaler Incident<small class="nt-sub">Panne ou accident</small></span></a></div>
+    <div class="nav-item"><a href="documents.html" class="nav-link"><span class="ni"><i class="bi bi-file-earmark-text-fill"></i></span><span class="nt">Mes Documents<small class="nt-sub">Permis · Contrat</small></span></a></div>
+    <div class="sb-section">Compte</div>
+    <div class="nav-item"><a href="notifications.html" class="nav-link"><span class="ni"><i class="bi bi-bell-fill"></i></span><span class="nt">Notifications<small class="nt-sub">2 non lues</small></span><span class="nb">2</span></a></div>
+    <div class="nav-item"><a href="profil.html" class="nav-link"><span class="ni"><i class="bi bi-person-fill"></i></span><span class="nt">Mon Profil<small class="nt-sub">Jean Dupont</small></span></a></div>
+  </div>
+  <div class="sb-foot">
+    <div class="profile-row" id="profileRow">
+      <div class="profile-av">JD</div>
+      <div class="profile-info"><b>Jean Dupont</b><small>Conducteur #482</small></div>
+      <i class="bi bi-three-dots-vertical profile-more"></i>
+      <div class="profile-popup" id="profilePopup">
+        <div class="pp-head">Mon compte</div>
+        <a href="profil.html" class="pp-link"><i class="bi bi-person-circle"></i> Mon Profil</a>
+        <a href="documents.html" class="pp-link"><i class="bi bi-file-earmark-text"></i> Mes Documents</a>
+        <div class="pp-link" id="themeToggleBtn"><i data-theme-icon class="bi bi-moon-stars-fill"></i><span data-theme-text>Mode sombre</span></div>
+        <hr style="margin:6px 0;border-color:rgba(255,255,255,0.08)">
+        <a href="#" class="pp-link" style="color:#f87171"><i class="bi bi-box-arrow-right"></i> Déconnexion</a>
+      </div>
+    </div>
+  </div>
+</aside>
+<div class="overlay" id="overlay"></div>
+<button class="mob-toggle" id="mobToggle"><i class="bi bi-list"></i></button>
+
+<main class="main">
+  <header class="top-bar">
+    <div class="topbar-left">
+      <button id="mobToggleInner" class="btn-icon d-lg-none"><i class="bi bi-list"></i></button>
+      <span id="statusBadge" class="badge-status status-en-mission">En mission</span>
+    </div>
+    <div class="topbar-right">
+      <div class="clock-pill d-none d-md-flex"><i class="bi bi-clock-fill" style="color:var(--accent)"></i><span data-clock>00:00</span></div>
+      <a href="notifications.html" style="text-decoration:none"><button class="notif-btn"><i class="bi bi-bell-fill"></i><span class="notif-badge">2</span></button></a>
+    </div>
+  </header>
+
+  <div class="content">
+    <div class="page-header">
+      <div class="page-header-title">
+        <h2>Signaler un <span style="color:var(--danger)">Incident</span></h2>
+        <p>Déclarez une panne, un accident ou tout problème rencontré en mission</p>
+      </div>
+      <div class="page-header-actions">
+        <a href="dashboard.html"><button class="btn-ghost"><i class="bi bi-arrow-left"></i> Retour</button></a>
+      </div>
+    </div>
+
+    <!-- SOS -->
+    <div style="background:linear-gradient(135deg,#7f1d1d,#dc2626);border-radius:14px;padding:18px 22px;display:flex;align-items:center;gap:16px;margin-bottom:28px;cursor:pointer" onclick="showToast('🚨 ALERTE SOS envoyée! Dispatcher et secours notifiés.','danger')">
+      <div style="width:50px;height:50px;background:rgba(255,255,255,0.12);border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i class="bi bi-telephone-fill" style="font-size:1.5rem;color:white"></i>
+      </div>
+      <div style="flex:1">
+        <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:1rem;color:white">URGENCE — Appel Immédiat</div>
+        <div style="font-size:.8rem;color:rgba(255,255,255,0.65);margin-top:2px">En cas de danger immédiat — Cliquer pour alerter le dispatcher et les secours maintenant</div>
+      </div>
+      <span style="background:white;color:#dc2626;font-weight:800;font-size:.85rem;padding:10px 20px;border-radius:30px;white-space:nowrap;flex-shrink:0">🆘 SOS</span>
+    </div>
+
+    <div class="row g-4">
+      <!-- FORM -->
+      <div class="col-lg-7">
+        <div class="card">
+          <div class="card-title" style="margin-bottom:20px">
+            <div class="card-title-icon" style="background:var(--danger-soft);color:var(--danger)"><i class="bi bi-exclamation-triangle-fill"></i></div>
+            FORMULAIRE DE SIGNALEMENT
+          </div>
+
+          <form id="incidentForm">
+            <!-- Type -->
+            <div class="form-group">
+              <label class="form-label">Type d'incident *</label>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                <label style="display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--border-color);border-radius:var(--radius-sm);cursor:pointer;transition:var(--transition)" class="incident-radio-label">
+                  <input type="radio" name="incidentType" value="panne" style="accent-color:var(--danger)" required>
+                  <span style="font-size:.875rem;font-weight:500"><i class="bi bi-wrench me-1" style="color:var(--warning)"></i>Panne mécanique</span>
+                </label>
+                <label style="display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--border-color);border-radius:var(--radius-sm);cursor:pointer;transition:var(--transition)" class="incident-radio-label">
+                  <input type="radio" name="incidentType" value="accident" style="accent-color:var(--danger)">
+                  <span style="font-size:.875rem;font-weight:500"><i class="bi bi-car-front me-1" style="color:var(--danger)"></i>Accident de route</span>
+                </label>
+                <label style="display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--border-color);border-radius:var(--radius-sm);cursor:pointer;transition:var(--transition)" class="incident-radio-label">
+                  <input type="radio" name="incidentType" value="crevaison" style="accent-color:var(--danger)">
+                  <span style="font-size:.875rem;font-weight:500"><i class="bi bi-bullseye me-1" style="color:var(--warning)"></i>Crevaison / Pneu</span>
+                </label>
+                <label style="display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--border-color);border-radius:var(--radius-sm);cursor:pointer;transition:var(--transition)" class="incident-radio-label">
+                  <input type="radio" name="incidentType" value="autre" style="accent-color:var(--danger)">
+                  <span style="font-size:.875rem;font-weight:500"><i class="bi bi-three-dots me-1"></i>Autre problème</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Severity -->
+            <div class="form-group">
+              <label class="form-label">Gravité *</label>
+              <select class="form-select-custom" required>
+                <option value="">Sélectionner la gravité...</option>
+                <option value="critique">🔴 Critique — Immobilisation totale</option>
+                <option value="grave">🟠 Grave — Besoin d'assistance rapide</option>
+                <option value="modere">🟡 Modéré — Peut continuer avec précaution</option>
+                <option value="mineur">🟢 Mineur — Signalement préventif</option>
+              </select>
+            </div>
+
+            <!-- Location + Mission -->
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label">Localisation *</label>
+                  <input type="text" class="form-control-custom" placeholder="Ex: Autoroute A3, Km 45, Rabat" required>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label">Mission concernée</label>
+                  <select class="form-select-custom">
+                    <option>#MS-8542 (en cours)</option>
+                    <option>#MS-8538</option>
+                    <option>Hors mission</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Description -->
+            <div class="form-group">
+              <label class="form-label">Description détaillée *</label>
+              <textarea class="form-control-custom" rows="4" placeholder="Décrivez précisément: circonstances, dommages observés, autres personnes impliquées, actions déjà prises..." required style="resize:vertical"></textarea>
+            </div>
+
+            <!-- Photos — REAL UPLOAD -->
+            <div class="form-group">
+              <label class="form-label">Photos (optionnel)</label>
+              <div class="upload-zone" data-upload-zone>
+                <i class="bi bi-camera" style="font-size:1.8rem;color:var(--gray-400);display:block;margin-bottom:8px"></i>
+                <div style="font-size:.875rem;font-weight:600">Ajouter des photos du véhicule / incident</div>
+                <div style="font-size:.75rem;color:var(--text-muted);margin-top:4px">JPG, PNG — Max 5 photos · 5MB chacune</div>
+                <input type="file" class="file-input-hidden" accept="image/*" multiple>
+              </div>
+              <div class="upload-file-name" style="display:none"></div>
+            </div>
+
+            <div style="display:flex;gap:10px">
+              <a href="dashboard.html"><button type="button" class="btn-ghost">Annuler</button></a>
+              <button type="submit" class="btn-prim danger" style="flex:1;justify-content:center">
+                <i class="bi bi-send-fill"></i> Envoyer le signalement
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- SIDEBAR INFO -->
+      <div class="col-lg-5">
+        <!-- Steps -->
+        <div class="card mb-3" style="background:var(--accent-soft);border-color:var(--accent-mid)">
+          <div class="card-title" style="color:var(--accent);margin-bottom:18px">
+            <div class="card-title-icon"><i class="bi bi-info-circle-fill"></i></div>QUE SE PASSE-T-IL ?
+          </div>
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <div style="display:flex;gap:12px;align-items:flex-start">
+              <div style="width:28px;height:28px;min-width:28px;background:var(--accent);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:800">1</div>
+              <div><div style="font-weight:700;font-size:.875rem;margin-bottom:2px">Notification immédiate</div><div style="font-size:.78rem;color:var(--text-muted)">Le dispatcher est alerté en temps réel dès la soumission</div></div>
+            </div>
+            <div style="display:flex;gap:12px;align-items:flex-start">
+              <div style="width:28px;height:28px;min-width:28px;background:var(--accent);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:800">2</div>
+              <div><div style="font-weight:700;font-size:.875rem;margin-bottom:2px">Assistance coordonnée</div><div style="font-size:.78rem;color:var(--text-muted)">Un technicien ou secours est dépêché selon la gravité</div></div>
+            </div>
+            <div style="display:flex;gap:12px;align-items:flex-start">
+              <div style="width:28px;height:28px;min-width:28px;background:var(--accent);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:800">3</div>
+              <div><div style="font-weight:700;font-size:.875rem;margin-bottom:2px">Rapport archivé</div><div style="font-size:.78rem;color:var(--text-muted)">Un rapport d'intervention est généré et archivé automatiquement</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contacts -->
+        <div class="card">
+          <div class="card-title" style="margin-bottom:16px">
+            <div class="card-title-icon" style="background:var(--danger-soft);color:var(--danger)"><i class="bi bi-telephone-fill"></i></div>
+            CONTACTS D'URGENCE
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--gray-50);border-radius:10px">
+              <div><div style="font-weight:700;font-size:.875rem">Dispatcher</div><div style="font-size:.77rem;color:var(--text-muted)">M. Rachidi Ahmed · Disponible 24/7</div></div>
+              <button class="btn-prim" style="padding:7px 14px;font-size:.8rem" onclick="showToast('Appel au dispatcher en cours...','info')"><i class="bi bi-telephone-fill"></i> Appeler</button>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--gray-50);border-radius:10px">
+              <div><div style="font-weight:700;font-size:.875rem">Assistance technique</div><div style="font-size:.77rem;color:var(--text-muted)">Dépannage & remorquage 24/7</div></div>
+              <button class="btn-prim" style="padding:7px 14px;font-size:.8rem" onclick="showToast('Appel assistance technique...','info')"><i class="bi bi-telephone-fill"></i> Appeler</button>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--danger-soft);border-radius:10px;border:1px solid rgba(239,68,68,0.2)">
+              <div><div style="font-weight:700;font-size:.875rem;color:var(--danger)">SAMU / Police / Pompiers</div><div style="font-size:.77rem;color:var(--text-muted)">Urgences nationales · 15 · 17 · 19</div></div>
+              <button class="btn-prim danger" style="padding:7px 14px;font-size:.8rem" onclick="showToast('Connexion aux secours 15/17/19...','danger')"><i class="bi bi-telephone-fill"></i> 15 / 19</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/dashboard.js"></script>
+<style>
+.incident-radio-label:hover { border-color: var(--danger) !important; background: var(--danger-soft); }
+</style>
+</body>
+</html>
