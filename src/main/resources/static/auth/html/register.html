@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Register an enterprise for Parc Vision - Fleet management platform">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Inscription — Parc Vision</title>
+    <link href="../../home/css/index.css" rel="stylesheet">
+    <link href="../css/auth.css" rel="stylesheet">
+    <style>
+        .step-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            gap: 12px;
+        }
+        .step-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--gray-200);
+            transition: var(--transition);
+        }
+        .step-dot.active {
+            background-color: var(--primary);
+            transform: scale(1.2);
+        }
+        .step-line {
+            width: 40px;
+            height: 2px;
+            background-color: var(--gray-200);
+            transition: var(--transition);
+        }
+        .step-line.active {
+            background-color: var(--primary);
+        }
+        .step-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 16px;
+            font-family: 'Outfit', sans-serif;
+        }
+        .row-gap {
+            display: flex;
+            gap: 16px;
+        }
+        .row-gap > * {
+            flex: 1;
+        }
+        
+        @media (max-width: 480px) {
+            .row-gap {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+    </style>
+</head>
+
+<body class="auth-body">
+
+    <!-- NAVBAR -->
+    <nav class="navbar fixed-top navbar-expand-lg bg-white">
+        <div class="container">
+            <a class="navbar-brand" href="../../home/html/index.html">
+                <img src="../../assets/logo.jpg" alt="Logo" />
+                Parc Vision
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+                aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav gap-3 ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link" href="../../home/html/index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Services</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">About Us</a>
+                        <ul class="dropdown-menu border-0 shadow-sm">
+                            <li><a class="dropdown-item" href="#">Our Story</a></li>
+                            <li><a class="dropdown-item" href="#">Team</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="#">Why Us</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Testimonials</a></li>
+                    <li class="btns-auth">
+                        <a href="login.html" class="btn btn-outline-primary">Login</a>
+                        <a href="register.html" class="btn btn-primary">Register</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="auth-main">
+        <!-- ===== LEFT PANEL : VIDEO ===== -->
+        <aside class="auth-visual-panel">
+            <video class="auth-video" autoplay loop muted playsinline>
+                <source src="../../assets/background-vid-index.mp4" type="video/mp4">
+            </video>
+
+            <div class="auth-video-overlay"></div>
+
+            <div class="auth-panel-content">
+                <div class="auth-panel-body">
+                    <h2>Rejoignez Parc Vision</h2>
+                    <p>Inscrivez votre entreprise et prenez le contrôle total de votre flotte de véhicules en quelques minutes.</p>
+
+                    <div class="auth-panel-stats">
+                        <div class="panel-stat">
+                            <span class="panel-stat-value">Rapide</span>
+                            <span class="panel-stat-label">Configuration</span>
+                        </div>
+                        <div class="panel-stat-divider"></div>
+                        <div class="panel-stat">
+                            <span class="panel-stat-value">100%</span>
+                            <span class="panel-stat-label">Personnalisable</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="auth-panel-footer">
+                    <div class="trust-badges">
+                        <div class="trust-badge">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                            </svg>
+                            <span>SSL Sécurisé</span>
+                        </div>
+                        <div class="trust-badge">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                            <span>Données Protégées</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ===== RIGHT PANEL : FORM ===== -->
+        <section class="auth-form-panel">
+            <div class="auth-form-wrapper">
+
+                <div class="auth-header" style="margin-bottom: 24px;">
+                    <div class="auth-icon-ring">
+                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                            <line x1="19" y1="8" x2="19" y2="14" />
+                            <line x1="22" y1="11" x2="16" y2="11" />
+                        </svg>
+                    </div>
+                    <h1>Créer un compte</h1>
+                    <p>Démarrez votre essai gratuit dès aujourd'hui</p>
+                </div>
+
+                <!-- Step Indicators -->
+                <div class="step-indicator">
+                    <div class="step-dot active" id="dot1"></div>
+                    <div class="step-line" id="line1"></div>
+                    <div class="step-dot" id="dot2"></div>
+                </div>
+
+                <form action="#" method="POST" id="registerForm" class="auth-form" novalidate>
+                    
+                    <!-- STEP 1: Enterprise Info -->
+                    <div id="step1">
+                        <h3 class="step-title">1. Informations de l'entreprise</h3>
+                        
+                        <div class="auth-field-group">
+                            <label for="enterpriseName" class="auth-label">Nom de l'entreprise</label>
+                            <div class="auth-input-wrapper">
+                                <span class="auth-input-icon">
+                                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                                    </svg>
+                                </span>
+                                <input type="text" class="auth-input" id="enterpriseName" name="enterpriseName" placeholder="Ex: Transport Logistique SARL" required>
+                            </div>
+                        </div>
+
+                        <div class="row-gap">
+                            <div class="auth-field-group">
+                                <label for="enterpriseReg" class="auth-label">Registre de Commerce (RC)</label>
+                                <div class="auth-input-wrapper">
+                                    <span class="auth-input-icon">
+                                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                            <polyline points="14 2 14 8 20 8"/>
+                                            <line x1="16" y1="13" x2="8" y2="13"/>
+                                            <line x1="16" y1="17" x2="8" y2="17"/>
+                                            <polyline points="10 9 9 9 8 9"/>
+                                        </svg>
+                                    </span>
+                                    <input type="text" class="auth-input" id="enterpriseReg" name="enterpriseReg" placeholder="Ex: RC 123456" required>
+                                </div>
+                            </div>
+                            <div class="auth-field-group">
+                                <label for="enterpriseNIF" class="auth-label">NIF / Numéro Fiscal</label>
+                                <div class="auth-input-wrapper">
+                                    <span class="auth-input-icon">
+                                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                            <line x1="16" y1="2" x2="16" y2="6"/>
+                                            <line x1="8" y1="2" x2="8" y2="6"/>
+                                            <line x1="3" y1="10" x2="21" y2="10"/>
+                                        </svg>
+                                    </span>
+                                    <input type="text" class="auth-input" id="enterpriseNIF" name="enterpriseNIF" placeholder="Ex: 000123456789" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row-gap">
+                            <div class="auth-field-group">
+                                <label for="enterprisePhone" class="auth-label">Téléphone</label>
+                                <div class="auth-input-wrapper">
+                                    <span class="auth-input-icon">
+                                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                                        </svg>
+                                    </span>
+                                    <input type="tel" class="auth-input" id="enterprisePhone" name="enterprisePhone" placeholder="+33 1 23 45 67 89" required>
+                                </div>
+                            </div>
+                            <div class="auth-field-group">
+                                <label for="fleetSize" class="auth-label">Taille de la flotte</label>
+                                <div class="auth-input-wrapper">
+                                    <span class="auth-input-icon">
+                                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/>
+                                            <circle cx="7" cy="17" r="2"/>
+                                            <path d="M9 17h6"/>
+                                            <circle cx="17" cy="17" r="2"/>
+                                        </svg>
+                                    </span>
+                                    <input type="number" class="auth-input" id="fleetSize" name="fleetSize" placeholder="Ex: 15" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="auth-field-group">
+                            <label for="enterpriseAddress" class="auth-label">Adresse du siège social</label>
+                            <div class="auth-input-wrapper">
+                                <span class="auth-input-icon">
+                                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                        <circle cx="12" cy="10" r="3"/>
+                                    </svg>
+                                </span>
+                                <input type="text" class="auth-input" id="enterpriseAddress" name="enterpriseAddress" placeholder="Ex: 123 Avenue des Champs-Élysées, Paris" required>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn-auth-submit" id="btnNextTo2">
+                            <span class="btn-text">Continuer</span>
+                            <span class="btn-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12" />
+                                    <polyline points="12 5 19 12 12 19" />
+                                </svg>
+                            </span>
+                        </button>
+                    </div>
+
+                    <!-- STEP 2: Admin Info -->
+                    <div id="step2" style="display: none;">
+                        <h3 class="step-title">2. Compte Administrateur</h3>
+                        
+                        <div class="row-gap">
+                            <div class="auth-field-group">
+                                <label for="adminFirstName" class="auth-label">Prénom</label>
+                                <div class="auth-input-wrapper">
+                                    <span class="auth-input-icon">
+                                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                            <circle cx="12" cy="7" r="4" />
+                                        </svg>
+                                    </span>
+                                    <input type="text" class="auth-input" id="adminFirstName" name="adminFirstName" placeholder="Prénom" required>
+                                </div>
+                            </div>
+                            <div class="auth-field-group">
+                                <label for="adminLastName" class="auth-label">Nom</label>
+                                <div class="auth-input-wrapper">
+                                    <span class="auth-input-icon" style="opacity: 0;">
+                                        <!-- spacer -->
+                                    </span>
+                                    <input type="text" class="auth-input" id="adminLastName" name="adminLastName" placeholder="Nom" required style="padding-left: 14px;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="auth-field-group">
+                            <label for="adminEmail" class="auth-label">Adresse e-mail professionnelle</label>
+                            <div class="auth-input-wrapper">
+                                <span class="auth-input-icon">
+                                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                        <polyline points="22,6 12,13 2,6" />
+                                    </svg>
+                                </span>
+                                <input type="email" class="auth-input" id="adminEmail" name="adminEmail" placeholder="nom@entreprise.com" required>
+                            </div>
+                        </div>
+
+                        <div class="auth-field-group">
+                            <label for="adminPassword" class="auth-label">Mot de passe</label>
+                            <div class="auth-input-wrapper">
+                                <span class="auth-input-icon">
+                                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                                    </svg>
+                                </span>
+                                <input type="password" class="auth-input" id="adminPassword" name="adminPassword" placeholder="••••••••" required>
+                                <button type="button" class="auth-eye-btn" id="toggleRegPassword" aria-label="Toggle password visibility">
+                                    <svg id="eyeRegIcon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                        <circle cx="12" cy="12" r="3" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 12px; margin-top: 24px;">
+                            <button type="button" class="btn btn-outline-secondary" id="btnBackTo1" style="border-radius: var(--radius-input); padding: 14px 24px; font-weight: 600;">Retour</button>
+                            <button type="submit" class="btn-auth-submit" id="submitRegBtn" style="flex: 1;">
+                                <span class="btn-text">S'inscrire</span>
+                                <span class="btn-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+
+                </form>
+
+                <div class="auth-divider"><span>ou</span></div>
+
+                <p class="auth-switch-text">
+                    Vous avez déjà un compte ?
+                    <a href="login.html" class="auth-switch-link">Se connecter</a>
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/auth.js"></script>
+</body>
+
+</html>

@@ -10,7 +10,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/").setViewName("forward:/home/html/index.html");
-        registry.addViewController("/home").setViewName("forward:/home/html/index.html");
+        registry.addViewController("/admin/dashboard").setViewName("forward:/admin/html/dashboard.html");
     }
 
     @Override
@@ -19,10 +19,18 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/css/**")
                 .addResourceLocations(
                         "classpath:/static/home/css/",
-                        "classpath:/static/auth/css/"
+                        "classpath:/static/auth/css/",
+                        "classpath:/static/admin/css/",
+                        "classpath:/static/conducteur/css/"
+
                 );
         registry.addResourceHandler("/js/**")
-                .addResourceLocations("classpath:/static/home/js/");
+                .addResourceLocations(
+                        "classpath:/static/home/js/",
+                        "classpath:/static/auth/js/",
+                        "classpath:/static/admin/js/",
+                        "classpath:/static/conducteur/js/"
+                );
         registry.addResourceHandler("/images/**")
                 .addResourceLocations("classpath:/static/assets/");
     }
