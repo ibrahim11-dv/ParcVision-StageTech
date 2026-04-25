@@ -1,448 +1,556 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard Conducteur — ParcVision</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../css/conducteur-style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Conducteur — ParcVision</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
 </head>
+
 <body>
 
-<!-- ═════ MODAL: PLEIN ═════ -->
-<div class="modal-overlay" id="pleinModal">
-  <div class="modal-box">
-    <div class="modal-header">
-      <h5><i class="bi bi-fuel-pump-fill me-2" style="color:var(--warning)"></i>Déclarer un Plein</h5>
-      <button class="btn-icon" data-modal-close="pleinModal"><i class="bi bi-x-lg"></i></button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group"><label class="form-label">Station-service</label><input type="text" class="form-control-custom" placeholder="Ex. Total — Casablanca Centre"></div>
-      <div class="row g-3">
-        <div class="col-6"><div class="form-group"><label class="form-label">Litres</label><input type="number" class="form-control-custom" placeholder="0.00"></div></div>
-        <div class="col-6"><div class="form-group"><label class="form-label">Montant (MAD)</label><input type="number" class="form-control-custom" placeholder="0.00"></div></div>
-      </div>
-      <div class="form-group"><label class="form-label">Km au compteur</label><input type="number" class="form-control-custom" placeholder="Kilométrage actuel"></div>
-      <div class="form-group">
-        <label class="form-label">Reçu / Justificatif</label>
-        <div class="upload-zone" data-upload-zone>
-          <i class="bi bi-cloud-upload" style="font-size:1.8rem;color:var(--accent);display:block;margin-bottom:6px"></i>
-          <div style="font-weight:600;font-size:.875rem">Cliquez ou glissez un fichier</div>
-          <small class="text-muted d-block mt-1">JPG, PNG, PDF — Max 5MB</small>
-          <input type="file" class="file-input-hidden" accept="image/*,.pdf">
-        </div>
-        <div class="upload-file-name" style="display:none"></div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn-ghost" data-modal-close="pleinModal">Annuler</button>
-      <button class="btn-prim accent" onclick="submitPlein()"><i class="bi bi-check2-circle"></i> Confirmer</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL: SUSPENSION — wider, Maladie option, pending state -->
-<div class="modal-overlay" id="suspensionModal">
-  <div class="modal-box" style="max-width:660px">
-
-    <!-- FORM VIEW -->
-    <div id="suspensionFormView">
-      <div class="modal-header" style="padding-bottom:14px;border-bottom:1px solid var(--border-color)">
-        <div>
-          <h5 style="font-size:1.05rem"><i class="bi bi-slash-circle-fill me-2" style="color:var(--danger)"></i>Demande de levee de suspension</h5>
-          <p style="font-size:.8rem;color:var(--text-muted);margin:3px 0 0">Remplissez le formulaire. L administrateur examinera votre demande sous 24-48h.</p>
-        </div>
-        <button class="btn-icon" onclick="cancelSuspension()"><i class="bi bi-x-lg"></i></button>
+  <!-- ═════ MODAL: PLEIN ═════ -->
+  <div class="modal-overlay" id="pleinModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h5><i class="bi bi-fuel-pump-fill me-2" style="color:var(--warning)"></i>Déclarer un Plein</h5>
+        <button class="btn-icon" data-modal-close="pleinModal"><i class="bi bi-x-lg"></i></button>
       </div>
       <div class="modal-body">
-        <div style="background:var(--danger-soft);border:1px solid rgba(220,38,38,0.22);border-radius:10px;padding:14px 16px;margin-bottom:20px;display:flex;gap:12px;align-items:flex-start">
-          <i class="bi bi-exclamation-triangle-fill" style="color:var(--danger);font-size:1.1rem;flex-shrink:0;margin-top:1px"></i>
-          <div>
-            <div style="font-weight:700;color:var(--danger);margin-bottom:3px">Votre compte est suspendu</div>
-            <div style="font-size:.82rem;color:var(--text-muted)">Vous ne pouvez pas accepter ni demarrer de missions. Soumettez une demande pour que l administrateur leve la suspension.</div>
-          </div>
-        </div>
+        <div class="form-group"><label class="form-label">Station-service</label><input type="text"
+            class="form-control-custom" placeholder="Ex. Total — Casablanca Centre"></div>
         <div class="row g-3">
-          <div class="col-md-6">
-            <div class="form-group">
-              <label class="form-label">Motif de la suspension *</label>
-              <select class="form-select-custom" id="suspensionMotif" style="height:44px" onchange="onMotifChange(this.value)">
-                <option value="">-- Selectionner un motif --</option>
-                <option value="maladie">Maladie / Certificat medical</option>
-                <option value="accident">Accident de route</option>
-                <option value="infraction">Infraction au code de la route</option>
-                <option value="document_expire">Document expire</option>
-                <option value="absence">Absence non justifiee</option>
-                <option value="accident_nd">Accident non declare</option>
-                <option value="autre">Autre motif</option>
-              </select>
-            </div>
+          <div class="col-6">
+            <div class="form-group"><label class="form-label">Litres</label><input type="number"
+                class="form-control-custom" placeholder="0.00"></div>
           </div>
-          <div class="col-md-6">
-            <div class="form-group">
-              <label class="form-label">Date de debut de suspension</label>
-              <input type="date" class="form-control-custom" id="suspensionDate" style="height:44px">
-            </div>
+          <div class="col-6">
+            <div class="form-group"><label class="form-label">Montant (MAD)</label><input type="number"
+                class="form-control-custom" placeholder="0.00"></div>
           </div>
         </div>
-        <div id="maladieNote" style="display:none;background:rgba(2,132,199,0.08);border:1px solid rgba(2,132,199,0.2);border-radius:10px;padding:12px 14px;margin-bottom:14px">
-          <div style="font-weight:700;font-size:.83rem;color:var(--info);margin-bottom:3px"><i class="bi bi-info-circle-fill me-1"></i>Arret maladie</div>
-          <div style="font-size:.79rem;color:var(--text-muted)">Joignez un <b>certificat medical</b> original et indiquez la duree prevue dans votre explication.</div>
-        </div>
+        <div class="form-group"><label class="form-label">Km au compteur</label><input type="number"
+            class="form-control-custom" placeholder="Kilométrage actuel"></div>
         <div class="form-group">
-          <label class="form-label">Explication detaillee *</label>
-          <textarea class="form-control-custom" id="suspensionDesc" rows="4"
-            placeholder="Decrivez precisement: circonstances, demarches effectuees, duree estimee si maladie..."
-            style="resize:vertical"></textarea>
-        </div>
-        <div class="form-group" style="margin-bottom:0">
-          <label class="form-label">Justificatif officiel *</label>
-          <div class="upload-zone" data-upload-zone style="padding:28px 16px">
-            <i class="bi bi-file-earmark-medical-fill" style="font-size:2rem;color:var(--accent);display:block;margin-bottom:8px"></i>
-            <div style="font-weight:700;font-size:.9rem">Joindre un document officiel</div>
-            <div style="font-size:.77rem;color:var(--text-muted);margin-top:4px">Certificat medical, attestation, PV... (PDF, JPG, PNG — Max 10MB)</div>
-            <input type="file" class="file-input-hidden" id="suspensionFile" accept=".pdf,image/*">
+          <label class="form-label">Reçu / Justificatif</label>
+          <div class="upload-zone" data-upload-zone>
+            <i class="bi bi-cloud-upload"
+              style="font-size:1.8rem;color:var(--accent);display:block;margin-bottom:6px"></i>
+            <div style="font-weight:600;font-size:.875rem">Cliquez ou glissez un fichier</div>
+            <small class="text-muted d-block mt-1">JPG, PNG, PDF — Max 5MB</small>
+            <input type="file" class="file-input-hidden" accept="image/*,.pdf">
           </div>
-          <div class="upload-file-name" id="suspensionFileName" style="display:none"></div>
+          <div class="upload-file-name" style="display:none"></div>
         </div>
       </div>
-      <div class="modal-footer" style="border-top:1px solid var(--border-color);padding-top:14px">
-        <button class="btn-ghost" onclick="cancelSuspension()">Annuler</button>
-        <button class="btn-prim danger" onclick="submitSuspension()" style="padding:10px 24px">
-          <i class="bi bi-send-fill"></i> Soumettre la demande
-        </button>
-      </div>
-    </div>
-
-    <!-- PENDING CONFIRMATION VIEW -->
-    <div id="suspensionPendingView" style="display:none;padding:40px 28px;text-align:center">
-      <div style="width:76px;height:76px;border-radius:50%;background:rgba(245,158,11,0.12);border:2px solid rgba(245,158,11,0.35);display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
-        <i class="bi bi-hourglass-split" style="font-size:1.9rem;color:var(--warning)"></i>
-      </div>
-      <h4 style="font-family:'Outfit',sans-serif;font-weight:800;font-size:1.2rem;margin-bottom:8px">Demande soumise avec succes</h4>
-      <p style="color:var(--text-muted);font-size:.875rem;max-width:420px;margin:0 auto 22px;line-height:1.65">Votre demande de levee de suspension a ete transmise a l administrateur. Vous serez notifie des qu elle sera traitee.</p>
-      <div style="display:inline-flex;align-items:center;gap:9px;background:rgba(245,158,11,0.10);border:1px solid rgba(245,158,11,0.3);border-radius:30px;padding:9px 22px;margin-bottom:28px">
-        <span style="width:8px;height:8px;border-radius:50%;background:var(--warning);display:inline-block;animation:pulse-dot 1.5s ease infinite"></span>
-        <span style="font-weight:700;font-size:.85rem;color:var(--warning)">En attente de validation — Administrateur</span>
-      </div>
-      <!-- Timeline -->
-      <div style="background:var(--gray-50);border:1px solid var(--border-color);border-radius:12px;padding:20px;text-align:left;max-width:440px;margin:0 auto 26px">
-        <div style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-muted);margin-bottom:16px">Suivi de la demande</div>
-        <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:16px">
-          <div style="width:30px;height:30px;min-width:30px;border-radius:50%;background:var(--success);display:flex;align-items:center;justify-content:center;color:white;font-size:.75rem"><i class="bi bi-check-lg"></i></div>
-          <div><div style="font-weight:700;font-size:.84rem;color:var(--success)">Demande soumise</div><div style="font-size:.75rem;color:var(--text-muted)" id="pendingTimestamp">-</div></div>
-        </div>
-        <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:16px">
-          <div style="width:30px;height:30px;min-width:30px;border-radius:50%;background:rgba(245,158,11,0.15);border:2px solid var(--warning);display:flex;align-items:center;justify-content:center;color:var(--warning);font-size:.75rem"><i class="bi bi-hourglass-split"></i></div>
-          <div><div style="font-weight:700;font-size:.84rem;color:var(--warning)">En cours d examen — Administrateur</div><div style="font-size:.75rem;color:var(--text-muted)">Delai habituel: 24-48h ouvrables</div></div>
-        </div>
-        <div style="display:flex;align-items:flex-start;gap:12px;opacity:.3">
-          <div style="width:30px;height:30px;min-width:30px;border-radius:50%;background:var(--gray-200);display:flex;align-items:center;justify-content:center;font-size:.75rem"><i class="bi bi-check2-all"></i></div>
-          <div><div style="font-weight:700;font-size:.84rem">Decision de l administrateur</div><div style="font-size:.75rem;color:var(--text-muted)">Demande acceptee ou refusee</div></div>
-        </div>
-      </div>
-      <button class="btn-ghost" onclick="closeSuspensionPending()" style="padding:10px 28px">Fermer</button>
-    </div>
-
-  </div>
-</div>
-<style>
-@keyframes pulse-pending { 0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,.3)} 50%{box-shadow:0 0 0 10px rgba(245,158,11,.04)} }
-</style>
-
-<div class="shell">
-<!-- ═════════ SIDEBAR ═════════ -->
-<aside class="sidebar" id="sidebar">
-  <a href="dashboard.html" class="sb-brand">
-    <div class="brand-icon"><i class="bi bi-car-front-fill"></i></div>
-    <div class="brand-text"><strong>ParcVision</strong><small>Gestion de flotte</small></div>
-  </a>
-  <div class="sb-body">
-    <div class="sb-section">Principal</div>
-    <div class="nav-item"><a href="dashboard.html" class="nav-link active"><span class="ni"><i class="bi bi-grid-fill"></i></span><span class="nt">Dashboard<small class="nt-sub">Vue générale</small></span></a></div>
-
-    <div class="sb-section">Mes activités</div>
-    <div class="nav-item"><a href="mission.html" class="nav-link"><span class="ni"><i class="bi bi-signpost-2-fill"></i></span><span class="nt">Mes Missions<small class="nt-sub">1 active · 2 nouvelles</small></span><span class="nb">2</span></a></div>
-    <div class="nav-item"><a href="historique.html" class="nav-link"><span class="ni"><i class="bi bi-clock-history"></i></span><span class="nt">Historique<small class="nt-sub">42 missions</small></span></a></div>
-
-    <div class="sb-section">Opérations</div>
-    <div class="nav-item"><a href="incident.html" class="nav-link"><span class="ni"><i class="bi bi-exclamation-octagon-fill"></i></span><span class="nt">Signaler Incident<small class="nt-sub">Panne ou accident</small></span></a></div>
-    <div class="nav-item"><a href="documents.html" class="nav-link"><span class="ni"><i class="bi bi-file-earmark-text-fill"></i></span><span class="nt">Mes Documents<small class="nt-sub">Permis · Contrat</small></span></a></div>
-
-    <div class="sb-section">Compte</div>
-    <div class="nav-item"><a href="notifications.html" class="nav-link"><span class="ni"><i class="bi bi-bell-fill"></i></span><span class="nt">Notifications<small class="nt-sub">2 non lues</small></span><span class="nb">2</span></a></div>
-    <div class="nav-item"><a href="profil.html" class="nav-link"><span class="ni"><i class="bi bi-person-fill"></i></span><span class="nt">Mon Profil<small class="nt-sub">Jean Dupont</small></span></a></div>
-  </div>
-  <div class="sb-foot">
-    <div class="profile-row" id="profileRow">
-      <div class="profile-av">JD</div>
-      <div class="profile-info"><b>Jean Dupont</b><small>admin@parcvision.ma</small></div>
-      <i class="bi bi-three-dots-vertical profile-more"></i>
-      <div class="profile-popup" id="profilePopup">
-        <div class="pp-head">Mon compte</div>
-        <a href="profil.html" class="pp-link"><i class="bi bi-person-circle"></i> Mon Profil</a>
-        <a href="documents.html" class="pp-link"><i class="bi bi-file-earmark-text"></i> Mes Documents</a>
-        <div class="pp-link" id="themeToggleBtn"><i data-theme-icon class="bi bi-moon-stars-fill"></i><span data-theme-text>Mode sombre</span></div>
-        <hr style="margin:6px 0;border-color:var(--border-color)">
-        <a href="#" class="pp-link" style="color:var(--danger)"><i class="bi bi-box-arrow-right"></i> Déconnexion</a>
+      <div class="modal-footer">
+        <button class="btn-ghost" data-modal-close="pleinModal">Annuler</button>
+        <button class="btn-prim accent" onclick="submitPlein()"><i class="bi bi-check2-circle"></i> Confirmer</button>
       </div>
     </div>
   </div>
-</aside>
 
-<div class="overlay" id="overlay"></div>
-<button class="mob-toggle" id="mobToggle"><i class="bi bi-list"></i></button>
+  <!-- MODAL: SUSPENSION — wider, Maladie option, pending state -->
+  <div class="modal-overlay" id="suspensionModal">
+    <div class="modal-box" style="max-width:660px">
 
-<main class="main">
-  <header class="top-bar">
-    <div class="topbar-left">
-      <button id="mobToggleInner" class="btn-icon d-lg-none me-2"><i class="bi bi-list"></i></button>
-      <span id="statusBadge" class="badge-status status-en-mission" title="Cliquer pour changer">En mission</span>
-      <span class="text-muted d-none d-md-inline" style="font-size:.75rem">· cliquez pour changer</span>
-    </div>
-    <div class="topbar-right">
-      <div class="clock-pill d-none d-md-flex"><i class="bi bi-clock" style="color:var(--accent)"></i><span data-clock>--:--</span></div>
-      <a href="notifications.html" style="text-decoration:none"><button class="notif-btn"><i class="bi bi-bell-fill"></i><span class="notif-badge">2</span></button></a>
-    </div>
-  </header>
-
-  <div class="content">
-
-    <!-- PAGE HEADER -->
-    <div class="page-header">
-      <div class="page-header-title">
-        <h2>Tableau de <span class="text-accent">bord</span></h2>
-        <p>Vue d'ensemble de votre activité · Dimanche, 20 Avril 2025</p>
-      </div>
-      <div class="page-header-actions">
-        <a href="incident.html"><button class="btn-ghost"><i class="bi bi-exclamation-triangle"></i> Signalement</button></a>
-        <a href="mission.html"><button class="btn-prim accent"><i class="bi bi-plus-lg"></i> Mes Missions</button></a>
-      </div>
-    </div>
-
-    <!-- KPI STRIP -->
-    <div class="row g-3 mb-4">
-      <div class="col-6 col-md-3">
-        <div class="stat-card">
-          <div class="stat-icon blue"><i class="bi bi-speedometer2"></i></div>
-          <div class="stat-body">
-            <div class="stat-val">1 248</div>
-            <div class="stat-label">KM ce mois</div>
-            <div class="stat-delta up"><i class="bi bi-arrow-up-short"></i>+12%</div>
+      <!-- FORM VIEW -->
+      <div id="suspensionFormView">
+        <div class="modal-header" style="padding-bottom:14px;border-bottom:1px solid var(--border-color)">
+          <div>
+            <h5 style="font-size:1.05rem"><i class="bi bi-slash-circle-fill me-2"
+                style="color:var(--danger)"></i>Demande de levee de suspension</h5>
+            <p style="font-size:.8rem;color:var(--text-muted);margin:3px 0 0">Remplissez le formulaire. L administrateur
+              examinera votre demande sous 24-48h.</p>
           </div>
+          <button class="btn-icon" onclick="cancelSuspension()"><i class="bi bi-x-lg"></i></button>
         </div>
-      </div>
-      <div class="col-6 col-md-3">
-        <div class="stat-card">
-          <div class="stat-icon green"><i class="bi bi-check-circle-fill"></i></div>
-          <div class="stat-body">
-            <div class="stat-val">42</div>
-            <div class="stat-label">Missions totales</div>
-            <div class="stat-delta up"><i class="bi bi-arrow-up-short"></i>3 ce mois</div>
-          </div>
-        </div>
-      </div>
-      <div class="col-6 col-md-3">
-        <div class="stat-card">
-          <div class="stat-icon orange"><i class="bi bi-fuel-pump-fill"></i></div>
-          <div class="stat-body">
-            <div class="stat-val">6.4 L</div>
-            <div class="stat-label">Consommation / 100</div>
-            <div class="stat-delta up"><i class="bi bi-leaf-fill"></i> Éco-conduite</div>
-          </div>
-        </div>
-      </div>
-      <div class="col-6 col-md-3">
-        <div class="stat-card">
-          <div class="stat-icon info"><i class="bi bi-star-fill"></i></div>
-          <div class="stat-body">
-            <div class="stat-val">4.9 / 5</div>
-            <div class="stat-label">Note sécurité</div>
-            <div class="stat-delta up"><i class="bi bi-trophy-fill"></i> Top conducteur</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- MAIN GRID -->
-    <div class="row g-4">
-
-      <!-- MISSION ACTIVE -->
-      <div class="col-xl-8">
-        <div class="mission-active-card" id="mainMissionCard" style="padding:24px">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+        <div class="modal-body">
+          <div
+            style="background:var(--danger-soft);border:1px solid rgba(220,38,38,0.22);border-radius:10px;padding:14px 16px;margin-bottom:20px;display:flex;gap:12px;align-items:flex-start">
+            <i class="bi bi-exclamation-triangle-fill"
+              style="color:var(--danger);font-size:1.1rem;flex-shrink:0;margin-top:1px"></i>
             <div>
-              <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:1.1rem">Mission en cours</div>
-              <div style="font-size:.78rem;opacity:.4;margin-top:2px">ID: #MS-8542 · 20 Avril 2025</div>
+              <div style="font-weight:700;color:var(--danger);margin-bottom:3px">Votre compte est suspendu</div>
+              <div style="font-size:.82rem;color:var(--text-muted)">Vous ne pouvez pas accepter ni demarrer de missions.
+                Soumettez une demande pour que l administrateur leve la suspension.</div>
             </div>
-            <span style="background:rgba(16,185,129,0.2);color:#6ee7b7;font-size:.7rem;font-weight:700;padding:5px 14px;border-radius:20px;letter-spacing:.5px">● EN ROUTE</span>
-          </div>
-          <div class="row g-4">
-            <div class="col-lg-5">
-              <!-- Route -->
-              <div class="route-step">
-                <div style="font-size:.65rem;font-weight:700;letter-spacing:1px;opacity:.35;text-transform:uppercase;margin-bottom:5px">Départ · 08:30</div>
-                <div style="font-weight:800;font-size:.95rem">Plateforme Logistique Casa</div>
-                <div style="font-size:.75rem;opacity:.35;margin-top:2px">Terminal 3, Port de Casablanca</div>
-              </div>
-              <div class="route-step dest">
-                <div style="font-size:.65rem;font-weight:700;letter-spacing:1px;opacity:.35;text-transform:uppercase;margin-bottom:5px">Destination · Est. 10:45</div>
-                <div style="font-weight:800;font-size:.95rem">Zone Industrielle Rabat Salé</div>
-                <div style="font-size:.75rem;opacity:.35;margin-top:2px">Entrepôt Logistique, Bloc B</div>
-              </div>
-              <div style="margin-top:4px">
-                <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:.77rem;opacity:.6">
-                  <span>Avancement</span><span style="color:#60a5fa;font-weight:800;opacity:1">65%</span>
-                </div>
-                <div class="progress-custom"><div class="progress-bar-custom" style="width:65%"></div></div>
-                <div style="display:flex;justify-content:space-between;margin-top:7px;font-size:.72rem;opacity:.35">
-                  <span><i class="bi bi-signpost-2 me-1"></i>32 km restants</span>
-                  <span><i class="bi bi-clock me-1"></i>~25 min</span>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-7">
-              <div class="row g-2 mb-3">
-                <div class="col-4">
-                  <div style="background:rgba(255,255,255,0.06);border-radius:10px;padding:10px;text-align:center">
-                    <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:1.15rem" id="missionTimer">01:45:22</div>
-                    <div style="font-size:.6rem;opacity:.35;text-transform:uppercase;margin-top:3px">Durée</div>
-                  </div>
-                </div>
-                <div class="col-4">
-                  <div style="background:rgba(255,255,255,0.06);border-radius:10px;padding:10px;text-align:center">
-                    <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:1.15rem">87</div>
-                    <div style="font-size:.6rem;opacity:.35;text-transform:uppercase;margin-top:3px">km/h</div>
-                  </div>
-                </div>
-                <div class="col-4">
-                  <div style="background:rgba(255,255,255,0.06);border-radius:10px;padding:10px;text-align:center">
-                    <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:1.15rem">238</div>
-                    <div style="font-size:.6rem;opacity:.35;text-transform:uppercase;margin-top:3px">km total</div>
-                  </div>
-                </div>
-              </div>
-              <!-- live GPS placeholder -->
-              <div style="background:rgba(255,255,255,0.04);border:1px dashed rgba(255,255,255,0.12);border-radius:12px;height:90px;display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:14px">
-                <i class="bi bi-geo-fill" style="font-size:1.5rem;color:#60a5fa"></i>
-                <div>
-                  <div style="font-weight:700;font-size:.82rem">Suivi GPS actif</div>
-                  <div style="font-size:.72rem;opacity:.35">Signal en temps réel — Mission #MS-8542</div>
-                </div>
-              </div>
-              <div style="display:flex;gap:8px">
-                <button id="btnEndMission" class="btn-prim success" style="flex:1;justify-content:center;padding:10px">
-                  <i class="bi bi-check2-all"></i> Terminer la mission
-                </button>
-                <a href="incident.html"><button class="btn-icon" style="color:#f87171;border-color:rgba(220,38,38,0.3);background:rgba(220,38,38,0.08)" title="Signaler un problème">
-                  <i class="bi bi-shield-exclamation"></i>
-                </button></a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- RIGHT -->
-      <div class="col-xl-4">
-        <div class="row g-4">
-
-          <!-- VEHICLE -->
-          <div class="col-12">
-            <div class="card">
-              <div class="section-header" style="margin-bottom:14px">
-                <h5 style="font-size:.9rem"><i class="bi bi-truck me-1" style="color:var(--accent)"></i> Mon Véhicule</h5>
-                <a href="documents.html" class="btn-ghost" style="padding:5px 12px;font-size:.78rem;text-decoration:none">Documents</a>
-              </div>
-              <div class="vehicle-img-wrap">
-                <img src="../img/berlingo.png" alt="Citroën Berlingo"
-                  onerror="this.parentElement.innerHTML='<div style=\'text-align:center;padding:20px;color:var(--text-muted)\'><i class=\'bi bi-truck\' style=\'font-size:2.5rem;display:block;margin-bottom:6px\'></i>Citroën Berlingo 2021</div>'">
-              </div>
-              <div class="vehicle-plate">
-                <h3>2458 · A · 7</h3>
-                <span>Citroën Berlingo Van · 2021</span>
-              </div>
-              <div style="display:flex;flex-direction:column;gap:0">
-                <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-color)">
-                  <span style="font-size:.82rem;color:var(--text-muted)"><i class="bi bi-droplet-fill me-1" style="color:var(--info)"></i>Carburant</span>
-                  <div style="display:flex;align-items:center;gap:8px">
-                    <div style="width:56px;height:5px;background:var(--gray-200);border-radius:3px;overflow:hidden"><div style="width:85%;height:100%;background:var(--success);border-radius:3px"></div></div>
-                    <span style="font-weight:700;font-size:.82rem;color:var(--success)">85%</span>
-                  </div>
-                </div>
-                <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-color)">
-                  <span style="font-size:.82rem;color:var(--text-muted)"><i class="bi bi-wrench me-1" style="color:var(--warning)"></i>Entretien dans</span>
-                  <span style="font-weight:700;font-size:.82rem">1 240 km</span>
-                </div>
-                <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0">
-                  <span style="font-size:.82rem;color:var(--text-muted)"><i class="bi bi-circle-fill me-1" style="color:var(--success);font-size:.5rem"></i>État général</span>
-                  <span style="font-weight:700;font-size:.82rem;color:var(--success)">Bon état</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- QUICK ACTIONS -->
-          <div class="col-12">
-            <div class="card">
-              <div class="section-header" style="margin-bottom:14px">
-                <h5 style="font-size:.9rem"><i class="bi bi-lightning-fill me-1" style="color:var(--accent)"></i> Actions rapides</h5>
-              </div>
-              <div class="quick-actions-grid">
-                <button class="action-btn" id="actionScanner"><i class="bi bi-camera-fill" style="color:var(--accent)"></i>Scanner</button>
-                <button class="action-btn" id="actionGPS"><i class="bi bi-geo-alt-fill" style="color:var(--success)"></i>GPS</button>
-                <button class="action-btn" id="actionPlein"><i class="bi bi-fuel-pump-fill" style="color:var(--warning)"></i>Plein</button>
-                <button class="action-btn danger" id="actionSOS"><i class="bi bi-telephone-fill" style="color:var(--danger)"></i>SOS</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- NOTIFICATIONS STRIP -->
-    <div class="row g-4 mt-0">
-      <div class="col-12">
-        <div class="card">
-          <div class="section-header">
-            <h5 style="font-size:.9rem"><i class="bi bi-bell-fill me-1" style="color:var(--accent)"></i> Notifications récentes</h5>
-            <a href="notifications.html" class="btn-ghost" style="padding:5px 12px;font-size:.78rem;text-decoration:none">Tout voir <i class="bi bi-chevron-right ms-1"></i></a>
           </div>
           <div class="row g-3">
             <div class="col-md-6">
-              <div style="display:flex;gap:12px;padding:14px;border-radius:10px;border:1px solid var(--border-color);transition:var(--transition);cursor:pointer" class="card-hover">
-                <div style="width:40px;height:40px;min-width:40px;background:var(--warning-soft);color:var(--warning);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem"><i class="bi bi-file-earmark-person-fill"></i></div>
-                <div><div style="font-weight:700;font-size:.855rem;margin-bottom:2px">Permis à renouveler</div><div style="font-size:.78rem;color:var(--text-muted)">Expire dans <b>15 jours</b></div><a href="documents.html" style="font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none">Voir documents →</a></div>
+              <div class="form-group">
+                <label class="form-label">Motif de la suspension *</label>
+                <select class="form-select-custom" id="suspensionMotif" style="height:44px"
+                  onchange="onMotifChange(this.value)">
+                  <option value="">-- Selectionner un motif --</option>
+                  <option value="maladie">Maladie / Certificat medical</option>
+                  <option value="accident">Accident de route</option>
+                  <option value="infraction">Infraction au code de la route</option>
+                  <option value="document_expire">Document expire</option>
+                  <option value="absence">Absence non justifiee</option>
+                  <option value="accident_nd">Accident non declare</option>
+                  <option value="autre">Autre motif</option>
+                </select>
               </div>
             </div>
             <div class="col-md-6">
-              <div style="display:flex;gap:12px;padding:14px;border-radius:10px;border:1px solid var(--border-color);transition:var(--transition);cursor:pointer" class="card-hover">
-                <div style="width:40px;height:40px;min-width:40px;background:var(--success-soft);color:var(--success);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem"><i class="bi bi-check-circle-fill"></i></div>
-                <div><div style="font-weight:700;font-size:.855rem;margin-bottom:2px">Mission #MS-1042 validée</div><div style="font-size:.78rem;color:var(--text-muted)">Le responsable a confirmé la livraison</div><a href="historique.html" style="font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none">Voir historique →</a></div>
+              <div class="form-group">
+                <label class="form-label">Date de debut de suspension</label>
+                <input type="date" class="form-control-custom" id="suspensionDate" style="height:44px">
+              </div>
+            </div>
+          </div>
+          <div id="maladieNote"
+            style="display:none;background:rgba(2,132,199,0.08);border:1px solid rgba(2,132,199,0.2);border-radius:10px;padding:12px 14px;margin-bottom:14px">
+            <div style="font-weight:700;font-size:.83rem;color:var(--info);margin-bottom:3px"><i
+                class="bi bi-info-circle-fill me-1"></i>Arret maladie</div>
+            <div style="font-size:.79rem;color:var(--text-muted)">Joignez un <b>certificat medical</b> original et
+              indiquez la duree prevue dans votre explication.</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Explication detaillee *</label>
+            <textarea class="form-control-custom" id="suspensionDesc" rows="4"
+              placeholder="Decrivez precisement: circonstances, demarches effectuees, duree estimee si maladie..."
+              style="resize:vertical"></textarea>
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">Justificatif officiel *</label>
+            <div class="upload-zone" data-upload-zone style="padding:28px 16px">
+              <i class="bi bi-file-earmark-medical-fill"
+                style="font-size:2rem;color:var(--accent);display:block;margin-bottom:8px"></i>
+              <div style="font-weight:700;font-size:.9rem">Joindre un document officiel</div>
+              <div style="font-size:.77rem;color:var(--text-muted);margin-top:4px">Certificat medical, attestation,
+                PV... (PDF, JPG, PNG — Max 10MB)</div>
+              <input type="file" class="file-input-hidden" id="suspensionFile" accept=".pdf,image/*">
+            </div>
+            <div class="upload-file-name" id="suspensionFileName" style="display:none"></div>
+          </div>
+        </div>
+        <div class="modal-footer" style="border-top:1px solid var(--border-color);padding-top:14px">
+          <button class="btn-ghost" onclick="cancelSuspension()">Annuler</button>
+          <button class="btn-prim danger" onclick="submitSuspension()" style="padding:10px 24px">
+            <i class="bi bi-send-fill"></i> Soumettre la demande
+          </button>
+        </div>
+      </div>
+
+      <!-- PENDING CONFIRMATION VIEW -->
+      <div id="suspensionPendingView" style="display:none;padding:40px 28px;text-align:center">
+        <div
+          style="width:76px;height:76px;border-radius:50%;background:rgba(245,158,11,0.12);border:2px solid rgba(245,158,11,0.35);display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
+          <i class="bi bi-hourglass-split" style="font-size:1.9rem;color:var(--warning)"></i>
+        </div>
+        <h4 style="font-family:'Outfit',sans-serif;font-weight:800;font-size:1.2rem;margin-bottom:8px">Demande soumise
+          avec succes</h4>
+        <p style="color:var(--text-muted);font-size:.875rem;max-width:420px;margin:0 auto 22px;line-height:1.65">Votre
+          demande de levee de suspension a ete transmise a l administrateur. Vous serez notifie des qu elle sera
+          traitee.</p>
+        <div
+          style="display:inline-flex;align-items:center;gap:9px;background:rgba(245,158,11,0.10);border:1px solid rgba(245,158,11,0.3);border-radius:30px;padding:9px 22px;margin-bottom:28px">
+          <span
+            style="width:8px;height:8px;border-radius:50%;background:var(--warning);display:inline-block;animation:pulse-dot 1.5s ease infinite"></span>
+          <span style="font-weight:700;font-size:.85rem;color:var(--warning)">En attente de validation —
+            Administrateur</span>
+        </div>
+        <!-- Timeline -->
+        <div
+          style="background:var(--gray-50);border:1px solid var(--border-color);border-radius:12px;padding:20px;text-align:left;max-width:440px;margin:0 auto 26px">
+          <div
+            style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-muted);margin-bottom:16px">
+            Suivi de la demande</div>
+          <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:16px">
+            <div
+              style="width:30px;height:30px;min-width:30px;border-radius:50%;background:var(--success);display:flex;align-items:center;justify-content:center;color:white;font-size:.75rem">
+              <i class="bi bi-check-lg"></i></div>
+            <div>
+              <div style="font-weight:700;font-size:.84rem;color:var(--success)">Demande soumise</div>
+              <div style="font-size:.75rem;color:var(--text-muted)" id="pendingTimestamp">-</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:16px">
+            <div
+              style="width:30px;height:30px;min-width:30px;border-radius:50%;background:rgba(245,158,11,0.15);border:2px solid var(--warning);display:flex;align-items:center;justify-content:center;color:var(--warning);font-size:.75rem">
+              <i class="bi bi-hourglass-split"></i></div>
+            <div>
+              <div style="font-weight:700;font-size:.84rem;color:var(--warning)">En cours d examen — Administrateur
+              </div>
+              <div style="font-size:.75rem;color:var(--text-muted)">Delai habituel: 24-48h ouvrables</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:12px;opacity:.3">
+            <div
+              style="width:30px;height:30px;min-width:30px;border-radius:50%;background:var(--gray-200);display:flex;align-items:center;justify-content:center;font-size:.75rem">
+              <i class="bi bi-check2-all"></i></div>
+            <div>
+              <div style="font-weight:700;font-size:.84rem">Decision de l administrateur</div>
+              <div style="font-size:.75rem;color:var(--text-muted)">Demande acceptee ou refusee</div>
+            </div>
+          </div>
+        </div>
+        <button class="btn-ghost" onclick="closeSuspensionPending()" style="padding:10px 28px">Fermer</button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <div class="shell">
+    <!-- ═════════ SIDEBAR ═════════ -->
+    <aside class="sidebar" id="sidebar">
+      <a href="dashboard.html" class="sb-brand">
+        <div class="brand-icon"><i class="bi bi-car-front-fill"></i></div>
+        <div class="brand-text"><strong>ParcVision</strong><small>Gestion de flotte</small></div>
+      </a>
+      <div class="sb-body">
+        <div class="sb-section">Principal</div>
+        <div class="nav-item"><a href="dashboard.html" class="nav-link active"><span class="ni"><i
+                class="bi bi-grid-fill"></i></span><span class="nt">Dashboard<small class="nt-sub">Vue
+                générale</small></span></a></div>
+
+        <div class="sb-section">Mes activités</div>
+        <div class="nav-item"><a href="mission.html" class="nav-link"><span class="ni"><i
+                class="bi bi-signpost-2-fill"></i></span><span class="nt">Mes Missions<small class="nt-sub">1 active · 2
+                nouvelles</small></span><span class="nb">2</span></a></div>
+        <div class="nav-item"><a href="historique.html" class="nav-link"><span class="ni"><i
+                class="bi bi-clock-history"></i></span><span class="nt">Historique<small class="nt-sub">42
+                missions</small></span></a></div>
+
+        <div class="sb-section">Opérations</div>
+        <div class="nav-item"><a href="incident.html" class="nav-link"><span class="ni"><i
+                class="bi bi-exclamation-octagon-fill"></i></span><span class="nt">Signaler Incident<small
+                class="nt-sub">Panne ou accident</small></span></a></div>
+        <div class="nav-item"><a href="documents.html" class="nav-link"><span class="ni"><i
+                class="bi bi-file-earmark-text-fill"></i></span><span class="nt">Mes Documents<small
+                class="nt-sub">Permis · Contrat</small></span></a></div>
+
+
+
+      </div>
+      <div class="sb-foot">
+        <div class="profile-row" id="profileRow">
+          <div class="profile-av">JD</div>
+          <div class="profile-info"><b>Jean Dupont</b><small>admin@parcvision.ma</small></div>
+          <i class="bi bi-three-dots-vertical profile-more"></i>
+          <div class="profile-popup" id="profilePopup">
+            <div class="pp-head">Mon compte</div>
+            <a href="profil.html" class="pp-link"><i class="bi bi-person-circle"></i> Mon Profil</a>
+            <a href="documents.html" class="pp-link"><i class="bi bi-file-earmark-text"></i> Mes Documents</a>
+            <div class="pp-link" id="themeToggleBtn"><i data-theme-icon class="bi bi-moon-stars-fill"></i><span
+                data-theme-text>Mode sombre</span></div>
+            <hr style="margin:6px 0;border-color:var(--border-color)">
+            <a href="#" class="pp-link" style="color:var(--danger)"><i class="bi bi-box-arrow-right"></i>
+              Déconnexion</a>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="overlay" id="overlay"></div>
+    <button class="mob-toggle" id="mobToggle"><i class="bi bi-list"></i></button>
+
+    <main class="main">
+      <header class="top-bar">
+        <div class="topbar-left">
+          <button id="mobToggleInner" class="btn-icon d-lg-none me-2"><i class="bi bi-list"></i></button>
+          <span id="statusBadge" class="badge-status status-en-mission" title="Cliquer pour changer">En mission</span>
+          <span class="text-muted d-none d-md-inline" style="font-size:.75rem">· cliquez pour changer</span>
+        </div>
+        <div class="topbar-right">
+          <div class="clock-pill d-none d-md-flex"><i class="bi bi-clock" style="color:var(--accent)"></i><span
+              data-clock>--:--</span></div>
+          <a href="notifications.html" style="text-decoration:none"><button class="notif-btn"><i
+                class="bi bi-bell-fill"></i><span class="notif-badge">2</span></button></a>
+        </div>
+      </header>
+
+      <div class="content">
+
+        <!-- PAGE HEADER -->
+        <div class="page-header">
+          <div class="page-header-title">
+            <h2>Tableau de <span class="text-accent">bord</span></h2>
+            <p>Vue d'ensemble de votre activité · Dimanche, 20 Avril 2025</p>
+          </div>
+          <div class="page-header-actions">
+            <a href="incident.html"><button class="btn-ghost"><i class="bi bi-exclamation-triangle"></i>
+                Signalement</button></a>
+            <a href="mission.html"><button class="btn-prim accent"><i class="bi bi-plus-lg"></i> Mes
+                Missions</button></a>
+          </div>
+        </div>
+
+        <!-- KPI STRIP -->
+        <div class="row g-3 mb-4">
+          <div class="col-6 col-md-3">
+            <div class="stat-card">
+              <div class="stat-icon blue"><i class="bi bi-speedometer2"></i></div>
+              <div class="stat-body">
+                <div class="stat-val">1 248</div>
+                <div class="stat-label">KM ce mois</div>
+                <div class="stat-delta up"><i class="bi bi-arrow-up-short"></i>+12%</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="stat-card">
+              <div class="stat-icon green"><i class="bi bi-check-circle-fill"></i></div>
+              <div class="stat-body">
+                <div class="stat-val">42</div>
+                <div class="stat-label">Missions totales</div>
+                <div class="stat-delta up"><i class="bi bi-arrow-up-short"></i>3 ce mois</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="stat-card">
+              <div class="stat-icon orange"><i class="bi bi-fuel-pump-fill"></i></div>
+              <div class="stat-body">
+                <div class="stat-val">6.4 L</div>
+                <div class="stat-label">Consommation / 100</div>
+                <div class="stat-delta up"><i class="bi bi-leaf-fill"></i> Éco-conduite</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="stat-card">
+              <div class="stat-icon info"><i class="bi bi-star-fill"></i></div>
+              <div class="stat-body">
+                <div class="stat-val">4.9 / 5</div>
+                <div class="stat-label">Note sécurité</div>
+                <div class="stat-delta up"><i class="bi bi-trophy-fill"></i> Top conducteur</div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
 
-  </div><!-- /content -->
-</main>
-</div><!-- /shell -->
+        <!-- MAIN GRID -->
+        <div class="row g-4">
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="../js/dashboard.js"></script>
-<script>
-function submitPlein() {
-  showToast('Plein de carburant enregistré!','success');
-  closeModal('pleinModal');
-}
+          <!-- MISSION ACTIVE -->
+          <div class="col-xl-8">
+            <div class="mission-active-card" id="mainMissionCard" style="padding:24px">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+                <div>
+                  <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:1.1rem">Mission en cours</div>
+                  <div style="font-size:.78rem;opacity:.4;margin-top:2px">ID: #MS-8542 · 20 Avril 2025</div>
+                </div>
+                <span
+                  style="background:rgba(16,185,129,0.2);color:#6ee7b7;font-size:.7rem;font-weight:700;padding:5px 14px;border-radius:20px;letter-spacing:.5px">●
+                  EN ROUTE</span>
+              </div>
+              <div class="row g-4">
+                <div class="col-lg-5">
+                  <!-- Route -->
+                  <div class="route-step">
+                    <div
+                      style="font-size:.65rem;font-weight:700;letter-spacing:1px;opacity:.35;text-transform:uppercase;margin-bottom:5px">
+                      Départ · 08:30</div>
+                    <div style="font-weight:800;font-size:.95rem">Plateforme Logistique Casa</div>
+                    <div style="font-size:.75rem;opacity:.35;margin-top:2px">Terminal 3, Port de Casablanca</div>
+                  </div>
+                  <div class="route-step dest">
+                    <div
+                      style="font-size:.65rem;font-weight:700;letter-spacing:1px;opacity:.35;text-transform:uppercase;margin-bottom:5px">
+                      Destination · Est. 10:45</div>
+                    <div style="font-weight:800;font-size:.95rem">Zone Industrielle Rabat Salé</div>
+                    <div style="font-size:.75rem;opacity:.35;margin-top:2px">Entrepôt Logistique, Bloc B</div>
+                  </div>
+                  <div style="margin-top:4px">
+                    <div
+                      style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:.77rem;opacity:.6">
+                      <span>Avancement</span><span style="color:#60a5fa;font-weight:800;opacity:1">65%</span>
+                    </div>
+                    <div class="progress-custom">
+                      <div class="progress-bar-custom" style="width:65%"></div>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;margin-top:7px;font-size:.72rem;opacity:.35">
+                      <span><i class="bi bi-signpost-2 me-1"></i>32 km restants</span>
+                      <span><i class="bi bi-clock me-1"></i>~25 min</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-7">
+                  <div class="row g-2 mb-3">
+                    <div class="col-4">
+                      <div style="background:rgba(255,255,255,0.06);border-radius:10px;padding:10px;text-align:center">
+                        <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:1.15rem"
+                          id="missionTimer">01:45:22</div>
+                        <div style="font-size:.6rem;opacity:.35;text-transform:uppercase;margin-top:3px">Durée</div>
+                      </div>
+                    </div>
+                    <div class="col-4">
+                      <div style="background:rgba(255,255,255,0.06);border-radius:10px;padding:10px;text-align:center">
+                        <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:1.15rem">87</div>
+                        <div style="font-size:.6rem;opacity:.35;text-transform:uppercase;margin-top:3px">km/h</div>
+                      </div>
+                    </div>
+                    <div class="col-4">
+                      <div style="background:rgba(255,255,255,0.06);border-radius:10px;padding:10px;text-align:center">
+                        <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:1.15rem">238</div>
+                        <div style="font-size:.6rem;opacity:.35;text-transform:uppercase;margin-top:3px">km total</div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- live GPS placeholder -->
+                  <div
+                    style="background:rgba(255,255,255,0.04);border:1px dashed rgba(255,255,255,0.12);border-radius:12px;height:90px;display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:14px">
+                    <i class="bi bi-geo-fill" style="font-size:1.5rem;color:#60a5fa"></i>
+                    <div>
+                      <div style="font-weight:700;font-size:.82rem">Suivi GPS actif</div>
+                      <div style="font-size:.72rem;opacity:.35">Signal en temps réel — Mission #MS-8542</div>
+                    </div>
+                  </div>
+                  <div style="display:flex;gap:8px">
+                    <button id="btnEndMission" class="btn-prim success"
+                      style="flex:1;justify-content:center;padding:10px">
+                      <i class="bi bi-check2-all"></i> Terminer la mission
+                    </button>
+                    <a href="incident.html"><button class="btn-icon"
+                        style="color:#f87171;border-color:rgba(220,38,38,0.3);background:rgba(220,38,38,0.08)"
+                        title="Signaler un problème">
+                        <i class="bi bi-shield-exclamation"></i>
+                      </button></a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
+          <!-- RIGHT -->
+          <div class="col-xl-4">
+            <div class="row g-4">
 
+              <!-- VEHICLE -->
+              <div class="col-12">
+                <div class="card">
+                  <div class="section-header" style="margin-bottom:14px">
+                    <h5 style="font-size:.9rem"><i class="bi bi-truck me-1" style="color:var(--accent)"></i> Mon
+                      Véhicule</h5>
+                    <a href="documents.html" class="btn-ghost"
+                      style="padding:5px 12px;font-size:.78rem;text-decoration:none">Documents</a>
+                  </div>
+                  <div class="vehicle-img-wrap">
+                    <img src="../img/berlingo.png" alt="Citroën Berlingo"
+                      onerror="this.parentElement.innerHTML='<div style=\'text-align:center;padding:20px;color:var(--text-muted)\'><i class=\'bi bi-truck\' style=\'font-size:2.5rem;display:block;margin-bottom:6px\'></i>Citroën Berlingo 2021</div>'">
+                  </div>
+                  <div class="vehicle-plate">
+                    <h3>2458 · A · 7</h3>
+                    <span>Citroën Berlingo Van · 2021</span>
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:0">
+                    <div
+                      style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-color)">
+                      <span style="font-size:.82rem;color:var(--text-muted)"><i class="bi bi-droplet-fill me-1"
+                          style="color:var(--info)"></i>Carburant</span>
+                      <div style="display:flex;align-items:center;gap:8px">
+                        <div style="width:56px;height:5px;background:var(--gray-200);border-radius:3px;overflow:hidden">
+                          <div style="width:85%;height:100%;background:var(--success);border-radius:3px"></div>
+                        </div>
+                        <span style="font-weight:700;font-size:.82rem;color:var(--success)">85%</span>
+                      </div>
+                    </div>
+                    <div
+                      style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-color)">
+                      <span style="font-size:.82rem;color:var(--text-muted)"><i class="bi bi-wrench me-1"
+                          style="color:var(--warning)"></i>Entretien dans</span>
+                      <span style="font-weight:700;font-size:.82rem">1 240 km</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0">
+                      <span style="font-size:.82rem;color:var(--text-muted)"><i class="bi bi-circle-fill me-1"
+                          style="color:var(--success);font-size:.5rem"></i>État général</span>
+                      <span style="font-weight:700;font-size:.82rem;color:var(--success)">Bon état</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-</script>
+              <!-- QUICK ACTIONS -->
+              <div class="col-12">
+                <div class="card">
+                  <div class="section-header" style="margin-bottom:14px">
+                    <h5 style="font-size:.9rem"><i class="bi bi-lightning-fill me-1" style="color:var(--accent)"></i>
+                      Actions rapides</h5>
+                  </div>
+                  <div class="quick-actions-grid">
+                    <button class="action-btn" id="actionScanner"><i class="bi bi-camera-fill"
+                        style="color:var(--accent)"></i>Scanner</button>
+                    <button class="action-btn" id="actionGPS"><i class="bi bi-geo-alt-fill"
+                        style="color:var(--success)"></i>GPS</button>
+                    <button class="action-btn" id="actionPlein"><i class="bi bi-fuel-pump-fill"
+                        style="color:var(--warning)"></i>Plein</button>
+                    <button class="action-btn danger" id="actionSOS"><i class="bi bi-telephone-fill"
+                        style="color:var(--danger)"></i>SOS</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- NOTIFICATIONS STRIP -->
+        <div class="row g-4 mt-0">
+          <div class="col-12">
+            <div class="card">
+              <div class="section-header">
+                <h5 style="font-size:.9rem"><i class="bi bi-bell-fill me-1" style="color:var(--accent)"></i>
+                  Notifications récentes</h5>
+                <a href="notifications.html" class="btn-ghost"
+                  style="padding:5px 12px;font-size:.78rem;text-decoration:none">Tout voir <i
+                    class="bi bi-chevron-right ms-1"></i></a>
+              </div>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <div
+                    style="display:flex;gap:12px;padding:14px;border-radius:10px;border:1px solid var(--border-color);transition:var(--transition);cursor:pointer"
+                    class="card-hover">
+                    <div
+                      style="width:40px;height:40px;min-width:40px;background:var(--warning-soft);color:var(--warning);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem">
+                      <i class="bi bi-file-earmark-person-fill"></i></div>
+                    <div>
+                      <div style="font-weight:700;font-size:.855rem;margin-bottom:2px">Permis à renouveler</div>
+                      <div style="font-size:.78rem;color:var(--text-muted)">Expire dans <b>15 jours</b></div><a
+                        href="documents.html"
+                        style="font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none">Voir documents
+                        →</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div
+                    style="display:flex;gap:12px;padding:14px;border-radius:10px;border:1px solid var(--border-color);transition:var(--transition);cursor:pointer"
+                    class="card-hover">
+                    <div
+                      style="width:40px;height:40px;min-width:40px;background:var(--success-soft);color:var(--success);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem">
+                      <i class="bi bi-check-circle-fill"></i></div>
+                    <div>
+                      <div style="font-weight:700;font-size:.855rem;margin-bottom:2px">Mission #MS-1042 validée</div>
+                      <div style="font-size:.78rem;color:var(--text-muted)">Le responsable a confirmé la livraison</div>
+                      <a href="historique.html"
+                        style="font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none">Voir
+                        historique →</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /content -->
+    </main>
+  </div><!-- /shell -->
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/global.js"></script>
+  <script src="../js/dashboard.js"></script>
+
 </body>
-</html>
 
+</html>

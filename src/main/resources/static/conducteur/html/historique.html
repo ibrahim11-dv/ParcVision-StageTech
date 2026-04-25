@@ -1,250 +1,300 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Historique des Missions — Espace Conducteur · ParcVision</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../css/conducteur-style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Historique des Missions — Espace Conducteur · ParcVision</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/historique.css">
 </head>
+
 <body>
 
-<!-- MODAL: Mission Detail -->
-<div class="modal-overlay" id="missionDetailModal">
-  <div class="modal-box" style="max-width:540px">
-    <div class="modal-header">
-      <h5><i class="bi bi-signpost-2-fill me-2" style="color:var(--accent)"></i>Détail de la mission</h5>
-      <button class="btn-icon" data-modal-close="missionDetailModal"><i class="bi bi-x-lg"></i></button>
-    </div>
-    <div class="modal-body" id="missionDetailInfo"></div>
-    <div class="modal-footer">
-      <button class="btn-ghost" data-modal-close="missionDetailModal">Fermer</button>
-      <button class="btn-prim accent" onclick="triggerDownload(null,'rapport_mission.pdf')"><i class="bi bi-download"></i> Rapport PDF</button>
-    </div>
-  </div>
-</div>
-
-<div class="shell">
-<!-- SIDEBAR -->
-<aside class="sidebar" id="sidebar">
-  <a href="dashboard.html" class="sb-brand">
-    <div class="brand-icon"><i class="bi bi-car-front-fill"></i></div>
-    <div class="brand-text"><strong>ParcVision</strong><small>Gestion de flotte</small></div>
-  </a>
-  <div class="sb-body">
-    <div class="sb-section">Principal</div>
-    <div class="nav-item"><a href="dashboard.html" class="nav-link"><span class="ni"><i class="bi bi-grid-fill"></i></span><span class="nt">Dashboard<small class="nt-sub">Vue générale</small></span></a></div>
-    <div class="sb-section">Mes activités</div>
-    <div class="nav-item"><a href="mission.html" class="nav-link"><span class="ni"><i class="bi bi-signpost-2-fill"></i></span><span class="nt">Mes Missions<small class="nt-sub">1 active · 2 nouvelles</small></span><span class="nb">2</span></a></div>
-    <div class="nav-item"><a href="historique.html" class="nav-link active"><span class="ni"><i class="bi bi-clock-history"></i></span><span class="nt">Historique<small class="nt-sub">42 missions</small></span></a></div>
-    <div class="sb-section">Opérations</div>
-    <div class="nav-item"><a href="incident.html" class="nav-link"><span class="ni"><i class="bi bi-exclamation-octagon-fill"></i></span><span class="nt">Signaler Incident<small class="nt-sub">Panne ou accident</small></span></a></div>
-    <div class="nav-item"><a href="documents.html" class="nav-link"><span class="ni"><i class="bi bi-file-earmark-text-fill"></i></span><span class="nt">Mes Documents<small class="nt-sub">Permis · Contrat</small></span></a></div>
-    <div class="sb-section">Compte</div>
-    <div class="nav-item"><a href="notifications.html" class="nav-link"><span class="ni"><i class="bi bi-bell-fill"></i></span><span class="nt">Notifications<small class="nt-sub">2 non lues</small></span><span class="nb">2</span></a></div>
-    <div class="nav-item"><a href="profil.html" class="nav-link"><span class="ni"><i class="bi bi-person-fill"></i></span><span class="nt">Mon Profil<small class="nt-sub">Jean Dupont</small></span></a></div>
-  </div>
-  <div class="sb-foot">
-    <div class="profile-row" id="profileRow">
-      <div class="profile-av">JD</div>
-      <div class="profile-info"><b>Jean Dupont</b><small>admin@parcvision.ma</small></div>
-      <i class="bi bi-three-dots-vertical profile-more"></i>
-      <div class="profile-popup" id="profilePopup">
-        <div class="pp-head">Mon compte</div>
-        <a href="profil.html" class="pp-link"><i class="bi bi-person-circle"></i> Mon Profil</a>
-        <a href="documents.html" class="pp-link"><i class="bi bi-file-earmark-text"></i> Mes Documents</a>
-        <div class="pp-link" id="themeToggleBtn"><i data-theme-icon class="bi bi-moon-stars-fill"></i><span data-theme-text>Mode sombre</span></div>
-        <hr style="margin:6px 0;border-color:var(--border-color)">
-        <a href="#" class="pp-link" style="color:var(--danger)"><i class="bi bi-box-arrow-right"></i> Déconnexion</a>
+  <!-- MODAL: Mission Detail -->
+  <div class="modal-overlay" id="missionDetailModal">
+    <div class="modal-box" style="max-width:540px">
+      <div class="modal-header">
+        <h5><i class="bi bi-signpost-2-fill me-2" style="color:var(--accent)"></i>Détail de la mission</h5>
+        <button class="btn-icon" data-modal-close="missionDetailModal"><i class="bi bi-x-lg"></i></button>
+      </div>
+      <div class="modal-body" id="missionDetailInfo"></div>
+      <div class="modal-footer">
+        <button class="btn-ghost" data-modal-close="missionDetailModal">Fermer</button>
+        <button class="btn-prim accent" onclick="triggerDownload(null,'rapport_mission.pdf')"><i
+            class="bi bi-download"></i> Rapport PDF</button>
       </div>
     </div>
   </div>
-</aside>
-<div class="overlay" id="overlay"></div>
-<button class="mob-toggle" id="mobToggle"><i class="bi bi-list"></i></button>
 
-<main class="main">
-  <header class="top-bar">
-    <div class="topbar-left">
-      <button id="mobToggleInner" class="btn-icon d-lg-none me-2"><i class="bi bi-list"></i></button>
-      <span id="statusBadge" class="badge-status status-en-mission">En mission</span>
-    </div>
-    <div class="topbar-right">
-      <div class="clock-pill d-none d-md-flex"><i class="bi bi-clock" style="color:var(--accent)"></i><span data-clock>--:--</span></div>
-      <a href="notifications.html" style="text-decoration:none"><button class="notif-btn"><i class="bi bi-bell-fill"></i><span class="notif-badge">2</span></button></a>
-    </div>
-  </header>
+  <div class="shell">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <a href="dashboard.html" class="sb-brand">
+        <div class="brand-icon"><i class="bi bi-car-front-fill"></i></div>
+        <div class="brand-text"><strong>ParcVision</strong><small>Gestion de flotte</small></div>
+      </a>
+      <div class="sb-body">
+        <div class="sb-section">Principal</div>
+        <div class="nav-item"><a href="dashboard.html" class="nav-link"><span class="ni"><i
+                class="bi bi-grid-fill"></i></span><span class="nt">Dashboard<small class="nt-sub">Vue
+                générale</small></span></a></div>
+        <div class="sb-section">Mes activités</div>
+        <div class="nav-item"><a href="mission.html" class="nav-link"><span class="ni"><i
+                class="bi bi-signpost-2-fill"></i></span><span class="nt">Mes Missions<small class="nt-sub">1 active · 2
+                nouvelles</small></span><span class="nb">2</span></a></div>
+        <div class="nav-item"><a href="historique.html" class="nav-link active"><span class="ni"><i
+                class="bi bi-clock-history"></i></span><span class="nt">Historique<small class="nt-sub">42
+                missions</small></span></a></div>
+        <div class="sb-section">Opérations</div>
+        <div class="nav-item"><a href="incident.html" class="nav-link"><span class="ni"><i
+                class="bi bi-exclamation-octagon-fill"></i></span><span class="nt">Signaler Incident<small
+                class="nt-sub">Panne ou accident</small></span></a></div>
+        <div class="nav-item"><a href="documents.html" class="nav-link"><span class="ni"><i
+                class="bi bi-file-earmark-text-fill"></i></span><span class="nt">Mes Documents<small
+                class="nt-sub">Permis · Contrat</small></span></a></div>
 
-  <div class="content">
-    <div class="page-header">
-      <div class="page-header-title">
-        <h2>Historique des <span class="text-accent">Missions</span></h2>
-        <p>Suivi et analyse de toutes vos missions passées</p>
-      </div>
-      <div class="page-header-actions">
-        <button id="exportBtn" class="btn-prim accent"><i class="bi bi-download"></i> Exporter PDF</button>
-      </div>
-    </div>
 
-    <!-- KPI ROW -->
-    <div class="row g-3 mb-4">
-      <div class="col-6 col-md-3">
-        <div class="stat-card">
-          <div class="stat-icon blue"><i class="bi bi-signpost-2-fill"></i></div>
-          <div class="stat-body"><div class="stat-val">42</div><div class="stat-label">Total Missions</div></div>
-        </div>
       </div>
-      <div class="col-6 col-md-3">
-        <div class="stat-card">
-          <div class="stat-icon green"><i class="bi bi-speedometer2"></i></div>
-          <div class="stat-body"><div class="stat-val">8 420</div><div class="stat-label">KM parcourus</div></div>
-        </div>
-      </div>
-      <div class="col-6 col-md-3">
-        <div class="stat-card">
-          <div class="stat-icon orange"><i class="bi bi-clock-history"></i></div>
-          <div class="stat-body"><div class="stat-val">218h</div><div class="stat-label">Temps de conduite</div></div>
-        </div>
-      </div>
-      <div class="col-6 col-md-3">
-        <div class="stat-card">
-          <div class="stat-icon info"><i class="bi bi-star-fill"></i></div>
-          <div class="stat-body"><div class="stat-val">4.9</div><div class="stat-label">Note moyenne</div></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- TABLE CARD -->
-    <div class="card" style="padding:0;overflow:hidden">
-      <!-- Card header with search -->
-      <div style="padding:18px 20px;border-bottom:1px solid var(--border-color);display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap">
-        <h5 style="font-family:'Outfit',sans-serif;font-weight:700;font-size:1rem;margin:0">Dernières Missions</h5>
-        <div style="display:flex;gap:10px;flex-wrap:wrap">
-          <div class="search-bar" style="min-width:200px">
-            <i class="bi bi-search"></i>
-            <input type="text" id="histSearch" placeholder="Rechercher une mission...">
+      <div class="sb-foot">
+        <div class="profile-row" id="profileRow">
+          <div class="profile-av">JD</div>
+          <div class="profile-info"><b>Jean Dupont</b><small>admin@parcvision.ma</small></div>
+          <i class="bi bi-three-dots-vertical profile-more"></i>
+          <div class="profile-popup" id="profilePopup">
+            <div class="pp-head">Mon compte</div>
+            <a href="profil.html" class="pp-link"><i class="bi bi-person-circle"></i> Mon Profil</a>
+            <a href="documents.html" class="pp-link"><i class="bi bi-file-earmark-text"></i> Mes Documents</a>
+            <div class="pp-link" id="themeToggleBtn"><i data-theme-icon class="bi bi-moon-stars-fill"></i><span
+                data-theme-text>Mode sombre</span></div>
+            <hr style="margin:6px 0;border-color:var(--border-color)">
+            <a href="#" class="pp-link" style="color:var(--danger)"><i class="bi bi-box-arrow-right"></i>
+              Déconnexion</a>
           </div>
-          <select class="form-select-custom" id="histFilter" style="width:auto;padding:9px 14px">
-            <option value="all">Tous les statuts</option>
-            <option value="validee">Validée</option>
-            <option value="annulee">Annulée</option>
-            <option value="incident">Incident</option>
-          </select>
         </div>
       </div>
+    </aside>
+    <div class="overlay" id="overlay"></div>
+    <button class="mob-toggle" id="mobToggle"><i class="bi bi-list"></i></button>
 
-      <div class="table-wrapper" style="border:none;border-radius:0;box-shadow:none">
-        <table class="table">
-          <thead><tr>
-            <th>Mission</th>
-            <th>Date & Lieu</th>
-            <th>Trajet</th>
-            <th>Distance</th>
-            <th>Durée</th>
-            <th>Note</th>
-            <th>Statut</th>
-            <th>Actions</th>
-          </tr></thead>
-          <tbody>
-            <tr class="hist-row" data-status="validee" data-month="avril">
-              <td><b class="mission-id">#MS-8542</b></td>
-              <td><span class="mission-date">20 Avr 2025</span><br><small style="color:var(--text-muted)">Casablanca</small></td>
-              <td><span class="mission-trajet">Casablanca → Rabat</span></td>
-              <td><span class="mission-dist">238 km</span></td>
-              <td>2h 45m</td>
-              <td><i class="bi bi-star-fill" style="color:#f59e0b"></i> 5.0</td>
-              <td><span class="prio-badge prio-faible">Validée</span></td>
-              <td>
-                <div style="display:flex;gap:5px">
-                  <button class="btn-icon" data-view-mission title="Voir détail"><i class="bi bi-eye"></i></button>
-                  <button class="btn-icon" onclick="triggerDownload(null,'rapport_MS8542.pdf')" title="Télécharger rapport"><i class="bi bi-download"></i></button>
-                </div>
-              </td>
-            </tr>
-            <tr class="hist-row" data-status="validee" data-month="avril">
-              <td><b class="mission-id">#MS-8538</b></td>
-              <td><span class="mission-date">18 Avr 2025</span><br><small style="color:var(--text-muted)">El Jadida</small></td>
-              <td><span class="mission-trajet">El Jadida → Casa</span></td>
-              <td><span class="mission-dist">98 km</span></td>
-              <td>1h 20m</td>
-              <td><i class="bi bi-star-fill" style="color:#f59e0b"></i> 4.8</td>
-              <td><span class="prio-badge prio-faible">Validée</span></td>
-              <td>
-                <div style="display:flex;gap:5px">
-                  <button class="btn-icon" data-view-mission title="Voir détail"><i class="bi bi-eye"></i></button>
-                  <button class="btn-icon" onclick="triggerDownload(null,'rapport_MS8538.pdf')" title="Télécharger"><i class="bi bi-download"></i></button>
-                </div>
-              </td>
-            </tr>
-            <tr class="hist-row" data-status="validee" data-month="avril">
-              <td><b class="mission-id">#MS-8515</b></td>
-              <td><span class="mission-date">16 Avr 2025</span><br><small style="color:var(--text-muted)">Tanger</small></td>
-              <td><span class="mission-trajet">Tanger → Kénitra</span></td>
-              <td><span class="mission-dist">315 km</span></td>
-              <td>3h 50m</td>
-              <td><i class="bi bi-star-fill" style="color:#f59e0b"></i> 4.9</td>
-              <td><span class="prio-badge prio-faible">Validée</span></td>
-              <td>
-                <div style="display:flex;gap:5px">
-                  <button class="btn-icon" data-view-mission title="Voir détail"><i class="bi bi-eye"></i></button>
-                  <button class="btn-icon" onclick="triggerDownload(null,'rapport_MS8515.pdf')" title="Télécharger"><i class="bi bi-download"></i></button>
-                </div>
-              </td>
-            </tr>
-            <tr class="hist-row" data-status="incident" data-month="avril">
-              <td><b class="mission-id">#MS-8502</b></td>
-              <td><span class="mission-date">14 Avr 2025</span><br><small style="color:var(--text-muted)">Rabat</small></td>
-              <td><span class="mission-trajet">Rabat → Settat</span></td>
-              <td><span class="mission-dist">182 km</span></td>
-              <td>2h 15m</td>
-              <td><i class="bi bi-star-fill" style="color:#f59e0b"></i> 3.5</td>
-              <td><span class="prio-badge prio-haute">Incident</span></td>
-              <td>
-                <div style="display:flex;gap:5px">
-                  <button class="btn-icon" data-view-mission title="Voir détail"><i class="bi bi-eye"></i></button>
-                  <button class="btn-icon" onclick="triggerDownload(null,'rapport_MS8502.pdf')" title="Télécharger"><i class="bi bi-download"></i></button>
-                </div>
-              </td>
-            </tr>
-            <tr class="hist-row" data-status="validee" data-month="mars">
-              <td><b class="mission-id">#MS-8489</b></td>
-              <td><span class="mission-date">29 Mars 2025</span><br><small style="color:var(--text-muted)">Kénitra</small></td>
-              <td><span class="mission-trajet">Kénitra → Fès</span></td>
-              <td><span class="mission-dist">195 km</span></td>
-              <td>2h 30m</td>
-              <td><i class="bi bi-star-fill" style="color:#f59e0b"></i> 5.0</td>
-              <td><span class="prio-badge prio-faible">Validée</span></td>
-              <td>
-                <div style="display:flex;gap:5px">
-                  <button class="btn-icon" data-view-mission title="Voir détail"><i class="bi bi-eye"></i></button>
-                  <button class="btn-icon" onclick="triggerDownload(null,'rapport_MS8489.pdf')" title="Télécharger"><i class="bi bi-download"></i></button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Pagination -->
-      <div style="padding:14px 20px;border-top:1px solid var(--border-color);display:flex;align-items:center;justify-content:space-between">
-        <span style="font-size:.82rem;color:var(--text-muted)">Affichage de 5 sur 42 missions</span>
-        <div style="display:flex;gap:6px">
-          <button class="btn-ghost" style="padding:6px 12px;font-size:.8rem" disabled><i class="bi bi-chevron-left"></i></button>
-          <button class="btn-ghost" style="padding:6px 14px;font-size:.8rem;background:var(--accent);color:white;border-color:var(--accent)">1</button>
-          <button class="btn-ghost" style="padding:6px 14px;font-size:.8rem">2</button>
-          <button class="btn-ghost" style="padding:6px 14px;font-size:.8rem">3</button>
-          <button class="btn-ghost" style="padding:6px 12px;font-size:.8rem"><i class="bi bi-chevron-right"></i></button>
+    <main class="main">
+      <header class="top-bar">
+        <div class="topbar-left">
+          <button id="mobToggleInner" class="btn-icon d-lg-none me-2"><i class="bi bi-list"></i></button>
+          <span id="statusBadge" class="badge-status status-en-mission">En mission</span>
         </div>
-      </div>
-    </div>
+        <div class="topbar-right">
+          <div class="clock-pill d-none d-md-flex"><i class="bi bi-clock" style="color:var(--accent)"></i><span
+              data-clock>--:--</span></div>
+          <a href="notifications.html" style="text-decoration:none"><button class="notif-btn"><i
+                class="bi bi-bell-fill"></i><span class="notif-badge">2</span></button></a>
+        </div>
+      </header>
 
+      <div class="content">
+        <div class="page-header">
+          <div class="page-header-title">
+            <h2>Historique des <span class="text-accent">Missions</span></h2>
+            <p>Suivi et analyse de toutes vos missions passées</p>
+          </div>
+          <div class="page-header-actions">
+            <button id="exportBtn" class="btn-prim accent"><i class="bi bi-download"></i> Exporter PDF</button>
+          </div>
+        </div>
+
+        <!-- KPI ROW -->
+        <div class="row g-3 mb-4">
+          <div class="col-6 col-md-3">
+            <div class="stat-card">
+              <div class="stat-icon blue"><i class="bi bi-signpost-2-fill"></i></div>
+              <div class="stat-body">
+                <div class="stat-val">42</div>
+                <div class="stat-label">Total Missions</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="stat-card">
+              <div class="stat-icon green"><i class="bi bi-speedometer2"></i></div>
+              <div class="stat-body">
+                <div class="stat-val">8 420</div>
+                <div class="stat-label">KM parcourus</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="stat-card">
+              <div class="stat-icon orange"><i class="bi bi-clock-history"></i></div>
+              <div class="stat-body">
+                <div class="stat-val">218h</div>
+                <div class="stat-label">Temps de conduite</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="stat-card">
+              <div class="stat-icon info"><i class="bi bi-star-fill"></i></div>
+              <div class="stat-body">
+                <div class="stat-val">4.9</div>
+                <div class="stat-label">Note moyenne</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TABLE CARD -->
+        <div class="card" style="padding:0;overflow:hidden">
+          <!-- Card header with search -->
+          <div
+            style="padding:18px 20px;border-bottom:1px solid var(--border-color);display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap">
+            <h5 style="font-family:'Outfit',sans-serif;font-weight:700;font-size:1rem;margin:0">Dernières Missions</h5>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <div class="search-bar" style="min-width:200px">
+                <i class="bi bi-search"></i>
+                <input type="text" id="histSearch" placeholder="Rechercher une mission...">
+              </div>
+              <select class="form-select-custom" id="histFilter" style="width:auto;padding:9px 14px">
+                <option value="all">Tous les statuts</option>
+                <option value="validee">Validée</option>
+                <option value="annulee">Annulée</option>
+                <option value="incident">Incident</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-wrapper" style="border:none;border-radius:0;box-shadow:none">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Mission</th>
+                  <th>Date & Lieu</th>
+                  <th>Trajet</th>
+                  <th>Distance</th>
+                  <th>Durée</th>
+                  <th>Note</th>
+                  <th>Statut</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="hist-row" data-status="validee" data-month="avril">
+                  <td><b class="mission-id">#MS-8542</b></td>
+                  <td><span class="mission-date">20 Avr 2025</span><br><small
+                      style="color:var(--text-muted)">Casablanca</small></td>
+                  <td><span class="mission-trajet">Casablanca → Rabat</span></td>
+                  <td><span class="mission-dist">238 km</span></td>
+                  <td>2h 45m</td>
+                  <td><i class="bi bi-star-fill" style="color:#f59e0b"></i> 5.0</td>
+                  <td><span class="prio-badge prio-faible">Validée</span></td>
+                  <td>
+                    <div style="display:flex;gap:5px">
+                      <button class="btn-icon" data-view-mission title="Voir détail"><i class="bi bi-eye"></i></button>
+                      <button class="btn-icon" onclick="triggerDownload(null,'rapport_MS8542.pdf')"
+                        title="Télécharger rapport"><i class="bi bi-download"></i></button>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="hist-row" data-status="validee" data-month="avril">
+                  <td><b class="mission-id">#MS-8538</b></td>
+                  <td><span class="mission-date">18 Avr 2025</span><br><small style="color:var(--text-muted)">El
+                      Jadida</small></td>
+                  <td><span class="mission-trajet">El Jadida → Casa</span></td>
+                  <td><span class="mission-dist">98 km</span></td>
+                  <td>1h 20m</td>
+                  <td><i class="bi bi-star-fill" style="color:#f59e0b"></i> 4.8</td>
+                  <td><span class="prio-badge prio-faible">Validée</span></td>
+                  <td>
+                    <div style="display:flex;gap:5px">
+                      <button class="btn-icon" data-view-mission title="Voir détail"><i class="bi bi-eye"></i></button>
+                      <button class="btn-icon" onclick="triggerDownload(null,'rapport_MS8538.pdf')"
+                        title="Télécharger"><i class="bi bi-download"></i></button>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="hist-row" data-status="validee" data-month="avril">
+                  <td><b class="mission-id">#MS-8515</b></td>
+                  <td><span class="mission-date">16 Avr 2025</span><br><small
+                      style="color:var(--text-muted)">Tanger</small></td>
+                  <td><span class="mission-trajet">Tanger → Kénitra</span></td>
+                  <td><span class="mission-dist">315 km</span></td>
+                  <td>3h 50m</td>
+                  <td><i class="bi bi-star-fill" style="color:#f59e0b"></i> 4.9</td>
+                  <td><span class="prio-badge prio-faible">Validée</span></td>
+                  <td>
+                    <div style="display:flex;gap:5px">
+                      <button class="btn-icon" data-view-mission title="Voir détail"><i class="bi bi-eye"></i></button>
+                      <button class="btn-icon" onclick="triggerDownload(null,'rapport_MS8515.pdf')"
+                        title="Télécharger"><i class="bi bi-download"></i></button>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="hist-row" data-status="incident" data-month="avril">
+                  <td><b class="mission-id">#MS-8502</b></td>
+                  <td><span class="mission-date">14 Avr 2025</span><br><small
+                      style="color:var(--text-muted)">Rabat</small></td>
+                  <td><span class="mission-trajet">Rabat → Settat</span></td>
+                  <td><span class="mission-dist">182 km</span></td>
+                  <td>2h 15m</td>
+                  <td><i class="bi bi-star-fill" style="color:#f59e0b"></i> 3.5</td>
+                  <td><span class="prio-badge prio-haute">Incident</span></td>
+                  <td>
+                    <div style="display:flex;gap:5px">
+                      <button class="btn-icon" data-view-mission title="Voir détail"><i class="bi bi-eye"></i></button>
+                      <button class="btn-icon" onclick="triggerDownload(null,'rapport_MS8502.pdf')"
+                        title="Télécharger"><i class="bi bi-download"></i></button>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="hist-row" data-status="validee" data-month="mars">
+                  <td><b class="mission-id">#MS-8489</b></td>
+                  <td><span class="mission-date">29 Mars 2025</span><br><small
+                      style="color:var(--text-muted)">Kénitra</small></td>
+                  <td><span class="mission-trajet">Kénitra → Fès</span></td>
+                  <td><span class="mission-dist">195 km</span></td>
+                  <td>2h 30m</td>
+                  <td><i class="bi bi-star-fill" style="color:#f59e0b"></i> 5.0</td>
+                  <td><span class="prio-badge prio-faible">Validée</span></td>
+                  <td>
+                    <div style="display:flex;gap:5px">
+                      <button class="btn-icon" data-view-mission title="Voir détail"><i class="bi bi-eye"></i></button>
+                      <button class="btn-icon" onclick="triggerDownload(null,'rapport_MS8489.pdf')"
+                        title="Télécharger"><i class="bi bi-download"></i></button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination -->
+          <div
+            style="padding:14px 20px;border-top:1px solid var(--border-color);display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:.82rem;color:var(--text-muted)">Affichage de 5 sur 42 missions</span>
+            <div style="display:flex;gap:6px">
+              <button class="btn-ghost" style="padding:6px 12px;font-size:.8rem" disabled><i
+                  class="bi bi-chevron-left"></i></button>
+              <button class="btn-ghost"
+                style="padding:6px 14px;font-size:.8rem;background:var(--accent);color:white;border-color:var(--accent)">1</button>
+              <button class="btn-ghost" style="padding:6px 14px;font-size:.8rem">2</button>
+              <button class="btn-ghost" style="padding:6px 14px;font-size:.8rem">3</button>
+              <button class="btn-ghost" style="padding:6px 12px;font-size:.8rem"><i
+                  class="bi bi-chevron-right"></i></button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
   </div>
-</main>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="../js/dashboard.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/global.js"></script>
+  <script src="../js/historique.js"></script>
 </body>
+
 </html>
