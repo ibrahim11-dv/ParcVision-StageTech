@@ -417,7 +417,6 @@ body {
     box-shadow: var(--shadow-md);
     padding: 35px;
     width: 100%;
-    max-width: 950px;
     animation: fadeUp 0.4s ease both;
 }
 

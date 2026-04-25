@@ -172,10 +172,197 @@
     <div class="main" id="main">
         <div class="page">
             <div class="w-100 d-flex flex-column align-items-center">
-                <div class="form-card">
-                <h2 class="page-title">Ajouter un Véhicule</h2>
-                <p class="page-subtitle">Veuillez renseigner les informations et importer les images du véhicule.</p>
-                
+                <!-- En-tête de page -->
+                <div class="page-header w-100 mb-4">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                        <div>
+                            <h2 class="page-title"><i class="bi bi-truck text-primary me-2"></i>Véhicules Enregistrés</h2>
+                            <p class="page-subtitle">Aperçu rapide des véhicules actuellement inscrits dans la flotte.</p>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addVehicleModal"><i class="bi bi-plus-lg me-1"></i> Nouveau Véhicule</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Statistiques rapides -->
+                <div class="row w-100 mb-4 g-3">
+                    <div class="col-md-3 col-6">
+                        <div class="card border-0 shadow-sm rounded-4 h-100 p-3" style="border-left: 4px solid var(--primary) !important;">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="text-muted small fw-semibold mb-1">Total</div>
+                                    <div class="fs-4 fw-bold text-dark">24</div>
+                                </div>
+                                <div class="fs-2 text-primary opacity-25"><i class="bi bi-car-front-fill"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="card border-0 shadow-sm rounded-4 h-100 p-3" style="border-left: 4px solid #10b981 !important;">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="text-muted small fw-semibold mb-1">Disponibles</div>
+                                    <div class="fs-4 fw-bold text-dark">15</div>
+                                </div>
+                                <div class="fs-2 text-success opacity-25"><i class="bi bi-check-circle-fill"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="card border-0 shadow-sm rounded-4 h-100 p-3" style="border-left: 4px solid #f59e0b !important;">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="text-muted small fw-semibold mb-1">En Mission</div>
+                                    <div class="fs-4 fw-bold text-dark">7</div>
+                                </div>
+                                <div class="fs-2 text-warning opacity-25"><i class="bi bi-cursor-fill"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="card border-0 shadow-sm rounded-4 h-100 p-3" style="border-left: 4px solid #ef4444 !important;">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="text-muted small fw-semibold mb-1">En Maintenance</div>
+                                    <div class="fs-4 fw-bold text-dark">2</div>
+                                </div>
+                                <div class="fs-2 text-danger opacity-25"><i class="bi bi-tools"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Liste des véhicules -->
+                <div class="form-card w-100">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th scope="col" class="border-0 rounded-start">Aperçu</th>
+                                    <th scope="col" class="border-0">Immatriculation</th>
+                                    <th scope="col" class="border-0">Marque & Modèle</th>
+                                    <th scope="col" class="border-0">Type</th>
+                                    <th scope="col" class="border-0">Statut</th>
+                                    <th scope="col" class="border-0 rounded-end">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="border-bottom-0">
+                                        <div class="profile-av bg-light text-primary" style="width: 40px; height: 30px; border-radius: 6px;"><i class="bi bi-truck"></i></div>
+                                    </td>
+                                    <td class="border-bottom-0"><span class="fw-semibold text-dark">12345 | A | 1</span></td>
+                                    <td class="border-bottom-0 text-muted">Renault Master</td>
+                                    <td class="border-bottom-0 text-muted">Fourgon</td>
+                                    <td class="border-bottom-0"><span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-2">Disponible</span></td>
+                                    <td class="border-bottom-0">
+                                        <button class="btn btn-sm btn-light text-primary border-0" data-bs-toggle="modal" data-bs-target="#editVehicleModal" title="Voir/Modifier"><i class="bi bi-pencil-square"></i></button>
+                                        <button class="btn btn-sm btn-light text-danger border-0"><i class="bi bi-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="border-bottom-0">
+                                        <div class="profile-av bg-light text-primary" style="width: 40px; height: 30px; border-radius: 6px;"><i class="bi bi-car-front"></i></div>
+                                    </td>
+                                    <td class="border-bottom-0"><span class="fw-semibold text-dark">67890 | B | 6</span></td>
+                                    <td class="border-bottom-0 text-muted">Peugeot Partner</td>
+                                    <td class="border-bottom-0 text-muted">Voiture utilitaire</td>
+                                    <td class="border-bottom-0"><span class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 rounded-pill px-2">En Mission</span></td>
+                                    <td class="border-bottom-0">
+                                        <button class="btn btn-sm btn-light text-primary border-0" data-bs-toggle="modal" data-bs-target="#editVehicleModal" title="Voir/Modifier"><i class="bi bi-pencil-square"></i></button>
+                                        <button class="btn btn-sm btn-light text-danger border-0"><i class="bi bi-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="border-bottom-0">
+                                        <div class="profile-av bg-light text-primary" style="width: 40px; height: 30px; border-radius: 6px;"><i class="bi bi-truck-front"></i></div>
+                                    </td>
+                                    <td class="border-bottom-0"><span class="fw-semibold text-dark">11223 | C | 9</span></td>
+                                    <td class="border-bottom-0 text-muted">Volvo FH16</td>
+                                    <td class="border-bottom-0 text-muted">Camion</td>
+                                    <td class="border-bottom-0"><span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 rounded-pill px-2">En Maintenance</span></td>
+                                    <td class="border-bottom-0">
+                                        <button class="btn btn-sm btn-light text-primary border-0" data-bs-toggle="modal" data-bs-target="#editVehicleModal" title="Voir/Modifier"><i class="bi bi-pencil-square"></i></button>
+                                        <button class="btn btn-sm btn-light text-danger border-0"><i class="bi bi-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="border-bottom-0">
+                                        <div class="profile-av bg-light text-primary" style="width: 40px; height: 30px; border-radius: 6px;"><i class="bi bi-truck"></i></div>
+                                    </td>
+                                    <td class="border-bottom-0"><span class="fw-semibold text-dark">44556 | A | 2</span></td>
+                                    <td class="border-bottom-0 text-muted">Mercedes Sprinter</td>
+                                    <td class="border-bottom-0 text-muted">Fourgon</td>
+                                    <td class="border-bottom-0"><span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-2">Disponible</span></td>
+                                    <td class="border-bottom-0">
+                                        <button class="btn btn-sm btn-light text-primary border-0" data-bs-toggle="modal" data-bs-target="#editVehicleModal" title="Voir/Modifier"><i class="bi bi-pencil-square"></i></button>
+                                        <button class="btn btn-sm btn-light text-danger border-0"><i class="bi bi-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="border-bottom-0">
+                                        <div class="profile-av bg-light text-primary" style="width: 40px; height: 30px; border-radius: 6px;"><i class="bi bi-car-front"></i></div>
+                                    </td>
+                                    <td class="border-bottom-0"><span class="fw-semibold text-dark">77889 | B | 1</span></td>
+                                    <td class="border-bottom-0 text-muted">Dacia Dokker</td>
+                                    <td class="border-bottom-0 text-muted">Voiture utilitaire</td>
+                                    <td class="border-bottom-0"><span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-2">Disponible</span></td>
+                                    <td class="border-bottom-0">
+                                        <button class="btn btn-sm btn-light text-primary border-0" data-bs-toggle="modal" data-bs-target="#editVehicleModal" title="Voir/Modifier"><i class="bi bi-pencil-square"></i></button>
+                                        <button class="btn btn-sm btn-light text-danger border-0"><i class="bi bi-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="border-bottom-0">
+                                        <div class="profile-av bg-light text-primary" style="width: 40px; height: 30px; border-radius: 6px;"><i class="bi bi-truck"></i></div>
+                                    </td>
+                                    <td class="border-bottom-0"><span class="fw-semibold text-dark">99001 | A | 3</span></td>
+                                    <td class="border-bottom-0 text-muted">Ford Transit</td>
+                                    <td class="border-bottom-0 text-muted">Fourgon</td>
+                                    <td class="border-bottom-0"><span class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 rounded-pill px-2">En Mission</span></td>
+                                    <td class="border-bottom-0">
+                                        <button class="btn btn-sm btn-light text-primary border-0" data-bs-toggle="modal" data-bs-target="#editVehicleModal" title="Voir/Modifier"><i class="bi bi-pencil-square"></i></button>
+                                        <button class="btn btn-sm btn-light text-danger border-0"><i class="bi bi-trash"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Pagination -->
+                    <div class="d-flex justify-content-between align-items-center mt-4 border-top pt-3">
+                        <span class="text-muted" style="font-size: 0.85rem;">Affichage de 1 à 6 sur 24 véhicules</span>
+                        <nav>
+                            <ul class="pagination pagination-sm mb-0">
+                                <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1">Précédent</a></li>
+                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item"><a class="page-link" href="#">4</a></li>
+                                <li class="page-item"><a class="page-link" href="#">Suivant</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Modal Ajouter Véhicule -->
+<div class="modal fade" id="addVehicleModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header border-bottom-0 pb-0">
+                <div>
+                    <h5 class="modal-title fw-bold">Ajouter un Véhicule</h5>
+                    <p class="text-muted mb-0" style="font-size: 0.85rem;">Veuillez renseigner les informations et importer les images du véhicule.</p>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
                 <form>
                     <!-- Drag and drop multiple images upload -->
                     <div class="upload-rect" id="vehicleUploadArea">
@@ -259,80 +446,14 @@
                             <input type="file" class="form-control" accept=".pdf,image/*">
                         </div>
                     </div>
-
-                    <div class="d-flex justify-content-end gap-2 mt-4">
-                        <button type="button" class="btn btn-light">Annuler</button>
-                        <button type="submit" class="btn btn-primary">Enregistrer le véhicule</button>
-                    </div>
                 </form>
-
-                </div>
-
-                <!-- Liste des véhicules -->
-                <div class="form-card mt-4" style="animation-delay: 0.2s;">
-                    <h2 class="page-title">Véhicules Enregistrés</h2>
-                    <p class="page-subtitle">Aperçu rapide des véhicules actuellement inscrits dans la flotte.</p>
-                    
-                    <div class="table-responsive mt-3">
-                        <table class="table table-hover align-middle mb-0">
-                            <thead class="table-light">
-                                <tr>
-                                    <th scope="col" class="border-0 rounded-start">Aperçu</th>
-                                    <th scope="col" class="border-0">Immatriculation</th>
-                                    <th scope="col" class="border-0">Marque & Modèle</th>
-                                    <th scope="col" class="border-0">Type</th>
-                                    <th scope="col" class="border-0">Statut</th>
-                                    <th scope="col" class="border-0 rounded-end">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="border-bottom-0">
-                                        <div class="profile-av bg-light text-primary" style="width: 40px; height: 30px; border-radius: 6px;"><i class="bi bi-truck"></i></div>
-                                    </td>
-                                    <td class="border-bottom-0"><span class="fw-semibold text-dark">12345 | A | 1</span></td>
-                                    <td class="border-bottom-0 text-muted">Renault Master</td>
-                                    <td class="border-bottom-0 text-muted">Fourgon</td>
-                                    <td class="border-bottom-0"><span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-2">Disponible</span></td>
-                                    <td class="border-bottom-0">
-                                        <button class="btn btn-sm btn-light text-primary border-0" data-bs-toggle="modal" data-bs-target="#editVehicleModal" title="Voir/Modifier"><i class="bi bi-pencil-square"></i></button>
-                                        <button class="btn btn-sm btn-light text-danger border-0"><i class="bi bi-trash"></i></button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="border-bottom-0">
-                                        <div class="profile-av bg-light text-primary" style="width: 40px; height: 30px; border-radius: 6px;"><i class="bi bi-car-front"></i></div>
-                                    </td>
-                                    <td class="border-bottom-0"><span class="fw-semibold text-dark">67890 | B | 6</span></td>
-                                    <td class="border-bottom-0 text-muted">Peugeot Partner</td>
-                                    <td class="border-bottom-0 text-muted">Voiture utilitaire</td>
-                                    <td class="border-bottom-0"><span class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 rounded-pill px-2">En Mission</span></td>
-                                    <td class="border-bottom-0">
-                                        <button class="btn btn-sm btn-light text-primary border-0" data-bs-toggle="modal" data-bs-target="#editVehicleModal" title="Voir/Modifier"><i class="bi bi-pencil-square"></i></button>
-                                        <button class="btn btn-sm btn-light text-danger border-0"><i class="bi bi-trash"></i></button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="border-bottom-0">
-                                        <div class="profile-av bg-light text-primary" style="width: 40px; height: 30px; border-radius: 6px;"><i class="bi bi-truck-front"></i></div>
-                                    </td>
-                                    <td class="border-bottom-0"><span class="fw-semibold text-dark">11223 | C | 9</span></td>
-                                    <td class="border-bottom-0 text-muted">Volvo FH16</td>
-                                    <td class="border-bottom-0 text-muted">Camion</td>
-                                    <td class="border-bottom-0"><span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 rounded-pill px-2">En Maintenance</span></td>
-                                    <td class="border-bottom-0">
-                                        <button class="btn btn-sm btn-light text-primary border-0" data-bs-toggle="modal" data-bs-target="#editVehicleModal" title="Voir/Modifier"><i class="bi bi-pencil-square"></i></button>
-                                        <button class="btn btn-sm btn-light text-danger border-0"><i class="bi bi-trash"></i></button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+            </div>
+            <div class="modal-footer border-top-0 pt-0 mt-3">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-primary">Enregistrer le véhicule</button>
             </div>
         </div>
     </div>
-
 </div>
 
 <!-- Modal Détails & Modification Véhicule -->
