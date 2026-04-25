@@ -8,9 +8,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(
-        name = "entreprise"
-)
+@Table(name = "entreprise")
 public class Entreprise {
     @Id
     @GeneratedValue
@@ -47,7 +45,7 @@ public class Entreprise {
     private LocalDate dateCreation;
 
     @OneToMany(
-            mappedBy = "utilisateur"
+            mappedBy = "entreprise"
     )
     @JsonManagedReference
     private List<Utilisateur> utilisateur;

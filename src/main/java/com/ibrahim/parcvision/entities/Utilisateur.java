@@ -48,13 +48,13 @@ public class Utilisateur {
     private Entreprise entreprise;
 
     @OneToOne(
-            mappedBy = "conducteur"
+            mappedBy = "utilisateur"
     )
     @JsonManagedReference
     private Conducteur conducteur;
 
     @OneToOne(
-            mappedBy = "admin"
+            mappedBy = "utilisateur"
     )
     @JsonManagedReference
     private Admin admin;

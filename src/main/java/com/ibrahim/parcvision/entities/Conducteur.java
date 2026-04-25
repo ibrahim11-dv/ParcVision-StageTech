@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+@Table(name = "conducteur")
 public class Conducteur {
     @Id
     @GeneratedValue
