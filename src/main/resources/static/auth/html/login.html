@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Sign in to Parc Vision - Fleet management platform">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Login — Parc Vision</title>
+    <link href="../../home/css/index.css" rel="stylesheet">
+    <link href="../css/auth.css" rel="stylesheet">
+</head>
+
+<body class="auth-body">
+
+    <!-- NAVBAR (unchanged) -->
+    <nav class="navbar fixed-top navbar-expand-lg bg-white">
+        <div class="container">
+            <a class="navbar-brand" href="../../home/html/index.html">
+                <img src="../../assets/logo.jpg" alt="Logo" />
+                Parc Vision
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+                aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav gap-3 ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link" href="../../home/html/index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Services</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">About Us</a>
+                        <ul class="dropdown-menu border-0 shadow-sm">
+                            <li><a class="dropdown-item" href="#">Our Story</a></li>
+                            <li><a class="dropdown-item" href="#">Team</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="#">Why Us</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Testimonials</a></li>
+                    <li class="btns-auth">
+                        <a href="login.html" class="btn btn-primary">Login</a>
+                        <a href="register.html" class="btn btn-outline-primary">Register</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="auth-main">
+        <!-- ===== LEFT PANEL : VIDEO ===== -->
+        <aside class="auth-visual-panel">
+            <video class="auth-video" autoplay loop muted playsinline>
+                <source src="../../assets/auth-vid.mp4" type="video/mp4">
+            </video>
+
+            <!-- Dark gradient overlay -->
+            <div class="auth-video-overlay"></div>
+
+            <div class="auth-panel-content">
+                <div class="auth-panel-headline">
+                    <h2>Bon retour parmi nous</h2>
+                    <p>Reprenez le contrôle de votre flotte en quelques secondes.</p>
+                </div>
+                
+                <div class="auth-panel-stats">
+                    <div class="auth-stat">
+                        <span class="auth-stat-value">+2 400</span>
+                        <span class="auth-stat-label">Véhicules gérés</span>
+                    </div>
+                    <div class="auth-stat-divider"></div>
+                    <div class="auth-stat">
+                        <span class="auth-stat-value">98%</span>
+                        <span class="auth-stat-label">Satisfaction client</span>
+                    </div>
+                    <div class="auth-stat-divider"></div>
+                    <div class="auth-stat">
+                        <span class="auth-stat-value">-35%</span>
+                        <span class="auth-stat-label">Coûts opérationnels</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ===== RIGHT PANEL : FORM ===== -->
+        <section class="auth-form-panel">
+            <div class="auth-form-wrapper">
+
+                <div class="auth-header">
+                    <h1>Connexion</h1>
+                    <p>Accédez à votre espace de gestion de flotte</p>
+                </div>
+
+                <form action="#" method="POST" id="loginForm" class="auth-form" novalidate>
+
+                    <!-- Identifier field -->
+                    <div class="auth-field-group">
+                        <label for="identifier" class="auth-label">Adresse e-mail ou code</label>
+                        <div class="auth-input-wrapper">
+                            <input type="text" class="auth-input" id="identifier" name="identifier"
+                                placeholder="nom@entreprise.com ou votre code" required autocomplete="username">
+                        </div>
+                    </div>
+
+                    <!-- Password field -->
+                    <div class="auth-field-group">
+                        <div class="auth-label-row">
+                            <label for="password" class="auth-label">Mot de passe</label>
+                            <a href="#" class="auth-link-small">Mot de passe oublié ?</a>
+                        </div>
+                        <div class="auth-input-wrapper">
+                            <input type="password" class="auth-input" id="password" name="password"
+                                placeholder="••••••••" required autocomplete="current-password">
+                            <button type="button" class="auth-eye-btn" id="togglePassword"
+                                aria-label="Toggle password visibility">
+                                <svg id="eyeIcon" width="17" height="17" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                    <circle cx="12" cy="12" r="3" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Remember me -->
+                    <div class="auth-remember">
+                        <label class="auth-checkbox-label" for="rememberMe">
+                            <input type="checkbox" id="rememberMe" name="rememberMe">
+                            <span class="auth-checkmark"></span>
+                            Se souvenir de moi
+                        </label>
+                    </div>
+
+                    <!-- Submit -->
+                    <button type="submit" class="btn-auth-submit" id="submitBtn">
+                        <span class="btn-text">Se connecter</span>
+                    </button>
+
+                </form>
+
+                <div class="auth-divider"><span>ou</span></div>
+
+                <p class="auth-switch-text">
+                    Vous n'avez pas de compte ?
+                    <a href="register.html" class="auth-switch-link">Créer un compte</a>
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/auth.js"></script>
+</body>
+
+</html>
