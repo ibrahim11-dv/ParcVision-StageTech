@@ -36,7 +36,8 @@ public class Conducteur {
 
     @OneToOne
     @JoinColumn(
-            name = "utilisateur_id"
+            name = "utilisateur_id",
+            nullable = false
     )
     @JsonBackReference
     private Utilisateur utilisateur;

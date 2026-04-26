@@ -56,7 +56,8 @@ public class Mission {
 
     @ManyToOne
     @JoinColumn(
-            name = "entreprise_id"
+            name = "entreprise_id",
+            nullable = false
     )
     @JsonBackReference
     private Entreprise entreprise;

@@ -40,7 +40,8 @@ public abstract class Intervention {
 
     @ManyToOne()
     @JoinColumn(
-            name = "vehicule_id"
+            name = "vehicule_id",
+            nullable = false
     )
     @JsonBackReference
     private Vehicule vehicule;
