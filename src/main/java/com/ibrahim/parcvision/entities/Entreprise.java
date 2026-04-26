@@ -50,5 +50,12 @@ public class Entreprise {
     @JsonManagedReference
     private List<Utilisateur> utilisateur;
 
+    @OneToMany(
+            mappedBy = "entreprise"
+    )
+    @JsonManagedReference
+    private List<Vehicule> vehicule;
+
+
 
 }
