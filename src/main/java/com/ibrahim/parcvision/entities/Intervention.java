@@ -1,5 +1,6 @@
 package com.ibrahim.parcvision.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -36,6 +37,13 @@ public abstract class Intervention {
             name = "kilometrage_au_moment"
     )
     private Long kilometrageAuMoment;
+
+    @ManyToOne()
+    @JoinColumn(
+            name = "vehicule_id"
+    )
+    @JsonBackReference
+    private Vehicule vehicule;
 
 
 
