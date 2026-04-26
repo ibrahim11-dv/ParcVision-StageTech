@@ -74,5 +74,13 @@ public class Document {
     @JsonBackReference
     private Entreprise entreprise;
 
+    @ManyToOne
+    @JoinColumn(
+            name = "dossier_archivage_id"
+    )
+    @JsonBackReference
+    private DossierArchivage dossierArchivage;
+
+
 
 }
