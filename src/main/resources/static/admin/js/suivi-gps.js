@@ -163,3 +163,83 @@ window.focusMap = function(coords) {
         });
     }
 };
+
+// ==========================================
+// Map Selection Logic for Modals
+// ==========================================
+let isSelectingMap = false;
+let mapSelectionTarget = { latId: '', lngId: '', modalId: '' };
+let currentModalInstance = null;
+
+window.startMapSelection = function(latId, lngId, modalId) {
+    isSelectingMap = true;
+    mapSelectionTarget = { latId, lngId, modalId };
+    
+    // Hide the modal using Bootstrap API
+    const modalEl = document.getElementById(modalId);
+    currentModalInstance = bootstrap.Modal.getInstance(modalEl);
+    if(currentModalInstance) {
+        currentModalInstance.hide();
+    }
+    
+    // Show banner and change map cursor
+    document.getElementById('mapSelectionBanner').style.setProperty('display', 'flex', 'important');
+    document.getElementById('map').style.cursor = 'crosshair';
+    
+    // Scroll to map
+    document.getElementById('map').scrollIntoView({behavior: 'smooth', block: 'center'});
+};
+
+window.cancelMapSelection = function() {
+    isSelectingMap = false;
+    document.getElementById('mapSelectionBanner').style.setProperty('display', 'none', 'important');
+    document.getElementById('map').style.cursor = '';
+    
+    // Re-show modal
+    if(currentModalInstance) {
+        currentModalInstance.show();
+    }
+};
+
+// Listen to map clicks globally
+document.addEventListener("DOMContentLoaded", function() {
+    // Wait slightly to ensure map is initialized
+    setTimeout(() => {
+        if(map) {
+            map.on('click', function(e) {
+                if(isSelectingMap) {
+                    // We captured a click during selection mode
+                    const lat = e.latlng.lat.toFixed(6);
+                    const lng = e.latlng.lng.toFixed(6);
+                    
+                    // Fill inputs
+                    document.getElementById(mapSelectionTarget.latId).value = lat;
+                    document.getElementById(mapSelectionTarget.lngId).value = lng;
+                    
+                    // End selection mode
+                    isSelectingMap = false;
+                    document.getElementById('mapSelectionBanner').style.setProperty('display', 'none', 'important');
+                    document.getElementById('map').style.cursor = '';
+                    
+                    // Add a temporary marker to show selected point
+                    const tempMarker = L.marker([lat, lng], {
+                        icon: L.divIcon({
+                            className: 'custom-div-icon',
+                            html: '<div style="width:16px;height:16px;background:#3b82f6;border-radius:50%;border:2px solid white;box-shadow:0 2px 5px rgba(0,0,0,0.3);"></div>',
+                            iconSize: [16, 16],
+                            iconAnchor: [8, 8]
+                        })
+                    }).addTo(map);
+                    
+                    // Remove temporary marker after 3 seconds
+                    setTimeout(() => map.removeLayer(tempMarker), 3000);
+                    
+                    // Re-show modal
+                    if(currentModalInstance) {
+                        currentModalInstance.show();
+                    }
+                }
+            });
+        }
+    }, 1000);
+});

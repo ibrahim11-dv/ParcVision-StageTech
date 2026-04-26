@@ -489,3 +489,51 @@ body.dark .leaflet-popup-content-wrapper,
 body.dark .leaflet-popup-tip {
     filter: none; /* Keep popup colors as defined by theme variables */
 }
+
+/* Fix Dark Mode pour Tables & Modals */
+body.dark .table {
+    --bs-table-bg: transparent;
+    --bs-table-color: var(--text-main);
+    --bs-table-border-color: var(--border-color);
+    --bs-table-hover-color: var(--text-main);
+    --bs-table-hover-bg: var(--gray-100);
+}
+body.dark .table-light {
+    --bs-table-bg: var(--gray-100);
+    --bs-table-color: var(--text-main);
+    --bs-table-border-color: var(--border-color);
+}
+body.dark .table-light th,
+body.dark .table-light td {
+    background-color: var(--gray-100);
+    color: var(--text-main);
+    border-color: var(--border-color);
+}
+body.dark .text-dark {
+    color: #ffffff !important;
+}
+body.dark .text-muted {
+    color: var(--gray-400) !important;
+}
+body.dark .bg-light {
+    background-color: var(--gray-100) !important;
+}
+body.dark .card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color) !important;
+}
+body.dark .modal-content {
+    background-color: var(--card-bg);
+    color: var(--text-main);
+}
+body.dark .modal-header, body.dark .modal-footer {
+    border-color: var(--border-color);
+}
+body.dark .form-control, body.dark .form-select {
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    border-color: var(--border-color);
+}
+body.dark .form-label {
+    color: var(--gray-400);
+}

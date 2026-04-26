@@ -184,13 +184,17 @@
                         </div>
                         <div class="d-flex gap-2">
                             <button class="btn btn-light"><i class="bi bi-arrow-clockwise me-1"></i> Rafraîchir</button>
-                            <button class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i> Nouvelle Mission</button>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addMissionModal"><i class="bi bi-plus-lg me-1"></i> Nouvelle Mission</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Section Carte GPS -->
-                <div class="form-card w-100 mb-4 p-0 overflow-hidden" style="max-width: 1100px;">
+                <div class="form-card w-100 mb-4 p-0 overflow-hidden position-relative" style="max-width: 1100px;">
+                    <div id="mapSelectionBanner" class="position-absolute top-0 start-50 translate-middle-x mt-3 p-2 px-4 bg-primary text-white rounded-pill shadow-lg d-flex align-items-center gap-3" style="display: none !important; z-index: 1000; font-family: 'Outfit', sans-serif; transition: all 0.3s ease;">
+                        <span><i class="bi bi-cursor-fill me-2"></i> Cliquez sur la carte pour sélectionner la position</span>
+                        <button class="btn btn-sm btn-light text-primary fw-bold rounded-pill" onclick="cancelMapSelection()">Annuler</button>
+                    </div>
                     <div id="map" class="map-container"></div>
                 </div>
 
@@ -235,7 +239,7 @@
                                     <td class="border-bottom-0"><span class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 rounded-pill px-2"><span class="pulse-dot"></span> En route</span></td>
                                     <td class="border-bottom-0">
                                         <button class="btn btn-sm btn-light text-success border-0" title="Confirmer Livraison"><i class="bi bi-check-circle"></i></button>
-                                        <button class="btn btn-sm btn-light text-primary border-0" title="Détails"><i class="bi bi-three-dots"></i></button>
+                                        <button class="btn btn-sm btn-light text-primary border-0" title="Modifier la mission" data-bs-toggle="modal" data-bs-target="#editMissionModal" onclick="event.stopPropagation();"><i class="bi bi-pencil-square"></i></button>
                                     </td>
                                 </tr>
                                 <!-- Mission 2 -->
@@ -261,7 +265,7 @@
                                     <td class="border-bottom-0"><span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-2">Livré</span></td>
                                     <td class="border-bottom-0">
                                         <button class="btn btn-sm btn-light text-muted border-0" disabled title="Déjà Livré"><i class="bi bi-check-circle-fill"></i></button>
-                                        <button class="btn btn-sm btn-light text-primary border-0" title="Détails"><i class="bi bi-three-dots"></i></button>
+                                        <button class="btn btn-sm btn-light text-primary border-0" title="Modifier la mission" data-bs-toggle="modal" data-bs-target="#editMissionModal" onclick="event.stopPropagation();"><i class="bi bi-pencil-square"></i></button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -273,6 +277,211 @@
         </div>
     </div>
 
+</div>
+
+<!-- Modal Ajouter Mission -->
+<div class="modal fade" id="addMissionModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header border-bottom-0 pb-0">
+                <div>
+                    <h5 class="modal-title fw-bold">Nouvelle Mission</h5>
+                    <p class="text-muted mb-0" style="font-size: 0.85rem;">Associer un conducteur et un véhicule à une mission.</p>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">Conducteur</label>
+                            <select class="form-select" required>
+                                <option value="" selected disabled>Choisir un conducteur...</option>
+                                <option value="1">Jean Dupont</option>
+                                <option value="2">Karim Alaoui</option>
+                                <option value="3">Said Amrani</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">Véhicule</label>
+                            <select class="form-select" required>
+                                <option value="" selected disabled>Choisir un véhicule...</option>
+                                <option value="1">Renault Master (12345 | A | 1)</option>
+                                <option value="2">Peugeot Partner (67890 | B | 6)</option>
+                                <option value="3">Dacia Dokker (77889 | B | 1)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label text-muted fw-bold">Point de départ</label>
+                            <div class="row g-2">
+                                <div class="col-12">
+                                    <input type="text" class="form-control" placeholder="Ville ou Adresse (ex: Casablanca)" required>
+                                </div>
+                                <div class="col-6">
+                                    <input type="number" id="add-lat-start" step="any" class="form-control form-control-sm text-muted" placeholder="Latitude (ex: 33.57)">
+                                </div>
+                                <div class="col-6">
+                                    <input type="number" id="add-lng-start" step="any" class="form-control form-control-sm text-muted" placeholder="Longitude (ex: -7.58)">
+                                </div>
+                                <div class="col-12 mt-1">
+                                    <button type="button" class="btn btn-sm btn-outline-primary w-100" onclick="startMapSelection('add-lat-start', 'add-lng-start', 'addMissionModal')"><i class="bi bi-geo-alt"></i> Pointer sur la carte</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted fw-bold">Destination</label>
+                            <div class="row g-2">
+                                <div class="col-12">
+                                    <input type="text" class="form-control" placeholder="Ville ou Adresse (ex: Rabat)" required>
+                                </div>
+                                <div class="col-6">
+                                    <input type="number" id="add-lat-end" step="any" class="form-control form-control-sm text-muted" placeholder="Latitude (ex: 34.02)">
+                                </div>
+                                <div class="col-6">
+                                    <input type="number" id="add-lng-end" step="any" class="form-control form-control-sm text-muted" placeholder="Longitude (ex: -6.84)">
+                                </div>
+                                <div class="col-12 mt-1">
+                                    <button type="button" class="btn btn-sm btn-outline-primary w-100" onclick="startMapSelection('add-lat-end', 'add-lng-end', 'addMissionModal')"><i class="bi bi-geo-alt"></i> Pointer sur la carte</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-12">
+                            <label class="form-label text-muted">Type de marchandise / Colis</label>
+                            <input type="text" class="form-control" placeholder="Ex: Colis Lourd (150kg), Fragile, etc." required>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">Date & Heure de départ prévues</label>
+                            <input type="datetime-local" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">Date & Heure de fin estimées</label>
+                            <input type="datetime-local" class="form-control" required>
+                        </div>
+                        
+                        <div class="col-12">
+                            <label class="form-label text-muted">Instructions Spéciales / Remarques</label>
+                            <textarea class="form-control" rows="3" placeholder="Ex: Contacter le client avant l'arrivée, attention fragile..."></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-top-0 pt-0 mt-3">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-primary">Créer la mission</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Modifier Mission -->
+<div class="modal fade" id="editMissionModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header border-bottom-0 pb-0">
+                <div>
+                    <h5 class="modal-title fw-bold">Modifier la Mission <span class="text-primary">#MSN-001</span></h5>
+                    <p class="text-muted mb-0" style="font-size: 0.85rem;">Mettre à jour les informations ou le statut de la mission.</p>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="row g-3">
+                        <div class="col-md-12 mb-2">
+                            <label class="form-label text-muted">Statut de la mission</label>
+                            <select class="form-select fw-bold border-warning text-warning" style="background-color: rgba(245, 158, 11, 0.05);">
+                                <option value="planifiee">Planifiée</option>
+                                <option value="en_route" selected>🟠 En route</option>
+                                <option value="livree">🟢 Livrée</option>
+                                <option value="annulee">🔴 Annulée</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">Conducteur</label>
+                            <select class="form-select" required>
+                                <option value="1" selected>Jean Dupont</option>
+                                <option value="2">Karim Alaoui</option>
+                                <option value="3">Said Amrani</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">Véhicule</label>
+                            <select class="form-select" required>
+                                <option value="1" selected>Renault Master (12345 | A | 1)</option>
+                                <option value="2">Peugeot Partner (67890 | B | 6)</option>
+                                <option value="3">Dacia Dokker (77889 | B | 1)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label text-muted fw-bold">Point de départ</label>
+                            <div class="row g-2">
+                                <div class="col-12">
+                                    <input type="text" class="form-control" value="Casablanca" required>
+                                </div>
+                                <div class="col-6">
+                                    <input type="number" id="edit-lat-start" step="any" class="form-control form-control-sm text-muted" value="33.5731">
+                                </div>
+                                <div class="col-6">
+                                    <input type="number" id="edit-lng-start" step="any" class="form-control form-control-sm text-muted" value="-7.5898">
+                                </div>
+                                <div class="col-12 mt-1">
+                                    <button type="button" class="btn btn-sm btn-outline-primary w-100" onclick="startMapSelection('edit-lat-start', 'edit-lng-start', 'editMissionModal')"><i class="bi bi-geo-alt"></i> Pointer sur la carte</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted fw-bold">Destination</label>
+                            <div class="row g-2">
+                                <div class="col-12">
+                                    <input type="text" class="form-control" value="Rabat" required>
+                                </div>
+                                <div class="col-6">
+                                    <input type="number" id="edit-lat-end" step="any" class="form-control form-control-sm text-muted" value="34.0208">
+                                </div>
+                                <div class="col-6">
+                                    <input type="number" id="edit-lng-end" step="any" class="form-control form-control-sm text-muted" value="-6.8416">
+                                </div>
+                                <div class="col-12 mt-1">
+                                    <button type="button" class="btn btn-sm btn-outline-primary w-100" onclick="startMapSelection('edit-lat-end', 'edit-lng-end', 'editMissionModal')"><i class="bi bi-geo-alt"></i> Pointer sur la carte</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-12">
+                            <label class="form-label text-muted">Type de marchandise / Colis</label>
+                            <input type="text" class="form-control" value="Colis Lourd (150kg)" required>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">Date & Heure de départ prévues</label>
+                            <input type="datetime-local" class="form-control" value="2026-05-01T08:00" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">Date & Heure de fin estimées</label>
+                            <input type="datetime-local" class="form-control" value="2026-05-01T12:30" required>
+                        </div>
+                        
+                        <div class="col-12">
+                            <label class="form-label text-muted">Instructions Spéciales / Remarques</label>
+                            <textarea class="form-control" rows="3">Appeler le client 30min avant d'arriver au dépôt. (Tél: 0612345678)</textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-top-0 pt-0 mt-3 d-flex justify-content-between">
+                <button type="button" class="btn btn-outline-danger border-0"><i class="bi bi-trash3 me-1"></i> Supprimer</button>
+                <div>
+                    <button type="button" class="btn btn-light me-2" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Scripts -->
