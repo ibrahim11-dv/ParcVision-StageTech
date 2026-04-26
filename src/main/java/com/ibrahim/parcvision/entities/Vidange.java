@@ -5,7 +5,7 @@ import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
 @Entity
-@DiscriminatorValue("REPARATION")
+@DiscriminatorValue("vidange")
 public class Vidange extends Intervention{
 
     @Column(
