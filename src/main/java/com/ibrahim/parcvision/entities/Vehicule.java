@@ -69,5 +69,6 @@ public class Vehicule {
     @OneToMany(
             mappedBy = "vehicule"
     )
+    @JsonManagedReference
     private List<Intervention> intervention;
 }
