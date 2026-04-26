@@ -41,7 +41,8 @@ public class Mission {
 
     @Column(
             name = "instructions_speciales",
-            nullable = false
+            nullable = false,
+            length = 500
     )
     private String instructionsSpeciales;
 
