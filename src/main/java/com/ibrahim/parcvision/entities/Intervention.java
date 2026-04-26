@@ -10,6 +10,7 @@ import java.time.LocalDate;
 @DiscriminatorColumn(name = "type_intervention")
 public abstract class Intervention {
     @Id
+    @GeneratedValue
     private Long id;
 
     @Column(

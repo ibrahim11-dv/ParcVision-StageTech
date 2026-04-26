@@ -1,10 +1,12 @@
 package com.ibrahim.parcvision.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.ibrahim.parcvision.enums.StatutMission;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 public class Mission {
@@ -75,6 +77,12 @@ public class Mission {
     )
     @JsonBackReference
     private Vehicule vehicule;
+
+    @OneToMany(
+            mappedBy = "mission"
+    )
+    @JsonManagedReference
+    private List<PointGPS> PointGPS;
 
 
 }
