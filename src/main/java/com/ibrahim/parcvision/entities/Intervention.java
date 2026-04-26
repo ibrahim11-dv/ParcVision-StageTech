@@ -1,6 +1,7 @@
 package com.ibrahim.parcvision.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -47,7 +48,11 @@ public abstract class Intervention {
     @JsonBackReference
     private Vehicule vehicule;
 
-
+    @OneToOne(
+            mappedBy = "intervention"
+    )
+    @JsonManagedReference
+    private Document document;
 
 
 }

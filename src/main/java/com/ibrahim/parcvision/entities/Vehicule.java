@@ -72,4 +72,10 @@ public class Vehicule {
     )
     @JsonManagedReference
     private List<Intervention> intervention;
+
+    @OneToOne(
+            mappedBy = "vehicule"
+    )
+    @JsonManagedReference
+    private Document document;
 }

@@ -63,7 +63,11 @@ public class Entreprise {
     private List<Mission> mission;
 
 
-
+    @OneToOne(
+            mappedBy = "entreprise"
+    )
+    @JsonManagedReference
+    private Document document;
 
 
 }

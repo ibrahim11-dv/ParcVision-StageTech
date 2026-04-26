@@ -84,5 +84,9 @@ public class Mission {
     @JsonManagedReference
     private List<PointGPS> PointGPS;
 
-
+    @OneToOne(
+            mappedBy = "mission"
+    )
+    @JsonManagedReference
+    private Document document;
 }

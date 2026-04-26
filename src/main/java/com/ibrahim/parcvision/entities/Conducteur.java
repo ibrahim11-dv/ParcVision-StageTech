@@ -48,4 +48,10 @@ public class Conducteur {
     @JsonManagedReference
     private List<Mission> mission;
 
+    @OneToOne(
+            mappedBy = "conducteur"
+    )
+    @JsonManagedReference
+    private Document document;
+
 }
