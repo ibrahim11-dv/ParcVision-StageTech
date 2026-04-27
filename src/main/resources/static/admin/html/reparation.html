@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parc Auto — Gestion des Réparations</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* Base styles from dashboard */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --primary: #1a2a6c;
+            --primary-dark: #0f1a4a;
+            --primary-light: #2d3d8f;
+            --accent: #2222b1;
+            --accent-soft: rgba(34, 34, 177, 0.08);
+            --accent-mid: rgba(34, 34, 177, 0.14);
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-400: #9ca3af;
+            --gray-600: #4b5563;
+            --gray-800: #1f2937;
+            --shadow-sm: 0 4px 12px rgba(0,0,0,0.05);
+            --shadow-md: 0 8px 24px rgba(0,0,0,0.08);
+            --shadow-lg: 0 20px 35px -10px rgba(0,0,0,0.12);
+            --sw: 272px;
+            --sw-mini: 70px;
+            --bg-body: var(--gray-50);
+            --bg-sidebar: white;
+            --text-main: var(--gray-800);
+            --border-color: var(--gray-200);
+            --card-bg: white;
+        }
+
+        body.dark {
+            --primary: #3b4fb0;
+            --primary-dark: #2a3a8a;
+            --primary-light: #4a5ebf;
+            --accent: #5c6bc0;
+            --accent-soft: rgba(92, 107, 192, 0.12);
+            --accent-mid: rgba(92, 107, 192, 0.2);
+            --gray-50: #0f1117;
+            --gray-100: #1a1d24;
+            --gray-200: #2a2e38;
+            --gray-400: #6b7280;
+            --gray-600: #9ca3af;
+            --gray-800: #e5e7eb;
+            --shadow-sm: 0 4px 12px rgba(0,0,0,0.25);
+            --shadow-md: 0 8px 24px rgba(0,0,0,0.35);
+            --shadow-lg: 0 20px 35px -10px rgba(0,0,0,0.45);
+            --bg-body: #0f1117;
+            --bg-sidebar: #141722;
+            --text-main: #f3f4f6;
+            --border-color: #2a2e38;
+            --card-bg: #1a1d24;
+        }
+
+        body {
+            font-family: 'Inter', 'Outfit', sans-serif;
+            background: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .shell { display: flex; min-height: 100vh; }
+
+        .sidebar {
+            width: var(--sw);
+            position: fixed; inset: 0 auto 0 0;
+            background: var(--bg-sidebar);
+            border-right: 1px solid var(--border-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex; flex-direction: column;
+            z-index: 200;
+            transition: width .28s cubic-bezier(.4,0,.2,1), background 0.2s ease, border-color 0.2s ease;
+            overflow: hidden;
+        }
+        
+        .main {
+            margin-left: var(--sw);
+            flex: 1; display: flex; flex-direction: column;
+            min-width: 0;
+            transition: margin-left .28s cubic-bezier(.4,0,.2,1);
+            padding: 30px;
+        }
+
+        .sidebar.mini { width: var(--sw-mini); }
+
+        .sb-brand {
+            display: flex; align-items: center; gap: 10px;
+            padding: 0 18px;
+            height: 70px;
+            border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
+            text-decoration: none;
+        }
+
+        .brand-icon {
+            width: 42px; height: 42px; flex-shrink: 0;
+            background: var(--primary);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; color: white;
+            box-shadow: 0 4px 14px rgba(26,42,108,0.3);
+            position: relative; overflow: hidden;
+        }
+
+        .brand-icon::after {
+            content: '';
+            position: absolute; top: 0; left: -40px; width: 30px; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: skewX(-15deg);
+            animation: shine 4s ease-in-out infinite;
+        }
+        @keyframes shine {
+            0%, 65%, 100% { left: -40px; opacity: 0; }
+            40% { left: 120%; opacity: 1; }
+        }
+
+        .brand-text { overflow: hidden; white-space: nowrap; transition: opacity .2s; }
+        .brand-text strong {
+            display: block;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.15rem; font-weight: 700;
+            color: var(--primary); line-height: 1.15;
+        }
+        .brand-text small {
+            font-size: 0.62rem; font-weight: 500;
+            color: var(--gray-400); text-transform: uppercase; letter-spacing: 1px;
+        }
+        .sidebar.mini .brand-text { opacity: 0; pointer-events: none; }
+
+        .sb-body {
+            flex: 1; overflow-y: auto; overflow-x: hidden;
+            padding: 14px 10px;
+        }
+        .sb-body::-webkit-scrollbar { width: 3px; }
+        .sb-body::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 3px; }
+
+        .sb-section {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.6rem; font-weight: 700;
+            letter-spacing: 1.8px; text-transform: uppercase;
+            color: var(--gray-400);
+            padding: 16px 10px 6px;
+            white-space: nowrap;
+            display: flex; align-items: center; gap: 8px;
+            transition: opacity .2s;
+        }
+        .sb-section::after { content: ''; flex: 1; height: 1px; background: var(--border-color); }
+        .sidebar.mini .sb-section { opacity: 0; pointer-events: none; }
+
+        .nav-item { margin-bottom: 2px; }
+
+        .nav-link {
+            display: flex; align-items: center; gap: 11px;
+            padding: 9px 10px;
+            border-radius: 12px;
+            color: var(--gray-600);
+            text-decoration: none;
+            font-size: 0.875rem; font-weight: 500;
+            transition: all .18s ease;
+            cursor: pointer;
+            border: none; background: none; width: 100%; text-align: left;
+            position: relative; overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .nav-link:hover { background: var(--accent-soft); color: var(--accent); }
+        .nav-link.active { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+        .nav-link.active::before {
+            content: '';
+            position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+            width: 3px; height: 22px;
+            background: var(--accent);
+            border-radius: 0 3px 3px 0;
+        }
+
+        .ni {
+            width: 34px; height: 34px; flex-shrink: 0;
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px;
+            background: var(--gray-100);
+            border: 1px solid var(--border-color);
+            transition: all .18s;
+            position: relative;
+            color: var(--gray-600);
+        }
+
+        .nav-link:hover .ni { background: var(--accent-soft); border-color: rgba(34,34,177,0.15); color: var(--accent); }
+        .nav-link.active .ni { background: var(--accent-mid); border-color: rgba(34,34,177,0.2); color: var(--accent); }
+
+        .ni .pulse {
+            position: absolute; top: -3px; right: -3px;
+            width: 8px; height: 8px; border-radius: 50%;
+            border: 1.5px solid var(--bg-sidebar);
+        }
+        .p-green { background: #10b981; box-shadow: 0 0 5px rgba(16,185,129,0.5); }
+        .p-amber { background: #f59e0b; box-shadow: 0 0 5px rgba(245,158,11,0.5); }
+        .p-red   { background: #ef4444; box-shadow: 0 0 5px rgba(239,68,68,0.5); animation: blink 1.2s ease-in-out infinite; }
+
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+        .nt { flex: 1; overflow: hidden; transition: opacity .2s; line-height: 1.2; }
+        .sidebar.mini .nt { opacity: 0; pointer-events: none; }
+        .nt-sub { display: block; font-size: 0.65rem; color: var(--gray-400); margin-top: 1px; font-weight: 400; }
+        .nav-link.active .nt-sub { color: rgba(34,34,177,0.55); }
+
+        .nb {
+            font-size: 0.62rem; font-weight: 700;
+            padding: 2px 7px; border-radius: 20px;
+            flex-shrink: 0; line-height: 1.5;
+            transition: opacity .2s;
+            font-family: 'Outfit', sans-serif;
+        }
+        .nb-blue   { background: rgba(34,34,177,0.1);  color: var(--accent); border: 1px solid rgba(34,34,177,0.18); }
+        .nb-amber  { background: rgba(245,158,11,0.1); color: #b45309;       border: 1px solid rgba(245,158,11,0.2); }
+        .nb-red    { background: rgba(239,68,68,0.1);  color: #b91c1c;       border: 1px solid rgba(239,68,68,0.2); }
+        .nb-green  { background: rgba(16, 185, 129, 0.1); color: #10b981;    border: 1px solid rgba(16, 185, 129, 0.2); }
+        .sidebar.mini .nb { opacity: 0; }
+
+        .sb-hr { height: 1px; background: var(--border-color); margin: 8px 4px; }
+
+        .sb-foot { border-top: 1px solid var(--border-color); flex-shrink: 0; }
+
+        .profile-row {
+            display: flex; align-items: center; gap: 10px;
+            padding: 12px 14px 14px;
+            cursor: pointer; position: relative;
+            transition: background .15s;
+        }
+        .profile-row:hover { background: var(--gray-100); }
+
+        .profile-av {
+            width: 38px; height: 38px; flex-shrink: 0;
+            border-radius: 11px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.82rem; font-weight: 700; color: white;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(26,42,108,0.25);
+        }
+        .profile-av::after {
+            content: '';
+            position: absolute; bottom: -1px; right: -1px;
+            width: 10px; height: 10px; border-radius: 50%;
+            background: #10b981;
+            border: 2px solid var(--bg-sidebar);
+            box-shadow: 0 0 4px rgba(16,185,129,0.4);
+        }
+
+        .profile-info { flex: 1; overflow: hidden; transition: opacity .2s; }
+        .profile-info b { display: block; font-size: 0.83rem; font-weight: 600; color: var(--text-main); white-space: nowrap; }
+        .profile-info small { font-size: 0.68rem; color: var(--gray-400); white-space: nowrap; }
+
+        .profile-more { font-size: 14px; color: var(--gray-400); transition: opacity .2s, color .15s; flex-shrink: 0; }
+        .profile-row:hover .profile-more { color: var(--accent); }
+
+        .profile-popup {
+            position: absolute; bottom: calc(100% + 6px); left: 10px; right: 10px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 6px;
+            box-shadow: var(--shadow-lg);
+            display: none; z-index: 500;
+            animation: popUp .2s cubic-bezier(.34,1.56,.64,1);
+        }
+        @keyframes popUp {
+            from { opacity:0; transform: translateY(6px) scale(.97); }
+            to   { opacity:1; transform: translateY(0) scale(1); }
+        }
+        .profile-popup.show { display: block; }
+
+        .pp-head {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 4px;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .pp-av {
+            width: 32px; height: 32px; border-radius: 9px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Outfit', sans-serif; font-size: 0.75rem; font-weight: 700; color: white;
+        }
+        .pp-head b { font-size: 0.83rem; color: var(--text-main); display: block; }
+        .pp-head small { font-size: 0.68rem; color: var(--gray-400); }
+
+        .pp-link {
+            display: flex; align-items: center; gap: 9px;
+            padding: 8px 12px; border-radius: 9px;
+            font-size: 0.83rem; font-weight: 500; color: var(--gray-600);
+            text-decoration: none; transition: all .14s;
+            cursor: pointer;
+        }
+        .pp-link:hover { background: var(--accent-soft); color: var(--accent); }
+        .pp-link i { font-size: 14px; width: 16px; text-align: center; color: var(--gray-400); }
+        .pp-link:hover i { color: var(--accent); }
+        .pp-hr { height: 1px; background: var(--border-color); margin: 4px 0; }
+        .pp-logout { color: #ef4444 !important; }
+        .pp-logout i { color: #ef4444 !important; }
+        .pp-logout:hover { background: rgba(239,68,68,0.1) !important; }
+
+        /* Reparation page specific styles */
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .page-title { font-family: 'Outfit', sans-serif; font-size: 1.8rem; font-weight: 700; color: var(--text-main); margin: 0; }
+        .page-subtitle { font-size: 0.9rem; color: var(--gray-600); margin-top: 5px; }
+
+        .btn-primary-custom {
+            background: var(--primary); color: white; border: none;
+            padding: 10px 20px; border-radius: 10px; font-weight: 500; font-size: 0.9rem;
+            display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s;
+            text-decoration: none;
+        }
+        .btn-primary-custom:hover { background: var(--primary-light); color: white; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(26,42,108,0.2); }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card {
+            background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px;
+            padding: 20px; display: flex; align-items: center; gap: 16px;
+            box-shadow: var(--shadow-sm); transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .stat-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
+        .stat-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+        .stat-info h3 { font-family: 'Outfit', sans-serif; font-size: 1.5rem; font-weight: 700; color: var(--text-main); margin: 0; line-height: 1.2; }
+        .stat-info p { font-size: 0.85rem; color: var(--gray-600); margin: 0; font-weight: 500; }
+
+        /* Status Colors */
+        .bg-red-soft { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+        .bg-amber-soft { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
+        .bg-blue-soft { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+        .bg-green-soft { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+
+        /* Table Styles */
+        .table-container { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; box-shadow: var(--shadow-sm); overflow: hidden; }
+        .table-header { padding: 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+        .table-title { font-family: 'Outfit', sans-serif; font-size: 1.2rem; font-weight: 600; color: var(--text-main); margin: 0; }
+        
+        .search-box { position: relative; width: 250px; }
+        .search-box i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--gray-400); }
+        .search-box input {
+            width: 100%; padding: 8px 12px 8px 35px; border: 1px solid var(--border-color); border-radius: 8px;
+            background: var(--bg-body); color: var(--text-main); font-size: 0.85rem; outline: none; transition: border-color 0.2s;
+        }
+        .search-box input:focus { border-color: var(--primary); }
+
+        .custom-table { width: 100%; border-collapse: collapse; }
+        .custom-table th {
+            text-align: left; padding: 15px 20px; font-family: 'Outfit', sans-serif; font-size: 0.75rem;
+            font-weight: 600; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border-color); background: rgba(0,0,0,0.01);
+        }
+        .custom-table td { padding: 15px 20px; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; color: var(--text-main); vertical-align: middle; }
+        .custom-table tbody tr { transition: background 0.2s; }
+        .custom-table tbody tr:hover { background: var(--gray-50); }
+
+        .vehicle-info { display: flex; align-items: center; gap: 12px; }
+        .vehicle-img { width: 40px; height: 40px; border-radius: 8px; background: var(--gray-100); display: flex; align-items: center; justify-content: center; font-size: 18px; color: var(--gray-600); }
+        .vehicle-details strong { display: block; font-weight: 600; color: var(--text-main); }
+        .vehicle-details small { color: var(--gray-400); font-size: 0.75rem; }
+
+        .badge-status { padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; }
+        .badge-status::before { content: ''; width: 6px; height: 6px; border-radius: 50%; }
+        
+        .status-encours { background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.2); }
+        .status-encours::before { background: #f59e0b; }
+        
+        .status-termine { background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2); }
+        .status-termine::before { background: #10b981; }
+        
+        .status-attente { background: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.2); }
+        .status-attente::before { background: #3b82f6; }
+
+        .cost { font-family: 'Outfit', sans-serif; font-weight: 600; color: var(--text-main); }
+
+        .action-btn {
+            width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border-color);
+            background: var(--card-bg); color: var(--gray-600); display: inline-flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.2s; text-decoration: none;
+        }
+        .action-btn:hover { background: var(--accent-soft); color: var(--accent); border-color: rgba(34,34,177,0.2); }
+
+        /* Modal Styles */
+        .custom-modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.4);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 1000; opacity: 0; pointer-events: none;
+            transition: opacity 0.3s ease; backdrop-filter: blur(2px);
+        }
+        .custom-modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .custom-modal {
+            background: var(--card-bg); border-radius: 16px; width: 90%; max-width: 550px;
+            box-shadow: var(--shadow-lg); transform: translateY(20px) scale(0.95);
+            transition: all 0.3s ease; display: flex; flex-direction: column; max-height: 90vh;
+        }
+        .custom-modal-overlay.active .custom-modal { transform: translateY(0) scale(1); }
+        .custom-modal-header { padding: 20px 24px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+        .custom-modal-title { font-family: 'Outfit', sans-serif; font-size: 1.25rem; font-weight: 700; color: var(--text-main); margin: 0; }
+        .custom-modal-close { background: none; border: none; font-size: 1.5rem; color: var(--gray-400); cursor: pointer; transition: color 0.2s; padding: 0; line-height: 1; }
+        .custom-modal-body { padding: 24px; overflow-y: auto; }
+        .custom-modal-footer { padding: 16px 24px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 12px; }
+        
+        .form-group { margin-bottom: 16px; }
+        .form-label { display: block; font-size: 0.85rem; font-weight: 500; color: var(--gray-600); margin-bottom: 8px; }
+        .form-control {
+            width: 100%; padding: 10px 14px; border: 1px solid var(--border-color); border-radius: 8px;
+            background: var(--bg-body); color: var(--text-main); font-size: 0.9rem; transition: border-color 0.2s;
+        }
+        .form-control:focus { border-color: var(--primary); outline: none; }
+        
+        .btn-secondary-custom {
+            background: var(--gray-100); color: var(--gray-800); border: 1px solid var(--border-color);
+            padding: 10px 20px; border-radius: 10px; font-weight: 500; font-size: 0.9rem; cursor: pointer; transition: all 0.2s;
+        }
+        .btn-secondary-custom:hover { background: var(--gray-200); }
+
+        /* View Detail row */
+        .view-detail-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed var(--border-color); }
+        .view-detail-row:last-child { border-bottom: none; }
+        .view-detail-label { color: var(--gray-600); font-size: 0.9rem; }
+        .view-detail-value { font-weight: 600; color: var(--text-main); font-size: 0.9rem; text-align: right; max-width: 65%; }
+
+        @media (max-width: 900px) {
+            .main { margin-left: 0; padding: 20px; padding-top: 70px; }
+            .sidebar { transform: translateX(-100%); width: var(--sw) !important; transition: transform .28s ease; }
+            .sidebar.open { transform: translateX(0); }
+        }
+    </style>
+</head>
+<body class="light">
+
+<div class="shell">
+
+    <!-- Sidebar (Identique aux autres pages) -->
+    <aside class="sidebar" id="sidebar">
+        <a href="dashboard.html" class="sb-brand">
+            <div class="brand-icon"><i class="bi bi-car-front-fill"></i></div>
+            <div class="brand-text">
+                <strong>Parc Auto</strong>
+                <small>Gestion de flotte</small>
+            </div>
+        </a>
+
+        <div class="sb-body">
+            <div class="sb-section">Principal</div>
+            <div class="nav-item">
+                <a href="dashboard.html" class="nav-link" data-tip="Dashboard">
+                    <span class="ni"><i class="bi bi-speedometer2"></i></span>
+                    <span class="nt">Dashboard<small class="nt-sub">Vue générale</small></span>
+                </a>
+            </div>
+
+            <div class="sb-section">Gestion</div>
+            <div class="nav-item">
+                <a href="conducteur.html" class="nav-link" data-tip="Conducteurs">
+                    <span class="ni"><i class="bi bi-person-badge"></i><span class="pulse p-green"></span></span>
+                    <span class="nt">Conducteurs<small class="nt-sub">18 actifs</small></span>
+                    <span class="nb nb-blue">18</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="vehicule.html" class="nav-link" data-tip="Véhicules">
+                    <span class="ni"><i class="bi bi-truck"></i><span class="pulse p-amber"></span></span>
+                    <span class="nt">Véhicules<small class="nt-sub">24 en flotte</small></span>
+                    <span class="nb nb-blue">24</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="suivi-gps.html" class="nav-link" data-tip="Suivi GPS">
+                    <span class="ni"><i class="bi bi-geo-alt"></i><span class="pulse p-green"></span></span>
+                    <span class="nt">Suivi GPS<small class="nt-sub">3 en déplacement</small></span>
+                    <span class="nb nb-green">LIVE</span>
+                </a>
+            </div>
+
+            <div class="sb-hr"></div>
+            <div class="sb-section">Interventions</div>
+            <div class="nav-item">
+                <a href="reparation.html" class="nav-link active" data-tip="Réparation">
+                    <span class="ni"><i class="bi bi-wrench-adjustable"></i><span class="pulse p-amber"></span></span>
+                    <span class="nt">Réparation<small class="nt-sub">5 en cours</small></span>
+                    <span class="nb nb-amber">5</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="accident.html" class="nav-link" data-tip="Accident">
+                    <span class="ni"><i class="bi bi-exclamation-triangle"></i><span class="pulse p-red"></span></span>
+                    <span class="nt">Accident<small class="nt-sub">3 ce mois</small></span>
+                    <span class="nb nb-red">3</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="depanage.html" class="nav-link" data-tip="Dépannage">
+                    <span class="ni"><i class="bi bi-cone-striped"></i><span class="pulse p-amber"></span></span>
+                    <span class="nt">Dépannage<small class="nt-sub">2 interventions</small></span>
+                    <span class="nb nb-amber">2</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="vidange.html" class="nav-link" data-tip="Vidange">
+                    <span class="ni"><i class="bi bi-droplet-half"></i><span class="pulse p-blue"></span></span>
+                    <span class="nt">Vidange<small class="nt-sub">7 planifiées</small></span>
+                    <span class="nb nb-blue">7</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="sb-foot">
+            <div class="profile-row" id="profileRow">
+                <div class="profile-av">AD</div>
+                <div class="profile-info">
+                    <b>Administrateur</b>
+                    <small>admin@parcauto.ma</small>
+                </div>
+                <i class="bi bi-three-dots-vertical profile-more"></i>
+            </div>
+        </div>
+    </aside>
+
+    <div class="main" id="main">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Gestion des Réparations</h1>
+                <p class="page-subtitle">Suivi des interventions mécaniques et carrosserie</p>
+            </div>
+            <button class="btn-primary-custom" onclick="openModal('addRepairModal')">
+                <i class="bi bi-plus-lg"></i>
+                Ajouter une Réparation
+            </button>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon bg-blue-soft"><i class="bi bi-wrench"></i></div>
+                <div class="stat-info">
+                    <h3>42</h3>
+                    <p>Total Réparations</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon bg-amber-soft"><i class="bi bi-hourglass-split"></i></div>
+                <div class="stat-info">
+                    <h3>5</h3>
+                    <p>En cours</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon bg-green-soft"><i class="bi bi-cash-stack"></i></div>
+                <div class="stat-info">
+                    <h3>12,450 <small>DH</small></h3>
+                    <p>Coût (Mois actuel)</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon bg-red-soft"><i class="bi bi-tools"></i></div>
+                <div class="stat-info">
+                    <h3>3</h3>
+                    <p>Urgences</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table Container -->
+        <div class="table-container">
+            <div class="table-header">
+                <h2 class="table-title">Historique des interventions</h2>
+                <div class="search-box">
+                    <i class="bi bi-search"></i>
+                    <input type="text" placeholder="Rechercher un véhicule...">
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Véhicule</th>
+                            <th>Date Entrée</th>
+                            <th>Garage / Prestataire</th>
+                            <th>Description</th>
+                            <th>Coût</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="vehicle-info">
+                                    <div class="vehicle-img"><i class="bi bi-truck"></i></div>
+                                    <div class="vehicle-details">
+                                        <strong>1234-A-6</strong>
+                                        <small>Renault Master</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>20 Avril 2026</td>
+                            <td>Garage Central</td>
+                            <td>Changement d'embrayage</td>
+                            <td class="cost">4,500 DH</td>
+                            <td><span class="badge-status status-encours">En cours</span></td>
+                            <td>
+                                <div class="d-flex gap-2">
+                                    <button class="action-btn" title="Voir détails" onclick="viewRepair('1234-A-6', 'Renault Master', '20 Avril 2026', 'Garage Central', 'Changement d\'embrayage', '4,500 DH', 'En cours')">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                    <button class="action-btn" title="Modifier" onclick="editRepair('1234-A-6', 'Renault Master', '2026-04-20', 'Garage Central', 'Changement d\'embrayage', '4500', 'encours')">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button class="action-btn text-danger" title="Supprimer" onclick="deleteRepair()"><i class="bi bi-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="vehicle-info">
+                                    <div class="vehicle-img"><i class="bi bi-car-front"></i></div>
+                                    <div class="vehicle-details">
+                                        <strong>5678-B-12</strong>
+                                        <small>Dacia Duster</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>15 Avril 2026</td>
+                            <td>Auto Services Plus</td>
+                            <td>Révision freins et plaquettes</td>
+                            <td class="cost">1,200 DH</td>
+                            <td><span class="badge-status status-termine">Terminé</span></td>
+                            <td>
+                                <div class="d-flex gap-2">
+                                    <button class="action-btn" title="Voir détails" onclick="viewRepair('5678-B-12', 'Dacia Duster', '15 Avril 2026', 'Auto Services Plus', 'Révision freins et plaquettes', '1,200 DH', 'Terminé')">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                    <button class="action-btn" title="Modifier" onclick="editRepair('5678-B-12', 'Dacia Duster', '2026-04-15', 'Auto Services Plus', 'Révision freins et plaquettes', '1200', 'termine')">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button class="action-btn text-danger" title="Supprimer" onclick="deleteRepair()"><i class="bi bi-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="vehicle-info">
+                                    <div class="vehicle-img"><i class="bi bi-truck"></i></div>
+                                    <div class="vehicle-details">
+                                        <strong>9012-H-33</strong>
+                                        <small>Iveco Daily</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>18 Avril 2026</td>
+                            <td>Garage Maghreb</td>
+                            <td>Réparation turbo</td>
+                            <td class="cost">8,700 DH</td>
+                            <td><span class="badge-status status-attente">En attente</span></td>
+                            <td>
+                                <div class="d-flex gap-2">
+                                    <button class="action-btn" title="Voir détails" onclick="viewRepair('9012-H-33', 'Iveco Daily', '18 Avril 2026', 'Garage Maghreb', 'Réparation turbo', '8,700 DH', 'En attente')">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                    <button class="action-btn" title="Modifier" onclick="editRepair('9012-H-33', 'Iveco Daily', '2026-04-18', 'Garage Maghreb', 'Réparation turbo', '8700', 'attente')">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button class="action-btn text-danger" title="Supprimer" onclick="deleteRepair()"><i class="bi bi-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Ajouter Réparation -->
+<div class="custom-modal-overlay" id="addRepairModal">
+    <div class="custom-modal">
+        <div class="custom-modal-header">
+            <h5 class="custom-modal-title">Nouvelle Réparation</h5>
+            <button class="custom-modal-close" onclick="closeModal('addRepairModal')">&times;</button>
+        </div>
+        <div class="custom-modal-body">
+            <form id="repairForm">
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label class="form-label">Véhicule</label>
+                        <select class="form-control">
+                            <option>Sélectionner un véhicule</option>
+                            <option>1234-A-6 (Renault Master)</option>
+                            <option>5678-B-12 (Dacia Duster)</option>
+                            <option>9012-H-33 (Iveco Daily)</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label class="form-label">Date Entrée</label>
+                        <input type="date" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Garage / Prestataire</label>
+                    <input type="text" class="form-control" placeholder="Nom du garage">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description de l'intervention</label>
+                    <textarea class="form-control" rows="3" placeholder="Ex: Changement d'embrayage..."></textarea>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label class="form-label">Coût Estimé (DH)</label>
+                        <input type="number" class="form-control" placeholder="0.00">
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label class="form-label">Statut Initial</label>
+                        <select class="form-control">
+                            <option value="encours">En cours</option>
+                            <option value="attente">En attente</option>
+                            <option value="termine">Terminé</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="custom-modal-footer">
+            <button class="btn-secondary-custom" onclick="closeModal('addRepairModal')">Annuler</button>
+            <button class="btn-primary-custom" onclick="saveRepair()">Enregistrer</button>
+        </div>
+    </div>
+</div>
+<!-- Modal Voir Réparation -->
+<div class="custom-modal-overlay" id="viewRepairModal">
+    <div class="custom-modal">
+        <div class="custom-modal-header">
+            <h5 class="custom-modal-title">Détails de la Réparation</h5>
+            <button class="custom-modal-close" onclick="closeModal('viewRepairModal')">&times;</button>
+        </div>
+        <div class="custom-modal-body">
+            <div class="view-detail-row">
+                <span class="view-detail-label">Véhicule</span>
+                <span class="view-detail-value" id="viewVehicle">Renault Master (1234-A-6)</span>
+            </div>
+            <div class="view-detail-row">
+                <span class="view-detail-label">Date Entrée</span>
+                <span class="view-detail-value" id="viewDate">20 Avril 2026</span>
+            </div>
+            <div class="view-detail-row">
+                <span class="view-detail-label">Garage / Prestataire</span>
+                <span class="view-detail-value" id="viewGarage">Garage Central</span>
+            </div>
+            <div class="view-detail-row">
+                <span class="view-detail-label">Description</span>
+                <span class="view-detail-value" id="viewDescription">Changement d'embrayage</span>
+            </div>
+            <div class="view-detail-row">
+                <span class="view-detail-label">Coût</span>
+                <span class="view-detail-value" id="viewCost">4,500 DH</span>
+            </div>
+            <div class="view-detail-row">
+                <span class="view-detail-label">Statut</span>
+                <span class="view-detail-value" id="viewStatus"><span class="badge-status status-encours">En cours</span></span>
+            </div>
+        </div>
+        <div class="custom-modal-footer">
+            <button class="btn-secondary-custom" onclick="closeModal('viewRepairModal')">Fermer</button>
+            <button class="btn-primary-custom" onclick="closeModal('viewRepairModal'); openModal('editRepairModal')">Modifier</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Modifier Réparation -->
+<div class="custom-modal-overlay" id="editRepairModal">
+    <div class="custom-modal">
+        <div class="custom-modal-header">
+            <h5 class="custom-modal-title">Modifier la Réparation</h5>
+            <button class="custom-modal-close" onclick="closeModal('editRepairModal')">&times;</button>
+        </div>
+        <div class="custom-modal-body">
+            <form id="editRepairForm">
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label class="form-label">Véhicule</label>
+                        <select class="form-control" id="editVehicle">
+                            <option>1234-A-6 (Renault Master)</option>
+                            <option>5678-B-12 (Dacia Duster)</option>
+                            <option>9012-H-33 (Iveco Daily)</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label class="form-label">Date Entrée</label>
+                        <input type="date" class="form-control" id="editDate">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Garage / Prestataire</label>
+                    <input type="text" class="form-control" id="editGarage">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description de l'intervention</label>
+                    <textarea class="form-control" rows="3" id="editDescription"></textarea>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label class="form-label">Coût Estimé (DH)</label>
+                        <input type="number" class="form-control" id="editCost">
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label class="form-label">Statut</label>
+                        <select class="form-control" id="editStatus">
+                            <option value="encours">En cours</option>
+                            <option value="attente">En attente</option>
+                            <option value="termine">Terminé</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="custom-modal-footer">
+            <button class="btn-secondary-custom" onclick="closeModal('editRepairModal')">Annuler</button>
+            <button class="btn-primary-custom" onclick="updateRepair()">Mettre à jour</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Modal functions
+    function openModal(id) {
+        document.getElementById(id).classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal(id) {
+        document.getElementById(id).classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+
+    function saveRepair() {
+        // Logique de sauvegarde fictive
+        alert('Réparation enregistrée avec succès !');
+        closeModal('addRepairModal');
+    }
+
+    function viewRepair(plate, model, date, garage, desc, cost, status) {
+        document.getElementById('viewVehicle').textContent = `${model} (${plate})`;
+        document.getElementById('viewDate').textContent = date;
+        document.getElementById('viewGarage').textContent = garage;
+        document.getElementById('viewDescription').textContent = desc;
+        document.getElementById('viewCost').textContent = cost;
+        
+        let statusClass = 'status-encours';
+        if(status === 'Terminé') statusClass = 'status-termine';
+        if(status === 'En attente') statusClass = 'status-attente';
+        
+        document.getElementById('viewStatus').innerHTML = `<span class="badge-status ${statusClass}">${status}</span>`;
+        
+        openModal('viewRepairModal');
+    }
+
+    function editRepair(plate, model, date, garage, desc, cost, status) {
+        document.getElementById('editVehicle').value = `${plate} (${model})`;
+        document.getElementById('editDate').value = date;
+        document.getElementById('editGarage').value = garage;
+        document.getElementById('editDescription').value = desc;
+        document.getElementById('editCost').value = cost;
+        document.getElementById('editStatus').value = status;
+        
+        openModal('editRepairModal');
+    }
+
+    function updateRepair() {
+        alert('Réparation mise à jour avec succès !');
+        closeModal('editRepairModal');
+    }
+
+    function deleteRepair() {
+        if(confirm('Êtes-vous sûr de vouloir supprimer cette réparation ?')) {
+            alert('Réparation supprimée !');
+        }
+    }
+
+    // Theme toggle (Shared with dashboard)
+    function initTheme() {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark');
+        }
+    }
+    initTheme();
+
+    // Close modal on overlay click
+    document.querySelectorAll('.custom-modal-overlay').forEach(overlay => {
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                closeModal(overlay.id);
+            }
+        });
+    });
+
+    // ── Embedded / iframe mode ──
+    if (window.self !== window.top || new URLSearchParams(window.location.search).get('embedded') === 'true') {
+        const sidebar = document.querySelector('.sidebar');
+        if (sidebar) sidebar.style.display = 'none';
+
+        const mainEl = document.querySelector('.main');
+        if (mainEl) {
+            mainEl.style.marginLeft = '0';
+            mainEl.style.padding = '30px';
+            mainEl.style.paddingTop = '30px';
+        }
+
+        // Sync theme from parent dashboard
+        window.addEventListener('message', function(event) {
+            if (event.data === 'theme-dark') {
+                document.body.classList.add('dark');
+            } else if (event.data === 'theme-light') {
+                document.body.classList.remove('dark');
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
