@@ -229,7 +229,68 @@
         .profile-info { flex: 1; overflow: hidden; transition: opacity .2s; }
         .profile-info b { display: block; font-size: 0.83rem; font-weight: 600; color: var(--text-main); white-space: nowrap; }
         .profile-info small { font-size: 0.68rem; color: var(--gray-400); white-space: nowrap; }
-        .profile-more { font-size: 14px; color: var(--gray-400); flex-shrink: 0; }
+        .profile-more { font-size: 14px; color: var(--gray-400); transition: opacity .2s, color .15s; flex-shrink: 0; }
+        .profile-row:hover .profile-more { color: var(--accent); }
+
+        .profile-popup {
+            position: absolute; bottom: calc(100% + 6px); left: 10px; right: 10px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 6px;
+            box-shadow: var(--shadow-lg);
+            display: none; z-index: 500;
+            animation: popUp .2s cubic-bezier(.34,1.56,.64,1);
+        }
+        @keyframes popUp {
+            from { opacity:0; transform: translateY(6px) scale(.97); }
+            to   { opacity:1; transform: translateY(0) scale(1); }
+        }
+        .profile-popup.show { display: block; }
+
+        .pp-head {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 4px;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .pp-av {
+            width: 32px; height: 32px; border-radius: 9px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Outfit', sans-serif; font-size: 0.75rem; font-weight: 700; color: white;
+        }
+        .pp-head b { font-size: 0.83rem; color: var(--text-main); display: block; }
+        .pp-head small { font-size: 0.68rem; color: var(--gray-400); }
+
+        .pp-link {
+            display: flex; align-items: center; gap: 9px;
+            padding: 8px 12px; border-radius: 9px;
+            font-size: 0.83rem; font-weight: 500; color: var(--gray-600);
+            text-decoration: none; transition: all .14s;
+            cursor: pointer;
+        }
+        .pp-link:hover { background: var(--accent-soft); color: var(--accent); }
+        .pp-link i { font-size: 14px; width: 16px; text-align: center; color: var(--gray-400); }
+        .pp-link:hover i { color: var(--accent); }
+        .pp-hr { height: 1px; background: var(--border-color); margin: 4px 0; }
+        .pp-logout { color: #ef4444 !important; }
+        .pp-logout i { color: #ef4444 !important; }
+        .pp-logout:hover { background: rgba(239,68,68,0.1) !important; }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(6px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .nav-item { animation: fadeUp .3s ease both; }
+        .nav-item:nth-child(1)  { animation-delay: .03s; }
+        .nav-item:nth-child(2)  { animation-delay: .06s; }
+        .nav-item:nth-child(3)  { animation-delay: .09s; }
+        .nav-item:nth-child(4)  { animation-delay: .12s; }
+        .nav-item:nth-child(5)  { animation-delay: .15s; }
+        .nav-item:nth-child(6)  { animation-delay: .18s; }
+        .nav-item:nth-child(7)  { animation-delay: .21s; }
+        .nav-item:nth-child(8)  { animation-delay: .24s; }
 
         /* Depanage Page Styles */
         .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
@@ -426,6 +487,26 @@
                     <small>admin@parcauto.ma</small>
                 </div>
                 <i class="bi bi-three-dots-vertical profile-more"></i>
+
+                <div class="profile-popup" id="profilePopup" onclick="event.stopPropagation()">
+                    <div class="pp-head">
+                        <div class="pp-av">AD</div>
+                        <div>
+                            <b>Administrateur</b>
+                            <small>admin@parcauto.ma</small>
+                        </div>
+                    </div>
+                    <a href="#" class="pp-link"><i class="bi bi-person-gear"></i> Mon profil</a>
+                    <a href="#" class="pp-link"><i class="bi bi-building"></i> Entreprise</a>
+                    <a href="#" class="pp-link"><i class="bi bi-gear"></i> Paramètres</a>
+                    <div class="pp-hr"></div>
+                    <div class="pp-link" id="themeToggleBtn">
+                        <i class="bi bi-moon-stars" id="themeIcon"></i>
+                        <span id="themeText">Mode sombre</span>
+                    </div>
+                    <div class="pp-hr"></div>
+                    <a href="#" class="pp-link pp-logout"><i class="bi bi-box-arrow-right"></i> Déconnexion</a>
+                </div>
             </div>
         </div>
     </aside>
@@ -665,10 +746,51 @@
         closeModal('editDepanageModal');
     }
 
-    // Theme & Embedded logic
-    function initTheme() {
-        if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+    // ── Profile popup ──
+    const profileRow = document.getElementById('profileRow');
+    const profilePopup = document.getElementById('profilePopup');
+    if (profileRow) {
+        profileRow.addEventListener('click', e => {
+            e.stopPropagation();
+            if (profilePopup) profilePopup.classList.toggle('show');
+        });
     }
+    document.addEventListener('click', () => {
+        if (profilePopup) profilePopup.classList.remove('show');
+    });
+
+    // ── Theme & Embedded logic ──
+    function updateThemeUI(isDark) {
+        const themeIcon = document.getElementById('themeIcon');
+        const themeText = document.getElementById('themeText');
+        if (!themeIcon || !themeText) return;
+        if (isDark) {
+            themeIcon.className = 'bi bi-sun';
+            themeText.textContent = 'Mode clair';
+        } else {
+            themeIcon.className = 'bi bi-moon-stars';
+            themeText.textContent = 'Mode sombre';
+        }
+    }
+
+    function initTheme() {
+        const saved = localStorage.getItem('theme');
+        const isDark = saved === 'dark';
+        document.body.classList.toggle('dark', isDark);
+        updateThemeUI(isDark);
+    }
+
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    if (themeToggleBtn) {
+        themeToggleBtn.addEventListener('click', e => {
+            e.preventDefault();
+            const isDark = document.body.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            updateThemeUI(isDark);
+            if (profilePopup) profilePopup.classList.remove('show');
+        });
+    }
+
     initTheme();
 
     if (window.self !== window.top) {
