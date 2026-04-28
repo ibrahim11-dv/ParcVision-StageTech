@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parc Auto — Archivage & Documents</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/archivage.css">
+</head>
+
+<body>
+
+    <div class="shell">
+
+        <aside class="sidebar" id="sidebar">
+
+            <a href="/admin/dashboard" class="sb-brand">
+                <div class="brand-icon"><i class="bi bi-car-front-fill"></i></div>
+                <div class="brand-text">
+                    <strong>Parc Auto</strong>
+                    <small>Gestion de flotte</small>
+                </div>
+            </a>
+
+            <div class="sb-body">
+
+                <div class="sb-section">Principal</div>
+
+                <div class="nav-item">
+                    <a href="/admin/dashboard" class="nav-link" data-tip="Dashboard">
+                        <span class="ni"><i class="bi bi-speedometer2"></i></span>
+                        <span class="nt">Dashboard<small class="nt-sub">Vue générale</small></span>
+                    </a>
+                </div>
+
+                <div class="sb-section">Gestion</div>
+
+                <div class="nav-item">
+                    <a href="/admin/conducteurs" class="nav-link" data-tip="Conducteurs">
+                        <span class="ni">
+                            <i class="bi bi-person-badge"></i>
+                            <span class="pulse p-green"></span>
+                        </span>
+                        <span class="nt">Conducteurs<small class="nt-sub">18 actifs</small></span>
+                        <span class="nb nb-blue">18</span>
+                    </a>
+                </div>
+
+                <div class="nav-item">
+                    <a href="/admin/vehicules" class="nav-link" data-tip="Véhicules">
+                        <span class="ni">
+                            <i class="bi bi-truck"></i>
+                            <span class="pulse p-amber"></span>
+                        </span>
+                        <span class="nt">Véhicules<small class="nt-sub">24 en flotte</small></span>
+                        <span class="nb nb-blue">24</span>
+                    </a>
+                </div>
+
+                <div class="nav-item">
+                    <a href="/admin/gps" class="nav-link" data-tip="Suivi GPS">
+                        <span class="ni">
+                            <i class="bi bi-geo-alt"></i>
+                            <span class="pulse p-green"></span>
+                        </span>
+                        <span class="nt">Suivi GPS<small class="nt-sub">3 en déplacement</small></span>
+                        <span class="nb nb-green"
+                            style="background:rgba(34,197,94,0.1); color:#15803d; border-color:rgba(34,197,94,0.2);">LIVE</span>
+                    </a>
+                </div>
+
+                <div class="sb-hr"></div>
+                <div class="sb-section">Interventions</div>
+
+                <div class="nav-item">
+                    <a href="/admin/reparations" class="nav-link" data-tip="Réparation">
+                        <span class="ni">
+                            <i class="bi bi-wrench-adjustable"></i>
+                            <span class="pulse p-amber"></span>
+                        </span>
+                        <span class="nt">Réparation<small class="nt-sub">5 en cours</small></span>
+                        <span class="nb nb-amber">5</span>
+                    </a>
+                </div>
+
+                <div class="nav-item">
+                    <a href="/admin/accidents" class="nav-link" data-tip="Accident">
+                        <span class="ni">
+                            <i class="bi bi-exclamation-triangle"></i>
+                            <span class="pulse p-red"></span>
+                        </span>
+                        <span class="nt">Accident<small class="nt-sub">3 ce mois</small></span>
+                        <span class="nb nb-red">3</span>
+                    </a>
+                </div>
+
+                <div class="nav-item">
+                    <a href="/admin/depannage" class="nav-link" data-tip="Dépannage">
+                        <span class="ni"><i class="bi bi-cone-striped"></i><span class="pulse p-amber"></span></span>
+                        <span class="nt">Dépannage<small class="nt-sub">2 interventions</small></span>
+                        <span class="nb nb-amber">2</span>
+                    </a>
+                </div>
+
+                <div class="nav-item">
+                    <a href="/admin/vidanges" class="nav-link" data-tip="Vidange">
+                        <span class="ni"><i class="bi bi-droplet-half"></i><span class="pulse p-blue"></span></span>
+                        <span class="nt">Vidange<small class="nt-sub">7 planifiées</small></span>
+                        <span class="nb nb-blue">7</span>
+                    </a>
+                </div>
+
+                <div class="sb-hr"></div>
+                <div class="sb-section">Données</div>
+
+                <div class="nav-item">
+                    <a href="/admin/archivage" class="nav-link active" data-tip="Archivage">
+                        <span class="ni"><i class="bi bi-archive-fill"></i></span>
+                        <span class="nt">Archivage<small class="nt-sub">Documents &amp; historique</small></span>
+                    </a>
+                </div>
+
+            </div>
+
+            <div class="sb-foot">
+                <div class="profile-row" id="profileRow">
+                    <div class="profile-av">AD</div>
+                    <div class="profile-info">
+                        <b>Administrateur</b>
+                        <small>admin@parcauto.ma</small>
+                    </div>
+                    <i class="bi bi-three-dots-vertical profile-more"></i>
+
+                    <div class="profile-popup" id="profilePopup" onclick="event.stopPropagation()">
+                        <div class="pp-head">
+                            <div class="pp-av">AD</div>
+                            <div>
+                                <b>Administrateur</b>
+                                <small>admin@parcauto.ma</small>
+                            </div>
+                        </div>
+                        <a href="#" class="pp-link"><i class="bi bi-person-gear"></i> Mon profil</a>
+                        <a href="#" class="pp-link"><i class="bi bi-building"></i> Entreprise</a>
+                        <a href="#" class="pp-link"><i class="bi bi-gear"></i> Paramètres</a>
+                        <div class="pp-hr"></div>
+                        <div class="pp-link" id="themeToggleBtn">
+                            <i class="bi bi-moon-stars" id="themeIcon"></i>
+                            <span id="themeText">Mode sombre</span>
+                        </div>
+                        <div class="pp-hr"></div>
+                        <a href="#" class="pp-link pp-logout"><i class="bi bi-box-arrow-right"></i> Déconnexion</a>
+                    </div>
+                </div>
+            </div>
+
+        </aside>
+
+        <div class="main">
+
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Gestion des Archives</h1>
+                    <p class="page-subtitle">Documents, contrats, et historique de la flotte</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn-secondary-custom" style="padding: 10px 20px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-main); font-weight: 500;" onclick="openModal('folderModal')">
+                        <i class="bi bi-folder-plus"></i> Nouveau dossier
+                    </button>
+                    <button class="btn-primary-custom" onclick="openModal('addModal')">
+                        <i class="bi bi-cloud-upload"></i> Ajouter un document
+                    </button>
+                </div>
+            </div>
+
+            <div class="explorer-layout">
+                <!-- Arborescence (Tree View) -->
+                <div class="explorer-tree">
+                    <h3 class="tree-title">Dossiers</h3>
+                    <ul class="tree-list">
+                        <li class="tree-item">
+                            <div class="tree-link active" onclick="toggleTree(this, 'root')">
+                                <i class="bi bi-folder2-open"></i>
+                                <span>Ma Flotte</span>
+                                <i class="bi bi-chevron-right tree-toggle open"></i>
+                            </div>
+                            <ul class="tree-sub show" id="root-sub">
+                                <li class="tree-item">
+                                    <div class="tree-link" onclick="toggleTree(this, 'vehicules')">
+                                        <i class="bi bi-folder"></i>
+                                        <span>Véhicules</span>
+                                        <i class="bi bi-chevron-right tree-toggle"></i>
+                                    </div>
+                                    <ul class="tree-sub" id="vehicules-sub">
+                                        <li class="tree-item"><a href="#" class="tree-link"><i class="bi bi-folder"></i> Ford Transit</a></li>
+                                        <li class="tree-item"><a href="#" class="tree-link"><i class="bi bi-folder"></i> Renault Master</a></li>
+                                    </ul>
+                                </li>
+                                <li class="tree-item">
+                                    <div class="tree-link" onclick="toggleTree(this, 'conducteurs')">
+                                        <i class="bi bi-folder"></i>
+                                        <span>Conducteurs</span>
+                                        <i class="bi bi-chevron-right tree-toggle"></i>
+                                    </div>
+                                    <ul class="tree-sub" id="conducteurs-sub">
+                                        <li class="tree-item"><a href="#" class="tree-link"><i class="bi bi-folder"></i> Karim Alami</a></li>
+                                        <li class="tree-item"><a href="#" class="tree-link"><i class="bi bi-folder"></i> Hassan Fassi</a></li>
+                                    </ul>
+                                </li>
+                                <li class="tree-item">
+                                    <a href="#" class="tree-link">
+                                        <i class="bi bi-folder"></i>
+                                        <span>Contrats & RH</span>
+                                    </a>
+                                </li>
+                                <li class="tree-item">
+                                    <a href="#" class="tree-link">
+                                        <i class="bi bi-folder"></i>
+                                        <span>Assurances</span>
+                                    </a>
+                                </li>
+                                <li class="tree-item">
+                                    <a href="#" class="tree-link">
+                                        <i class="bi bi-folder"></i>
+                                        <span>Factures</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Explorer Main Content -->
+                <div class="explorer-main">
+                    <div class="explorer-toolbar">
+                        <div class="explorer-breadcrumbs">
+                            <div class="breadcrumb-item"><a href="#"><i class="bi bi-house-door"></i></a></div>
+                            <i class="bi bi-chevron-right"></i>
+                            <div class="breadcrumb-item active">Ma Flotte</div>
+                        </div>
+                        <div class="search-box" style="width: 200px;">
+                            <i class="bi bi-search"></i>
+                            <input type="text" placeholder="Filtrer...">
+                        </div>
+                    </div>
+
+                    <div class="explorer-grid">
+                        <!-- Folders -->
+                        <div class="explorer-item">
+                            <div class="explorer-item-icon icon-folder"><i class="bi bi-folder-fill"></i></div>
+                            <div class="explorer-item-name">Véhicules</div>
+                            <div class="explorer-item-info">2 dossiers</div>
+                        </div>
+                        <div class="explorer-item">
+                            <div class="explorer-item-icon icon-folder"><i class="bi bi-folder-fill"></i></div>
+                            <div class="explorer-item-name">Conducteurs</div>
+                            <div class="explorer-item-info">2 dossiers</div>
+                        </div>
+                        <div class="explorer-item">
+                            <div class="explorer-item-icon icon-folder"><i class="bi bi-folder-fill"></i></div>
+                            <div class="explorer-item-name">Contrats & RH</div>
+                            <div class="explorer-item-info">15 fichiers</div>
+                        </div>
+                        <div class="explorer-item">
+                            <div class="explorer-item-icon icon-folder"><i class="bi bi-folder-fill"></i></div>
+                            <div class="explorer-item-name">Assurances</div>
+                            <div class="explorer-item-info">8 fichiers</div>
+                        </div>
+
+                        <!-- Files -->
+                        <div class="explorer-item" onclick="openModal('viewModal')">
+                            <div class="explorer-item-icon icon-pdf"><i class="bi bi-file-earmark-pdf-fill"></i></div>
+                            <div class="explorer-item-name">Règlement Intérieur.pdf</div>
+                            <div class="explorer-item-info">2.4 MB</div>
+                        </div>
+                        <div class="explorer-item">
+                            <div class="explorer-item-icon icon-image"><i class="bi bi-file-earmark-image-fill"></i></div>
+                            <div class="explorer-item-name">Logo_Entreprise.png</div>
+                            <div class="explorer-item-info">1.1 MB</div>
+                        </div>
+                        <div class="explorer-item">
+                            <div class="explorer-item-icon icon-word"><i class="bi bi-file-earmark-word-fill"></i></div>
+                            <div class="explorer-item-name">Note de Service.docx</div>
+                            <div class="explorer-item-info">540 KB</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Add File -->
+        <div class="custom-modal-overlay" id="addModal">
+            <div class="custom-modal" onclick="event.stopPropagation()">
+                <div class="custom-modal-header">
+                    <h3 class="custom-modal-title">Ajouter un document</h3>
+                    <button class="custom-modal-close" onclick="closeModal('addModal')"><i class="bi bi-x"></i></button>
+                </div>
+                <div class="custom-modal-body">
+                    <div class="form-group">
+                        <label class="form-label">Dossier de destination</label>
+                        <select class="form-control">
+                            <option>Ma Flotte /</option>
+                            <option>Ma Flotte / Véhicules</option>
+                            <option>Ma Flotte / Conducteurs</option>
+                            <option>Ma Flotte / Assurances</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Fichier</label>
+                        <input type="file" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description (Optionnel)</label>
+                        <textarea class="form-control" rows="3" placeholder="Notes sur le document..."></textarea>
+                    </div>
+                </div>
+                <div class="custom-modal-footer">
+                    <button class="btn-secondary-custom" style="padding: 10px 20px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--gray-100); color: var(--gray-600); font-weight: 500;" onclick="closeModal('addModal')">Annuler</button>
+                    <button class="btn-primary-custom" onclick="closeModal('addModal')">Uploader</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal New Folder -->
+        <div class="custom-modal-overlay" id="folderModal">
+            <div class="custom-modal" onclick="event.stopPropagation()">
+                <div class="custom-modal-header">
+                    <h3 class="custom-modal-title">Nouveau dossier</h3>
+                    <button class="custom-modal-close" onclick="closeModal('folderModal')"><i class="bi bi-x"></i></button>
+                </div>
+                <div class="custom-modal-body">
+                    <div class="form-group">
+                        <label class="form-label">Emplacement</label>
+                        <select class="form-control">
+                            <option>Ma Flotte /</option>
+                            <option>Ma Flotte / Véhicules</option>
+                            <option>Ma Flotte / Conducteurs</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Nom du dossier</label>
+                        <input type="text" class="form-control" placeholder="Ex: Rapports 2026">
+                    </div>
+                </div>
+                <div class="custom-modal-footer">
+                    <button class="btn-secondary-custom" style="padding: 10px 20px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--gray-100); color: var(--gray-600); font-weight: 500;" onclick="closeModal('folderModal')">Annuler</button>
+                    <button class="btn-primary-custom" onclick="closeModal('folderModal')">Créer</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal View File -->
+        <div class="custom-modal-overlay" id="viewModal">
+            <div class="custom-modal" onclick="event.stopPropagation()">
+                <div class="custom-modal-header">
+                    <h3 class="custom-modal-title">Détails du document</h3>
+                    <button class="custom-modal-close" onclick="closeModal('viewModal')"><i class="bi bi-x"></i></button>
+                </div>
+                <div class="custom-modal-body">
+                    <div class="view-detail-row">
+                        <span class="view-detail-label">Nom</span>
+                        <span class="view-detail-value">Règlement Intérieur.pdf</span>
+                    </div>
+                    <div class="view-detail-row">
+                        <span class="view-detail-label">Taille</span>
+                        <span class="view-detail-value">2.4 MB</span>
+                    </div>
+                    <div class="view-detail-row">
+                        <span class="view-detail-label">Type</span>
+                        <span class="view-detail-value">Adobe Acrobat PDF</span>
+                    </div>
+                    <div class="view-detail-row">
+                        <span class="view-detail-label">Dernière modification</span>
+                        <span class="view-detail-value">28 Avril 2026</span>
+                    </div>
+                </div>
+                <div class="custom-modal-footer">
+                    <button class="btn-secondary-custom" style="padding: 10px 20px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--gray-100); color: var(--gray-600); font-weight: 500;" onclick="closeModal('viewModal')">Fermer</button>
+                    <button class="btn-primary-custom"><i class="bi bi-download"></i> Télécharger</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="../js/archivage.js"></script>
+</body>
+
+</html>
