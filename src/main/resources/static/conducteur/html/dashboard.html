@@ -1,673 +1,556 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Parc Auto — Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-
-    <style>
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-        :root {
-            --primary: #1a2a6c;
-            --primary-dark: #0f1a4a;
-            --primary-light: #2d3d8f;
-            --accent: #2222b1;
-            --accent-soft: rgba(34, 34, 177, 0.08);
-            --accent-mid: rgba(34, 34, 177, 0.14);
-            --gray-50: #f9fafb;
-            --gray-100: #f3f4f6;
-            --gray-200: #e5e7eb;
-            --gray-400: #9ca3af;
-            --gray-600: #4b5563;
-            --gray-800: #1f2937;
-            --shadow-sm: 0 4px 12px rgba(0,0,0,0.05);
-            --shadow-md: 0 8px 24px rgba(0,0,0,0.08);
-            --shadow-lg: 0 20px 35px -10px rgba(0,0,0,0.12);
-            --sw: 272px;
-            --sw-mini: 70px;
-            --bg-body: var(--gray-50);
-            --bg-sidebar: white;
-            --text-main: var(--gray-800);
-            --border-color: var(--gray-200);
-            --card-bg: white;
-        }
-
-        body.dark {
-            --primary: #3b4fb0;
-            --primary-dark: #2a3a8a;
-            --primary-light: #4a5ebf;
-            --accent: #5c6bc0;
-            --accent-soft: rgba(92, 107, 192, 0.12);
-            --accent-mid: rgba(92, 107, 192, 0.2);
-            --gray-50: #0f1117;
-            --gray-100: #1a1d24;
-            --gray-200: #2a2e38;
-            --gray-400: #6b7280;
-            --gray-600: #9ca3af;
-            --gray-800: #e5e7eb;
-            --shadow-sm: 0 4px 12px rgba(0,0,0,0.25);
-            --shadow-md: 0 8px 24px rgba(0,0,0,0.35);
-            --shadow-lg: 0 20px 35px -10px rgba(0,0,0,0.45);
-            --bg-body: #0f1117;
-            --bg-sidebar: #141722;
-            --text-main: #f3f4f6;
-            --border-color: #2a2e38;
-            --card-bg: #1a1d24;
-        }
-
-        html, body { height: 100%; }
-
-        body {
-            font-family: 'Inter', 'Outfit', sans-serif;
-            background: var(--bg-body);
-            color: var(--text-main);
-            min-height: 100vh;
-            overflow-x: hidden;
-            transition: background 0.2s ease, color 0.2s ease;
-        }
-
-        .shell { display: flex; min-height: 100vh; }
-
-        .sidebar {
-            width: var(--sw);
-            position: fixed; inset: 0 auto 0 0;
-            background: var(--bg-sidebar);
-            border-right: 1px solid var(--border-color);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            display: flex; flex-direction: column;
-            z-index: 200;
-            transition: width .28s cubic-bezier(.4,0,.2,1), background 0.2s ease, border-color 0.2s ease;
-            overflow: hidden;
-        }
-        .sidebar.mini { width: var(--sw-mini); }
-
-        .sb-brand {
-            display: flex; align-items: center; gap: 10px;
-            padding: 0 18px;
-            height: 70px;
-            border-bottom: 1px solid var(--border-color);
-            flex-shrink: 0;
-            text-decoration: none;
-        }
-
-        .brand-icon {
-            width: 42px; height: 42px; flex-shrink: 0;
-            background: var(--primary);
-            border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 20px; color: white;
-            box-shadow: 0 4px 14px rgba(26,42,108,0.3);
-            position: relative; overflow: hidden;
-        }
-
-        .brand-icon::after {
-            content: '';
-            position: absolute; top: 0; left: -40px; width: 30px; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transform: skewX(-15deg);
-            animation: shine 4s ease-in-out infinite;
-        }
-        @keyframes shine {
-            0%, 65%, 100% { left: -40px; opacity: 0; }
-            40% { left: 120%; opacity: 1; }
-        }
-
-        .brand-text { overflow: hidden; white-space: nowrap; transition: opacity .2s; }
-        .brand-text strong {
-            display: block;
-            font-family: 'Outfit', sans-serif;
-            font-size: 1.15rem; font-weight: 700;
-            color: var(--primary); line-height: 1.15;
-        }
-        .brand-text small {
-            font-size: 0.62rem; font-weight: 500;
-            color: var(--gray-400); text-transform: uppercase; letter-spacing: 1px;
-        }
-        .sidebar.mini .brand-text { opacity: 0; pointer-events: none; }
-
-        .sb-body {
-            flex: 1; overflow-y: auto; overflow-x: hidden;
-            padding: 14px 10px;
-        }
-        .sb-body::-webkit-scrollbar { width: 3px; }
-        .sb-body::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 3px; }
-
-        .sb-section {
-            font-family: 'Outfit', sans-serif;
-            font-size: 0.6rem; font-weight: 700;
-            letter-spacing: 1.8px; text-transform: uppercase;
-            color: var(--gray-400);
-            padding: 16px 10px 6px;
-            white-space: nowrap;
-            display: flex; align-items: center; gap: 8px;
-            transition: opacity .2s;
-        }
-        .sb-section::after {
-            content: ''; flex: 1; height: 1px; background: var(--border-color);
-        }
-        .sidebar.mini .sb-section { opacity: 0; pointer-events: none; }
-
-        .nav-item { margin-bottom: 2px; }
-
-        .nav-link {
-            display: flex; align-items: center; gap: 11px;
-            padding: 9px 10px;
-            border-radius: 12px;
-            color: var(--gray-600);
-            text-decoration: none;
-            font-size: 0.875rem; font-weight: 500;
-            transition: all .18s ease;
-            cursor: pointer;
-            border: none; background: none; width: 100%; text-align: left;
-            position: relative; overflow: hidden;
-            white-space: nowrap;
-        }
-
-        .nav-link:hover {
-            background: var(--accent-soft);
-            color: var(--accent);
-        }
-
-        .nav-link.active {
-            background: var(--accent-soft);
-            color: var(--accent);
-            font-weight: 600;
-        }
-
-        .nav-link.active::before {
-            content: '';
-            position: absolute; left: 0; top: 50%; transform: translateY(-50%);
-            width: 3px; height: 22px;
-            background: var(--accent);
-            border-radius: 0 3px 3px 0;
-        }
-
-        .ni {
-            width: 34px; height: 34px; flex-shrink: 0;
-            border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 16px;
-            background: var(--gray-100);
-            border: 1px solid var(--border-color);
-            transition: all .18s;
-            position: relative;
-            color: var(--gray-600);
-        }
-
-        .nav-link:hover .ni {
-            background: var(--accent-soft);
-            border-color: rgba(34,34,177,0.15);
-            color: var(--accent);
-        }
-
-        .nav-link.active .ni {
-            background: var(--accent-mid);
-            border-color: rgba(34,34,177,0.2);
-            color: var(--accent);
-        }
-
-        .ni .pulse {
-            position: absolute; top: -3px; right: -3px;
-            width: 8px; height: 8px; border-radius: 50%;
-            border: 1.5px solid var(--bg-sidebar);
-        }
-        .p-green { background: #10b981; box-shadow: 0 0 5px rgba(16,185,129,0.5); }
-        .p-amber { background: #f59e0b; box-shadow: 0 0 5px rgba(245,158,11,0.5); }
-        .p-red   { background: #ef4444; box-shadow: 0 0 5px rgba(239,68,68,0.5); animation: blink 1.2s ease-in-out infinite; }
-
-        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
-
-        .nt { flex: 1; overflow: hidden; transition: opacity .2s; line-height: 1.2; }
-        .sidebar.mini .nt { opacity: 0; pointer-events: none; }
-        .nt-sub {
-            display: block; font-size: 0.65rem;
-            color: var(--gray-400); margin-top: 1px;
-            font-weight: 400;
-        }
-        .nav-link.active .nt-sub { color: rgba(34,34,177,0.55); }
-
-        .nb {
-            font-size: 0.62rem; font-weight: 700;
-            padding: 2px 7px; border-radius: 20px;
-            flex-shrink: 0; line-height: 1.5;
-            transition: opacity .2s;
-            font-family: 'Outfit', sans-serif;
-        }
-        .nb-blue   { background: rgba(34,34,177,0.1);  color: var(--accent); border: 1px solid rgba(34,34,177,0.18); }
-        .nb-amber  { background: rgba(245,158,11,0.1); color: #b45309;       border: 1px solid rgba(245,158,11,0.2); }
-        .nb-red    { background: rgba(239,68,68,0.1);  color: #b91c1c;       border: 1px solid rgba(239,68,68,0.2); }
-        .nb-green  { background: rgba(16,185,129,0.1); color: #065f46;       border: 1px solid rgba(16,185,129,0.2); }
-        .sidebar.mini .nb { opacity: 0; }
-
-        .sb-hr { height: 1px; background: var(--border-color); margin: 8px 4px; }
-
-        .sb-foot {
-            border-top: 1px solid var(--border-color);
-            flex-shrink: 0;
-        }
-
-        .collapse-row {
-            display: flex; justify-content: flex-end;
-            padding: 10px 12px 0;
-        }
-        .sidebar.mini .collapse-row { justify-content: center; }
-
-        .collapse-btn {
-            width: 28px; height: 28px;
-            border-radius: 8px;
-            background: var(--gray-100);
-            border: 1px solid var(--border-color);
-            color: var(--gray-400); font-size: 12px;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: all .18s;
-        }
-        .collapse-btn:hover { background: var(--accent-soft); border-color: rgba(34,34,177,0.2); color: var(--accent); }
-
-        .profile-row {
-            display: flex; align-items: center; gap: 10px;
-            padding: 12px 14px 14px;
-            cursor: pointer; position: relative;
-            transition: background .15s;
-        }
-        .profile-row:hover { background: var(--gray-100); }
-
-        .profile-av {
-            width: 38px; height: 38px; flex-shrink: 0;
-            border-radius: 11px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            display: flex; align-items: center; justify-content: center;
-            font-family: 'Outfit', sans-serif;
-            font-size: 0.82rem; font-weight: 700; color: white;
-            position: relative;
-            box-shadow: 0 4px 10px rgba(26,42,108,0.25);
-        }
-        .profile-av::after {
-            content: '';
-            position: absolute; bottom: -1px; right: -1px;
-            width: 10px; height: 10px; border-radius: 50%;
-            background: #10b981;
-            border: 2px solid var(--bg-sidebar);
-            box-shadow: 0 0 4px rgba(16,185,129,0.4);
-        }
-
-        .profile-info { flex: 1; overflow: hidden; transition: opacity .2s; }
-        .sidebar.mini .profile-info { opacity: 0; }
-        .profile-info b {
-            display: block; font-size: 0.83rem; font-weight: 600;
-            color: var(--text-main); white-space: nowrap;
-        }
-        .profile-info small { font-size: 0.68rem; color: var(--gray-400); white-space: nowrap; }
-
-        .profile-more {
-            font-size: 14px; color: var(--gray-400);
-            transition: opacity .2s, color .15s; flex-shrink: 0;
-        }
-        .sidebar.mini .profile-more { opacity: 0; }
-        .profile-row:hover .profile-more { color: var(--accent); }
-
-        .profile-popup {
-            position: absolute; bottom: calc(100% + 6px); left: 10px; right: 10px;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 6px;
-            box-shadow: var(--shadow-lg);
-            display: none; z-index: 500;
-            animation: popUp .2s cubic-bezier(.34,1.56,.64,1);
-        }
-        @keyframes popUp {
-            from { opacity:0; transform: translateY(6px) scale(.97); }
-            to   { opacity:1; transform: translateY(0) scale(1); }
-        }
-        .profile-popup.show { display: block; }
-
-        .pp-head {
-            padding: 10px 12px;
-            border-bottom: 1px solid var(--border-color);
-            margin-bottom: 4px;
-            display: flex; align-items: center; gap: 10px;
-        }
-        .pp-av {
-            width: 32px; height: 32px; border-radius: 9px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            display: flex; align-items: center; justify-content: center;
-            font-family: 'Outfit', sans-serif; font-size: 0.75rem; font-weight: 700; color: white;
-        }
-        .pp-head b { font-size: 0.83rem; color: var(--text-main); display: block; }
-        .pp-head small { font-size: 0.68rem; color: var(--gray-400); }
-
-        .pp-link {
-            display: flex; align-items: center; gap: 9px;
-            padding: 8px 12px; border-radius: 9px;
-            font-size: 0.83rem; font-weight: 500; color: var(--gray-600);
-            text-decoration: none; transition: all .14s;
-            cursor: pointer;
-        }
-        .pp-link:hover { background: var(--accent-soft); color: var(--accent); }
-        .pp-link i { font-size: 14px; width: 16px; text-align: center; color: var(--gray-400); }
-        .pp-link:hover i { color: var(--accent); }
-        .pp-hr { height: 1px; background: var(--border-color); margin: 4px 0; }
-        .pp-logout { color: #ef4444 !important; }
-        .pp-logout i { color: #ef4444 !important; }
-        .pp-logout:hover { background: rgba(239,68,68,0.1) !important; }
-
-        .sidebar.mini .nav-link { justify-content: center; }
-        .sidebar.mini .nav-link[data-tip]:hover::after {
-            content: attr(data-tip);
-            position: absolute; left: calc(100% + 12px); top: 50%; transform: translateY(-50%);
-            background: var(--primary);
-            color: white;
-            font-size: 0.78rem; font-weight: 500; font-family: 'Inter', sans-serif;
-            padding: 5px 11px; border-radius: 8px;
-            white-space: nowrap; pointer-events: none; z-index: 999;
-            box-shadow: var(--shadow-md);
-        }
-        .sidebar.mini .nav-link[data-tip]:hover::before {
-            content: '';
-            position: absolute; left: calc(100% + 6px); top: 50%; transform: translateY(-50%);
-            width: 0; height: 0;
-            border-top: 5px solid transparent;
-            border-bottom: 5px solid transparent;
-            border-right: 6px solid var(--primary);
-            z-index: 999;
-        }
-
-        .main {
-            margin-left: var(--sw);
-            flex: 1; display: flex; flex-direction: column;
-            min-width: 0;
-            transition: margin-left .28s cubic-bezier(.4,0,.2,1);
-        }
-        .main.mini { margin-left: var(--sw-mini); }
-
-        .page {
-            flex: 1; padding: 40px;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .page-hint {
-            text-align: center; color: var(--gray-400);
-            display: flex; flex-direction: column; gap: 10px; align-items: center;
-        }
-        .page-hint i { font-size: 2.2rem; color: var(--gray-200); }
-        .page-hint span { font-size: 0.9rem; }
-
-        .overlay {
-            display: none; position: fixed; inset: 0;
-            background: rgba(0,0,0,0.4); z-index: 150;
-        }
-
-        .mob-toggle {
-            display: none;
-            position: fixed; top: 16px; left: 16px; z-index: 100;
-            width: 40px; height: 40px; border-radius: 10px;
-            background: var(--bg-sidebar); border: 1px solid var(--border-color);
-            box-shadow: var(--shadow-sm);
-            align-items: center; justify-content: center;
-            font-size: 18px; color: var(--gray-600); cursor: pointer;
-            transition: all .15s;
-        }
-        .mob-toggle:hover { background: var(--accent-soft); color: var(--accent); border-color: rgba(34,34,177,0.2); }
-
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(6px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-        .nav-item { animation: fadeUp .3s ease both; }
-        .nav-item:nth-child(1)  { animation-delay: .03s; }
-        .nav-item:nth-child(2)  { animation-delay: .06s; }
-        .nav-item:nth-child(3)  { animation-delay: .09s; }
-        .nav-item:nth-child(4)  { animation-delay: .12s; }
-        .nav-item:nth-child(5)  { animation-delay: .15s; }
-        .nav-item:nth-child(6)  { animation-delay: .18s; }
-        .nav-item:nth-child(7)  { animation-delay: .21s; }
-        .nav-item:nth-child(8)  { animation-delay: .24s; }
-        .nav-item:nth-child(9)  { animation-delay: .27s; }
-        .nav-item:nth-child(10) { animation-delay: .30s; }
-
-        @media (max-width: 900px) {
-            .sidebar { transform: translateX(-100%); width: var(--sw) !important; transition: transform .28s ease; }
-            .sidebar.open { transform: translateX(0); }
-            .overlay { display: block; }
-            .main { margin-left: 0 !important; }
-            .mob-toggle { display: flex; }
-            .collapse-row { display: none; }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Conducteur — ParcVision</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
 </head>
+
 <body>
 
-<div class="shell">
+  <!-- ═════ MODAL: PLEIN ═════ -->
+  <div class="modal-overlay" id="pleinModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h5><i class="bi bi-fuel-pump-fill me-2" style="color:var(--warning)"></i>Déclarer un Plein</h5>
+        <button class="btn-icon" data-modal-close="pleinModal"><i class="bi bi-x-lg"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group"><label class="form-label">Station-service</label><input type="text"
+            class="form-control-custom" placeholder="Ex. Total — Casablanca Centre"></div>
+        <div class="row g-3">
+          <div class="col-6">
+            <div class="form-group"><label class="form-label">Litres</label><input type="number"
+                class="form-control-custom" placeholder="0.00"></div>
+          </div>
+          <div class="col-6">
+            <div class="form-group"><label class="form-label">Montant (MAD)</label><input type="number"
+                class="form-control-custom" placeholder="0.00"></div>
+          </div>
+        </div>
+        <div class="form-group"><label class="form-label">Km au compteur</label><input type="number"
+            class="form-control-custom" placeholder="Kilométrage actuel"></div>
+        <div class="form-group">
+          <label class="form-label">Reçu / Justificatif</label>
+          <div class="upload-zone" data-upload-zone>
+            <i class="bi bi-cloud-upload"
+              style="font-size:1.8rem;color:var(--accent);display:block;margin-bottom:6px"></i>
+            <div style="font-weight:600;font-size:.875rem">Cliquez ou glissez un fichier</div>
+            <small class="text-muted d-block mt-1">JPG, PNG, PDF — Max 5MB</small>
+            <input type="file" class="file-input-hidden" accept="image/*,.pdf">
+          </div>
+          <div class="upload-file-name" style="display:none"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-ghost" data-modal-close="pleinModal">Annuler</button>
+        <button class="btn-prim accent" onclick="submitPlein()"><i class="bi bi-check2-circle"></i> Confirmer</button>
+      </div>
+    </div>
+  </div>
 
+  <!-- MODAL: SUSPENSION — wider, Maladie option, pending state -->
+  <div class="modal-overlay" id="suspensionModal">
+    <div class="modal-box" style="max-width:660px">
+
+      <!-- FORM VIEW -->
+      <div id="suspensionFormView">
+        <div class="modal-header" style="padding-bottom:14px;border-bottom:1px solid var(--border-color)">
+          <div>
+            <h5 style="font-size:1.05rem"><i class="bi bi-slash-circle-fill me-2"
+                style="color:var(--danger)"></i>Demande de levee de suspension</h5>
+            <p style="font-size:.8rem;color:var(--text-muted);margin:3px 0 0">Remplissez le formulaire. L administrateur
+              examinera votre demande sous 24-48h.</p>
+          </div>
+          <button class="btn-icon" onclick="cancelSuspension()"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <div class="modal-body">
+          <div
+            style="background:var(--danger-soft);border:1px solid rgba(220,38,38,0.22);border-radius:10px;padding:14px 16px;margin-bottom:20px;display:flex;gap:12px;align-items:flex-start">
+            <i class="bi bi-exclamation-triangle-fill"
+              style="color:var(--danger);font-size:1.1rem;flex-shrink:0;margin-top:1px"></i>
+            <div>
+              <div style="font-weight:700;color:var(--danger);margin-bottom:3px">Votre compte est suspendu</div>
+              <div style="font-size:.82rem;color:var(--text-muted)">Vous ne pouvez pas accepter ni demarrer de missions.
+                Soumettez une demande pour que l administrateur leve la suspension.</div>
+            </div>
+          </div>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">Motif de la suspension *</label>
+                <select class="form-select-custom" id="suspensionMotif" style="height:44px"
+                  onchange="onMotifChange(this.value)">
+                  <option value="">-- Selectionner un motif --</option>
+                  <option value="maladie">Maladie / Certificat medical</option>
+                  <option value="accident">Accident de route</option>
+                  <option value="infraction">Infraction au code de la route</option>
+                  <option value="document_expire">Document expire</option>
+                  <option value="absence">Absence non justifiee</option>
+                  <option value="accident_nd">Accident non declare</option>
+                  <option value="autre">Autre motif</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label">Date de debut de suspension</label>
+                <input type="date" class="form-control-custom" id="suspensionDate" style="height:44px">
+              </div>
+            </div>
+          </div>
+          <div id="maladieNote"
+            style="display:none;background:rgba(2,132,199,0.08);border:1px solid rgba(2,132,199,0.2);border-radius:10px;padding:12px 14px;margin-bottom:14px">
+            <div style="font-weight:700;font-size:.83rem;color:var(--info);margin-bottom:3px"><i
+                class="bi bi-info-circle-fill me-1"></i>Arret maladie</div>
+            <div style="font-size:.79rem;color:var(--text-muted)">Joignez un <b>certificat medical</b> original et
+              indiquez la duree prevue dans votre explication.</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Explication detaillee *</label>
+            <textarea class="form-control-custom" id="suspensionDesc" rows="4"
+              placeholder="Decrivez precisement: circonstances, demarches effectuees, duree estimee si maladie..."
+              style="resize:vertical"></textarea>
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">Justificatif officiel *</label>
+            <div class="upload-zone" data-upload-zone style="padding:28px 16px">
+              <i class="bi bi-file-earmark-medical-fill"
+                style="font-size:2rem;color:var(--accent);display:block;margin-bottom:8px"></i>
+              <div style="font-weight:700;font-size:.9rem">Joindre un document officiel</div>
+              <div style="font-size:.77rem;color:var(--text-muted);margin-top:4px">Certificat medical, attestation,
+                PV... (PDF, JPG, PNG — Max 10MB)</div>
+              <input type="file" class="file-input-hidden" id="suspensionFile" accept=".pdf,image/*">
+            </div>
+            <div class="upload-file-name" id="suspensionFileName" style="display:none"></div>
+          </div>
+        </div>
+        <div class="modal-footer" style="border-top:1px solid var(--border-color);padding-top:14px">
+          <button class="btn-ghost" onclick="cancelSuspension()">Annuler</button>
+          <button class="btn-prim danger" onclick="submitSuspension()" style="padding:10px 24px">
+            <i class="bi bi-send-fill"></i> Soumettre la demande
+          </button>
+        </div>
+      </div>
+
+      <!-- PENDING CONFIRMATION VIEW -->
+      <div id="suspensionPendingView" style="display:none;padding:40px 28px;text-align:center">
+        <div
+          style="width:76px;height:76px;border-radius:50%;background:rgba(245,158,11,0.12);border:2px solid rgba(245,158,11,0.35);display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
+          <i class="bi bi-hourglass-split" style="font-size:1.9rem;color:var(--warning)"></i>
+        </div>
+        <h4 style="font-family:'Outfit',sans-serif;font-weight:800;font-size:1.2rem;margin-bottom:8px">Demande soumise
+          avec succes</h4>
+        <p style="color:var(--text-muted);font-size:.875rem;max-width:420px;margin:0 auto 22px;line-height:1.65">Votre
+          demande de levee de suspension a ete transmise a l administrateur. Vous serez notifie des qu elle sera
+          traitee.</p>
+        <div
+          style="display:inline-flex;align-items:center;gap:9px;background:rgba(245,158,11,0.10);border:1px solid rgba(245,158,11,0.3);border-radius:30px;padding:9px 22px;margin-bottom:28px">
+          <span
+            style="width:8px;height:8px;border-radius:50%;background:var(--warning);display:inline-block;animation:pulse-dot 1.5s ease infinite"></span>
+          <span style="font-weight:700;font-size:.85rem;color:var(--warning)">En attente de validation —
+            Administrateur</span>
+        </div>
+        <!-- Timeline -->
+        <div
+          style="background:var(--gray-50);border:1px solid var(--border-color);border-radius:12px;padding:20px;text-align:left;max-width:440px;margin:0 auto 26px">
+          <div
+            style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-muted);margin-bottom:16px">
+            Suivi de la demande</div>
+          <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:16px">
+            <div
+              style="width:30px;height:30px;min-width:30px;border-radius:50%;background:var(--success);display:flex;align-items:center;justify-content:center;color:white;font-size:.75rem">
+              <i class="bi bi-check-lg"></i></div>
+            <div>
+              <div style="font-weight:700;font-size:.84rem;color:var(--success)">Demande soumise</div>
+              <div style="font-size:.75rem;color:var(--text-muted)" id="pendingTimestamp">-</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:16px">
+            <div
+              style="width:30px;height:30px;min-width:30px;border-radius:50%;background:rgba(245,158,11,0.15);border:2px solid var(--warning);display:flex;align-items:center;justify-content:center;color:var(--warning);font-size:.75rem">
+              <i class="bi bi-hourglass-split"></i></div>
+            <div>
+              <div style="font-weight:700;font-size:.84rem;color:var(--warning)">En cours d examen — Administrateur
+              </div>
+              <div style="font-size:.75rem;color:var(--text-muted)">Delai habituel: 24-48h ouvrables</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:12px;opacity:.3">
+            <div
+              style="width:30px;height:30px;min-width:30px;border-radius:50%;background:var(--gray-200);display:flex;align-items:center;justify-content:center;font-size:.75rem">
+              <i class="bi bi-check2-all"></i></div>
+            <div>
+              <div style="font-weight:700;font-size:.84rem">Decision de l administrateur</div>
+              <div style="font-size:.75rem;color:var(--text-muted)">Demande acceptee ou refusee</div>
+            </div>
+          </div>
+        </div>
+        <button class="btn-ghost" onclick="closeSuspensionPending()" style="padding:10px 28px">Fermer</button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <div class="shell">
+    <!-- ═════════ SIDEBAR ═════════ -->
     <aside class="sidebar" id="sidebar">
+      <a href="dashboard.html" class="sb-brand">
+        <div class="brand-icon"><i class="bi bi-car-front-fill"></i></div>
+        <div class="brand-text"><strong>ParcVision</strong><small>Gestion de flotte</small></div>
+      </a>
+      <div class="sb-body">
+        <div class="sb-section">Principal</div>
+        <div class="nav-item"><a href="dashboard.html" class="nav-link active"><span class="ni"><i
+                class="bi bi-grid-fill"></i></span><span class="nt">Tableau de bord<small class="nt-sub">Vue
+                générale</small></span></a></div>
 
-        <a href="#" class="sb-brand">
-            <div class="brand-icon"><i class="bi bi-car-front-fill"></i></div>
-            <div class="brand-text">
-                <strong>Parc Auto</strong>
-                <small>Gestion de flotte</small>
-            </div>
-        </a>
+        <div class="sb-section">Mes activités</div>
+        <div class="nav-item"><a href="mission.html" class="nav-link"><span class="ni"><i
+                class="bi bi-signpost-2-fill"></i></span><span class="nt">Mes Missions<small class="nt-sub">1 active · 2
+                nouvelles</small></span><span class="nb">2</span></a></div>
+        <div class="nav-item"><a href="historique.html" class="nav-link"><span class="ni"><i
+                class="bi bi-clock-history"></i></span><span class="nt">Historique<small class="nt-sub">42
+                missions</small></span></a></div>
 
-        <div class="sb-body">
+        <div class="sb-section">Opérations</div>
+        <div class="nav-item"><a href="incident.html" class="nav-link"><span class="ni"><i
+                class="bi bi-exclamation-octagon-fill"></i></span><span class="nt">Signaler Incident<small
+                class="nt-sub">Panne ou accident</small></span></a></div>
+        <div class="nav-item"><a href="documents.html" class="nav-link"><span class="ni"><i
+                class="bi bi-file-earmark-text-fill"></i></span><span class="nt">Mes Documents<small
+                class="nt-sub">Permis · Contrat</small></span></a></div>
 
-            <div class="sb-section">Principal</div>
 
-            <div class="nav-item">
-                <a href="#" class="nav-link active"
-                   data-tip="Dashboard" data-page="Dashboard">
-                    <span class="ni"><i class="bi bi-speedometer2"></i></span>
-                    <span class="nt">Dashboard<small class="nt-sub">Vue générale</small></span>
-                </a>
-            </div>
 
-            <div class="sb-section">Gestion</div>
-
-            <div class="nav-item">
-                <a href="#" class="nav-link"
-                   data-tip="Conducteurs" data-page="Conducteurs">
-        <span class="ni">
-          <i class="bi bi-person-badge"></i>
-          <span class="pulse p-green"></span>
-        </span>
-                    <span class="nt">Conducteurs<small class="nt-sub">18 actifs</small></span>
-                    <span class="nb nb-blue">18</span>
-                </a>
-            </div>
-
-            <div class="nav-item">
-                <a href="#" class="nav-link"
-                   data-tip="Véhicules" data-page="Véhicules">
-        <span class="ni">
-          <i class="bi bi-truck"></i>
-          <span class="pulse p-amber"></span>
-        </span>
-                    <span class="nt">Véhicules<small class="nt-sub">24 en flotte</small></span>
-                    <span class="nb nb-blue">24</span>
-                </a>
-            </div>
-
-            <div class="nav-item">
-                <a href="#" class="nav-link"
-                   data-tip="Suivi GPS" data-page="Suivi GPS">
-        <span class="ni">
-          <i class="bi bi-geo-alt"></i>
-          <span class="pulse p-green"></span>
-        </span>
-                    <span class="nt">Suivi GPS<small class="nt-sub">3 en déplacement</small></span>
-                    <span class="nb nb-green" style="background:rgba(34,197,94,0.1); color:#15803d; border-color:rgba(34,197,94,0.2);">LIVE</span>
-                </a>
-            </div>
-
-            <div class="sb-hr"></div>
-            <div class="sb-section">Interventions</div>
-
-            <div class="nav-item">
-                <a href="#" class="nav-link"
-                   data-tip="Réparation" data-page="Réparation">
-        <span class="ni">
-          <i class="bi bi-wrench-adjustable"></i>
-          <span class="pulse p-amber"></span>
-        </span>
-                    <span class="nt">Réparation<small class="nt-sub">5 en cours</small></span>
-                    <span class="nb nb-amber">5</span>
-                </a>
-            </div>
-
-            <div class="nav-item">
-                <a href="#" class="nav-link"
-                   data-tip="Accident" data-page="Accident">
-        <span class="ni">
-          <i class="bi bi-exclamation-triangle"></i>
-          <span class="pulse p-red"></span>
-        </span>
-                    <span class="nt">Accident<small class="nt-sub">3 ce mois</small></span>
-                    <span class="nb nb-red">3</span>
-                </a>
-            </div>
-
-            <div class="nav-item">
-                <a href="#" class="nav-link"
-                   data-tip="Dépannage" data-page="Dépannage">
-                    <span class="ni"><i class="bi bi-cone-striped"></i></span>
-                    <span class="nt">Dépannage<small class="nt-sub">Interventions terrain</small></span>
-                </a>
-            </div>
-
-            <div class="nav-item">
-                <a href="#" class="nav-link"
-                   data-tip="Vidange" data-page="Vidange">
-                    <span class="ni"><i class="bi bi-droplet-half"></i></span>
-                    <span class="nt">Vidange<small class="nt-sub">7 planifiées</small></span>
-                    <span class="nb nb-blue">7</span>
-                </a>
-            </div>
-
-            <div class="sb-hr"></div>
-            <div class="sb-section">Données</div>
-
-            <div class="nav-item">
-                <a href="#" class="nav-link"
-                   data-tip="Archivage" data-page="Archivage">
-                    <span class="ni"><i class="bi bi-archive"></i></span>
-                    <span class="nt">Archivage<small class="nt-sub">Documents & historique</small></span>
-                </a>
-            </div>
-
+      </div>
+      <div class="sb-foot">
+        <div class="profile-row" id="profileRow">
+          <div class="profile-av">JD</div>
+          <div class="profile-info"><b>Jean Dupont</b><small>admin@parcvision.ma</small></div>
+          <i class="bi bi-three-dots-vertical profile-more"></i>
+          <div class="profile-popup" id="profilePopup">
+            <div class="pp-head">Mon compte</div>
+            <a href="profil.html" class="pp-link"><i class="bi bi-person-circle"></i> Mon Profil</a>
+            <a href="documents.html" class="pp-link"><i class="bi bi-file-earmark-text"></i> Mes Documents</a>
+            <div class="pp-link" id="themeToggleBtn"><i data-theme-icon class="bi bi-moon-stars-fill"></i><span
+                data-theme-text>Mode sombre</span></div>
+            <hr style="margin:6px 0;border-color:var(--border-color)">
+            <a href="#" class="pp-link" style="color:var(--danger)"><i class="bi bi-box-arrow-right"></i>
+              Déconnexion</a>
+          </div>
         </div>
-
-        <div class="sb-foot">
-            <div class="profile-row" id="profileRow">
-                <div class="profile-av">AD</div>
-                <div class="profile-info">
-                    <b>Administrateur</b>
-                    <small>admin@parcauto.ma</small>
-                </div>
-                <i class="bi bi-three-dots-vertical profile-more"></i>
-
-                <div class="profile-popup" id="profilePopup" onclick="event.stopPropagation()">
-                    <div class="pp-head">
-                        <div class="pp-av">AD</div>
-                        <div>
-                            <b>Administrateur</b>
-                            <small>admin@parcauto.ma</small>
-                        </div>
-                    </div>
-                    <a href="#" class="pp-link"><i class="bi bi-person-gear"></i> Mon profil</a>
-                    <a href="#" class="pp-link"><i class="bi bi-building"></i> Entreprise</a>
-                    <a href="#" class="pp-link"><i class="bi bi-gear"></i> Paramètres</a>
-                    <div class="pp-hr"></div>
-                    <div class="pp-link" id="themeToggleBtn">
-                        <i class="bi bi-moon-stars" id="themeIcon"></i>
-                        <span id="themeText">Mode sombre</span>
-                    </div>
-                    <div class="pp-hr"></div>
-                    <a href="#" class="pp-link pp-logout"><i class="bi bi-box-arrow-right"></i> Déconnexion</a>
-                </div>
-            </div>
-        </div>
-
+      </div>
     </aside>
 
-    <div class="overlay" id="overlay" style="display:none;" onclick="closeMobile()"></div>
+    <div class="overlay" id="overlay"></div>
+    <button class="mob-toggle" id="mobToggle"><i class="bi bi-list"></i></button>
 
-    <button class="mob-toggle" onclick="openMobile()">
-        <i class="bi bi-list"></i>
-    </button>
-
-    <div class="main" id="main">
-        <div class="page">
-            <div class="page-hint">
-                <i class="bi bi-layout-sidebar-inset"></i>
-                <span>Sélectionne une section</span>
-            </div>
+    <main class="main">
+      <header class="top-bar">
+        <div class="topbar-left">
+          <button id="mobToggleInner" class="btn-icon d-lg-none me-2"><i class="bi bi-list"></i></button>
+          <span id="statusBadge" class="badge-status status-en-mission" title="Cliquer pour changer">En mission</span>
+          <span class="text-muted d-none d-md-inline" style="font-size:.75rem">· cliquez pour changer</span>
         </div>
-    </div>
+        <div class="topbar-right">
+          <div class="clock-pill d-none d-md-flex"><i class="bi bi-clock" style="color:var(--accent)"></i><span
+              data-clock>--:--</span></div>
+          <a href="notifications.html" style="text-decoration:none"><button class="notif-btn"><i
+                class="bi bi-bell-fill"></i><span class="notif-badge">2</span></button></a>
+        </div>
+      </header>
 
-</div>
+      <div class="content">
 
-<script>
-    // Profile popup
-    document.getElementById('profileRow').addEventListener('click', e => {
-        e.stopPropagation();
-        document.getElementById('profilePopup').classList.toggle('show');
-    });
-    document.addEventListener('click', () => {
-        document.getElementById('profilePopup').classList.remove('show');
-    });
+        <!-- PAGE HEADER -->
+        <div class="page-header">
+          <div class="page-header-title">
+            <h2>Tableau de <span class="text-accent">bord</span></h2>
+            <p>Vue d'ensemble de votre activité · Dimanche, 20 Avril 2025</p>
+          </div>
+          <div class="page-header-actions">
+            <a href="incident.html"><button class="btn-ghost"><i class="bi bi-exclamation-triangle"></i>
+                Signalement</button></a>
+            <a href="mission.html"><button class="btn-prim accent"><i class="bi bi-plus-lg"></i> Mes
+                Missions</button></a>
+          </div>
+        </div>
 
-    // Theme toggle functionality
-    function initTheme() {
-        const savedTheme = localStorage.getItem('theme');
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        <!-- KPI STRIP -->
+        <div class="row g-3 mb-4">
+          <div class="col-6 col-md-3">
+            <div class="stat-card">
+              <div class="stat-icon blue"><i class="bi bi-speedometer2"></i></div>
+              <div class="stat-body">
+                <div class="stat-val">1 248</div>
+                <div class="stat-label">KM ce mois</div>
+                <div class="stat-delta up"><i class="bi bi-arrow-up-short"></i>+12%</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="stat-card">
+              <div class="stat-icon green"><i class="bi bi-check-circle-fill"></i></div>
+              <div class="stat-body">
+                <div class="stat-val">42</div>
+                <div class="stat-label">Missions totales</div>
+                <div class="stat-delta up"><i class="bi bi-arrow-up-short"></i>3 ce mois</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="stat-card">
+              <div class="stat-icon orange"><i class="bi bi-fuel-pump-fill"></i></div>
+              <div class="stat-body">
+                <div class="stat-val">6.4 L</div>
+                <div class="stat-label">Consommation / 100</div>
+                <div class="stat-delta up"><i class="bi bi-leaf-fill"></i> Éco-conduite</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="stat-card">
+              <div class="stat-icon info"><i class="bi bi-star-fill"></i></div>
+              <div class="stat-body">
+                <div class="stat-val">4.9 / 5</div>
+                <div class="stat-label">Note sécurité</div>
+                <div class="stat-delta up"><i class="bi bi-trophy-fill"></i> Top conducteur</div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-        if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
-            document.body.classList.add('dark');
-            updateThemeUI(true);
-        } else {
-            document.body.classList.remove('dark');
-            updateThemeUI(false);
-        }
-    }
+        <!-- MAIN GRID -->
+        <div class="row g-4">
 
-    function updateThemeUI(isDark) {
-        const themeIcon = document.getElementById('themeIcon');
-        const themeText = document.getElementById('themeText');
-        if (isDark) {
-            themeIcon.className = 'bi bi-sun';
-            themeText.textContent = 'Mode clair';
-        } else {
-            themeIcon.className = 'bi bi-moon-stars';
-            themeText.textContent = 'Mode sombre';
-        }
-    }
+          <!-- MISSION ACTIVE -->
+          <div class="col-xl-8">
+            <div class="mission-active-card" id="mainMissionCard" style="padding:24px">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+                <div>
+                  <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:1.1rem">Mission en cours</div>
+                  <div style="font-size:.78rem;opacity:.4;margin-top:2px">ID: #MS-8542 · 20 Avril 2025</div>
+                </div>
+                <span
+                  style="background:rgba(16,185,129,0.2);color:#6ee7b7;font-size:.7rem;font-weight:700;padding:5px 14px;border-radius:20px;letter-spacing:.5px">●
+                  EN ROUTE</span>
+              </div>
+              <div class="row g-4">
+                <div class="col-lg-5">
+                  <!-- Route -->
+                  <div class="route-step">
+                    <div
+                      style="font-size:.65rem;font-weight:700;letter-spacing:1px;opacity:.35;text-transform:uppercase;margin-bottom:5px">
+                      Départ · 08:30</div>
+                    <div style="font-weight:800;font-size:.95rem">Plateforme Logistique Casa</div>
+                    <div style="font-size:.75rem;opacity:.35;margin-top:2px">Terminal 3, Port de Casablanca</div>
+                  </div>
+                  <div class="route-step dest">
+                    <div
+                      style="font-size:.65rem;font-weight:700;letter-spacing:1px;opacity:.35;text-transform:uppercase;margin-bottom:5px">
+                      Destination · Est. 10:45</div>
+                    <div style="font-weight:800;font-size:.95rem">Zone Industrielle Rabat Salé</div>
+                    <div style="font-size:.75rem;opacity:.35;margin-top:2px">Entrepôt Logistique, Bloc B</div>
+                  </div>
+                  <div style="margin-top:4px">
+                    <div
+                      style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:.77rem;opacity:.6">
+                      <span>Avancement</span><span style="color:#60a5fa;font-weight:800;opacity:1">65%</span>
+                    </div>
+                    <div class="progress-custom">
+                      <div class="progress-bar-custom" style="width:65%"></div>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;margin-top:7px;font-size:.72rem;opacity:.35">
+                      <span><i class="bi bi-signpost-2 me-1"></i>32 km restants</span>
+                      <span><i class="bi bi-clock me-1"></i>~25 min</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-7">
+                  <div class="row g-2 mb-3">
+                    <div class="col-4">
+                      <div style="background:rgba(255,255,255,0.06);border-radius:10px;padding:10px;text-align:center">
+                        <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:1.15rem"
+                          id="missionTimer">01:45:22</div>
+                        <div style="font-size:.6rem;opacity:.35;text-transform:uppercase;margin-top:3px">Durée</div>
+                      </div>
+                    </div>
+                    <div class="col-4">
+                      <div style="background:rgba(255,255,255,0.06);border-radius:10px;padding:10px;text-align:center">
+                        <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:1.15rem">87</div>
+                        <div style="font-size:.6rem;opacity:.35;text-transform:uppercase;margin-top:3px">km/h</div>
+                      </div>
+                    </div>
+                    <div class="col-4">
+                      <div style="background:rgba(255,255,255,0.06);border-radius:10px;padding:10px;text-align:center">
+                        <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:1.15rem">238</div>
+                        <div style="font-size:.6rem;opacity:.35;text-transform:uppercase;margin-top:3px">km total</div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- live GPS placeholder -->
+                  <div
+                    style="background:rgba(255,255,255,0.04);border:1px dashed rgba(255,255,255,0.12);border-radius:12px;height:90px;display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:14px">
+                    <i class="bi bi-geo-fill" style="font-size:1.5rem;color:#60a5fa"></i>
+                    <div>
+                      <div style="font-weight:700;font-size:.82rem">Suivi GPS actif</div>
+                      <div style="font-size:.72rem;opacity:.35">Signal en temps réel — Mission #MS-8542</div>
+                    </div>
+                  </div>
+                  <div style="display:flex;gap:8px">
+                    <button id="btnEndMission" class="btn-prim success"
+                      style="flex:1;justify-content:center;padding:10px">
+                      <i class="bi bi-check2-all"></i> Terminer la mission
+                    </button>
+                    <a href="incident.html"><button class="btn-icon"
+                        style="color:#f87171;border-color:rgba(220,38,38,0.3);background:rgba(220,38,38,0.08)"
+                        title="Signaler un problème">
+                        <i class="bi bi-shield-exclamation"></i>
+                      </button></a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
-    function toggleTheme() {
-        const isDark = document.body.classList.toggle('dark');
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        updateThemeUI(isDark);
-    }
+          <!-- RIGHT -->
+          <div class="col-xl-4">
+            <div class="row g-4">
 
-    document.getElementById('themeToggleBtn').addEventListener('click', (e) => {
-        e.preventDefault();
-        toggleTheme();
-        document.getElementById('profilePopup').classList.remove('show');
-    });
+              <!-- VEHICLE -->
+              <div class="col-12">
+                <div class="card">
+                  <div class="section-header" style="margin-bottom:14px">
+                    <h5 style="font-size:.9rem"><i class="bi bi-truck me-1" style="color:var(--accent)"></i> Mon
+                      Véhicule</h5>
+                    <a href="documents.html" class="btn-ghost"
+                      style="padding:5px 12px;font-size:.78rem;text-decoration:none">Documents</a>
+                  </div>
+                  <div class="vehicle-img-wrap">
+                    <img src="../img/berlingo.png" alt="Citroën Berlingo"
+                      onerror="this.parentElement.innerHTML='<div style=\'text-align:center;padding:20px;color:var(--text-muted)\'><i class=\'bi bi-truck\' style=\'font-size:2.5rem;display:block;margin-bottom:6px\'></i>Citroën Berlingo 2021</div>'">
+                  </div>
+                  <div class="vehicle-plate">
+                    <h3>2458 · A · 7</h3>
+                    <span>Citroën Berlingo Van · 2021</span>
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:0">
+                    <div
+                      style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-color)">
+                      <span style="font-size:.82rem;color:var(--text-muted)"><i class="bi bi-droplet-fill me-1"
+                          style="color:var(--info)"></i>Carburant</span>
+                      <div style="display:flex;align-items:center;gap:8px">
+                        <div style="width:56px;height:5px;background:var(--gray-200);border-radius:3px;overflow:hidden">
+                          <div style="width:85%;height:100%;background:var(--success);border-radius:3px"></div>
+                        </div>
+                        <span style="font-weight:700;font-size:.82rem;color:var(--success)">85%</span>
+                      </div>
+                    </div>
+                    <div
+                      style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-color)">
+                      <span style="font-size:.82rem;color:var(--text-muted)"><i class="bi bi-wrench me-1"
+                          style="color:var(--warning)"></i>Entretien dans</span>
+                      <span style="font-weight:700;font-size:.82rem">1 240 km</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0">
+                      <span style="font-size:.82rem;color:var(--text-muted)"><i class="bi bi-circle-fill me-1"
+                          style="color:var(--success);font-size:.5rem"></i>État général</span>
+                      <span style="font-weight:700;font-size:.82rem;color:var(--success)">Bon état</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-    initTheme();
+              <!-- QUICK ACTIONS -->
+              <div class="col-12">
+                <div class="card">
+                  <div class="section-header" style="margin-bottom:14px">
+                    <h5 style="font-size:.9rem"><i class="bi bi-lightning-fill me-1" style="color:var(--accent)"></i>
+                      Actions rapides</h5>
+                  </div>
+                  <div class="quick-actions-grid">
+                    <button class="action-btn" id="actionScanner"><i class="bi bi-camera-fill"
+                        style="color:var(--accent)"></i>Scanner</button>
+                    <button class="action-btn" id="actionGPS"><i class="bi bi-geo-alt-fill"
+                        style="color:var(--success)"></i>GPS</button>
+                    <button class="action-btn" id="actionPlein"><i class="bi bi-fuel-pump-fill"
+                        style="color:var(--warning)"></i>Plein</button>
+                    <button class="action-btn danger" id="actionSOS"><i class="bi bi-telephone-fill"
+                        style="color:var(--danger)"></i>SOS</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-    // Mobile sidebar functions (keeping original behavior)
-    window.openMobile = function() {
-        document.getElementById('sidebar').classList.add('open');
-        document.getElementById('overlay').style.display = 'block';
-    };
-    window.closeMobile = function() {
-        document.getElementById('sidebar').classList.remove('open');
-        document.getElementById('overlay').style.display = 'none';
-    };
-</script>
+        <!-- NOTIFICATIONS STRIP -->
+        <div class="row g-4 mt-0">
+          <div class="col-12">
+            <div class="card">
+              <div class="section-header">
+                <h5 style="font-size:.9rem"><i class="bi bi-bell-fill me-1" style="color:var(--accent)"></i>
+                  Notifications récentes</h5>
+                <a href="notifications.html" class="btn-ghost"
+                  style="padding:5px 12px;font-size:.78rem;text-decoration:none">Tout voir <i
+                    class="bi bi-chevron-right ms-1"></i></a>
+              </div>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <div
+                    style="display:flex;gap:12px;padding:14px;border-radius:10px;border:1px solid var(--border-color);transition:var(--transition);cursor:pointer"
+                    class="card-hover">
+                    <div
+                      style="width:40px;height:40px;min-width:40px;background:var(--warning-soft);color:var(--warning);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem">
+                      <i class="bi bi-file-earmark-person-fill"></i></div>
+                    <div>
+                      <div style="font-weight:700;font-size:.855rem;margin-bottom:2px">Permis à renouveler</div>
+                      <div style="font-size:.78rem;color:var(--text-muted)">Expire dans <b>15 jours</b></div><a
+                        href="documents.html"
+                        style="font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none">Voir documents
+                        →</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div
+                    style="display:flex;gap:12px;padding:14px;border-radius:10px;border:1px solid var(--border-color);transition:var(--transition);cursor:pointer"
+                    class="card-hover">
+                    <div
+                      style="width:40px;height:40px;min-width:40px;background:var(--success-soft);color:var(--success);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem">
+                      <i class="bi bi-check-circle-fill"></i></div>
+                    <div>
+                      <div style="font-weight:700;font-size:.855rem;margin-bottom:2px">Mission #MS-1042 validée</div>
+                      <div style="font-size:.78rem;color:var(--text-muted)">Le responsable a confirmé la livraison</div>
+                      <a href="historique.html"
+                        style="font-size:.75rem;color:var(--accent);font-weight:600;text-decoration:none">Voir
+                        historique →</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /content -->
+    </main>
+  </div><!-- /shell -->
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/global.js"></script>
+  <script src="../js/dashboard.js"></script>
+
 </body>
+
 </html>

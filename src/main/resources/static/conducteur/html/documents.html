@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mes Documents — Espace Conducteur · ParcVision</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/documents.css">
+</head>
+
+<body>
+
+  <!-- MODAL: Upload Document — REAL FILE UPLOAD -->
+  <div class="modal-overlay" id="uploadDocModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h5 class="font-outfit fw-800"><i class="bi bi-cloud-upload-fill text-accent me-2"></i>Ajouter un document</h5>
+        <button class="btn-icon" data-modal-close="uploadDocModal"><i class="bi bi-x-lg"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Type de document *</label>
+          <select class="form-select-custom" id="docType" required>
+            <option value="">Sélectionner...</option>
+            <option>Permis de conduire</option>
+            <option>Carte d'identité</option>
+            <option>Contrat de travail</option>
+            <option>Assurance véhicule</option>
+            <option>Certificat médical</option>
+            <option>Contrôle technique</option>
+            <option>Autre</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Date d'expiration</label>
+          <input type="date" class="form-control-custom" id="docExpiry">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Fichier (PDF, JPG, PNG) *</label>
+          <div class="upload-zone" data-upload-zone id="docUploadZone">
+            <i class="bi bi-cloud-upload"
+              style="font-size:2rem;color:var(--accent);display:block;margin-bottom:8px"></i>
+            <div style="font-weight:600;font-size:.875rem">Glissez-déposez ou cliquez pour choisir</div>
+            <div style="font-size:.78rem;color:var(--text-muted);margin-top:4px">PDF, JPG, PNG — Max 10 MB</div>
+            <input type="file" class="file-input-hidden" id="docFileInput" accept=".pdf,image/*">
+          </div>
+          <div class="upload-file-name" id="docFileName" style="display:none"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Notes (optionnel)</label>
+          <textarea class="form-control-custom" id="docNotes" rows="2"
+            placeholder="Informations complémentaires..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-ghost" data-modal-close="uploadDocModal">Annuler</button>
+        <button class="btn-prim" onclick="submitDoc()"><i class="bi bi-cloud-upload"></i> Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="shell">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <a href="dashboard.html" class="sb-brand">
+        <div class="brand-icon"><i class="bi bi-car-front-fill"></i></div>
+        <div class="brand-text"><strong>ParcVision</strong><small>Espace Conducteur</small></div>
+      </a>
+      <div class="sb-body">
+        <div class="sb-section">Navigation</div>
+        <div class="nav-item"><a href="dashboard.html" class="nav-link"><span class="ni"><i
+                class="bi bi-grid-fill"></i></span><span class="nt">Tableau de bord<small class="nt-sub">Vue
+                d'ensemble</small></span></a></div>
+        <div class="nav-item"><a href="mission.html" class="nav-link"><span class="ni"><i
+                class="bi bi-signpost-2-fill"></i></span><span class="nt">Mes Missions<small class="nt-sub">1 active · 2
+                nouvelles</small></span><span class="nb">2</span></a></div>
+        <div class="nav-item"><a href="historique.html" class="nav-link"><span class="ni"><i
+                class="bi bi-clock-history"></i></span><span class="nt">Historique<small class="nt-sub">42
+                missions</small></span></a></div>
+        <div class="sb-section">Opérations</div>
+        <div class="nav-item"><a href="incident.html" class="nav-link"><span class="ni"><i
+                class="bi bi-exclamation-octagon-fill"></i></span><span class="nt">Signaler Incident<small
+                class="nt-sub">Panne ou accident</small></span></a></div>
+        <div class="nav-item"><a href="documents.html" class="nav-link active"><span class="ni"><i
+                class="bi bi-file-earmark-text-fill"></i></span><span class="nt">Mes Documents<small
+                class="nt-sub">Permis · Contrat</small></span></a></div>
+
+
+      </div>
+      <div class="sb-foot">
+        <div class="profile-row" id="profileRow">
+          <div class="profile-av">JD</div>
+          <div class="profile-info"><b>Jean Dupont</b><small>Conducteur #482</small></div>
+          <i class="bi bi-three-dots-vertical profile-more"></i>
+          <div class="profile-popup" id="profilePopup">
+            <div class="pp-head">Mon compte</div>
+            <a href="profil.html" class="pp-link"><i class="bi bi-person-circle"></i> Mon Profil</a>
+            <a href="documents.html" class="pp-link"><i class="bi bi-file-earmark-text"></i> Mes Documents</a>
+            <div class="pp-link" id="themeToggleBtn"><i data-theme-icon class="bi bi-moon-stars-fill"></i><span
+                data-theme-text>Mode sombre</span></div>
+            <hr style="margin:6px 0;border-color:rgba(255,255,255,0.08)">
+            <a href="#" class="pp-link" style="color:#f87171"><i class="bi bi-box-arrow-right"></i> Déconnexion</a>
+          </div>
+        </div>
+      </div>
+    </aside>
+    <div class="overlay" id="overlay"></div>
+    <button class="mob-toggle" id="mobToggle"><i class="bi bi-list"></i></button>
+
+    <main class="main">
+      <header class="top-bar">
+        <div class="topbar-left">
+          <button id="mobToggleInner" class="btn-icon d-lg-none"><i class="bi bi-list"></i></button>
+          <span id="statusBadge" class="badge-status status-en-mission">En mission</span>
+        </div>
+        <div class="topbar-right">
+          <div class="clock-pill d-none d-md-flex"><i class="bi bi-clock-fill" style="color:var(--accent)"></i><span
+              data-clock>00:00</span></div>
+          <a href="notifications.html" style="text-decoration:none"><button class="notif-btn"><i
+                class="bi bi-bell-fill"></i><span class="notif-badge">2</span></button></a>
+        </div>
+      </header>
+
+      <div class="content">
+        <div class="page-header">
+          <div class="page-header-title">
+            <h2>Mes <span class="text-accent">Documents</span></h2>
+            <p>Gérez vos documents administratifs et leur validité</p>
+          </div>
+          <div class="page-header-actions">
+            <button id="uploadDocBtn" class="btn-prim"><i class="bi bi-plus-lg"></i> Ajouter un document</button>
+          </div>
+        </div>
+
+        <!-- ALERT -->
+        <div
+          style="background:var(--warning-soft);border:1px solid rgba(245,158,11,0.3);border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:14px;margin-bottom:24px">
+          <i class="bi bi-exclamation-triangle-fill" style="color:var(--warning);font-size:1.3rem;flex-shrink:0"></i>
+          <div style="flex:1">
+            <div style="font-weight:700;font-size:.9rem;color:var(--warning)">Permis de conduire bientôt expiré</div>
+            <div style="font-size:.82rem;color:var(--text-muted);margin-top:2px">Votre permis <b>(Catégorie C)</b>
+              expire dans <b>15 jours</b>. Veuillez le renouveler pour continuer à exercer.</div>
+          </div>
+          <button class="btn-ghost" style="flex-shrink:0;font-size:.82rem;padding:7px 14px"
+            onclick="openModal('uploadDocModal')">Renouveler</button>
+        </div>
+
+        <!-- TABS -->
+        <div class="tab-bar" data-panels="docPanels">
+          <button class="tab-btn active">Obligatoires <span class="tab-count">3</span></button>
+          <button class="tab-btn">Véhicule <span class="tab-count">2</span></button>
+          <button class="tab-btn">Autres <span class="tab-count">1</span></button>
+        </div>
+
+        <div id="docPanels">
+          <!-- TAB 1 -->
+          <div data-tab-panel>
+            <div class="row g-3">
+              <div class="col-md-6 col-lg-4">
+                <div class="doc-card">
+                  <div class="doc-icon" style="background:var(--warning-soft);color:var(--warning)"><i
+                      class="bi bi-card-text"></i></div>
+                  <div style="flex:1;min-width:0">
+                    <h6 style="font-weight:700;margin-bottom:3px;font-size:.9rem">Permis de conduire</h6>
+                    <div style="font-size:.77rem;color:var(--text-muted);margin-bottom:8px">Catégorie B + C · N°
+                      23-456-789</div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:6px">
+                      <span class="doc-expiry doc-warning">Expire 05/05/2025</span>
+                      <button class="btn-icon" style="width:28px;height:28px;font-size:.8rem"
+                        onclick="downloadDoc('Permis_Conduire.pdf')" title="Télécharger"><i
+                          class="bi bi-download"></i></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4">
+                <div class="doc-card">
+                  <div class="doc-icon" style="background:var(--accent-soft);color:var(--accent)"><i
+                      class="bi bi-person-badge-fill"></i></div>
+                  <div style="flex:1;min-width:0">
+                    <h6 style="font-weight:700;margin-bottom:3px;font-size:.9rem">Carte Nationale d'Identité</h6>
+                    <div style="font-size:.77rem;color:var(--text-muted);margin-bottom:8px">CIN · N° BK-247836</div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:6px">
+                      <span class="doc-expiry doc-valid">Valide 12/08/2028</span>
+                      <button class="btn-icon" style="width:28px;height:28px;font-size:.8rem"
+                        onclick="downloadDoc('CIN_BK247836.pdf')" title="Télécharger"><i
+                          class="bi bi-download"></i></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4">
+                <div class="doc-card">
+                  <div class="doc-icon" style="background:var(--success-soft);color:var(--success)"><i
+                      class="bi bi-file-earmark-medical-fill"></i></div>
+                  <div style="flex:1;min-width:0">
+                    <h6 style="font-weight:700;margin-bottom:3px;font-size:.9rem">Certificat médical</h6>
+                    <div style="font-size:.77rem;color:var(--text-muted);margin-bottom:8px">Aptitude à la conduite ·
+                      Catégorie C</div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:6px">
+                      <span class="doc-expiry doc-valid">Valide 15/10/2025</span>
+                      <button class="btn-icon" style="width:28px;height:28px;font-size:.8rem"
+                        onclick="downloadDoc('Certificat_Medical.pdf')" title="Télécharger"><i
+                          class="bi bi-download"></i></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 2 -->
+          <div data-tab-panel>
+            <div class="row g-3">
+              <div class="col-md-6 col-lg-4">
+                <div class="doc-card">
+                  <div class="doc-icon" style="background:var(--success-soft);color:var(--success)"><i
+                      class="bi bi-shield-fill-check"></i></div>
+                  <div style="flex:1;min-width:0">
+                    <h6 style="font-weight:700;margin-bottom:3px;font-size:.9rem">Assurance véhicule</h6>
+                    <div style="font-size:.77rem;color:var(--text-muted);margin-bottom:8px">2458·A·7 · Police N°
+                      77-AS-2024</div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:6px">
+                      <span class="doc-expiry doc-valid">Valide 31/12/2025</span>
+                      <button class="btn-icon" style="width:28px;height:28px;font-size:.8rem"
+                        onclick="downloadDoc('Assurance_Vehicule.pdf')" title="Télécharger"><i
+                          class="bi bi-download"></i></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4">
+                <div class="doc-card">
+                  <div class="doc-icon" style="background:var(--info-soft);color:var(--info)"><i
+                      class="bi bi-clipboard2-check-fill"></i></div>
+                  <div style="flex:1;min-width:0">
+                    <h6 style="font-weight:700;margin-bottom:3px;font-size:.9rem">Contrôle technique</h6>
+                    <div style="font-size:.77rem;color:var(--text-muted);margin-bottom:8px">2458·A·7 · Citroën Berlingo
+                    </div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:6px">
+                      <span class="doc-expiry doc-valid">Valide 08/09/2025</span>
+                      <button class="btn-icon" style="width:28px;height:28px;font-size:.8rem"
+                        onclick="downloadDoc('Controle_Technique.pdf')" title="Télécharger"><i
+                          class="bi bi-download"></i></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 3 -->
+          <div data-tab-panel>
+            <div class="row g-3 mb-3">
+              <div class="col-md-6 col-lg-4">
+                <div class="doc-card">
+                  <div class="doc-icon" style="background:var(--accent-soft);color:var(--accent)"><i
+                      class="bi bi-file-earmark-text-fill"></i></div>
+                  <div style="flex:1;min-width:0">
+                    <h6 style="font-weight:700;margin-bottom:3px;font-size:.9rem">Contrat de travail</h6>
+                    <div style="font-size:.77rem;color:var(--text-muted);margin-bottom:8px">CDI · Depuis le 01/03/2022
+                    </div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:6px">
+                      <span class="doc-expiry doc-valid">CDI — Actif</span>
+                      <button class="btn-icon" style="width:28px;height:28px;font-size:.8rem"
+                        onclick="downloadDoc('Contrat_Travail_CDI.pdf')" title="Télécharger"><i
+                          class="bi bi-download"></i></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div style="text-align:center;padding:20px">
+              <button class="btn-prim" onclick="openModal('uploadDocModal')"><i class="bi bi-plus-lg"></i> Ajouter un
+                document</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/global.js"></script>
+  <script src="../js/documents.js"></script>
+
+</body>
+
+</html>
