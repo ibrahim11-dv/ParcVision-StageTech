@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parc Auto — Gestion des Accidents</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/accident.css">
+</head>
+
+<body>
+
+    <div class="shell">
+
+        <aside class="sidebar" id="sidebar">
+
+            <a href="dashboard.html" class="sb-brand">
+                <div class="brand-icon"><i class="bi bi-car-front-fill"></i></div>
+                <div class="brand-text">
+                    <strong>Parc Auto</strong>
+                    <small>Gestion de flotte</small>
+                </div>
+            </a>
+
+            <div class="sb-body">
+
+                <div class="sb-section">Principal</div>
+
+                <div class="nav-item">
+                    <a href="dashboard.html" class="nav-link" data-tip="Dashboard">
+                        <span class="ni"><i class="bi bi-speedometer2"></i></span>
+                        <span class="nt">Dashboard<small class="nt-sub">Vue générale</small></span>
+                    </a>
+                </div>
+
+                <div class="sb-section">Gestion</div>
+
+                <div class="nav-item">
+                    <a href="conducteur.html" class="nav-link" data-tip="Conducteurs">
+                        <span class="ni">
+                            <i class="bi bi-person-badge"></i>
+                            <span class="pulse p-green"></span>
+                        </span>
+                        <span class="nt">Conducteurs<small class="nt-sub">18 actifs</small></span>
+                        <span class="nb nb-blue">18</span>
+                    </a>
+                </div>
+
+                <div class="nav-item">
+                    <a href="vehicule.html" class="nav-link" data-tip="Véhicules">
+                        <span class="ni">
+                            <i class="bi bi-truck"></i>
+                            <span class="pulse p-amber"></span>
+                        </span>
+                        <span class="nt">Véhicules<small class="nt-sub">24 en flotte</small></span>
+                        <span class="nb nb-blue">24</span>
+                    </a>
+                </div>
+
+                <div class="nav-item">
+                    <a href="suivi-gps.html" class="nav-link" data-tip="Suivi GPS">
+                        <span class="ni">
+                            <i class="bi bi-geo-alt"></i>
+                            <span class="pulse p-green"></span>
+                        </span>
+                        <span class="nt">Suivi GPS<small class="nt-sub">3 en déplacement</small></span>
+                        <span class="nb nb-green"
+                            style="background:rgba(34,197,94,0.1); color:#15803d; border-color:rgba(34,197,94,0.2);">LIVE</span>
+                    </a>
+                </div>
+
+                <div class="sb-hr"></div>
+                <div class="sb-section">Interventions</div>
+
+                <div class="nav-item">
+                    <a href="reparation.html" class="nav-link" data-tip="Réparation">
+                        <span class="ni">
+                            <i class="bi bi-wrench-adjustable"></i>
+                            <span class="pulse p-amber"></span>
+                        </span>
+                        <span class="nt">Réparation<small class="nt-sub">5 en cours</small></span>
+                        <span class="nb nb-amber">5</span>
+                    </a>
+                </div>
+
+                <div class="nav-item">
+                    <a href="accident.html" class="nav-link active" data-tip="Accident">
+                        <span class="ni">
+                            <i class="bi bi-exclamation-triangle"></i>
+                            <span class="pulse p-red"></span>
+                        </span>
+                        <span class="nt">Accident<small class="nt-sub">3 ce mois</small></span>
+                        <span class="nb nb-red">3</span>
+                    </a>
+                </div>
+
+                <div class="nav-item">
+                    <a href="depanage.html" class="nav-link" data-tip="Dépannage">
+                        <span class="ni"><i class="bi bi-cone-striped"></i><span class="pulse p-amber"></span></span>
+                        <span class="nt">Dépannage<small class="nt-sub">2 interventions</small></span>
+                        <span class="nb nb-amber">2</span>
+                    </a>
+                </div>
+
+                <div class="nav-item">
+                    <a href="vidange.html" class="nav-link" data-tip="Vidange">
+                        <span class="ni"><i class="bi bi-droplet-half"></i><span class="pulse p-blue"></span></span>
+                        <span class="nt">Vidange<small class="nt-sub">7 planifiées</small></span>
+                        <span class="nb nb-blue">7</span>
+                    </a>
+                </div>
+
+                <div class="sb-hr"></div>
+                <div class="sb-section">Données</div>
+
+                <div class="nav-item">
+                    <a href="archivage.html" class="nav-link" data-tip="Archivage">
+                        <span class="ni"><i class="bi bi-archive"></i></span>
+                        <span class="nt">Archivage<small class="nt-sub">Documents &amp; historique</small></span>
+                    </a>
+                </div>
+
+            </div>
+
+            <div class="sb-foot">
+                <div class="profile-row" id="profileRow">
+                    <div class="profile-av">AD</div>
+                    <div class="profile-info">
+                        <b>Administrateur</b>
+                        <small>admin@parcauto.ma</small>
+                    </div>
+                    <i class="bi bi-three-dots-vertical profile-more"></i>
+
+                    <div class="profile-popup" id="profilePopup" onclick="event.stopPropagation()">
+                        <div class="pp-head">
+                            <div class="pp-av">AD</div>
+                            <div>
+                                <b>Administrateur</b>
+                                <small>admin@parcauto.ma</small>
+                            </div>
+                        </div>
+                        <a href="#" class="pp-link"><i class="bi bi-person-gear"></i> Mon profil</a>
+                        <a href="#" class="pp-link"><i class="bi bi-building"></i> Entreprise</a>
+                        <a href="#" class="pp-link"><i class="bi bi-gear"></i> Paramètres</a>
+                        <div class="pp-hr"></div>
+                        <div class="pp-link" id="themeToggleBtn">
+                            <i class="bi bi-moon-stars" id="themeIcon"></i>
+                            <span id="themeText">Mode sombre</span>
+                        </div>
+                        <div class="pp-hr"></div>
+                        <a href="#" class="pp-link pp-logout"><i class="bi bi-box-arrow-right"></i> Déconnexion</a>
+                    </div>
+                </div>
+            </div>
+
+        </aside>
+
+        <div class="main">
+
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Gestion des Accidents</h1>
+                    <p class="page-subtitle">Suivi des sinistres, réparations et conducteurs impliqués</p>
+                </div>
+                <button class="btn-primary-custom" onclick="openModal('addModal')">
+                    <i class="bi bi-plus-lg"></i> Déclarer un accident
+                </button>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon bg-red-soft"><i class="bi bi-exclamation-triangle-fill"></i></div>
+                    <div class="stat-info">
+                        <h3>12</h3>
+                        <p>Total Accidents (Année)</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon bg-amber-soft"><i class="bi bi-tools"></i></div>
+                    <div class="stat-info">
+                        <h3>4</h3>
+                        <p>En cours de réparation</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon bg-blue-soft"><i class="bi bi-cash-stack"></i></div>
+                    <div class="stat-info">
+                        <h3>85 400 <small>DH</small></h3>
+                        <p>Budget Réparation Estimé</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <div class="table-header">
+                    <h2 class="table-title">Derniers Accidents</h2>
+                    <div class="search-box">
+                        <i class="bi bi-search"></i>
+                        <input type="text" placeholder="Rechercher...">
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>Véhicule</th>
+                                <th>Conducteur</th>
+                                <th>Date & Lieu</th>
+                                <th>Contexte</th>
+                                <th>État / Gravité</th>
+                                <th>Budget Estimé</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="vehicle-info">
+                                        <div class="vehicle-img" style="background: #fee2e2; color: #ef4444;"><i
+                                                class="bi bi-truck"></i></div>
+                                        <div class="vehicle-details">
+                                            <strong>Ford Transit</strong>
+                                            <small>3344-D-22</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="driver-info">
+                                        <div class="driver-avatar" style="background: var(--gray-800);">HF</div>
+                                        <span>Hassan Fassi</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>10 Avril 2026</div>
+                                    <small style="color: var(--gray-400);">Marrakech</small>
+                                </td>
+                                <td><span class="badge"
+                                        style="background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600;">En
+                                        mission</span></td>
+                                <td><span class="badge-severity severity-tres-grave">Très Grave</span></td>
+                                <td><span class="budget" style="color: var(--gray-400);">Non applicable</span></td>
+                                <td><span class="badge"
+                                        style="background: #1f2937; color: #ef4444; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600;">Irréparable
+                                        / Épave</span></td>
+                                <td>
+                                    <button class="action-btn" title="Voir détails" onclick="openModal('viewModal')"><i
+                                            class="bi bi-eye"></i></button>
+                                    <button class="action-btn" title="Modifier" onclick="openModal('editModal')"><i
+                                            class="bi bi-pencil"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="vehicle-info">
+                                        <div class="vehicle-img"><i class="bi bi-truck"></i></div>
+                                        <div class="vehicle-details">
+                                            <strong>Renault Master</strong>
+                                            <small>1234-A-56</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="driver-info">
+                                        <div class="driver-avatar">KA</div>
+                                        <span>Karim Alami</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>15 Avril 2026</div>
+                                    <small style="color: var(--gray-400);">Casablanca</small>
+                                </td>
+                                <td><span class="badge"
+                                        style="background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600;">En
+                                        mission</span></td>
+                                <td><span class="badge-severity severity-majeur">Majeur</span></td>
+                                <td><span class="budget">35 000 DH</span></td>
+                                <td><span class="badge"
+                                        style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600;">En
+                                        expertise</span></td>
+                                <td>
+                                    <button class="action-btn" title="Voir détails" onclick="openModal('viewModal')"><i
+                                            class="bi bi-eye"></i></button>
+                                    <button class="action-btn" title="Modifier" onclick="openModal('editModal')"><i
+                                            class="bi bi-pencil"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="vehicle-info">
+                                        <div class="vehicle-img"><i class="bi bi-car-front"></i></div>
+                                        <div class="vehicle-details">
+                                            <strong>Dacia Logan</strong>
+                                            <small>9876-B-44</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="driver-info">
+                                        <div class="driver-avatar">YB</div>
+                                        <span>Youssef Benali</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>02 Avril 2026</div>
+                                    <small style="color: var(--gray-400);">Rabat</small>
+                                </td>
+                                <td><span class="badge"
+                                        style="background: rgba(239, 68, 68, 0.1); color: #ef4444; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600;">Hors
+                                        mission</span></td>
+                                <td><span class="badge-severity severity-moyenne">Moyenne</span></td>
+                                <td><span class="budget">8 500 DH</span></td>
+                                <td><span class="badge"
+                                        style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600;">En
+                                        réparation</span></td>
+                                <td>
+                                    <button class="action-btn" title="Voir détails" onclick="openModal('viewModal')"><i
+                                            class="bi bi-eye"></i></button>
+                                    <button class="action-btn" title="Modifier" onclick="openModal('editModal')"><i
+                                            class="bi bi-pencil"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="vehicle-info">
+                                        <div class="vehicle-img"><i class="bi bi-car-front"></i></div>
+                                        <div class="vehicle-details">
+                                            <strong>Peugeot 208</strong>
+                                            <small>4567-C-33</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="driver-info">
+                                        <div class="driver-avatar">SM</div>
+                                        <span>Said Mansouri</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>28 Mars 2026</div>
+                                    <small style="color: var(--gray-400);">Tanger</small>
+                                </td>
+                                <td><span class="badge"
+                                        style="background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600;">En
+                                        mission</span></td>
+                                <td><span class="badge-severity severity-mineur">Mineur</span></td>
+                                <td><span class="budget">1 200 DH</span></td>
+                                <td><span class="badge"
+                                        style="background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600;">Réparé</span>
+                                </td>
+                                <td>
+                                    <button class="action-btn" title="Voir détails" onclick="openModal('viewModal')"><i
+                                            class="bi bi-eye"></i></button>
+                                    <button class="action-btn" title="Modifier" onclick="openModal('editModal')"><i
+                                            class="bi bi-pencil"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Add -->
+        <div class="custom-modal-overlay" id="addModal">
+            <div class="custom-modal" onclick="event.stopPropagation()">
+                <div class="custom-modal-header">
+                    <h3 class="custom-modal-title">Déclarer un accident</h3>
+                    <button class="custom-modal-close" onclick="closeModal('addModal')"><i class="bi bi-x"></i></button>
+                </div>
+                <div class="custom-modal-body">
+                    <div class="form-group">
+                        <label class="form-label">Véhicule impliqué</label>
+                        <select class="form-control">
+                            <option>Sélectionnez un véhicule</option>
+                            <option>Renault Master (1234-A-56)</option>
+                            <option>Dacia Logan (9876-B-44)</option>
+                            <option>Peugeot 208 (4567-C-33)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Conducteur</label>
+                        <select class="form-control">
+                            <option>Sélectionnez un conducteur</option>
+                            <option>Karim Alami</option>
+                            <option>Youssef Benali</option>
+                            <option>Said Mansouri</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Date et Heure</label>
+                        <input type="datetime-local" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Lieu de l'accident</label>
+                        <input type="text" class="form-control" placeholder="Ex: Casablanca, Centre ville">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Contexte</label>
+                        <select class="form-control">
+                            <option value="en-mission">En mission</option>
+                            <option value="hors-mission">Hors mission</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Gravité</label>
+                        <select class="form-control" id="graviteSelectAdd">
+                            <option value="mineur">Mineur</option>
+                            <option value="moyenne">Moyenne</option>
+                            <option value="majeur">Majeur</option>
+                            <option value="tres-grave">Très Grave (Irréparable)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Budget Estimé (DH)</label>
+                        <input type="number" class="form-control" id="budgetInputAdd" placeholder="Ex: 5000">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description des dégâts</label>
+                        <textarea class="form-control" rows="3"
+                            placeholder="Décrivez les dégâts matériels..."></textarea>
+                    </div>
+                </div>
+                <div class="custom-modal-footer">
+                    <button class="btn-secondary-custom" onclick="closeModal('addModal')">Annuler</button>
+                    <button class="btn-primary-custom" onclick="closeModal('addModal')">Enregistrer</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal View -->
+        <div class="custom-modal-overlay" id="viewModal">
+            <div class="custom-modal" onclick="event.stopPropagation()">
+                <div class="custom-modal-header">
+                    <h3 class="custom-modal-title">Détails de l'accident</h3>
+                    <button class="custom-modal-close" onclick="closeModal('viewModal')"><i
+                            class="bi bi-x"></i></button>
+                </div>
+                <div class="custom-modal-body">
+                    <div class="view-detail-row">
+                        <span class="view-detail-label">Véhicule</span>
+                        <span class="view-detail-value">Renault Master (1234-A-56)</span>
+                    </div>
+                    <div class="view-detail-row">
+                        <span class="view-detail-label">Conducteur</span>
+                        <span class="view-detail-value">Karim Alami</span>
+                    </div>
+                    <div class="view-detail-row">
+                        <span class="view-detail-label">Date & Lieu</span>
+                        <span class="view-detail-value">15 Avril 2026<br><small
+                                style="color:var(--gray-400);font-weight:400;">Casablanca</small></span>
+                    </div>
+                    <div class="view-detail-row">
+                        <span class="view-detail-label">Contexte</span>
+                        <span class="view-detail-value"><span class="badge"
+                                style="background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600;">En
+                                mission</span></span>
+                    </div>
+                    <div class="view-detail-row">
+                        <span class="view-detail-label">Gravité</span>
+                        <span class="view-detail-value"><span
+                                class="badge-severity severity-majeur">Majeur</span></span>
+                    </div>
+                    <div class="view-detail-row">
+                        <span class="view-detail-label">Budget Estimé</span>
+                        <span class="view-detail-value">35 000 DH</span>
+                    </div>
+                    <div class="view-detail-row">
+                        <span class="view-detail-label">Description</span>
+                        <span class="view-detail-value" style="font-weight:400;">Choc frontal. Pare-chocs détruit,
+                            radiateur touché. Le véhicule doit être remorqué au garage central.</span>
+                    </div>
+                </div>
+                <div class="custom-modal-footer">
+                    <button class="btn-secondary-custom" onclick="closeModal('viewModal')">Fermer</button>
+                    <button class="btn-primary-custom"
+                        onclick="closeModal('viewModal'); openModal('editModal')">Modifier</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Edit -->
+        <div class="custom-modal-overlay" id="editModal">
+            <div class="custom-modal" onclick="event.stopPropagation()">
+                <div class="custom-modal-header">
+                    <h3 class="custom-modal-title">Modifier l'accident</h3>
+                    <button class="custom-modal-close" onclick="closeModal('editModal')"><i
+                            class="bi bi-x"></i></button>
+                </div>
+                <div class="custom-modal-body">
+                    <div class="form-group">
+                        <label class="form-label">Statut</label>
+                        <select class="form-control" id="statutSelect">
+                            <option>En expertise</option>
+                            <option>En réparation</option>
+                            <option>Réparé</option>
+                            <option value="irreparable">Irréparable / Épave</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Budget Estimé (DH)</label>
+                        <input type="number" class="form-control" id="budgetInput" value="35000">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Notes supplémentaires</label>
+                        <textarea class="form-control" rows="3">L'assurance prend en charge 80% des frais.</textarea>
+                    </div>
+                </div>
+                <div class="custom-modal-footer">
+                    <button class="btn-secondary-custom" onclick="closeModal('editModal')">Annuler</button>
+                    <button class="btn-primary-custom" onclick="closeModal('editModal')">Mettre à jour</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="../js/accident.js"></script>
+</body>
+
+</html>
