@@ -37,7 +37,12 @@ public class Utilisateur {
     @Column(
             nullable = false
     )
+
+    private String password;
     @Enumerated(EnumType.STRING)
+    @Column(
+            nullable = false
+    )
     private Role role;
 
     @ManyToOne
@@ -59,4 +64,5 @@ public class Utilisateur {
     )
     @JsonManagedReference
     private Admin admin;
+
 }
