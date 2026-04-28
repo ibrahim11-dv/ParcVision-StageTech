@@ -70,42 +70,47 @@
     <aside class="sidebar" id="sidebar">
       <a href="dashboard.html" class="sb-brand">
         <div class="brand-icon"><i class="bi bi-car-front-fill"></i></div>
-        <div class="brand-text"><strong>ParcVision</strong><small>Espace Conducteur</small></div>
+        <div class="brand-text"><strong>ParcVision</strong><small>Gestion de flotte</small></div>
       </a>
       <div class="sb-body">
-        <div class="sb-section">Navigation</div>
-        <div class="nav-item"><a href="dashboard.html" class="nav-link"><span class="ni"><i
+        <div class="sb-section">Principal</div>
+        <div class="nav-item"><a href="dashboard.html" class="nav-link active"><span class="ni"><i
                 class="bi bi-grid-fill"></i></span><span class="nt">Tableau de bord<small class="nt-sub">Vue
-                d'ensemble</small></span></a></div>
+                générale</small></span></a></div>
+
+        <div class="sb-section">Mes activités</div>
         <div class="nav-item"><a href="mission.html" class="nav-link"><span class="ni"><i
                 class="bi bi-signpost-2-fill"></i></span><span class="nt">Mes Missions<small class="nt-sub">1 active · 2
                 nouvelles</small></span><span class="nb">2</span></a></div>
         <div class="nav-item"><a href="historique.html" class="nav-link"><span class="ni"><i
                 class="bi bi-clock-history"></i></span><span class="nt">Historique<small class="nt-sub">42
                 missions</small></span></a></div>
+
         <div class="sb-section">Opérations</div>
         <div class="nav-item"><a href="incident.html" class="nav-link"><span class="ni"><i
                 class="bi bi-exclamation-octagon-fill"></i></span><span class="nt">Signaler Incident<small
                 class="nt-sub">Panne ou accident</small></span></a></div>
-        <div class="nav-item"><a href="documents.html" class="nav-link active"><span class="ni"><i
+        <div class="nav-item"><a href="documents.html" class="nav-link"><span class="ni"><i
                 class="bi bi-file-earmark-text-fill"></i></span><span class="nt">Mes Documents<small
                 class="nt-sub">Permis · Contrat</small></span></a></div>
+
 
 
       </div>
       <div class="sb-foot">
         <div class="profile-row" id="profileRow">
           <div class="profile-av">JD</div>
-          <div class="profile-info"><b>Jean Dupont</b><small>Conducteur #482</small></div>
+          <div class="profile-info"><b>Jean Dupont</b><small>admin@parcvision.ma</small></div>
           <i class="bi bi-three-dots-vertical profile-more"></i>
           <div class="profile-popup" id="profilePopup">
             <div class="pp-head">Mon compte</div>
             <a href="profil.html" class="pp-link"><i class="bi bi-person-circle"></i> Mon Profil</a>
             <a href="documents.html" class="pp-link"><i class="bi bi-file-earmark-text"></i> Mes Documents</a>
             <div class="pp-link" id="themeToggleBtn"><i data-theme-icon class="bi bi-moon-stars-fill"></i><span
-                data-theme-text>Mode sombre</span></div>
-            <hr style="margin:6px 0;border-color:rgba(255,255,255,0.08)">
-            <a href="#" class="pp-link" style="color:#f87171"><i class="bi bi-box-arrow-right"></i> Déconnexion</a>
+                    data-theme-text>Mode sombre</span></div>
+            <hr style="margin:6px 0;border-color:var(--border-color)">
+            <a href="#" class="pp-link" style="color:var(--danger)"><i class="bi bi-box-arrow-right"></i>
+              Déconnexion</a>
           </div>
         </div>
       </div>
