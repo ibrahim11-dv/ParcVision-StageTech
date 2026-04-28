@@ -54,63 +54,32 @@
         <!-- ===== LEFT PANEL : VIDEO ===== -->
         <aside class="auth-visual-panel">
             <video class="auth-video" autoplay loop muted playsinline>
-                <source src="../../assets/background-vid-index.mp4" type="video/mp4">
+                <source src="../../assets/auth-vid.mp4" type="video/mp4">
             </video>
 
             <!-- Dark gradient overlay -->
             <div class="auth-video-overlay"></div>
 
-            <!-- Branded content on top of video -->
             <div class="auth-panel-content">
-
-
-                <div class="auth-panel-body">
-                    <h2>Gérez votre flotte intelligemment</h2>
-                    <p>Plateforme unifiée d'inspection, de maintenance et de suivi en temps réel pour les gestionnaires
-                        de parc exigeants.</p>
-
-                    <div class="auth-panel-stats">
-                        <div class="panel-stat">
-                            <span class="panel-stat-value">500+</span>
-                            <span class="panel-stat-label">Flottes gérées</span>
-                        </div>
-                        <div class="panel-stat-divider"></div>
-                        <div class="panel-stat">
-                            <span class="panel-stat-value">98%</span>
-                            <span class="panel-stat-label">Satisfaction client</span>
-                        </div>
-                        <div class="panel-stat-divider"></div>
-                        <div class="panel-stat">
-                            <span class="panel-stat-value">24/7</span>
-                            <span class="panel-stat-label">Support dédié</span>
-                        </div>
-                    </div>
+                <div class="auth-panel-headline">
+                    <h2>Bon retour parmi nous</h2>
+                    <p>Reprenez le contrôle de votre flotte en quelques secondes.</p>
                 </div>
-
-                <div class="auth-panel-footer">
-                    <div class="trust-badges">
-                        <div class="trust-badge">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2.5">
-                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                            </svg>
-                            <span>SSL Sécurisé</span>
-                        </div>
-                        <div class="trust-badge">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2.5">
-                                <polyline points="20 6 9 17 4 12" />
-                            </svg>
-                            <span>Conformité RGPD</span>
-                        </div>
-                        <div class="trust-badge">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2.5">
-                                <circle cx="12" cy="12" r="10" />
-                                <polyline points="12 6 12 12 16 14" />
-                            </svg>
-                            <span>Disponibilité 99.9%</span>
-                        </div>
+                
+                <div class="auth-panel-stats">
+                    <div class="auth-stat">
+                        <span class="auth-stat-value">+2 400</span>
+                        <span class="auth-stat-label">Véhicules gérés</span>
+                    </div>
+                    <div class="auth-stat-divider"></div>
+                    <div class="auth-stat">
+                        <span class="auth-stat-value">98%</span>
+                        <span class="auth-stat-label">Satisfaction client</span>
+                    </div>
+                    <div class="auth-stat-divider"></div>
+                    <div class="auth-stat">
+                        <span class="auth-stat-value">-35%</span>
+                        <span class="auth-stat-label">Coûts opérationnels</span>
                     </div>
                 </div>
             </div>
@@ -121,13 +90,6 @@
             <div class="auth-form-wrapper">
 
                 <div class="auth-header">
-                    <div class="auth-icon-ring">
-                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                            <circle cx="12" cy="7" r="4" />
-                        </svg>
-                    </div>
                     <h1>Connexion</h1>
                     <p>Accédez à votre espace de gestion de flotte</p>
                 </div>
@@ -138,14 +100,6 @@
                     <div class="auth-field-group">
                         <label for="identifier" class="auth-label">Adresse e-mail ou code</label>
                         <div class="auth-input-wrapper">
-                            <span class="auth-input-icon">
-                                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path
-                                        d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                                    <polyline points="22,6 12,13 2,6" />
-                                </svg>
-                            </span>
                             <input type="text" class="auth-input" id="identifier" name="identifier"
                                 placeholder="nom@entreprise.com ou votre code" required autocomplete="username">
                         </div>
@@ -158,13 +112,6 @@
                             <a href="#" class="auth-link-small">Mot de passe oublié ?</a>
                         </div>
                         <div class="auth-input-wrapper">
-                            <span class="auth-input-icon">
-                                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                                </svg>
-                            </span>
                             <input type="password" class="auth-input" id="password" name="password"
                                 placeholder="••••••••" required autocomplete="current-password">
                             <button type="button" class="auth-eye-btn" id="togglePassword"
@@ -191,13 +138,6 @@
                     <!-- Submit -->
                     <button type="submit" class="btn-auth-submit" id="submitBtn">
                         <span class="btn-text">Se connecter</span>
-                        <span class="btn-icon">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                <line x1="5" y1="12" x2="19" y2="12" />
-                                <polyline points="12 5 19 12 12 19" />
-                            </svg>
-                        </span>
                     </button>
 
                 </form>

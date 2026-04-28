@@ -44,30 +44,56 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (step1 && step2 && btnNext && btnBack) {
         btnNext.addEventListener("click", function () {
-            // Optional: validate step 1
-            const enterpriseName = document.getElementById("enterpriseName");
-            if (enterpriseName && !enterpriseName.value) {
-                // simple html5 validation trigger would be better but this works for demo
-                enterpriseName.reportValidity();
-                return;
+            // validate step 1
+            const step1Inputs = step1.querySelectorAll("input[required]");
+            let isValid = true;
+            for (const input of step1Inputs) {
+                if (!input.checkValidity()) {
+                    input.reportValidity();
+                    isValid = false;
+                    break;
+                }
             }
+            if (!isValid) return;
 
             // Transition to next step
-            step1.style.display = "none";
-            step2.style.display = "block";
+            step1.classList.add("step-exit-left");
             
-            // Update indicators
-            line1.classList.add("active");
-            dot2.classList.add("active");
+            setTimeout(() => {
+                step1.style.display = "none";
+                step2.style.display = "block";
+                step2.classList.add("step-enter-right");
+                
+                // Force reflow
+                void step2.offsetWidth;
+                
+                step2.classList.remove("step-enter-right");
+                step1.classList.remove("step-exit-left"); // reset
+                
+                // Update indicators
+                line1.classList.add("active");
+                dot2.classList.add("active");
+            }, 300);
         });
 
         btnBack.addEventListener("click", function () {
-            step2.style.display = "none";
-            step1.style.display = "block";
+            step2.classList.add("step-exit-right");
             
-            // Revert indicators
-            line1.classList.remove("active");
-            dot2.classList.remove("active");
+            setTimeout(() => {
+                step2.style.display = "none";
+                step1.style.display = "block";
+                step1.classList.add("step-enter-left");
+                
+                // Force reflow
+                void step1.offsetWidth;
+                
+                step1.classList.remove("step-enter-left");
+                step2.classList.remove("step-exit-right"); // reset
+                
+                // Revert indicators
+                line1.classList.remove("active");
+                dot2.classList.remove("active");
+            }, 300);
         });
     }
 });
