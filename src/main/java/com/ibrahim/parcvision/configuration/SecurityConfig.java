@@ -4,6 +4,7 @@ import com.ibrahim.parcvision.service.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -47,16 +48,13 @@ public class SecurityConfig {
         //.httpBasic(Customizer.withDefaults());
         return http.build();
     }
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
-        return authConfig.getAuthenticationManager();
-    }
+
 
     @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(customUserDetailsService);
-        provider.setPasswordEncoder(passwordEncoder());
-        return provider;
+    public AuthenticationManager authenticationManager() {
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider(customUserDetailsService);
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+        return new ProviderManager(daoAuthenticationProvider);
     }
 
     @Bean

@@ -12,6 +12,11 @@ import org.springframework.stereotype.Service;
 public class CustomUserDetailsService implements UserDetailsService {
 
     private UtilisateurRepository utilisateurRepository;
+
+    public CustomUserDetailsService(UtilisateurRepository utilisateurRepository) {
+        this.utilisateurRepository = utilisateurRepository;
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Utilisateur user = utilisateurRepository.findByEmail(username).orElseThrow(()->

@@ -79,8 +79,8 @@ public class Utilisateur implements UserDetails {
     }
 
     @Override
-    public @Nullable String getPassword() {
-        return "";
+    public String getPassword() {
+        return password;
     }
 
     @Override
