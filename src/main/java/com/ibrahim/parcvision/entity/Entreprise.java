@@ -1,8 +1,7 @@
-package com.ibrahim.parcvision.entities;
+package com.ibrahim.parcvision.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSourceExtensionsKt;
 
 import java.time.LocalDate;
 import java.util.List;

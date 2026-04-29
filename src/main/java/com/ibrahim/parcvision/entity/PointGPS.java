@@ -1,11 +1,10 @@
-package com.ibrahim.parcvision.entities;
+package com.ibrahim.parcvision.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.ibrahim.parcvision.enums.TypePoint;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 public class PointGPS {

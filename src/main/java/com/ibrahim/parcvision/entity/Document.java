@@ -1,4 +1,4 @@
-package com.ibrahim.parcvision.entities;
+package com.ibrahim.parcvision.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;

@@ -1,4 +1,4 @@
-package com.ibrahim.parcvision.controllers;
+package com.ibrahim.parcvision.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

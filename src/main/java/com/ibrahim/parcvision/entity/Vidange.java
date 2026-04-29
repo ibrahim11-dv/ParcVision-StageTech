@@ -1,4 +1,4 @@
-package com.ibrahim.parcvision.entities;
+package com.ibrahim.parcvision.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
