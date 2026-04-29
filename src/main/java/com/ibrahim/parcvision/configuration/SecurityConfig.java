@@ -9,8 +9,10 @@ import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -29,17 +31,21 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http){
-        // to disable crsf
-        // .crsf(crsf-> crsf.disable())
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http
-                .csrf(AbstractHttpConfigurer::disable)
-                // 2. Make sure there's NO session (Stateless API)
+                // no session
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/","/login","/register").permitAll()
-                                .anyRequest().authenticated())
-                                .httpBasic(Customizer.withDefaults());
+                          auth.requestMatchers(
+                                          "/",
+                                          "/login",
+                                          "/register",
+                                          "/error",
+                                          "/api/v1/test"
+                                  ).permitAll()
+                                  .anyRequest().authenticated()
+                )
+                .httpBasic(Customizer.withDefaults());
         // for adding awt filter
         // http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         // default filter ( basic auth )
@@ -47,14 +53,32 @@ public class SecurityConfig {
         return http.build();
     }
     @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http){
-        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider(customUserDetailsService);
-        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
-        return new ProviderManager(daoAuthenticationProvider);
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
     }
+
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(customUserDetailsService);
+        provider.setPasswordEncoder(passwordEncoder());
+        return provider;
+    }
+
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().requestMatchers(
+                "/css/**",
+                "/js/**",
+                "/images/**",
+                "/static/**",
+                "/home/**",
+                "/auth/**"
+        );
     }
 
 }
