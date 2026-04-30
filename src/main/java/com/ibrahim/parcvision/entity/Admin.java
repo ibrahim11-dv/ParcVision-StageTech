@@ -19,4 +19,28 @@ public class Admin {
     @JsonBackReference
     private Utilisateur utilisateur;
 
+    public Admin(Utilisateur utilisateur, Long id) {
+        this.utilisateur = utilisateur;
+        this.id = id;
+    }
+
+    public Admin() {
+
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Utilisateur getUtilisateur() {
+        return utilisateur;
+    }
+
+    public void setUtilisateur(Utilisateur utilisateur) {
+        this.utilisateur = utilisateur;
+    }
 }

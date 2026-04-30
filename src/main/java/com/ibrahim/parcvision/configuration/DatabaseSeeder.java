@@ -1,8 +1,10 @@
 package com.ibrahim.parcvision.configuration;
 
+import com.ibrahim.parcvision.entity.Admin;
 import com.ibrahim.parcvision.entity.Entreprise;
 import com.ibrahim.parcvision.entity.Utilisateur;
 import com.ibrahim.parcvision.enums.Role;
+import com.ibrahim.parcvision.repository.AdminRepository;
 import com.ibrahim.parcvision.repository.EntrepriseRepository;
 import com.ibrahim.parcvision.repository.UtilisateurRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -17,11 +19,13 @@ public class DatabaseSeeder implements CommandLineRunner {
     private PasswordEncoder passwordEncoder;
     private EntrepriseRepository entrepriseRepository;
     private UtilisateurRepository utilisateurRepository;
+    private AdminRepository adminRepository;
 
-    public DatabaseSeeder(PasswordEncoder passwordEncoder, EntrepriseRepository entrepriseRepository, UtilisateurRepository utilisateurRepository) {
+    public DatabaseSeeder(AdminRepository adminRepository ,PasswordEncoder passwordEncoder, EntrepriseRepository entrepriseRepository, UtilisateurRepository utilisateurRepository) {
         this.passwordEncoder = passwordEncoder;
         this.entrepriseRepository = entrepriseRepository;
         this.utilisateurRepository = utilisateurRepository;
+        this.adminRepository = adminRepository;
     }
 
     @Override
@@ -43,7 +47,10 @@ public class DatabaseSeeder implements CommandLineRunner {
             user.setTelephone("0669462131");
             user.setPassword(passwordEncoder.encode("test123"));
             user.setEntreprise(entreprise);
-            utilisateurRepository.save(user);
+            user = utilisateurRepository.save(user);
+            Admin admin = new Admin();
+            admin.setUtilisateur(user);
+            adminRepository.save(admin);
             System.out.println("User Created !!!");
 
         }catch (Exception e){

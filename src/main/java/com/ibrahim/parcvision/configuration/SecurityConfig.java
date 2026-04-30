@@ -31,26 +31,19 @@ public class SecurityConfig {
         http
                 .csrf(c -> c.disable())
                 // no session ( statless)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
                           auth.requestMatchers(
                                           "/",
                                           "/login",
                                           "/register",
                                           "/error",
+                                          "/api/auth/login",
                                           "/api/v1/test"
                                   ).permitAll()
                                   .anyRequest().authenticated()
-                )
-                .formLogin(form->
-                        form
-                                .loginPage("/login")
-                                .loginProcessingUrl("/perform_login")
-                                .defaultSuccessUrl("/admin/dashboard",true)
-                                .usernameParameter("email")
-                                .passwordParameter("password")
-                                .permitAll()
-                );
+                ).httpBasic(Customizer.withDefaults());
+
         // for adding awt filter
         // http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         // default filter ( basic auth )
