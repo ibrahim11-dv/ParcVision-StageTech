@@ -182,7 +182,7 @@ window.startMapSelection = function(latId, lngId, modalId) {
         currentModalInstance.hide();
     }
     
-    // Show banner and change map cursor
+    // Show banner.txt and change map cursor
     document.getElementById('mapSelectionBanner').style.setProperty('display', 'flex', 'important');
     document.getElementById('map').style.cursor = 'crosshair';
     
