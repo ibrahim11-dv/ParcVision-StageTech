@@ -1,5 +1,6 @@
 package com.ibrahim.parcvision.configuration;
 
+import com.ibrahim.parcvision.SecurityFilter.JwtAuthFilter;
 import com.ibrahim.parcvision.service.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,15 +16,18 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     CustomUserDetailsService customUserDetailsService;
+    JwtAuthFilter jwtAuthFilter;
 
-    public SecurityConfig(CustomUserDetailsService customUserDetailsService) {
+    public SecurityConfig(CustomUserDetailsService customUserDetailsService, JwtAuthFilter jwtAuthFilter) {
         this.customUserDetailsService = customUserDetailsService;
+        this.jwtAuthFilter = jwtAuthFilter;
     }
 
     @Bean
@@ -42,7 +46,7 @@ public class SecurityConfig {
                                           "/api/v1/test"
                                   ).permitAll()
                                   .anyRequest().authenticated()
-                ).httpBasic(Customizer.withDefaults());
+                ).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         // for adding awt filter
         // http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
