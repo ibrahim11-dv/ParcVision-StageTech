@@ -2,6 +2,8 @@ package com.ibrahim.parcvision.controller;
 
 import com.ibrahim.parcvision.dao.AuthRequest;
 import com.ibrahim.parcvision.service.JwtService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,7 +25,8 @@ public class AuthController {
 
     @PostMapping("/login")
     public String login(
-            @RequestBody AuthRequest authReqest
+            @RequestBody AuthRequest authReqest,
+            HttpServletResponse response
     ){
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -32,6 +35,26 @@ public class AuthController {
                 )
         );
         UserDetails userDetails = (UserDetails) auth.getPrincipal();
-        return jwtService.generateToken(userDetails);
+        String token = jwtService.generateToken(userDetails);
+        Cookie cookie = new Cookie("jwt_token",token);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(60*5);
+        response.addCookie(cookie);
+        return token;
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(
+            HttpServletResponse response
+    ){
+        Cookie cookie = new Cookie("jwt_token",null);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        return ResponseEntity.ok("loggedOut");
+    }
+
+
 }

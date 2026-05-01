@@ -4,6 +4,7 @@ import com.ibrahim.parcvision.service.CustomUserDetailsService;
 import com.ibrahim.parcvision.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -35,6 +36,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if(authhead != null && authhead.startsWith("Bearer ")){
             token = authhead.substring(7);
             email = jwtService.extractEmail(token);
+        }else if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("jwt_token".equals(cookie.getName())) {
+                    token = cookie.getValue();
+                    email = jwtService.extractEmail(token);
+                    break;
+                }
+            }
         }
         if(email !=null && SecurityContextHolder.getContext().getAuthentication() == null){
             UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
