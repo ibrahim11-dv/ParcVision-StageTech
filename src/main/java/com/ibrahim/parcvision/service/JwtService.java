@@ -28,6 +28,9 @@ public class JwtService {
     private boolean isTokenExprired(String token) {
         return this.extractClaims(token).getExpiration().before(new Date());
     }
+    public void setExpiration(Long time){
+        expiration = time;
+    }
     public Claims extractClaims(String token){
         Claims c = Jwts.parser()
                 .verifyWith(getSigningKey())

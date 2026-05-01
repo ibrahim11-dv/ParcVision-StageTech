@@ -39,7 +39,14 @@ public class AuthController {
         Cookie cookie = new Cookie("jwt_token",token);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
-        cookie.setMaxAge(60*60*8);
+        if(authReqest.isRememberMe()){
+            // set to 30 day
+            cookie.setMaxAge(60*60*24*30);
+            jwtService.setExpiration(2592000000L);
+        }else{
+            //already 8h par default so no need for setting it
+            cookie.setMaxAge(60*60*8);
+        }
         response.addCookie(cookie);
         return token;
     }
