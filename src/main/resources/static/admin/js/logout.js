@@ -1,10 +1,17 @@
-document.getElementById("logout-btn").addEventListener("click",(e)=>{
+document.getElementById("logout-btn").addEventListener("click",async (e) => {
     e.preventDefault()
-    const response = fetch("api/auth/logout",{
-        method:'POST',
+    const response = await fetch("/api/auth/logout", {
+        method: 'POST',
         credentials: 'same-origin'
     })
-    if (response.ok) {
-        window.location.href = '/login';
+    try{
+        if (response.ok) {
+            window.location.href = '/login';
+        }else {
+            console.error('Logout failed with status:', response.status);
+        }
+    }catch (err){
+        console.error(err)
     }
+
 });
