@@ -14,7 +14,6 @@ public class Entreprise {
     private Long  id;
 
     @Column(
-            length = 50,
             unique = true,
             nullable = false
     )
@@ -24,7 +23,6 @@ public class Entreprise {
     )
     private String adresse;
     @Column(
-            length = 10,
             unique = true,
             nullable = false
     )

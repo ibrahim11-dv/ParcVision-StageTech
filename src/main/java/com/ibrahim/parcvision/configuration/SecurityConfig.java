@@ -43,7 +43,7 @@ public class SecurityConfig {
                                           "/register",
                                           "/error",
                                           "/api/auth/login",
-                                          "/api/v1/test"
+                                          "/api/registration/register-Enterprise"
                                   ).permitAll()
                                   .anyRequest().authenticated()
                 ).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

@@ -1,6 +1,6 @@
 package com.ibrahim.parcvision.controller;
 
-import com.ibrahim.parcvision.dao.AuthRequest;
+import com.ibrahim.parcvision.dao.AuthRequestDao;
 import com.ibrahim.parcvision.service.JwtService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,7 +25,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public String login(
-            @RequestBody AuthRequest authReqest,
+            @RequestBody AuthRequestDao authReqest,
             HttpServletResponse response
     ){
         Authentication auth = authenticationManager.authenticate(

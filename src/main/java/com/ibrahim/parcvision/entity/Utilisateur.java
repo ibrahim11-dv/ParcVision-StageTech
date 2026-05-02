@@ -18,12 +18,12 @@ public class Utilisateur implements UserDetails {
     @GeneratedValue
     private Long  id;
     @Column(
-            length = 20,
+            length = 50,
             nullable = false
     )
     private String nom;
     @Column(
-            length = 20,
+            length = 50,
             nullable = false
     )
     private String prenom;

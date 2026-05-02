@@ -1,6 +1,6 @@
 package com.ibrahim.parcvision.dao;
 
-public class AuthRequest {
+public class AuthRequestDao {
     private String email;
     private String password;
     private boolean rememberMe;
