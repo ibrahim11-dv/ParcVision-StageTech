@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parc Auto — Profil Entreprise</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/profile-entreprise.css">
+</head>
+<body>
+
+<div class="shell">
+
+    <aside class="sidebar" id="sidebar">
+
+        <a href="/admin/dashboard" class="sb-brand">
+            <div class="brand-icon"><i class="bi bi-car-front-fill"></i></div>
+            <div class="brand-text">
+                <strong>Parc Auto</strong>
+                <small>Gestion de flotte</small>
+            </div>
+        </a>
+
+        <div class="sb-body">
+
+            <div class="sb-section">Principal</div>
+
+            <div class="nav-item">
+                <a href="/admin/dashboard" class="nav-link" data-tip="Dashboard" data-page="Dashboard">
+                    <span class="ni"><i class="bi bi-speedometer2"></i></span>
+                    <span class="nt">Dashboard<small class="nt-sub">Vue générale</small></span>
+                </a>
+            </div>
+
+            <div class="sb-section">Gestion</div>
+
+            <div class="nav-item">
+                <a href="/admin/conducteurs" class="nav-link" data-tip="Conducteurs" data-page="Conducteurs">
+                    <span class="ni">
+                        <i class="bi bi-person-badge"></i>
+                        <span class="pulse p-green"></span>
+                    </span>
+                    <span class="nt">Conducteurs<small class="nt-sub">18 actifs</small></span>
+                    <span class="nb nb-blue">18</span>
+                </a>
+            </div>
+
+            <div class="nav-item">
+                <a href="/admin/vehicules" class="nav-link" data-tip="Véhicules" data-page="Véhicules">
+                    <span class="ni">
+                        <i class="bi bi-truck"></i>
+                        <span class="pulse p-amber"></span>
+                    </span>
+                    <span class="nt">Véhicules<small class="nt-sub">24 en flotte</small></span>
+                    <span class="nb nb-blue">24</span>
+                </a>
+            </div>
+
+            <div class="nav-item">
+                <a href="/admin/gps" class="nav-link" data-tip="Suivi GPS" data-page="Suivi GPS">
+                    <span class="ni">
+                        <i class="bi bi-geo-alt"></i>
+                        <span class="pulse p-green"></span>
+                    </span>
+                    <span class="nt">Suivi GPS<small class="nt-sub">3 en déplacement</small></span>
+                    <span class="nb nb-green" style="background:rgba(34,197,94,0.1); color:#15803d; border-color:rgba(34,197,94,0.2);">LIVE</span>
+                </a>
+            </div>
+
+            <div class="sb-hr"></div>
+            <div class="sb-section">Interventions</div>
+
+            <div class="nav-item">
+                <a href="/admin/reparations" class="nav-link" data-tip="Réparation" data-page="Réparation">
+                    <span class="ni">
+                        <i class="bi bi-wrench-adjustable"></i>
+                        <span class="pulse p-amber"></span>
+                    </span>
+                    <span class="nt">Réparation<small class="nt-sub">5 en cours</small></span>
+                    <span class="nb nb-amber">5</span>
+                </a>
+            </div>
+
+            <div class="nav-item">
+                <a href="/admin/accidents" class="nav-link" data-tip="Accident" data-page="Accident">
+                    <span class="ni">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        <span class="pulse p-red"></span>
+                    </span>
+                    <span class="nt">Accident<small class="nt-sub">3 ce mois</small></span>
+                    <span class="nb nb-red">3</span>
+                </a>
+            </div>
+
+            <div class="nav-item">
+                <a href="/admin/depannage" class="nav-link" data-tip="Dépannage" data-page="Dépannage">
+                    <span class="ni"><i class="bi bi-cone-striped"></i></span>
+                    <span class="nt">Dépannage<small class="nt-sub">Interventions terrain</small></span>
+                </a>
+            </div>
+
+            <div class="nav-item">
+                <a href="/admin/vidanges" class="nav-link" data-tip="Vidange" data-page="Vidange">
+                    <span class="ni"><i class="bi bi-droplet-half"></i></span>
+                    <span class="nt">Vidange<small class="nt-sub">7 planifiées</small></span>
+                    <span class="nb nb-blue">7</span>
+                </a>
+            </div>
+
+            <div class="sb-hr"></div>
+            <div class="sb-section">Données</div>
+
+            <div class="nav-item">
+                <a href="/admin/archivage" class="nav-link" data-tip="Archivage" data-page="Archivage">
+                    <span class="ni"><i class="bi bi-archive"></i></span>
+                    <span class="nt">Archivage<small class="nt-sub">Documents & historique</small></span>
+                </a>
+            </div>
+
+        </div>
+
+        <div class="sb-foot">
+            <div class="profile-row" id="profileRow">
+                <div class="profile-av">AD</div>
+                <div class="profile-info">
+                    <b>Administrateur</b>
+                    <small>admin@parcauto.ma</small>
+                </div>
+                <i class="bi bi-three-dots-vertical profile-more"></i>
+
+                <div class="profile-popup" id="profilePopup" onclick="event.stopPropagation()">
+                    <div class="pp-head">
+                        <div class="pp-av">AD</div>
+                        <div>
+                            <b>Administrateur</b>
+                            <small>admin@parcauto.ma</small>
+                        </div>
+                    </div>
+                    <a href="/admin/profile-admin" class="pp-link"><i class="bi bi-person-gear"></i> Mon profil</a>
+                    <a href="/admin/profile-entreprise" class="pp-link"><i class="bi bi-building"></i> Entreprise</a>
+                    <a href="#" class="pp-link"><i class="bi bi-gear"></i> Paramètres</a>
+                    <div class="pp-hr"></div>
+                    <div class="pp-link" id="themeToggleBtn">
+                        <i class="bi bi-moon-stars" id="themeIcon"></i>
+                        <span id="themeText">Mode sombre</span>
+                    </div>
+                    <div class="pp-hr"></div>
+                    <a href="#" id="logout-btn" class="pp-link pp-logout"><i class="bi bi-box-arrow-right"></i> Déconnexion</a>
+                </div>
+            </div>
+        </div>
+
+    </aside>
+
+    <div class="overlay" id="overlay" onclick="closeMobile()"></div>
+
+    <button class="mob-toggle" onclick="openMobile()">
+        <i class="bi bi-list"></i>
+    </button>
+
+    <div class="main" id="main">
+        <div class="page">
+            <div class="w-100 d-flex flex-column align-items-center">
+                
+                <div class="page-header w-100 mb-4">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                        <div>
+                            <h2 class="page-title">Profil Entreprise</h2>
+                            <p class="page-subtitle">Informations générales de votre organisation</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row w-100 g-4">
+                    
+                    <!-- Profile Summary Card -->
+                    <div class="col-12">
+                        <div class="form-card d-flex align-items-center gap-4">
+                            <div class="profile-av" style="width: 80px; height: 80px; border-radius: 18px; font-size: 1.8rem; box-shadow: none; background: linear-gradient(135deg, #10b981, #059669);">
+                                EN
+                            </div>
+                            <div>
+                                <h4 class="fw-bold mb-1 text-dark">Entreprise Example</h4>
+                                <p class="text-muted mb-2 small">contact@entreprise.ma</p>
+                                <span class="badge bg-success bg-opacity-10 text-success px-3 py-1 rounded-pill fw-medium border border-success border-opacity-10">Compte vérifié</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Settings Card -->
+                    <div class="col-12">
+                        <div class="form-card p-0">
+                            <div class="px-4 pt-3">
+                                <ul class="nav nav-pills custom-tabs" id="profileTabs" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="info-tab" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab">Informations de l'entreprise</button>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="p-4">
+                                <div class="tab-content" id="profileTabContent">
+                                    
+                                    <!-- Informations Entreprise -->
+                                    <div class="tab-pane fade show active" id="info" role="tabpanel">
+                                        <form id="entrepriseForm">
+                                            <div class="row g-3">
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Nom de l'entreprise</label>
+                                                    <input type="text" class="form-control" value="Entreprise Example" required>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Secteur d'activité</label>
+                                                    <input type="text" class="form-control" value="Logistique" required>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <label class="form-label">Adresse</label>
+                                                    <input type="text" class="form-control" value="123 Rue de la Logistique, Casablanca" required>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Email</label>
+                                                    <input type="email" class="form-control" value="contact@entreprise.ma" required>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Téléphone</label>
+                                                    <input type="tel" class="form-control" value="+212 5 00 00 00 00" required>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Date de création</label>
+                                                    <input type="date" class="form-control" value="2010-05-15" required>
+                                                </div>
+                                                
+                                                <div class="col-12 mt-4 pt-2 border-top">
+                                                    <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/profile-entreprise.js"></script>
+<script src="../js/logout.js"></script>
+
+</body>
+</html>

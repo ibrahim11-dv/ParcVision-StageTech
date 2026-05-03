@@ -15,7 +15,6 @@ document.getElementById("loginForm").addEventListener("submit",async (e)=>{
         })
     })
     if(response.ok){
-        const token = await response.text();
         window.location.href = "/admin/dashboard"
     }else{
         alert("wrong email or password")

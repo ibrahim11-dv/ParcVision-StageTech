@@ -32,11 +32,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             FilterChain filterChain) throws ServletException, IOException {
         String token = null;
         String email = null;
-        String authhead = request.getHeader("Authorization");
-        if(authhead != null && authhead.startsWith("Bearer ")){
-            token = authhead.substring(7);
-            email = jwtService.extractEmail(token);
-        }else if (request.getCookies() != null) {
+        if (request.getCookies() != null) {
             for (Cookie cookie : request.getCookies()) {
                 if ("jwt_token".equals(cookie.getName())) {
                     token = cookie.getValue();
