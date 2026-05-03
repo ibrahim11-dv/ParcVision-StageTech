@@ -4,6 +4,9 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -71,4 +74,20 @@ public class JwtService {
     ){
         return email.equals(userDetails.getUsername()) && !isTokenExprired(token);
     }
+    public String extractEmailFromCookie(HttpServletRequest request){
+        Cookie[] cookies = request.getCookies();
+        try{
+            if(cookies !=null){
+                for(Cookie c : cookies){
+                    if(c.getName().equals("jwt_token")){
+                        return extractEmail(c.getValue());
+                    }
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }
