@@ -45,6 +45,8 @@ public class Utilisateur implements UserDetails {
     )
 
     private String password;
+
+    private String photoProfileUrl;
     @Enumerated(EnumType.STRING)
     @Column(
             nullable = false
@@ -71,6 +73,17 @@ public class Utilisateur implements UserDetails {
     @JsonManagedReference
     private Admin admin;
 
+    public String getPhotoProfileUrl() {
+        return photoProfileUrl;
+    }
+
+    public void setPhotoProfileUrl(String photoProfileUrl) {
+        this.photoProfileUrl = photoProfileUrl;
+    }
+
+    public Utilisateur() {
+
+    }
 
 
     @Override
@@ -164,18 +177,18 @@ public class Utilisateur implements UserDetails {
         this.admin = admin;
     }
 
-    public Utilisateur(Long id, String nom, String prenom, String email, String telephone, String password, Role role, Entreprise entreprise, Conducteur conducteur, Admin admin) {
+    public Utilisateur(Long id, String nom, String prenom, String email, String telephone, String password, String photoProfileUrl, Role role, Entreprise entreprise, Conducteur conducteur, Admin admin) {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
         this.email = email;
         this.telephone = telephone;
         this.password = password;
+        this.photoProfileUrl = photoProfileUrl;
         this.role = role;
         this.entreprise = entreprise;
         this.conducteur = conducteur;
         this.admin = admin;
     }
-    public Utilisateur() {
-    }
+
 }

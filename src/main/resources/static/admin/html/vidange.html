@@ -150,158 +150,169 @@
     </aside>
 
     <div class="main" id="main">
-        <div class="page-header">
-            <div>
-                <h1 class="page-title">Gestion des Vidanges</h1>
-                <p class="page-subtitle">Suivi de l'entretien et changements d'huile</p>
-            </div>
-            <button class="btn-primary-custom" onclick="openModal('addOilChangeModal')">
-                <i class="bi bi-plus-lg"></i>
-                Nouvelle Vidange
-            </button>
-        </div>
+        <div class="page">
+            <div class="w-100 d-flex flex-column align-items-center">
 
-        <!-- Stats Cards -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon bg-blue-soft"><i class="bi bi-droplet-half"></i></div>
-                <div class="stat-info">
-                    <h3>128</h3>
-                    <p>Vidanges réalisées</p>
+                <!-- En-tête de page -->
+                <div class="page-header w-100 mb-4">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                        <div>
+                            <h2 class="page-title"><i class="bi bi-droplet-half text-primary me-2"></i>Gestion des Vidanges</h2>
+                            <p class="page-subtitle">Suivi de l'entretien et changements d'huile.</p>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-primary" onclick="openModal('addOilChangeModal')"><i class="bi bi-plus-lg me-1"></i> Nouvelle Vidange</button>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon bg-green-soft"><i class="bi bi-check-circle"></i></div>
-                <div class="stat-info">
-                    <h3>18</h3>
-                    <p>Véhicules à jour</p>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon bg-amber-soft"><i class="bi bi-exclamation-circle"></i></div>
-                <div class="stat-info">
-                    <h3>4</h3>
-                    <p>Vidanges imminentes</p>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon bg-red-soft"><i class="bi bi-x-circle"></i></div>
-                <div class="stat-info">
-                    <h3>2</h3>
-                    <p>Vidanges en retard</p>
-                </div>
-            </div>
-        </div>
 
-        <!-- Table Container -->
-        <div class="table-container">
-            <div class="table-header">
-                <h2 class="table-title">Historique & Planification</h2>
-                <div class="search-box">
-                    <i class="bi bi-search"></i>
-                    <input type="text" placeholder="Rechercher un véhicule...">
+                <!-- KPI ROW -->
+                <div class="row w-100 g-3 mb-4">
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-icon blue"><i class="bi bi-droplet-half"></i></div>
+                            <div class="stat-body">
+                                <div class="stat-val">128</div>
+                                <div class="stat-label">Total Vidanges</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-icon green"><i class="bi bi-check-circle"></i></div>
+                            <div class="stat-body">
+                                <div class="stat-val">18</div>
+                                <div class="stat-label">À jour</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-icon orange"><i class="bi bi-exclamation-circle"></i></div>
+                            <div class="stat-body">
+                                <div class="stat-val">4</div>
+                                <div class="stat-label">Imminentes</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-icon red"><i class="bi bi-x-circle"></i></div>
+                            <div class="stat-body">
+                                <div class="stat-val">2</div>
+                                <div class="stat-label">En retard</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="table-responsive">
-                <table class="custom-table">
-                    <thead>
-                        <tr>
-                            <th>Véhicule</th>
-                            <th>Dernière Vidange</th>
-                            <th>Type d'Huile</th>
-                            <th>Km Actuel (est.)</th>
-                            <th>Prochaine (km)</th>
-                            <th>Statut</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <div class="vehicle-info">
-                                    <div class="vehicle-img"><i class="bi bi-truck"></i></div>
-                                    <div class="vehicle-details">
-                                        <strong>1234-A-6</strong>
-                                        <small>Renault Master</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>10 Mars 2026</td>
-                            <td>5W30 Synthétique</td>
-                            <td>85,200 km</td>
-                            <td>95,000 km</td>
-                            <td><span class="badge-status status-ajour">À jour</span></td>
-                            <td>
-                                <div class="d-flex gap-2">
-                                    <button class="action-btn" title="Voir détails" onclick="viewOilChange('1234-A-6', 'Renault Master', '10 Mars 2026', '5W30 Synthétique', '85,000 km', '95,000 km', '450 DH', 'Garage Central', 'À jour')">
-                                        <i class="bi bi-eye"></i>
-                                    </button>
-                                    <button class="action-btn" title="Modifier" onclick="editOilChange('1234-A-6', 'Renault Master', '2026-03-10', '5W30 Synthétique', '85000', '95000', '450', 'Garage Central', 'ajour')">
-                                        <i class="bi bi-pencil"></i>
-                                    </button>
-                                    <button class="action-btn text-danger" title="Supprimer" onclick="deleteOilChange()"><i class="bi bi-trash"></i></button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="vehicle-info">
-                                    <div class="vehicle-img"><i class="bi bi-car-front"></i></div>
-                                    <div class="vehicle-details">
-                                        <strong>5678-B-12</strong>
-                                        <small>Dacia Duster</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>05 Janvier 2026</td>
-                            <td>10W40 Semi-Synth</td>
-                            <td>119,500 km</td>
-                            <td>120,000 km</td>
-                            <td><span class="badge-status status-bientot">Bientôt</span></td>
-                            <td>
-                                <div class="d-flex gap-2">
-                                    <button class="action-btn" title="Voir détails" onclick="viewOilChange('5678-B-12', 'Dacia Duster', '05 Janvier 2026', '10W40 Semi-Synth', '110,000 km', '120,000 km', '350 DH', 'Auto Services Plus', 'Bientôt')">
-                                        <i class="bi bi-eye"></i>
-                                    </button>
-                                    <button class="action-btn" title="Modifier" onclick="editOilChange('5678-B-12', 'Dacia Duster', '2026-01-05', '10W40 Semi-Synth', '110000', '120000', '350', 'Auto Services Plus', 'bientot')">
-                                        <i class="bi bi-pencil"></i>
-                                    </button>
-                                    <button class="action-btn text-danger" title="Supprimer" onclick="deleteOilChange()"><i class="bi bi-trash"></i></button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="vehicle-info">
-                                    <div class="vehicle-img"><i class="bi bi-truck"></i></div>
-                                    <div class="vehicle-details">
-                                        <strong>9012-H-33</strong>
-                                        <small>Iveco Daily</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>15 Novembre 2025</td>
-                            <td>5W40 Synthétique</td>
-                            <td>156,200 km</td>
-                            <td>155,000 km</td>
-                            <td><span class="badge-status status-retard">En retard</span></td>
-                            <td>
-                                <div class="d-flex gap-2">
-                                    <button class="action-btn" title="Voir détails" onclick="viewOilChange('9012-H-33', 'Iveco Daily', '15 Novembre 2025', '5W40 Synthétique', '140,000 km', '155,000 km', '550 DH', 'Garage Maghreb', 'En retard')">
-                                        <i class="bi bi-eye"></i>
-                                    </button>
-                                    <button class="action-btn" title="Modifier" onclick="editOilChange('9012-H-33', 'Iveco Daily', '2025-11-15', '5W40 Synthétique', '140000', '155000', '550', 'Garage Maghreb', 'retard')">
-                                        <i class="bi bi-pencil"></i>
-                                    </button>
-                                    <button class="action-btn text-danger" title="Supprimer" onclick="deleteOilChange()"><i class="bi bi-trash"></i></button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+
+                <!-- Table Container -->
+                <div class="card w-100" style="padding:0;overflow:hidden; animation: fadeUp 0.4s ease both;">
+                    <!-- Card header with search -->
+                    <div style="padding:18px 20px;border-bottom:1px solid var(--border-color);display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap">
+                        <h5 style="font-family:'Outfit',sans-serif;font-weight:700;font-size:1rem;margin:0">Historique & Planification</h5>
+                        <div style="display:flex;gap:10px;flex-wrap:wrap">
+                            <div class="search-bar" style="min-width:200px">
+                                <i class="bi bi-search"></i>
+                                <input type="text" placeholder="Rechercher un véhicule...">
+                            </div>
+                            <select class="form-select-custom" style="width:auto;padding:9px 14px">
+                                <option value="all">Tous les statuts</option>
+                                <option value="ajour">À jour</option>
+                                <option value="bientot">Bientôt</option>
+                                <option value="retard">En retard</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="table-wrapper" style="border:none;border-radius:0;box-shadow:none">
+                        <table class="table align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Véhicule</th>
+                                    <th>Dernière Vidange</th>
+                                    <th>Type d'Huile</th>
+                                    <th>Km Actuel (est.)</th>
+                                    <th>Prochaine (km)</th>
+                                    <th>Statut</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="hist-row">
+                                    <td>
+                                        <div style="display:flex;align-items:center;gap:10px">
+                                            <div class="profile-av bg-light text-primary" style="width: 36px; height: 36px; border-radius: 8px;"><i class="bi bi-truck"></i></div>
+                                            <div>
+                                                <b class="mission-id" style="color:var(--text-main); display:block; line-height:1.2;">1234-A-6</b>
+                                                <span class="mission-dist" style="font-size:0.75rem;">Renault Master</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="mission-date">10 Mars 2026</span></td>
+                                    <td><span style="font-weight:500;">5W30 Synthétique</span></td>
+                                    <td><span class="mission-dist">85,200 km</span></td>
+                                    <td><b style="color:var(--text-main);">95,000 km</b></td>
+                                    <td><span class="prio-badge prio-faible">À jour</span></td>
+                                    <td>
+                                        <div style="display:flex;gap:5px">
+                                            <button class="btn-icon" title="Voir" onclick="viewOilChange('1234-A-6', 'Renault Master', '10 Mars 2026', '5W30 Synthétique', '85,000 km', '95,000 km', '450 DH', 'Garage Central', 'À jour')"><i class="bi bi-eye"></i></button>
+                                            <button class="btn-icon" title="Modifier" onclick="editOilChange('1234-A-6', 'Renault Master', '2026-03-10', '5W30 Synthétique', '85000', '95000', '450', 'Garage Central', 'ajour')"><i class="bi bi-pencil-square"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="hist-row">
+                                    <td>
+                                        <div style="display:flex;align-items:center;gap:10px">
+                                            <div class="profile-av bg-light text-primary" style="width: 36px; height: 36px; border-radius: 8px;"><i class="bi bi-car-front"></i></div>
+                                            <div>
+                                                <b class="mission-id" style="color:var(--text-main); display:block; line-height:1.2;">5678-B-12</b>
+                                                <span class="mission-dist" style="font-size:0.75rem;">Dacia Duster</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="mission-date">05 Janvier 2026</span></td>
+                                    <td><span style="font-weight:500;">10W40 Semi-Synth</span></td>
+                                    <td><span class="mission-dist">119,500 km</span></td>
+                                    <td><b style="color:var(--text-main);">120,000 km</b></td>
+                                    <td><span class="prio-badge prio-normale">Bientôt</span></td>
+                                    <td>
+                                        <div style="display:flex;gap:5px">
+                                            <button class="btn-icon" title="Voir" onclick="viewOilChange('5678-B-12', 'Dacia Duster', '05 Janvier 2026', '10W40 Semi-Synth', '110,000 km', '120,000 km', '350 DH', 'Auto Services Plus', 'Bientôt')"><i class="bi bi-eye"></i></button>
+                                            <button class="btn-icon" title="Modifier" onclick="editOilChange('5678-B-12', 'Dacia Duster', '2026-01-05', '10W40 Semi-Synth', '110000', '120000', '350', 'Auto Services Plus', 'bientot')"><i class="bi bi-pencil-square"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="hist-row">
+                                    <td>
+                                        <div style="display:flex;align-items:center;gap:10px">
+                                            <div class="profile-av bg-light text-danger" style="width: 36px; height: 36px; border-radius: 8px;"><i class="bi bi-truck"></i></div>
+                                            <div>
+                                                <b class="mission-id" style="color:var(--text-main); display:block; line-height:1.2;">9012-H-33</b>
+                                                <span class="mission-dist" style="font-size:0.75rem;">Iveco Daily</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="mission-date">15 Novembre 2025</span></td>
+                                    <td><span style="font-weight:500;">5W40 Synthétique</span></td>
+                                    <td><span class="mission-dist">156,200 km</span></td>
+                                    <td><b class="text-danger">155,000 km</b></td>
+                                    <td><span class="prio-badge prio-haute">En retard</span></td>
+                                    <td>
+                                        <div style="display:flex;gap:5px">
+                                            <button class="btn-icon" title="Voir" onclick="viewOilChange('9012-H-33', 'Iveco Daily', '15 Novembre 2025', '5W40 Synthétique', '140,000 km', '155,000 km', '550 DH', 'Garage Maghreb', 'En retard')"><i class="bi bi-eye"></i></button>
+                                            <button class="btn-icon" title="Modifier" onclick="editOilChange('9012-H-33', 'Iveco Daily', '2025-11-15', '5W40 Synthétique', '140000', '155000', '550', 'Garage Maghreb', 'retard')"><i class="bi bi-pencil-square"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
 </div>
 
 <!-- Modal Ajouter Vidange -->
@@ -368,8 +379,8 @@
             </form>
         </div>
         <div class="custom-modal-footer">
-            <button class="btn-secondary-custom" onclick="closeModal('addOilChangeModal')">Annuler</button>
-            <button class="btn-primary-custom" onclick="saveOilChange()">Enregistrer</button>
+            <button class="btn btn-secondary" onclick="closeModal('addOilChangeModal')">Annuler</button>
+            <button class="btn btn-primary" onclick="saveOilChange()">Enregistrer</button>
         </div>
     </div>
 </div>
@@ -416,8 +427,8 @@
             </div>
         </div>
         <div class="custom-modal-footer">
-            <button class="btn-secondary-custom" onclick="closeModal('viewOilChangeModal')">Fermer</button>
-            <button class="btn-primary-custom" onclick="closeModal('viewOilChangeModal'); openModal('editOilChangeModal')">Modifier</button>
+            <button class="btn btn-secondary" onclick="closeModal('viewOilChangeModal')">Fermer</button>
+            <button class="btn btn-primary" onclick="closeModal('viewOilChangeModal'); openModal('editOilChangeModal')">Modifier</button>
         </div>
     </div>
 </div>
@@ -485,8 +496,8 @@
             </form>
         </div>
         <div class="custom-modal-footer">
-            <button class="btn-secondary-custom" onclick="closeModal('editOilChangeModal')">Annuler</button>
-            <button class="btn-primary-custom" onclick="updateOilChange()">Mettre à jour</button>
+            <button class="btn btn-secondary" onclick="closeModal('editOilChangeModal')">Annuler</button>
+            <button class="btn btn-primary" onclick="updateOilChange()">Mettre à jour</button>
         </div>
     </div>
 </div>

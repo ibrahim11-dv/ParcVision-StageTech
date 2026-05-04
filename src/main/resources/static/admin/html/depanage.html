@@ -150,106 +150,132 @@
     </aside>
 
     <div class="main" id="main">
-        <div class="page-header">
-            <div>
-                <h1 class="page-title">Gestion des Dépannages</h1>
-                <p class="page-subtitle">Suivi des interventions de remorquage et assistance routière</p>
-            </div>
-            <button class="btn-primary-custom" onclick="openModal('addDepanageModal')">
-                <i class="bi bi-plus-lg"></i>
-                Nouvelle Intervention
-            </button>
-        </div>
+        <div class="page">
+            <div class="w-100 d-flex flex-column align-items-center">
 
-        <!-- Stats Cards -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon bg-blue-soft"><i class="bi bi-cone-striped"></i></div>
-                <div class="stat-info">
-                    <h3>28</h3>
-                    <p>Total Dépannages</p>
+                <!-- En-tête de page -->
+                <div class="page-header w-100 mb-4">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                        <div>
+                            <h2 class="page-title"><i class="bi bi-cone-striped text-warning me-2"></i>Gestion des Dépannages</h2>
+                            <p class="page-subtitle">Suivi des interventions de remorquage et assistance routière.</p>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-warning" onclick="openModal('addDepanageModal')"><i class="bi bi-plus-lg me-1"></i> Nouvelle Intervention</button>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon bg-amber-soft"><i class="bi bi-telephone-outbound"></i></div>
-                <div class="stat-info">
-                    <h3>2</h3>
-                    <p>En cours</p>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon bg-green-soft"><i class="bi bi-cash-stack"></i></div>
-                <div class="stat-info">
-                    <h3>6,800 <small>DH</small></h3>
-                    <p>Frais (Mois actuel)</p>
-                </div>
-            </div>
-        </div>
 
-        <!-- Table Container -->
-        <div class="table-container">
-            <div class="table-header">
-                <h2 class="table-title">Historique des dépannages</h2>
-                <div class="search-box">
-                    <i class="bi bi-search"></i>
-                    <input type="text" placeholder="Rechercher...">
+                <!-- KPI ROW -->
+                <div class="row w-100 g-3 mb-4">
+                    <div class="col-6 col-md-4">
+                        <div class="stat-card">
+                            <div class="stat-icon blue"><i class="bi bi-cone-striped"></i></div>
+                            <div class="stat-body">
+                                <div class="stat-val">28</div>
+                                <div class="stat-label">Total Dépannages</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-4">
+                        <div class="stat-card">
+                            <div class="stat-icon orange"><i class="bi bi-telephone-outbound"></i></div>
+                            <div class="stat-body">
+                                <div class="stat-val">2</div>
+                                <div class="stat-label">En cours</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="stat-card">
+                            <div class="stat-icon green"><i class="bi bi-cash-stack"></i></div>
+                            <div class="stat-body">
+                                <div class="stat-val">6,800 <small>DH</small></div>
+                                <div class="stat-label">Frais (Mois)</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="table-responsive">
-                <table class="custom-table">
-                    <thead>
-                        <tr>
-                            <th>Véhicule</th>
-                            <th>Conducteur</th>
-                            <th>Date & Heure</th>
-                            <th>Lieu</th>
-                            <th>Motif</th>
-                            <th>Statut</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>1234-A-6</strong></td>
-                            <td>Ahmed Alami</td>
-                            <td>21 Avril, 10:30</td>
-                            <td>Autoroute A1, km 42</td>
-                            <td>Panne Moteur</td>
-                            <td><span class="badge-status status-encours">En cours</span></td>
-                            <td>
-                                <div class="d-flex gap-2">
-                                    <button class="action-btn" title="Voir" onclick="viewDepanage('1234-A-6', 'Ahmed Alami', '21 Avril, 10:30', 'Autoroute A1, km 42', 'Panne Moteur', 'En cours')">
-                                        <i class="bi bi-eye"></i>
-                                    </button>
-                                    <button class="action-btn" title="Modifier" onclick="editDepanage('1234-A-6', 'Ahmed Alami', '2026-04-21T10:30', 'Autoroute A1, km 42', 'Panne Moteur', 'encours')">
-                                        <i class="bi bi-pencil"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><strong>5678-B-12</strong></td>
-                            <td>Said Benali</td>
-                            <td>19 Avril, 14:15</td>
-                            <td>Centre Ville, Rabat</td>
-                            <td>Crevaison</td>
-                            <td><span class="badge-status status-termine">Terminé</span></td>
-                            <td>
-                                <div class="d-flex gap-2">
-                                    <button class="action-btn" title="Voir" onclick="viewDepanage('5678-B-12', 'Said Benali', '19 Avril, 14:15', 'Centre Ville, Rabat', 'Crevaison', 'Terminé')">
-                                        <i class="bi bi-eye"></i>
-                                    </button>
-                                    <button class="action-btn" title="Modifier" onclick="editDepanage('5678-B-12', 'Said Benali', '2026-04-19T14:15', 'Centre Ville, Rabat', 'Crevaison', 'termine')">
-                                        <i class="bi bi-pencil"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+
+                <!-- Table Container -->
+                <div class="card w-100" style="padding:0;overflow:hidden; animation: fadeUp 0.4s ease both;">
+                    <!-- Card header with search -->
+                    <div style="padding:18px 20px;border-bottom:1px solid var(--border-color);display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap">
+                        <h5 style="font-family:'Outfit',sans-serif;font-weight:700;font-size:1rem;margin:0">Historique des dépannages</h5>
+                        <div style="display:flex;gap:10px;flex-wrap:wrap">
+                            <div class="search-bar" style="min-width:200px">
+                                <i class="bi bi-search"></i>
+                                <input type="text" placeholder="Rechercher...">
+                            </div>
+                            <select class="form-select-custom" style="width:auto;padding:9px 14px">
+                                <option value="all">Tous les statuts</option>
+                                <option value="encours">En cours</option>
+                                <option value="termine">Terminé</option>
+                                <option value="attente">En attente</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="table-wrapper" style="border:none;border-radius:0;box-shadow:none">
+                        <table class="table align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Véhicule</th>
+                                    <th>Conducteur</th>
+                                    <th>Date & Heure</th>
+                                    <th>Lieu</th>
+                                    <th>Motif</th>
+                                    <th>Statut</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="hist-row">
+                                    <td>
+                                        <div style="display:flex;align-items:center;gap:10px">
+                                            <div class="profile-av bg-light text-primary" style="width: 36px; height: 36px; border-radius: 8px;"><i class="bi bi-truck"></i></div>
+                                            <b class="mission-id" style="color:var(--text-main);">1234-A-6</b>
+                                        </div>
+                                    </td>
+                                    <td><span style="font-weight:500;">Ahmed Alami</span></td>
+                                    <td><span class="mission-date">21 Avril, 10:30</span></td>
+                                    <td><span class="mission-dist">Autoroute A1, km 42</span></td>
+                                    <td><span class="mission-dist">Panne Moteur</span></td>
+                                    <td><span class="prio-badge prio-normale">En cours</span></td>
+                                    <td>
+                                        <div style="display:flex;gap:5px">
+                                            <button class="btn-icon" title="Voir" onclick="viewDepanage('1234-A-6', 'Ahmed Alami', '21 Avril, 10:30', 'Autoroute A1, km 42', 'Panne Moteur', 'En cours')"><i class="bi bi-eye"></i></button>
+                                            <button class="btn-icon" title="Modifier" onclick="editDepanage('1234-A-6', 'Ahmed Alami', '2026-04-21T10:30', 'Autoroute A1, km 42', 'Panne Moteur', 'encours')"><i class="bi bi-pencil-square"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="hist-row">
+                                    <td>
+                                        <div style="display:flex;align-items:center;gap:10px">
+                                            <div class="profile-av bg-light text-primary" style="width: 36px; height: 36px; border-radius: 8px;"><i class="bi bi-truck"></i></div>
+                                            <b class="mission-id" style="color:var(--text-main);">5678-B-12</b>
+                                        </div>
+                                    </td>
+                                    <td><span style="font-weight:500;">Said Benali</span></td>
+                                    <td><span class="mission-date">19 Avril, 14:15</span></td>
+                                    <td><span class="mission-dist">Centre Ville, Rabat</span></td>
+                                    <td><span class="mission-dist">Crevaison</span></td>
+                                    <td><span class="prio-badge prio-faible">Terminé</span></td>
+                                    <td>
+                                        <div style="display:flex;gap:5px">
+                                            <button class="btn-icon" title="Voir" onclick="viewDepanage('5678-B-12', 'Said Benali', '19 Avril, 14:15', 'Centre Ville, Rabat', 'Crevaison', 'Terminé')"><i class="bi bi-eye"></i></button>
+                                            <button class="btn-icon" title="Modifier" onclick="editDepanage('5678-B-12', 'Said Benali', '2026-04-19T14:15', 'Centre Ville, Rabat', 'Crevaison', 'termine')"><i class="bi bi-pencil-square"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
 </div>
 
 <!-- Modal View -->
@@ -268,7 +294,7 @@
             <div class="view-detail-row"><span class="view-detail-label">Statut</span><span class="view-detail-value" id="v_sta"></span></div>
         </div>
         <div class="custom-modal-footer">
-            <button class="btn-secondary-custom" onclick="closeModal('viewDepanageModal')">Fermer</button>
+            <button class="btn btn-secondary" onclick="closeModal('viewDepanageModal')">Fermer</button>
         </div>
     </div>
 </div>
@@ -297,8 +323,8 @@
             </form>
         </div>
         <div class="custom-modal-footer">
-            <button class="btn-secondary-custom" onclick="closeModal('addDepanageModal')">Annuler</button>
-            <button class="btn-primary-custom" onclick="saveDepanage()">Enregistrer</button>
+            <button class="btn btn-secondary" onclick="closeModal('addDepanageModal')">Annuler</button>
+            <button class="btn btn-primary" onclick="saveDepanage()">Enregistrer</button>
         </div>
     </div>
 </div>
@@ -343,8 +369,8 @@
             </form>
         </div>
         <div class="custom-modal-footer">
-            <button class="btn-secondary-custom" onclick="closeModal('editDepanageModal')">Annuler</button>
-            <button class="btn-primary-custom" onclick="updateDepanage()">Mettre à jour</button>
+            <button class="btn btn-secondary" onclick="closeModal('editDepanageModal')">Annuler</button>
+            <button class="btn btn-primary" onclick="updateDepanage()">Mettre à jour</button>
         </div>
     </div>
 </div>

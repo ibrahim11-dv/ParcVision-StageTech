@@ -152,211 +152,194 @@
 
         </aside>
 
-        <div class="main">
+        <div class="main" id="main">
+            <div class="page">
+                <div class="w-100 d-flex flex-column align-items-center">
 
-            <div class="page-header">
-                <div>
-                    <h1 class="page-title">Gestion des Accidents</h1>
-                    <p class="page-subtitle">Suivi des sinistres, réparations et conducteurs impliqués</p>
-                </div>
-                <button class="btn-primary-custom" onclick="openModal('addModal')">
-                    <i class="bi bi-plus-lg"></i> Déclarer un accident
-                </button>
-            </div>
-
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon bg-red-soft"><i class="bi bi-exclamation-triangle-fill"></i></div>
-                    <div class="stat-info">
-                        <h3>12</h3>
-                        <p>Total Accidents (Année)</p>
+            <div class="page-header w-100 mb-4">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                    <div>
+                        <h2 class="page-title"><i class="bi bi-exclamation-triangle text-danger me-2"></i>Gestion des Accidents</h2>
+                        <p class="page-subtitle">Suivi des sinistres, réparations et conducteurs impliqués.</p>
                     </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon bg-amber-soft"><i class="bi bi-tools"></i></div>
-                    <div class="stat-info">
-                        <h3>4</h3>
-                        <p>En cours de réparation</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon bg-blue-soft"><i class="bi bi-cash-stack"></i></div>
-                    <div class="stat-info">
-                        <h3>85 400 <small>DH</small></h3>
-                        <p>Budget Réparation Estimé</p>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-danger" onclick="openModal('addModal')"><i class="bi bi-plus-lg me-1"></i> Déclarer un accident</button>
                     </div>
                 </div>
             </div>
 
-            <div class="table-container">
-                <div class="table-header">
-                    <h2 class="table-title">Derniers Accidents</h2>
-                    <div class="search-box">
-                        <i class="bi bi-search"></i>
-                        <input type="text" placeholder="Rechercher...">
+            <!-- KPI ROW -->
+            <div class="row w-100 g-3 mb-4">
+                <div class="col-6 col-md-4 col-lg-4">
+                    <div class="stat-card">
+                        <div class="stat-icon red"><i class="bi bi-exclamation-triangle-fill"></i></div>
+                        <div class="stat-body">
+                            <div class="stat-val">12</div>
+                            <div class="stat-label">Total Accidents (Année)</div>
+                        </div>
                     </div>
                 </div>
-                <div class="table-responsive">
-                    <table class="custom-table">
+                <div class="col-6 col-md-4 col-lg-4">
+                    <div class="stat-card">
+                        <div class="stat-icon orange"><i class="bi bi-wrench-adjustable"></i></div>
+                        <div class="stat-body">
+                            <div class="stat-val">4</div>
+                            <div class="stat-label">En réparation</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-4 col-lg-4">
+                    <div class="stat-card">
+                        <div class="stat-icon blue"><i class="bi bi-cash-stack"></i></div>
+                        <div class="stat-body">
+                            <div class="stat-val">85k <small>DH</small></div>
+                            <div class="stat-label">Budget Estimé</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table Container -->
+            <div class="card w-100" style="padding:0;overflow:hidden; animation: fadeUp 0.4s ease both;">
+                <!-- Card header with search -->
+                <div style="padding:18px 20px;border-bottom:1px solid var(--border-color);display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap">
+                    <h5 style="font-family:'Outfit',sans-serif;font-weight:700;font-size:1rem;margin:0">Derniers Accidents</h5>
+                    <div style="display:flex;gap:10px;flex-wrap:wrap">
+                        <div class="search-bar" style="min-width:200px">
+                            <i class="bi bi-search"></i>
+                            <input type="text" placeholder="Rechercher un véhicule ou conducteur...">
+                        </div>
+                        <select class="form-select-custom" style="width:auto;padding:9px 14px">
+                            <option value="all">Tous les statuts</option>
+                            <option value="expertise">En expertise</option>
+                            <option value="reparation">En réparation</option>
+                            <option value="repare">Réparé</option>
+                            <option value="epave">Épave</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-wrapper" style="border:none;border-radius:0;box-shadow:none">
+                    <table class="table align-middle">
                         <thead>
                             <tr>
                                 <th>Véhicule</th>
                                 <th>Conducteur</th>
                                 <th>Date & Lieu</th>
-                                <th>Contexte</th>
-                                <th>État / Gravité</th>
-                                <th>Budget Estimé</th>
+                                <th>Gravité</th>
+                                <th>Budget</th>
                                 <th>Statut</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
+                            <tr class="hist-row">
                                 <td>
-                                    <div class="vehicle-info">
-                                        <div class="vehicle-img" style="background: #fee2e2; color: #ef4444;"><i
-                                                class="bi bi-truck"></i></div>
-                                        <div class="vehicle-details">
-                                            <strong>Ford Transit</strong>
-                                            <small>3344-D-22</small>
+                                    <div style="display:flex;align-items:center;gap:10px">
+                                        <div class="profile-av bg-light text-danger" style="width: 36px; height: 36px; border-radius: 8px;"><i class="bi bi-truck"></i></div>
+                                        <div>
+                                            <b class="mission-id" style="color:var(--text-main); display:block; line-height:1.2;">3344-D-22</b>
+                                            <span class="mission-dist" style="font-size:0.75rem;">Ford Transit</span>
                                         </div>
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="driver-info">
-                                        <div class="driver-avatar" style="background: var(--gray-800);">HF</div>
-                                        <span>Hassan Fassi</span>
+                                    <div style="display:flex;align-items:center;gap:10px">
+                                        <div class="profile-av" style="width: 30px; height: 30px; border-radius: 50%; font-size: 0.7rem;">HF</div>
+                                        <span style="font-size: 0.85rem; font-weight: 500;">Hassan Fassi</span>
                                     </div>
                                 </td>
                                 <td>
-                                    <div>10 Avril 2026</div>
-                                    <small style="color: var(--gray-400);">Marrakech</small>
+                                    <div class="mission-date">10 Avril 2026</div>
+                                    <div class="mission-dist" style="font-size:0.75rem;">Marrakech</div>
                                 </td>
-                                <td><span class="badge"
-                                        style="background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600;">En
-                                        mission</span></td>
-                                <td><span class="badge-severity severity-tres-grave">Très Grave</span></td>
-                                <td><span class="budget" style="color: var(--gray-400);">Non applicable</span></td>
-                                <td><span class="badge"
-                                        style="background: #1f2937; color: #ef4444; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600;">Irréparable
-                                        / Épave</span></td>
+                                <td><span class="prio-badge prio-haute">Très Grave</span></td>
+                                <td><span style="font-family:'Outfit',sans-serif;font-weight:600; color:var(--gray-400)">-</span></td>
+                                <td><span class="prio-badge prio-haute" style="background:rgba(31,41,55,0.1); color:#1f2937;">Épave</span></td>
                                 <td>
-                                    <button class="action-btn" title="Voir détails" onclick="openModal('viewModal')"><i
-                                            class="bi bi-eye"></i></button>
-                                    <button class="action-btn" title="Modifier" onclick="openModal('editModal')"><i
-                                            class="bi bi-pencil"></i></button>
+                                    <div style="display:flex;gap:5px">
+                                        <button class="btn-icon" title="Voir détails" onclick="openModal('viewModal')"><i class="bi bi-eye"></i></button>
+                                        <button class="btn-icon" title="Modifier" onclick="openModal('editModal')"><i class="bi bi-pencil-square"></i></button>
+                                    </div>
                                 </td>
                             </tr>
-                            <tr>
+                            <tr class="hist-row">
                                 <td>
-                                    <div class="vehicle-info">
-                                        <div class="vehicle-img"><i class="bi bi-truck"></i></div>
-                                        <div class="vehicle-details">
-                                            <strong>Renault Master</strong>
-                                            <small>1234-A-56</small>
+                                    <div style="display:flex;align-items:center;gap:10px">
+                                        <div class="profile-av bg-light text-primary" style="width: 36px; height: 36px; border-radius: 8px;"><i class="bi bi-truck"></i></div>
+                                        <div>
+                                            <b class="mission-id" style="color:var(--text-main); display:block; line-height:1.2;">1234-A-56</b>
+                                            <span class="mission-dist" style="font-size:0.75rem;">Renault Master</span>
                                         </div>
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="driver-info">
-                                        <div class="driver-avatar">KA</div>
-                                        <span>Karim Alami</span>
+                                    <div style="display:flex;align-items:center;gap:10px">
+                                        <div class="profile-av" style="width: 30px; height: 30px; border-radius: 50%; font-size: 0.7rem;">KA</div>
+                                        <span style="font-size: 0.85rem; font-weight: 500;">Karim Alami</span>
                                     </div>
                                 </td>
                                 <td>
-                                    <div>15 Avril 2026</div>
-                                    <small style="color: var(--gray-400);">Casablanca</small>
+                                    <div class="mission-date">15 Avril 2026</div>
+                                    <div class="mission-dist" style="font-size:0.75rem;">Casablanca</div>
                                 </td>
-                                <td><span class="badge"
-                                        style="background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600;">En
-                                        mission</span></td>
-                                <td><span class="badge-severity severity-majeur">Majeur</span></td>
-                                <td><span class="budget">35 000 DH</span></td>
-                                <td><span class="badge"
-                                        style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600;">En
-                                        expertise</span></td>
+                                <td><span class="prio-badge prio-haute">Majeur</span></td>
+                                <td><span style="font-family:'Outfit',sans-serif;font-weight:600;">35,000 DH</span></td>
+                                <td><span class="prio-badge prio-normale">En expertise</span></td>
                                 <td>
-                                    <button class="action-btn" title="Voir détails" onclick="openModal('viewModal')"><i
-                                            class="bi bi-eye"></i></button>
-                                    <button class="action-btn" title="Modifier" onclick="openModal('editModal')"><i
-                                            class="bi bi-pencil"></i></button>
+                                    <div style="display:flex;gap:5px">
+                                        <button class="btn-icon" title="Voir détails" onclick="openModal('viewModal')"><i class="bi bi-eye"></i></button>
+                                        <button class="btn-icon" title="Modifier" onclick="openModal('editModal')"><i class="bi bi-pencil-square"></i></button>
+                                    </div>
                                 </td>
                             </tr>
-                            <tr>
+                            <tr class="hist-row">
                                 <td>
-                                    <div class="vehicle-info">
-                                        <div class="vehicle-img"><i class="bi bi-car-front"></i></div>
-                                        <div class="vehicle-details">
-                                            <strong>Dacia Logan</strong>
-                                            <small>9876-B-44</small>
+                                    <div style="display:flex;align-items:center;gap:10px">
+                                        <div class="profile-av bg-light text-primary" style="width: 36px; height: 36px; border-radius: 8px;"><i class="bi bi-car-front"></i></div>
+                                        <div>
+                                            <b class="mission-id" style="color:var(--text-main); display:block; line-height:1.2;">9876-B-44</b>
+                                            <span class="mission-dist" style="font-size:0.75rem;">Dacia Logan</span>
                                         </div>
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="driver-info">
-                                        <div class="driver-avatar">YB</div>
-                                        <span>Youssef Benali</span>
+                                    <div style="display:flex;align-items:center;gap:10px">
+                                        <div class="profile-av" style="width: 30px; height: 30px; border-radius: 50%; font-size: 0.7rem;">YB</div>
+                                        <span style="font-size: 0.85rem; font-weight: 500;">Youssef Benali</span>
                                     </div>
                                 </td>
                                 <td>
-                                    <div>02 Avril 2026</div>
-                                    <small style="color: var(--gray-400);">Rabat</small>
+                                    <div class="mission-date">02 Avril 2026</div>
+                                    <div class="mission-dist" style="font-size:0.75rem;">Rabat</div>
                                 </td>
-                                <td><span class="badge"
-                                        style="background: rgba(239, 68, 68, 0.1); color: #ef4444; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600;">Hors
-                                        mission</span></td>
-                                <td><span class="badge-severity severity-moyenne">Moyenne</span></td>
-                                <td><span class="budget">8 500 DH</span></td>
-                                <td><span class="badge"
-                                        style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600;">En
-                                        réparation</span></td>
+                                <td><span class="prio-badge prio-normale">Moyenne</span></td>
+                                <td><span style="font-family:'Outfit',sans-serif;font-weight:600;">8,500 DH</span></td>
+                                <td><span class="prio-badge prio-normale" style="background:rgba(59,130,246,0.1); color:#3b82f6;">Réparation</span></td>
                                 <td>
-                                    <button class="action-btn" title="Voir détails" onclick="openModal('viewModal')"><i
-                                            class="bi bi-eye"></i></button>
-                                    <button class="action-btn" title="Modifier" onclick="openModal('editModal')"><i
-                                            class="bi bi-pencil"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="vehicle-info">
-                                        <div class="vehicle-img"><i class="bi bi-car-front"></i></div>
-                                        <div class="vehicle-details">
-                                            <strong>Peugeot 208</strong>
-                                            <small>4567-C-33</small>
-                                        </div>
+                                    <div style="display:flex;gap:5px">
+                                        <button class="btn-icon" title="Voir détails" onclick="openModal('viewModal')"><i class="bi bi-eye"></i></button>
+                                        <button class="btn-icon" title="Modifier" onclick="openModal('editModal')"><i class="bi bi-pencil-square"></i></button>
                                     </div>
-                                </td>
-                                <td>
-                                    <div class="driver-info">
-                                        <div class="driver-avatar">SM</div>
-                                        <span>Said Mansouri</span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div>28 Mars 2026</div>
-                                    <small style="color: var(--gray-400);">Tanger</small>
-                                </td>
-                                <td><span class="badge"
-                                        style="background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600;">En
-                                        mission</span></td>
-                                <td><span class="badge-severity severity-mineur">Mineur</span></td>
-                                <td><span class="budget">1 200 DH</span></td>
-                                <td><span class="badge"
-                                        style="background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600;">Réparé</span>
-                                </td>
-                                <td>
-                                    <button class="action-btn" title="Voir détails" onclick="openModal('viewModal')"><i
-                                            class="bi bi-eye"></i></button>
-                                    <button class="action-btn" title="Modifier" onclick="openModal('editModal')"><i
-                                            class="bi bi-pencil"></i></button>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-            </div>
-        </div>
+                
+                <!-- Pagination -->
+                <div style="padding:14px 20px;border-top:1px solid var(--border-color);display:flex;align-items:center;justify-content:space-between">
+                    <span style="font-size:.82rem;color:var(--text-muted)">Affichage de 1 à 3 sur 12 accidents</span>
+                    <div style="display:flex;gap:6px">
+                        <button class="btn-ghost" style="padding:6px 12px;font-size:.8rem" disabled><i class="bi bi-chevron-left"></i></button>
+                        <button class="btn-ghost" style="padding:6px 14px;font-size:.8rem;background:var(--accent);color:white;border-color:var(--accent)">1</button>
+                        <button class="btn-ghost" style="padding:6px 14px;font-size:.8rem">2</button>
+                        <button class="btn-ghost" style="padding:6px 12px;font-size:.8rem"><i class="bi bi-chevron-right"></i></button>
+                    </div>
+                </div> <!-- w-100 end -->
+            </div> <!-- page end -->
+        </div> <!-- main end -->
+
 
         <!-- Modal Add -->
         <div class="custom-modal-overlay" id="addModal">
@@ -375,6 +358,7 @@
                             <option>Peugeot 208 (4567-C-33)</option>
                         </select>
                     </div>
+
                     <div class="form-group">
                         <label class="form-label">Conducteur</label>
                         <select class="form-control">
@@ -419,8 +403,8 @@
                     </div>
                 </div>
                 <div class="custom-modal-footer">
-                    <button class="btn-secondary-custom" onclick="closeModal('addModal')">Annuler</button>
-                    <button class="btn-primary-custom" onclick="closeModal('addModal')">Enregistrer</button>
+                    <button class="btn btn-secondary" onclick="closeModal('addModal')">Annuler</button>
+                    <button class="btn btn-primary" onclick="closeModal('addModal')">Enregistrer</button>
                 </div>
             </div>
         </div>
@@ -469,8 +453,8 @@
                     </div>
                 </div>
                 <div class="custom-modal-footer">
-                    <button class="btn-secondary-custom" onclick="closeModal('viewModal')">Fermer</button>
-                    <button class="btn-primary-custom"
+                    <button class="btn btn-secondary" onclick="closeModal('viewModal')">Fermer</button>
+                    <button class="btn btn-primary"
                         onclick="closeModal('viewModal'); openModal('editModal')">Modifier</button>
                 </div>
             </div>
@@ -504,8 +488,8 @@
                     </div>
                 </div>
                 <div class="custom-modal-footer">
-                    <button class="btn-secondary-custom" onclick="closeModal('editModal')">Annuler</button>
-                    <button class="btn-primary-custom" onclick="closeModal('editModal')">Mettre à jour</button>
+                    <button class="btn btn-secondary" onclick="closeModal('editModal')">Annuler</button>
+                    <button class="btn btn-primary" onclick="closeModal('editModal')">Mettre à jour</button>
                 </div>
             </div>
         </div>

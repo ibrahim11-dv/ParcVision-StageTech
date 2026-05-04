@@ -170,145 +170,167 @@
                     </div>
                 </div>
 
-                <!-- Statistiques rapides -->
-                <div class="row w-100 mb-4 g-3">
-                    <div class="col-md-3 col-6">
-                        <div class="card border-0 shadow-sm rounded-4 h-100 p-3" style="border-left: 4px solid var(--primary) !important;">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <div class="text-muted small fw-semibold mb-1">Total</div>
-                                    <div class="fs-4 fw-bold text-dark">18</div>
-                                </div>
-                                <div class="fs-2 text-primary opacity-25"><i class="bi bi-people-fill"></i></div>
+                 <!-- KPI ROW -->
+                <div class="row w-100 g-3 mb-4">
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-icon blue"><i class="bi bi-people-fill"></i></div>
+                            <div class="stat-body">
+                                <div class="stat-val">18</div>
+                                <div class="stat-label">Total Conducteurs</div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3 col-6">
-                        <div class="card border-0 shadow-sm rounded-4 h-100 p-3" style="border-left: 4px solid #10b981 !important;">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <div class="text-muted small fw-semibold mb-1">Disponibles</div>
-                                    <div class="fs-4 fw-bold text-dark">12</div>
-                                </div>
-                                <div class="fs-2 text-success opacity-25"><i class="bi bi-check-circle-fill"></i></div>
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-icon green"><i class="bi bi-person-check-fill"></i></div>
+                            <div class="stat-body">
+                                <div class="stat-val">12</div>
+                                <div class="stat-label">Disponibles</div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3 col-6">
-                        <div class="card border-0 shadow-sm rounded-4 h-100 p-3" style="border-left: 4px solid #f59e0b !important;">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <div class="text-muted small fw-semibold mb-1">En Mission</div>
-                                    <div class="fs-4 fw-bold text-dark">4</div>
-                                </div>
-                                <div class="fs-2 text-warning opacity-25"><i class="bi bi-cursor-fill"></i></div>
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-icon orange"><i class="bi bi-car-front-fill"></i></div>
+                            <div class="stat-body">
+                                <div class="stat-val">4</div>
+                                <div class="stat-label">En Mission</div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3 col-6">
-                        <div class="card border-0 shadow-sm rounded-4 h-100 p-3" style="border-left: 4px solid #ef4444 !important;">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <div class="text-muted small fw-semibold mb-1">En Congé</div>
-                                    <div class="fs-4 fw-bold text-dark">2</div>
-                                </div>
-                                <div class="fs-2 text-danger opacity-25"><i class="bi bi-calendar2-x-fill"></i></div>
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-icon red"><i class="bi bi-calendar-x-fill"></i></div>
+                            <div class="stat-body">
+                                <div class="stat-val">2</div>
+                                <div class="stat-label">En Congé</div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> <!-- row end -->
+
 
                 <!-- Liste des conducteurs -->
-                <div class="form-card w-100">
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
-                            <thead class="table-light">
+                <div class="card w-100" style="padding:0;overflow:hidden; animation: fadeUp 0.4s ease both;">
+                    <!-- Card header with search -->
+                    <div style="padding:18px 20px;border-bottom:1px solid var(--border-color);display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap">
+                        <h5 style="font-family:'Outfit',sans-serif;font-weight:700;font-size:1rem;margin:0">Liste des Conducteurs</h5>
+                        <div style="display:flex;gap:10px;flex-wrap:wrap">
+                            <div class="search-bar" style="min-width:200px">
+                                <i class="bi bi-search"></i>
+                                <input type="text" id="condSearch" placeholder="Rechercher un conducteur...">
+                            </div>
+                            <select class="form-select-custom" id="condFilter" style="width:auto;padding:9px 14px">
+                                <option value="all">Tous les statuts</option>
+                                <option value="disponible">Disponible</option>
+                                <option value="mission">En Mission</option>
+                                <option value="conge">En Congé</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="table-wrapper" style="border:none;border-radius:0;box-shadow:none">
+                        <table class="table align-middle">
+                            <thead>
                                 <tr>
-                                    <th scope="col" class="border-0 rounded-start">Profil</th>
-                                    <th scope="col" class="border-0">Conducteur</th>
-                                    <th scope="col" class="border-0">Email</th>
-                                    <th scope="col" class="border-0">Téléphone</th>
-                                    <th scope="col" class="border-0">Statut</th>
-                                    <th scope="col" class="border-0 rounded-end">Action</th>
+                                    <th>Profil</th>
+                                    <th>Conducteur</th>
+                                    <th>Email</th>
+                                    <th>Téléphone</th>
+                                    <th>Statut</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td class="border-bottom-0">
+                                <tr class="hist-row">
+                                    <td>
                                         <div class="profile-av" style="width: 34px; height: 34px; border-radius: 9px; font-size: 0.75rem;">JD</div>
                                     </td>
-                                    <td class="border-bottom-0"><span class="fw-semibold text-dark">Jean Dupont</span></td>
-                                    <td class="border-bottom-0 text-muted">jean.dupont@example.com</td>
-                                    <td class="border-bottom-0 text-muted">+212 6 12 34 56 78</td>
-                                    <td class="border-bottom-0"><span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-2">Disponible</span></td>
-                                    <td class="border-bottom-0">
-                                        <button class="btn btn-sm btn-light text-primary border-0" data-bs-toggle="modal" data-bs-target="#editDriverModal" title="Voir/Modifier"><i class="bi bi-pencil-square"></i></button>
-                                        <button class="btn btn-sm btn-light text-danger border-0"><i class="bi bi-trash"></i></button>
+                                    <td><b class="mission-id" style="color:var(--text-main);">Jean Dupont</b></td>
+                                    <td><span class="mission-date">jean.dupont@example.com</span></td>
+                                    <td><span class="mission-dist">+212 6 12 34 56 78</span></td>
+                                    <td><span class="prio-badge prio-faible">Disponible</span></td>
+                                    <td>
+                                        <div style="display:flex;gap:5px">
+                                            <button class="btn-icon" data-bs-toggle="modal" data-bs-target="#editDriverModal" title="Voir/Modifier"><i class="bi bi-pencil-square"></i></button>
+                                            <button class="btn-icon" title="Supprimer"><i class="bi bi-trash" style="color:#ef4444"></i></button>
+                                        </div>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td class="border-bottom-0">
+                                <tr class="hist-row">
+                                    <td>
                                         <div class="profile-av" style="width: 34px; height: 34px; border-radius: 9px; font-size: 0.75rem; background: linear-gradient(135deg, #f59e0b, #d97706);">KA</div>
                                     </td>
-                                    <td class="border-bottom-0"><span class="fw-semibold text-dark">Karim Alaoui</span></td>
-                                    <td class="border-bottom-0 text-muted">k.alaoui@example.com</td>
-                                    <td class="border-bottom-0 text-muted">+212 6 98 76 54 32</td>
-                                    <td class="border-bottom-0"><span class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 rounded-pill px-2">En Mission</span></td>
-                                    <td class="border-bottom-0">
-                                        <button class="btn btn-sm btn-light text-primary border-0" data-bs-toggle="modal" data-bs-target="#editDriverModal" title="Voir/Modifier"><i class="bi bi-pencil-square"></i></button>
-                                        <button class="btn btn-sm btn-light text-danger border-0"><i class="bi bi-trash"></i></button>
+                                    <td><b class="mission-id" style="color:var(--text-main);">Karim Alaoui</b></td>
+                                    <td><span class="mission-date">k.alaoui@example.com</span></td>
+                                    <td><span class="mission-dist">+212 6 98 76 54 32</span></td>
+                                    <td><span class="prio-badge prio-normale">En Mission</span></td>
+                                    <td>
+                                        <div style="display:flex;gap:5px">
+                                            <button class="btn-icon" data-bs-toggle="modal" data-bs-target="#editDriverModal" title="Voir/Modifier"><i class="bi bi-pencil-square"></i></button>
+                                            <button class="btn-icon" title="Supprimer"><i class="bi bi-trash" style="color:#ef4444"></i></button>
+                                        </div>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td class="border-bottom-0">
+                                <tr class="hist-row">
+                                    <td>
                                         <div class="profile-av" style="width: 34px; height: 34px; border-radius: 9px; font-size: 0.75rem; background: linear-gradient(135deg, #ef4444, #b91c1c);">MB</div>
                                     </td>
-                                    <td class="border-bottom-0"><span class="fw-semibold text-dark">Mounir Benali</span></td>
-                                    <td class="border-bottom-0 text-muted">m.benali@example.com</td>
-                                    <td class="border-bottom-0 text-muted">+212 6 11 22 33 44</td>
-                                    <td class="border-bottom-0"><span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 rounded-pill px-2">En Congé</span></td>
-                                    <td class="border-bottom-0">
-                                        <button class="btn btn-sm btn-light text-primary border-0" data-bs-toggle="modal" data-bs-target="#editDriverModal" title="Voir/Modifier"><i class="bi bi-pencil-square"></i></button>
-                                        <button class="btn btn-sm btn-light text-danger border-0"><i class="bi bi-trash"></i></button>
+                                    <td><b class="mission-id" style="color:var(--text-main);">Mounir Benali</b></td>
+                                    <td><span class="mission-date">m.benali@example.com</span></td>
+                                    <td><span class="mission-dist">+212 6 11 22 33 44</span></td>
+                                    <td><span class="prio-badge prio-haute">En Congé</span></td>
+                                    <td>
+                                        <div style="display:flex;gap:5px">
+                                            <button class="btn-icon" data-bs-toggle="modal" data-bs-target="#editDriverModal" title="Voir/Modifier"><i class="bi bi-pencil-square"></i></button>
+                                            <button class="btn-icon" title="Supprimer"><i class="bi bi-trash" style="color:#ef4444"></i></button>
+                                        </div>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td class="border-bottom-0">
+                                <tr class="hist-row">
+                                    <td>
                                         <div class="profile-av" style="width: 34px; height: 34px; border-radius: 9px; font-size: 0.75rem; background: linear-gradient(135deg, #10b981, #059669);">SA</div>
                                     </td>
-                                    <td class="border-bottom-0"><span class="fw-semibold text-dark">Said Amrani</span></td>
-                                    <td class="border-bottom-0 text-muted">s.amrani@example.com</td>
-                                    <td class="border-bottom-0 text-muted">+212 6 55 66 77 88</td>
-                                    <td class="border-bottom-0"><span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-2">Disponible</span></td>
-                                    <td class="border-bottom-0">
-                                        <button class="btn btn-sm btn-light text-primary border-0" data-bs-toggle="modal" data-bs-target="#editDriverModal" title="Voir/Modifier"><i class="bi bi-pencil-square"></i></button>
-                                        <button class="btn btn-sm btn-light text-danger border-0"><i class="bi bi-trash"></i></button>
+                                    <td><b class="mission-id" style="color:var(--text-main);">Said Amrani</b></td>
+                                    <td><span class="mission-date">s.amrani@example.com</span></td>
+                                    <td><span class="mission-dist">+212 6 55 66 77 88</span></td>
+                                    <td><span class="prio-badge prio-faible">Disponible</span></td>
+                                    <td>
+                                        <div style="display:flex;gap:5px">
+                                            <button class="btn-icon" data-bs-toggle="modal" data-bs-target="#editDriverModal" title="Voir/Modifier"><i class="bi bi-pencil-square"></i></button>
+                                            <button class="btn-icon" title="Supprimer"><i class="bi bi-trash" style="color:#ef4444"></i></button>
+                                        </div>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td class="border-bottom-0">
+                                <tr class="hist-row">
+                                    <td>
                                         <div class="profile-av" style="width: 34px; height: 34px; border-radius: 9px; font-size: 0.75rem; background: linear-gradient(135deg, #8b5cf6, #6d28d9);">YT</div>
                                     </td>
-                                    <td class="border-bottom-0"><span class="fw-semibold text-dark">Youssef Tazi</span></td>
-                                    <td class="border-bottom-0 text-muted">y.tazi@example.com</td>
-                                    <td class="border-bottom-0 text-muted">+212 6 99 88 77 66</td>
-                                    <td class="border-bottom-0"><span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-2">Disponible</span></td>
-                                    <td class="border-bottom-0">
-                                        <button class="btn btn-sm btn-light text-primary border-0" data-bs-toggle="modal" data-bs-target="#editDriverModal" title="Voir/Modifier"><i class="bi bi-pencil-square"></i></button>
-                                        <button class="btn btn-sm btn-light text-danger border-0"><i class="bi bi-trash"></i></button>
+                                    <td><b class="mission-id" style="color:var(--text-main);">Youssef Tazi</b></td>
+                                    <td><span class="mission-date">y.tazi@example.com</span></td>
+                                    <td><span class="mission-dist">+212 6 99 88 77 66</span></td>
+                                    <td><span class="prio-badge prio-faible">Disponible</span></td>
+                                    <td>
+                                        <div style="display:flex;gap:5px">
+                                            <button class="btn-icon" data-bs-toggle="modal" data-bs-target="#editDriverModal" title="Voir/Modifier"><i class="bi bi-pencil-square"></i></button>
+                                            <button class="btn-icon" title="Supprimer"><i class="bi bi-trash" style="color:#ef4444"></i></button>
+                                        </div>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td class="border-bottom-0">
+                                <tr class="hist-row">
+                                    <td>
                                         <div class="profile-av" style="width: 34px; height: 34px; border-radius: 9px; font-size: 0.75rem; background: linear-gradient(135deg, #f59e0b, #d97706);">HN</div>
                                     </td>
-                                    <td class="border-bottom-0"><span class="fw-semibold text-dark">Hassan Nouri</span></td>
-                                    <td class="border-bottom-0 text-muted">h.nouri@example.com</td>
-                                    <td class="border-bottom-0 text-muted">+212 6 11 11 22 22</td>
-                                    <td class="border-bottom-0"><span class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 rounded-pill px-2">En Mission</span></td>
-                                    <td class="border-bottom-0">
-                                        <button class="btn btn-sm btn-light text-primary border-0" data-bs-toggle="modal" data-bs-target="#editDriverModal" title="Voir/Modifier"><i class="bi bi-pencil-square"></i></button>
-                                        <button class="btn btn-sm btn-light text-danger border-0"><i class="bi bi-trash"></i></button>
+                                    <td><b class="mission-id" style="color:var(--text-main);">Hassan Nouri</b></td>
+                                    <td><span class="mission-date">h.nouri@example.com</span></td>
+                                    <td><span class="mission-dist">+212 6 11 11 22 22</span></td>
+                                    <td><span class="prio-badge prio-normale">En Mission</span></td>
+                                    <td>
+                                        <div style="display:flex;gap:5px">
+                                            <button class="btn-icon" data-bs-toggle="modal" data-bs-target="#editDriverModal" title="Voir/Modifier"><i class="bi bi-pencil-square"></i></button>
+                                            <button class="btn-icon" title="Supprimer"><i class="bi bi-trash" style="color:#ef4444"></i></button>
+                                        </div>
                                     </td>
                                 </tr>
                             </tbody>
@@ -316,24 +338,20 @@
                     </div>
                     
                     <!-- Pagination -->
-                    <div class="d-flex justify-content-between align-items-center mt-4 border-top pt-3">
-                        <span class="text-muted" style="font-size: 0.85rem;">Affichage de 1 à 6 sur 18 conducteurs</span>
-                        <nav>
-                            <ul class="pagination pagination-sm mb-0">
-                                <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1">Précédent</a></li>
-                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item"><a class="page-link" href="#">Suivant</a></li>
-                            </ul>
-                        </nav>
+                    <div style="padding:14px 20px;border-top:1px solid var(--border-color);display:flex;align-items:center;justify-content:space-between">
+                        <span style="font-size:.82rem;color:var(--text-muted)">Affichage de 1 à 6 sur 18 conducteurs</span>
+                        <div style="display:flex;gap:6px">
+                            <button class="btn-ghost" style="padding:6px 12px;font-size:.8rem" disabled><i class="bi bi-chevron-left"></i></button>
+                            <button class="btn-ghost" style="padding:6px 14px;font-size:.8rem;background:var(--accent);color:white;border-color:var(--accent)">1</button>
+                            <button class="btn-ghost" style="padding:6px 14px;font-size:.8rem">2</button>
+                            <button class="btn-ghost" style="padding:6px 14px;font-size:.8rem">3</button>
+                            <button class="btn-ghost" style="padding:6px 12px;font-size:.8rem"><i class="bi bi-chevron-right"></i></button>
+                        </div>
                     </div>
-                </div>
-            </div>
         </div>
     </div>
-
 </div>
+
 
 <!-- Modal Ajouter Conducteur -->
 <div class="modal fade" id="addDriverModal" tabindex="-1" aria-hidden="true">
