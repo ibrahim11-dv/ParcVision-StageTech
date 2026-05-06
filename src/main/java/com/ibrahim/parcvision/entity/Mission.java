@@ -89,4 +89,8 @@ public class Mission {
     )
     @JsonManagedReference
     private Document document;
+
+    @OneToMany
+    @JsonManagedReference
+    private List<Colis> colis;
 }

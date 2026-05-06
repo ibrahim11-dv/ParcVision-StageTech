@@ -12,7 +12,7 @@ public class PointGPS {
     @GeneratedValue
     private Long id;
 
-    private double altitude ;
+    private double laltitude ;
 
     private double longitude;
 

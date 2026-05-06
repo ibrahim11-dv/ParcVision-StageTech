@@ -265,6 +265,7 @@
 </div>
 
 <!-- Modal Ajouter Mission -->
+<!-- Modal Ajouter Mission -->
 <div class="modal fade" id="addMissionModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg">
@@ -278,8 +279,10 @@
             <div class="modal-body">
                 <form>
                     <div class="row g-3">
+
+                        <!-- Conducteur + Véhicule -->
                         <div class="col-md-6">
-                            <label class="form-label text-muted">Conducteur</label>
+                            <label class="form-label text-muted">Conducteur <span class="text-danger">*</span></label>
                             <select class="form-select" required>
                                 <option value="" selected disabled>Choisir un conducteur...</option>
                                 <option value="1">Jean Dupont</option>
@@ -288,7 +291,7 @@
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label text-muted">Véhicule</label>
+                            <label class="form-label text-muted">Véhicule <span class="text-danger">*</span></label>
                             <select class="form-select" required>
                                 <option value="" selected disabled>Choisir un véhicule...</option>
                                 <option value="1">Renault Master (12345 | A | 1)</option>
@@ -296,9 +299,10 @@
                                 <option value="3">Dacia Dokker (77889 | B | 1)</option>
                             </select>
                         </div>
-                        
+
+                        <!-- Point de départ -->
                         <div class="col-md-6">
-                            <label class="form-label text-muted fw-bold">Point de départ</label>
+                            <label class="form-label text-muted fw-bold">Point de départ <span class="text-danger">*</span></label>
                             <div class="row g-2">
                                 <div class="col-12">
                                     <input type="text" class="form-control" placeholder="Ville ou Adresse (ex: Casablanca)" required>
@@ -314,8 +318,10 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Destination -->
                         <div class="col-md-6">
-                            <label class="form-label text-muted fw-bold">Destination</label>
+                            <label class="form-label text-muted fw-bold">Destination <span class="text-danger">*</span></label>
                             <div class="row g-2">
                                 <div class="col-12">
                                     <input type="text" class="form-control" placeholder="Ville ou Adresse (ex: Rabat)" required>
@@ -331,25 +337,57 @@
                                 </div>
                             </div>
                         </div>
-                        
-                        <div class="col-md-12">
-                            <label class="form-label text-muted">Type de marchandise / Colis</label>
-                            <input type="text" class="form-control" placeholder="Ex: Colis Lourd (150kg), Fragile, etc." required>
-                        </div>
-                        
+
+                        <!-- Dates -->
                         <div class="col-md-6">
-                            <label class="form-label text-muted">Date & Heure de départ prévues</label>
+                            <label class="form-label text-muted">Date & Heure de départ prévues <span class="text-danger">*</span></label>
                             <input type="datetime-local" class="form-control" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label text-muted">Date & Heure de fin estimées</label>
-                            <input type="datetime-local" class="form-control" required>
+                            <input type="datetime-local" class="form-control">
                         </div>
-                        
+
+                        <!-- Séparateur Colis -->
+                        <div class="col-12 mt-2">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="fw-bold text-muted" style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px;">Colis transporté</span>
+                                <div style="flex:1; height:1px; background:var(--border-color, #e5e7eb);"></div>
+                            </div>
+                        </div>
+
+                        <!-- Colis : description + code_suivi -->
+                        <div class="col-md-8">
+                            <label class="form-label text-muted">Description du colis <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" placeholder="Ex: Équipements électroniques, pièces mécaniques..." required>
+                        </div>
+
+                        <!-- Colis : type + poids + volume -->
+                        <div class="col-md-4">
+                            <label class="form-label text-muted">Type de colis <span class="text-danger">*</span></label>
+                            <select class="form-select" required>
+                                <option value="" selected disabled>Choisir...</option>
+                                <option value="STANDARD">Standard</option>
+                                <option value="FRAGILE">Fragile</option>
+                                <option value="LOURD">Lourd</option>
+                                <option value="TEMPERATURE_DIRIGEE">Température dirigée</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label text-muted">Poids (kg)</label>
+                            <input type="number" step="0.01" min="0" class="form-control" placeholder="Ex: 150.5">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label text-muted">Volume (m³)</label>
+                            <input type="number" step="0.001" min="0" class="form-control" placeholder="Ex: 2.3">
+                        </div>
+
+                        <!-- Instructions -->
                         <div class="col-12">
                             <label class="form-label text-muted">Instructions Spéciales / Remarques</label>
                             <textarea class="form-control" rows="3" placeholder="Ex: Contacter le client avant l'arrivée, attention fragile..."></textarea>
                         </div>
+
                     </div>
                 </form>
             </div>
@@ -361,6 +399,7 @@
     </div>
 </div>
 
+<!-- Modal Modifier Mission -->
 <!-- Modal Modifier Mission -->
 <div class="modal fade" id="editMissionModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -375,16 +414,29 @@
             <div class="modal-body">
                 <form>
                     <div class="row g-3">
+
+                        <!-- Statut -->
                         <div class="col-md-12 mb-2">
                             <label class="form-label text-muted">Statut de la mission</label>
-                            <select class="form-select fw-bold border-warning text-warning" style="background-color: rgba(245, 158, 11, 0.05);">
-                                <option value="planifiee">Planifiée</option>
-                                <option value="en_route" selected>🟠 En route</option>
-                                <option value="livree">🟢 Livrée</option>
-                                <option value="annulee">🔴 Annulée</option>
+                            <select class="form-select" id="editStatutSelect" onchange="toggleEditStatutFields(this.value)">
+                                <option value="PLANIFIEE">🔵 Planifiée</option>
+                                <option value="EN_COURS" selected>🟠 En cours</option>
+                                <option value="TERMINEE">🟢 Terminée</option>
+                                <option value="ANNULEE">🔴 Annulée</option>
                             </select>
                         </div>
-                        
+
+                        <!-- Date fin réelle + Preuve livraison (affichés si TERMINEE) -->
+                        <div class="col-md-6" id="editFinReelleField" style="display:none;">
+                            <label class="form-label text-muted">Date & Heure de fin réelle</label>
+                            <input type="datetime-local" class="form-control">
+                        </div>
+                        <div class="col-md-6" id="editPreuveField" style="display:none;">
+                            <label class="form-label text-muted">Preuve de livraison (URL photo/signature)</label>
+                            <input type="text" class="form-control" placeholder="Ex: https://... ou chemin fichier">
+                        </div>
+
+                        <!-- Conducteur + Véhicule -->
                         <div class="col-md-6">
                             <label class="form-label text-muted">Conducteur</label>
                             <select class="form-select" required>
@@ -401,7 +453,8 @@
                                 <option value="3">Dacia Dokker (77889 | B | 1)</option>
                             </select>
                         </div>
-                        
+
+                        <!-- Point de départ -->
                         <div class="col-md-6">
                             <label class="form-label text-muted fw-bold">Point de départ</label>
                             <div class="row g-2">
@@ -419,6 +472,8 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Destination -->
                         <div class="col-md-6">
                             <label class="form-label text-muted fw-bold">Destination</label>
                             <div class="row g-2">
@@ -436,25 +491,60 @@
                                 </div>
                             </div>
                         </div>
-                        
-                        <div class="col-md-12">
-                            <label class="form-label text-muted">Type de marchandise / Colis</label>
-                            <input type="text" class="form-control" value="Colis Lourd (150kg)" required>
-                        </div>
-                        
+
+                        <!-- Dates -->
                         <div class="col-md-6">
                             <label class="form-label text-muted">Date & Heure de départ prévues</label>
                             <input type="datetime-local" class="form-control" value="2026-05-01T08:00" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label text-muted">Date & Heure de fin estimées</label>
-                            <input type="datetime-local" class="form-control" value="2026-05-01T12:30" required>
+                            <input type="datetime-local" class="form-control" value="2026-05-01T12:30">
                         </div>
-                        
+
+                        <!-- Séparateur Colis -->
+                        <div class="col-12 mt-2">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="fw-bold text-muted" style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px;">Colis transporté</span>
+                                <div style="flex:1; height:1px; background:var(--border-color, #e5e7eb);"></div>
+                            </div>
+                        </div>
+
+                        <!-- Colis : description + code_suivi -->
+                        <div class="col-md-8">
+                            <label class="form-label text-muted">Description du colis</label>
+                            <input type="text" class="form-control" value="Colis Lourd (150kg)" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label text-muted">Code suivi</label>
+                            <input type="text" class="form-control" value="PKG-00001">
+                        </div>
+
+                        <!-- Colis : type + poids + volume -->
+                        <div class="col-md-4">
+                            <label class="form-label text-muted">Type de colis</label>
+                            <select class="form-select" required>
+                                <option value="STANDARD">Standard</option>
+                                <option value="FRAGILE">Fragile</option>
+                                <option value="LOURD" selected>Lourd</option>
+                                <option value="TEMPERATURE_DIRIGEE">Température dirigée</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label text-muted">Poids (kg)</label>
+                            <input type="number" step="0.01" min="0" class="form-control" value="150">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label text-muted">Volume (m³)</label>
+                            <input type="number" step="0.001" min="0" class="form-control" placeholder="Ex: 2.3">
+                        </div>
+
+                        <!-- Instructions -->
                         <div class="col-12">
                             <label class="form-label text-muted">Instructions Spéciales / Remarques</label>
                             <textarea class="form-control" rows="3">Appeler le client 30min avant d'arriver au dépôt. (Tél: 0612345678)</textarea>
                         </div>
+
                     </div>
                 </form>
             </div>
@@ -468,6 +558,16 @@
         </div>
     </div>
 </div>
+
+<script>
+    function toggleEditStatutFields(val) {
+        const finReelle = document.getElementById('editFinReelleField');
+        const preuve    = document.getElementById('editPreuveField');
+        const show = val === 'TERMINEE';
+        finReelle.style.display = show ? '' : 'none';
+        preuve.style.display    = show ? '' : 'none';
+    }
+</script>
 
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
