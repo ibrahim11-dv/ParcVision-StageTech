@@ -1,8 +1,5 @@
 package com.ibrahim.parcvision.dao;
 
-import com.ibrahim.parcvision.entity.Conducteur;
-import com.ibrahim.parcvision.entity.PointGPS;
-import com.ibrahim.parcvision.entity.Vehicule;
 import jakarta.validation.constraints.*;
 
 import java.time.LocalDateTime;
@@ -10,6 +7,7 @@ import java.time.LocalDateTime;
 public class AddMissionDao {
     @NotNull
     private Long conducteurId;
+
     @NotNull
     private Long vehiculeId;
 
@@ -17,42 +15,52 @@ public class AddMissionDao {
     @Size(max = 255)
     private String adressDepart;
 
-    @NotBlank
-    @DecimalMax("-180.0")
-    @DecimalMin("180.0")
+    @NotNull
+    @DecimalMin("-180.0")
+    @DecimalMax("180.0")
     private Double longitudeDepart;
 
-    @NotBlank
-    @DecimalMax("-90.0")
-    @DecimalMin("90.0")
+    @NotNull
+    @DecimalMin("-90.0")
+    @DecimalMax("90.0")
     private Double latitudeDepart;
 
-    @NotBlank
+    @NotNull
     @Size(max = 255)
     private String adressDestination;
-    @NotBlank
-    @DecimalMax("-180.0")
-    @DecimalMin("180.0")
+
+    @NotNull
+    @DecimalMin("-180.0")
+    @DecimalMax("180.0")
     private Double longitudeDestination;
-    @NotBlank
-    @DecimalMax("-90.0")
-    @DecimalMin("90.0")
+
+    @NotNull
+    @DecimalMin("-90.0")
+    @DecimalMax("90.0")
     private Double latitudeDestination;
 
     @NotNull
     private LocalDateTime dateDepart;
+
     @Future
     private LocalDateTime dateArrivee;
 
-    @NotBlank @Size(max = 500)
+    @NotBlank
+    @Size(max = 500)
     private String description;
+
     @Positive
     private Double poids;
+
     @Positive
     private Double Volume;
 
+    @NotBlank
+    private String typeColis;
+
     private String InstructionSpeciales;
 
+    // Getters and Setters (keep as they are)
     public Long getConducteurId() {
         return conducteurId;
     }
@@ -91,6 +99,14 @@ public class AddMissionDao {
 
     public void setLatitudeDepart(Double latitudeDepart) {
         this.latitudeDepart = latitudeDepart;
+    }
+
+    public String getTypeColis() {
+        return typeColis;
+    }
+
+    public void setTypeColis(String typeColis) {
+        this.typeColis = typeColis;
     }
 
     public String getAdressDestination() {

@@ -47,126 +47,218 @@ document.getElementById('themeToggleBtn').addEventListener('click', (e) => {
 
 initTheme();
 
-// Mobile sidebar functions
-window.openMobile = function() {
-    document.getElementById('sidebar').classList.add('open');
-    document.getElementById('overlay').style.display = 'block';
-};
-window.closeMobile = function() {
-    document.getElementById('sidebar').classList.remove('open');
-    document.getElementById('overlay').style.display = 'none';
-};
-
 // ==========================================
-// Map Initialization and Logic (Leaflet.js)
+// Mission Management & Map Logic
 // ==========================================
 let map;
 let markers = [];
+let allMissions = [];
 
-document.addEventListener("DOMContentLoaded", function() {
-    // Initialize map centered on Morocco
-    map = L.map('map').setView([33.5, -7.5], 6);
+async function fetchMissions() {
+    try {
+        const response = await fetch('/api/missions');
+        if (!response.ok) throw new Error('Failed to fetch missions');
+        allMissions = await response.json();
+        renderMissions(allMissions);
+    } catch (error) {
+        console.error('Error fetching missions:', error);
+    }
+}
 
-    // Add OpenStreetMap tiles
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    }).addTo(map);
+function renderMissions(missions) {
+    const tableBody = document.querySelector('table tbody');
+    tableBody.innerHTML = ''; 
+    
+    markers.forEach(marker => map.removeLayer(marker));
+    markers = [];
 
-    // Custom Icon for Live Vehicles
-    const truckIcon = L.icon({
-        iconUrl: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzFhMmE2YyIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIxIj48cGF0aCBkPSJNMTkgN2gtM2YtMS0xLjUtMkg4bS0xIDEuNS0ySDF2OWgxYzAgMS42NiAxLjM0IDMgMyAzczMtMS4zNCAzLTNoMThjMCAxLjY2IDEuMzQgMyAzIDNzMy0xLjM0IDMtM2gxdjZsLTItMnoiLz48L3N2Zz4=', // Custom truck icon placeholder base64 can be placed, or we use default
-        iconSize: [32, 32],
-        iconAnchor: [16, 32],
-        popupAnchor: [0, -32]
-    });
-
-    const activeMissions = [
-        {
-            id: "#MSN-001",
-            driver: "Jean Dupont",
-            vehicle: "Renault Master",
-            plate: "12345 | A | 1",
-            lat: 33.5731, 
-            lng: -7.5898,
-            destination: "Rabat",
-            status: "En route",
-            speed: "65 km/h"
-        },
-        {
-            id: "#MSN-002",
-            driver: "Karim Alaoui",
-            vehicle: "Peugeot Partner",
-            plate: "67890 | B | 6",
-            lat: 34.0208, 
-            lng: -6.8416,
-            destination: "Kenitra",
-            status: "Livré",
-            speed: "0 km/h"
-        }
-    ];
-
-    // Add markers to map
-    activeMissions.forEach(mission => {
-        let color = mission.status === "Livré" ? "#10b981" : "#f59e0b";
+    missions.forEach(mission => {
+        const row = document.createElement('tr');
+        row.style.cursor = 'pointer';
+        row.onclick = () => focusMap([mission.latitudeDepart, mission.longitudeDepart]);
         
-        // Use HTML element for marker to create a pulse effect for moving vehicles
-        let htmlIcon = `<div style="position:relative; width:20px; height:20px;">
-                            <div style="width:16px;height:16px;background:${color};border-radius:50%;border:2px solid white;box-shadow:0 2px 5px rgba(0,0,0,0.3);position:absolute;z-index:2;"></div>
-                            ${mission.status === "En route" ? `<div style="width:16px;height:16px;background:${color};border-radius:50%;position:absolute;animation:pulse 1.5s infinite;z-index:1;"></div>` : ''}
-                        </div>`;
+        const isDelivered = mission.statut === 'TERMINEE';
 
-        let divIcon = L.divIcon({
-            className: 'custom-div-icon',
-            html: htmlIcon,
-            iconSize: [20, 20],
-            iconAnchor: [10, 10]
-        });
-
-        const marker = L.marker([mission.lat, mission.lng], {icon: divIcon}).addTo(map);
-        
-        const popupContent = `
-            <div class="custom-popup-title">${mission.id}</div>
-            <div class="custom-popup-body">
-                <strong>Conducteur:</strong> ${mission.driver}<br>
-                <strong>Véhicule:</strong> ${mission.vehicle} (${mission.plate})<br>
-                <strong>Destination:</strong> ${mission.destination}<br>
-                <strong>Vitesse:</strong> ${mission.speed}
-            </div>
+        row.innerHTML = `
+            <td class="border-bottom-0"><span class="fw-bold text-primary">${mission.reference}</span></td>
+            <td class="border-bottom-0">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="profile-av" style="width: 28px; height: 28px; border-radius: 8px; font-size: 0.65rem;">
+                        ${mission.conducteurNomComplet ? mission.conducteurNomComplet.split(' ').map(n => n[0]).join('') : '??'}
+                    </div>
+                    <span class="fw-semibold text-dark">${mission.conducteurNomComplet || 'Inconnu'}</span>
+                </div>
+            </td>
+            <td class="border-bottom-0">
+                <div class="text-dark"><i class="bi bi-truck me-1 text-muted"></i> ${mission.vehiculeMarqueModele}</div>
+                <small class="text-muted">${mission.vehiculeImmatriculation}</small>
+            </td>
+            <td class="border-bottom-0">
+                <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 rounded-pill px-2">
+                    ${mission.colisType} (${mission.colisPoids}kg)
+                </span>
+            </td>
+            <td class="border-bottom-0">
+                <small class="d-block text-muted"><i class="bi bi-record-circle text-success me-1"></i> ${mission.adresseDepart}</small>
+                <small class="d-block text-muted"><i class="bi bi-geo-alt text-danger me-1"></i> ${mission.adresseArrivee}</small>
+            </td>
+            <td class="border-bottom-0">${getStatusBadge(mission.statut)}</td>
+            <td class="border-bottom-0 text-end">
+                ${!isDelivered ? `
+                    <button class="btn btn-sm btn-light text-success border-0" title="Confirmer Livraison" onclick="event.stopPropagation(); confirmDelivery(${mission.id})"><i class="bi bi-check-circle"></i></button>
+                ` : `
+                    <button class="btn btn-sm btn-light text-muted border-0" disabled><i class="bi bi-check-circle-fill"></i></button>
+                `}
+                <button class="btn btn-sm btn-light text-primary border-0" title="Modifier" data-bs-toggle="modal" data-bs-target="#editMissionModal" onclick="event.stopPropagation(); prepareEdit(${mission.id})"><i class="bi bi-pencil-square"></i></button>
+            </td>
         `;
-        
-        marker.bindPopup(popupContent);
-        markers.push(marker);
+        tableBody.appendChild(row);
+
+        if (mission.latitudeDepart && mission.longitudeDepart) {
+            let color = isDelivered ? "#10b981" : (mission.statut === "ANNULEE" ? "#ef4444" : "#f59e0b");
+            
+            let htmlIcon = `<div style="position:relative; width:20px; height:20px;">
+                                <div style="width:16px;height:16px;background:${color};border-radius:50%;border:2px solid white;box-shadow:0 2px 5px rgba(0,0,0,0.3);position:absolute;z-index:2;"></div>
+                                ${mission.statut === "EN_COURS" ? `<div style="width:16px;height:16px;background:${color};border-radius:50%;position:absolute;animation:pulse 1.5s infinite;z-index:1;"></div>` : ''}
+                            </div>`;
+
+            let divIcon = L.divIcon({
+                className: 'custom-div-icon',
+                html: htmlIcon,
+                iconSize: [20, 20],
+                iconAnchor: [10, 10]
+            });
+
+            const marker = L.marker([mission.latitudeDepart, mission.longitudeDepart], {icon: divIcon}).addTo(map);
+            marker.bindPopup(`
+                <div class="custom-popup-title">${mission.reference}</div>
+                <div class="custom-popup-body">
+                    <b>Conducteur:</b> ${mission.conducteurNomComplet}<br>
+                    <b>Véhicule:</b> ${mission.vehiculeMarqueModele}<br>
+                    <b>Statut:</b> ${mission.statut}
+                </div>
+            `);
+            markers.push(marker);
+        }
     });
 
-    // Fit bounds to show all markers
     if(markers.length > 0) {
         const group = new L.featureGroup(markers);
         map.fitBounds(group.getBounds().pad(0.5));
     }
-});
+}
 
-// Function to focus map on a specific mission from table click
-window.focusMap = function(coords) {
-    if(map) {
-        map.setView(coords, 14, {
-            animate: true,
-            duration: 1
-        });
+function getStatusBadge(statut) {
+    const configs = {
+        'PLANIFIEE': { class: 'bg-primary', text: 'Planifiée' },
+        'EN_COURS': { class: 'bg-warning', text: 'En route', pulse: true },
+        'TERMINEE': { class: 'bg-success', text: 'Livré' },
+        'ANNULEE': { class: 'bg-danger', text: 'Annulée' }
+    };
+    const config = configs[statut] || { class: 'bg-secondary', text: statut };
+    return `<span class="badge ${config.class} bg-opacity-10 text-${config.class.replace('bg-', '')} border border-${config.class.replace('bg-', '')} border-opacity-25 rounded-pill px-2">
+                ${config.pulse ? '<span class="pulse-dot"></span> ' : ''}${config.text}
+            </span>`;
+}
+
+async function populateDropdowns() {
+    try {
+        const [driversRes, vehiclesRes] = await Promise.all([
+            fetch('/api/missions/conducteurs'),
+            fetch('/api/missions/vehicules')
+        ]);
         
-        // Find and open the popup for the marker at these coordinates
+        if (driversRes.ok) {
+            const drivers = await driversRes.json();
+            const addSelect = document.getElementById('add_conducteur');
+            const editSelect = document.getElementById('edit_conducteur');
+            
+            drivers.forEach(d => {
+                addSelect.add(new Option(d.nom, d.id));
+                if(editSelect) editSelect.add(new Option(d.nom, d.id));
+            });
+        }
+        
+        if (vehiclesRes.ok) {
+            const vehicles = await vehiclesRes.json();
+            const addSelect = document.getElementById('add_vehicule');
+            const editSelect = document.getElementById('edit_vehicule');
+            
+            vehicles.forEach(v => {
+                addSelect.add(new Option(v.label, v.id));
+                if(editSelect) editSelect.add(new Option(v.label, v.id));
+            });
+        }
+    } catch (error) {
+        console.error('Error populating dropdowns:', error);
+    }
+}
+
+window.prepareEdit = function(id) {
+    const mission = allMissions.find(m => m.id === id);
+    if (!mission) return;
+    
+    const modal = document.getElementById('editMissionModal');
+    modal.querySelector('.modal-title span').textContent = mission.reference;
+    
+    // Status
+    document.getElementById('editStatutSelect').value = mission.statut;
+    toggleEditStatutFields(mission.statut);
+    
+    // Conducteur & Vehicule
+    document.getElementById('edit_conducteur').value = mission.conducteurId;
+    document.getElementById('edit_vehicule').value = mission.vehiculeId;
+    
+    // Trajet
+    document.getElementById('edit_adresse_depart').value = mission.adresseDepart || '';
+    document.getElementById('edit-lat-start').value = mission.latitudeDepart || '';
+    document.getElementById('edit-lng-start').value = mission.longitudeDepart || '';
+    
+    document.getElementById('edit_adresse_destination').value = mission.adresseArrivee || '';
+    document.getElementById('edit-lat-end').value = mission.latitudeDestination || '';
+    document.getElementById('edit-lng-end').value = mission.longitudeDestination || '';
+    
+    // Dates
+    document.getElementById('edit_date_depart').value = mission.dateDebut || '';
+    document.getElementById('edit_date_fin_estimee').value = mission.dateFinEstimee || '';
+    
+    // Colis
+    document.getElementById('edit_colis_description').value = mission.colisDescription || '';
+    document.getElementById('edit_colis_code_suivi').value = mission.colisCodeSuivi || '';
+    document.getElementById('edit_colis_type').value = mission.colisType || 'STANDARD';
+    document.getElementById('edit_colis_poids').value = mission.colisPoids || '';
+    document.getElementById('edit_colis_volume').value = mission.colisVolume || '';
+    
+    // Instructions
+    document.getElementById('edit_instructions').value = mission.instructionsSpeciales || '';
+};
+
+async function confirmDelivery(missionId) {
+    if (!confirm('Marquer cette mission comme terminée ?')) return;
+    try {
+        const response = await fetch(`/api/missions/${missionId}/status?status=TERMINEE`, { method: 'PATCH' });
+        if (response.ok) {
+            fetchMissions();
+        } else {
+            alert('Erreur lors de la mise à jour');
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+window.focusMap = function(coords) {
+    if(map && coords[0] && coords[1]) {
+        map.setView(coords, 14, { animate: true, duration: 1 });
         markers.forEach(marker => {
-            const markerCoords = marker.getLatLng();
-            if (markerCoords.lat === coords[0] && markerCoords.lng === coords[1]) {
+            if (marker.getLatLng().lat === coords[0] && marker.getLatLng().lng === coords[1]) {
                 marker.openPopup();
             }
         });
     }
 };
 
-// ==========================================
-// Map Selection Logic for Modals
-// ==========================================
+// Map Selection Logic
 let isSelectingMap = false;
 let mapSelectionTarget = { latId: '', lngId: '', modalId: '' };
 let currentModalInstance = null;
@@ -174,19 +266,12 @@ let currentModalInstance = null;
 window.startMapSelection = function(latId, lngId, modalId) {
     isSelectingMap = true;
     mapSelectionTarget = { latId, lngId, modalId };
-    
-    // Hide the modal using Bootstrap API
     const modalEl = document.getElementById(modalId);
     currentModalInstance = bootstrap.Modal.getInstance(modalEl);
-    if(currentModalInstance) {
-        currentModalInstance.hide();
-    }
+    if(currentModalInstance) currentModalInstance.hide();
     
-    // Show banner.txt and change map cursor
     document.getElementById('mapSelectionBanner').style.setProperty('display', 'flex', 'important');
     document.getElementById('map').style.cursor = 'crosshair';
-    
-    // Scroll to map
     document.getElementById('map').scrollIntoView({behavior: 'smooth', block: 'center'});
 };
 
@@ -194,52 +279,129 @@ window.cancelMapSelection = function() {
     isSelectingMap = false;
     document.getElementById('mapSelectionBanner').style.setProperty('display', 'none', 'important');
     document.getElementById('map').style.cursor = '';
-    
-    // Re-show modal
-    if(currentModalInstance) {
-        currentModalInstance.show();
-    }
+    if(currentModalInstance) currentModalInstance.show();
 };
 
-// Listen to map clicks globally
 document.addEventListener("DOMContentLoaded", function() {
-    // Wait slightly to ensure map is initialized
-    setTimeout(() => {
-        if(map) {
-            map.on('click', function(e) {
-                if(isSelectingMap) {
-                    // We captured a click during selection mode
-                    const lat = e.latlng.lat.toFixed(6);
-                    const lng = e.latlng.lng.toFixed(6);
-                    
-                    // Fill inputs
-                    document.getElementById(mapSelectionTarget.latId).value = lat;
-                    document.getElementById(mapSelectionTarget.lngId).value = lng;
-                    
-                    // End selection mode
-                    isSelectingMap = false;
-                    document.getElementById('mapSelectionBanner').style.setProperty('display', 'none', 'important');
-                    document.getElementById('map').style.cursor = '';
-                    
-                    // Add a temporary marker to show selected point
-                    const tempMarker = L.marker([lat, lng], {
-                        icon: L.divIcon({
-                            className: 'custom-div-icon',
-                            html: '<div style="width:16px;height:16px;background:#3b82f6;border-radius:50%;border:2px solid white;box-shadow:0 2px 5px rgba(0,0,0,0.3);"></div>',
-                            iconSize: [16, 16],
-                            iconAnchor: [8, 8]
-                        })
-                    }).addTo(map);
-                    
-                    // Remove temporary marker after 3 seconds
-                    setTimeout(() => map.removeLayer(tempMarker), 3000);
-                    
-                    // Re-show modal
-                    if(currentModalInstance) {
-                        currentModalInstance.show();
-                    }
-                }
-            });
+    map = L.map('map').setView([33.5, -7.5], 6);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+
+    fetchMissions();
+    populateDropdowns();
+
+    document.getElementById('saveMissionEdit').addEventListener('click', saveEditMission);
+
+    map.on('click', function(e) {
+        if(isSelectingMap) {
+            const lat = e.latlng.lat.toFixed(6);
+            const lng = e.latlng.lng.toFixed(6);
+            document.getElementById(mapSelectionTarget.latId).value = lat;
+            document.getElementById(mapSelectionTarget.lngId).value = lng;
+            
+            isSelectingMap = false;
+            document.getElementById('mapSelectionBanner').style.setProperty('display', 'none', 'important');
+            document.getElementById('map').style.cursor = '';
+            if(currentModalInstance) currentModalInstance.show();
         }
-    }, 1000);
+    });
 });
+
+let currentEditingId = null;
+
+window.prepareEdit = function(id) {
+    const mission = allMissions.find(m => m.id === id);
+    if (!mission) return;
+    
+    currentEditingId = id;
+    const modal = document.getElementById('editMissionModal');
+    modal.querySelector('.modal-title span').textContent = mission.reference;
+    
+    // Status
+    document.getElementById('editStatutSelect').value = mission.statut;
+    toggleEditStatutFields(mission.statut);
+    
+    // Conducteur & Vehicule
+    document.getElementById('edit_conducteur').value = mission.conducteurId;
+    document.getElementById('edit_vehicule').value = mission.vehiculeId;
+    
+    // Trajet
+    document.getElementById('edit_adresse_depart').value = mission.adresseDepart || '';
+    document.getElementById('edit-lat-start').value = mission.latitudeDepart || '';
+    document.getElementById('edit-lng-start').value = mission.longitudeDepart || '';
+    
+    document.getElementById('edit_adresse_destination').value = mission.adresseArrivee || '';
+    document.getElementById('edit-lat-end').value = mission.latitudeDestination || '';
+    document.getElementById('edit-lng-end').value = mission.longitudeDestination || '';
+    
+    // Dates (Format for datetime-local: YYYY-MM-DDTHH:MM)
+    if (mission.dateDebut) {
+        document.getElementById('edit_date_depart').value = mission.dateDebut + "T08:00"; // Defaulting time if only date is present
+    }
+    if (mission.dateFinEstimee) {
+        document.getElementById('edit_date_fin_estimee').value = mission.dateFinEstimee + "T18:00";
+    }
+    
+    // Colis
+    document.getElementById('edit_colis_description').value = mission.colisDescription || '';
+    document.getElementById('edit_colis_code_suivi').value = mission.colisCodeSuivi || '';
+    document.getElementById('edit_colis_type').value = mission.colisType || 'STANDARD';
+    document.getElementById('edit_colis_poids').value = mission.colisPoids || '';
+    document.getElementById('edit_colis_volume').value = mission.colisVolume || '';
+    
+    // Instructions
+    document.getElementById('edit_instructions').value = mission.instructionsSpeciales || '';
+};
+
+async function saveEditMission() {
+    if (!currentEditingId) return;
+
+    const missionData = {
+        id: currentEditingId,
+        conducteurId: document.getElementById('edit_conducteur').value,
+        vehiculeId: document.getElementById('edit_vehicule').value,
+        adressDepart: document.getElementById('edit_adresse_depart').value,
+        latitudeDepart: parseFloat(document.getElementById('edit-lat-start').value),
+        longitudeDepart: parseFloat(document.getElementById('edit-lng-start').value),
+        adressDestination: document.getElementById('edit_adresse_destination').value,
+        latitudeDestination: parseFloat(document.getElementById('edit-lat-end').value),
+        longitudeDestination: parseFloat(document.getElementById('edit-lng-end').value),
+        dateDepart: document.getElementById('edit_date_depart').value,
+        dateArrivee: document.getElementById('edit_date_fin_estimee').value,
+        description: document.getElementById('edit_colis_description').value,
+        poids: parseFloat(document.getElementById('edit_colis_poids').value),
+        volume: parseFloat(document.getElementById('edit_colis_volume').value),
+        typeColis: document.getElementById('edit_colis_type').value,
+        instructionSpeciales: document.getElementById('edit_instructions').value
+    };
+
+    // First update the mission details
+    try {
+        const updateRes = await fetch(`/api/missions/${currentEditingId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(missionData)
+        });
+
+        if (!updateRes.ok) throw new Error('Failed to update mission details');
+
+        // Then update the status if changed
+        const newStatus = document.getElementById('editStatutSelect').value;
+        const currentMission = allMissions.find(m => m.id === currentEditingId);
+        
+        if (newStatus !== currentMission.statut) {
+            await fetch(`/api/missions/${currentEditingId}/status?status=${newStatus}`, { method: 'PATCH' });
+        }
+
+        // Close modal and refresh
+        const modalEl = document.getElementById('editMissionModal');
+        const modalInstance = bootstrap.Modal.getInstance(modalEl);
+        if (modalInstance) modalInstance.hide();
+        
+        fetchMissions();
+        alert('Mission mise à jour avec succès !');
+
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Une erreur est survenue lors de la modification.');
+    }
+}

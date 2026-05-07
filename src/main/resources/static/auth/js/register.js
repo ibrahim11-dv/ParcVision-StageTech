@@ -13,7 +13,7 @@ document.getElementById("registerForm").addEventListener("submit",async (e)=>{
     const adminPassword = document.getElementById("adminPassword").value
 
     try{
-        const response = await fetch("/api/registration/register-Enterprise",{
+        const response = await fetch("/api/registration",{
             method : 'POST',
             headers : {"Content-Type" : "application/json"},
             body : JSON.stringify({

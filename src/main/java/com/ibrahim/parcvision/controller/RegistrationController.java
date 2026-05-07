@@ -18,7 +18,7 @@ public class RegistrationController {
         this.registrationService = registrationService;
     }
 
-    @PostMapping("/register-Enterprise")
+    @PostMapping
     public ResponseEntity<?> registerEntreprise(
             @RequestBody @Valid RegistrationRequestDao registrationRequestDao
     ){
