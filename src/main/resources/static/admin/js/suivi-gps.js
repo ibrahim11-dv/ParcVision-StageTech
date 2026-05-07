@@ -67,8 +67,8 @@ async function fetchMissions() {
 
 function renderMissions(missions) {
     const tableBody = document.querySelector('table tbody');
-    tableBody.innerHTML = ''; 
-    
+    tableBody.innerHTML = '';
+
     markers.forEach(marker => map.removeLayer(marker));
     markers = [];
 
@@ -76,7 +76,7 @@ function renderMissions(missions) {
         const row = document.createElement('tr');
         row.style.cursor = 'pointer';
         row.onclick = () => focusMap([mission.latitudeDepart, mission.longitudeDepart]);
-        
+
         const isDelivered = mission.statut === 'TERMINEE';
 
         row.innerHTML = `
@@ -95,7 +95,7 @@ function renderMissions(missions) {
             </td>
             <td class="border-bottom-0">
                 <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 rounded-pill px-2">
-                    ${mission.colisType} (${mission.colisPoids}kg)
+                    ${mission.colisType} (${mission.colisPoids ? mission.colisPoids.toFixed(2) : '0'}kg)
                 </span>
             </td>
             <td class="border-bottom-0">
@@ -116,7 +116,7 @@ function renderMissions(missions) {
 
         if (mission.latitudeDepart && mission.longitudeDepart) {
             let color = isDelivered ? "#10b981" : (mission.statut === "ANNULEE" ? "#ef4444" : "#f59e0b");
-            
+
             let htmlIcon = `<div style="position:relative; width:20px; height:20px;">
                                 <div style="width:16px;height:16px;background:${color};border-radius:50%;border:2px solid white;box-shadow:0 2px 5px rgba(0,0,0,0.3);position:absolute;z-index:2;"></div>
                                 ${mission.statut === "EN_COURS" ? `<div style="width:16px;height:16px;background:${color};border-radius:50%;position:absolute;animation:pulse 1.5s infinite;z-index:1;"></div>` : ''}
@@ -129,7 +129,7 @@ function renderMissions(missions) {
                 iconAnchor: [10, 10]
             });
 
-            const marker = L.marker([mission.latitudeDepart, mission.longitudeDepart], {icon: divIcon}).addTo(map);
+            const marker = L.marker([mission.latitudeDepart, mission.longitudeDepart], { icon: divIcon }).addTo(map);
             marker.bindPopup(`
                 <div class="custom-popup-title">${mission.reference}</div>
                 <div class="custom-popup-body">
@@ -142,7 +142,7 @@ function renderMissions(missions) {
         }
     });
 
-    if(markers.length > 0) {
+    if (markers.length > 0) {
         const group = new L.featureGroup(markers);
         map.fitBounds(group.getBounds().pad(0.5));
     }
@@ -167,26 +167,26 @@ async function populateDropdowns() {
             fetch('/api/missions/conducteurs'),
             fetch('/api/missions/vehicules')
         ]);
-        
+
         if (driversRes.ok) {
             const drivers = await driversRes.json();
             const addSelect = document.getElementById('add_conducteur');
             const editSelect = document.getElementById('edit_conducteur');
-            
+
             drivers.forEach(d => {
                 addSelect.add(new Option(d.nom, d.id));
-                if(editSelect) editSelect.add(new Option(d.nom, d.id));
+                if (editSelect) editSelect.add(new Option(d.nom, d.id));
             });
         }
-        
+
         if (vehiclesRes.ok) {
             const vehicles = await vehiclesRes.json();
             const addSelect = document.getElementById('add_vehicule');
             const editSelect = document.getElementById('edit_vehicule');
-            
+
             vehicles.forEach(v => {
                 addSelect.add(new Option(v.label, v.id));
-                if(editSelect) editSelect.add(new Option(v.label, v.id));
+                if (editSelect) editSelect.add(new Option(v.label, v.id));
             });
         }
     } catch (error) {
@@ -194,44 +194,6 @@ async function populateDropdowns() {
     }
 }
 
-window.prepareEdit = function(id) {
-    const mission = allMissions.find(m => m.id === id);
-    if (!mission) return;
-    
-    const modal = document.getElementById('editMissionModal');
-    modal.querySelector('.modal-title span').textContent = mission.reference;
-    
-    // Status
-    document.getElementById('editStatutSelect').value = mission.statut;
-    toggleEditStatutFields(mission.statut);
-    
-    // Conducteur & Vehicule
-    document.getElementById('edit_conducteur').value = mission.conducteurId;
-    document.getElementById('edit_vehicule').value = mission.vehiculeId;
-    
-    // Trajet
-    document.getElementById('edit_adresse_depart').value = mission.adresseDepart || '';
-    document.getElementById('edit-lat-start').value = mission.latitudeDepart || '';
-    document.getElementById('edit-lng-start').value = mission.longitudeDepart || '';
-    
-    document.getElementById('edit_adresse_destination').value = mission.adresseArrivee || '';
-    document.getElementById('edit-lat-end').value = mission.latitudeDestination || '';
-    document.getElementById('edit-lng-end').value = mission.longitudeDestination || '';
-    
-    // Dates
-    document.getElementById('edit_date_depart').value = mission.dateDebut || '';
-    document.getElementById('edit_date_fin_estimee').value = mission.dateFinEstimee || '';
-    
-    // Colis
-    document.getElementById('edit_colis_description').value = mission.colisDescription || '';
-    document.getElementById('edit_colis_code_suivi').value = mission.colisCodeSuivi || '';
-    document.getElementById('edit_colis_type').value = mission.colisType || 'STANDARD';
-    document.getElementById('edit_colis_poids').value = mission.colisPoids || '';
-    document.getElementById('edit_colis_volume').value = mission.colisVolume || '';
-    
-    // Instructions
-    document.getElementById('edit_instructions').value = mission.instructionsSpeciales || '';
-};
 
 async function confirmDelivery(missionId) {
     if (!confirm('Marquer cette mission comme terminée ?')) return;
@@ -247,8 +209,8 @@ async function confirmDelivery(missionId) {
     }
 }
 
-window.focusMap = function(coords) {
-    if(map && coords[0] && coords[1]) {
+window.focusMap = function (coords) {
+    if (map && coords[0] && coords[1]) {
         map.setView(coords, 14, { animate: true, duration: 1 });
         markers.forEach(marker => {
             if (marker.getLatLng().lat === coords[0] && marker.getLatLng().lng === coords[1]) {
@@ -263,26 +225,26 @@ let isSelectingMap = false;
 let mapSelectionTarget = { latId: '', lngId: '', modalId: '' };
 let currentModalInstance = null;
 
-window.startMapSelection = function(latId, lngId, modalId) {
+window.startMapSelection = function (latId, lngId, modalId) {
     isSelectingMap = true;
     mapSelectionTarget = { latId, lngId, modalId };
     const modalEl = document.getElementById(modalId);
     currentModalInstance = bootstrap.Modal.getInstance(modalEl);
-    if(currentModalInstance) currentModalInstance.hide();
-    
+    if (currentModalInstance) currentModalInstance.hide();
+
     document.getElementById('mapSelectionBanner').style.setProperty('display', 'flex', 'important');
     document.getElementById('map').style.cursor = 'crosshair';
-    document.getElementById('map').scrollIntoView({behavior: 'smooth', block: 'center'});
+    document.getElementById('map').scrollIntoView({ behavior: 'smooth', block: 'center' });
 };
 
-window.cancelMapSelection = function() {
+window.cancelMapSelection = function () {
     isSelectingMap = false;
     document.getElementById('mapSelectionBanner').style.setProperty('display', 'none', 'important');
     document.getElementById('map').style.cursor = '';
-    if(currentModalInstance) currentModalInstance.show();
+    if (currentModalInstance) currentModalInstance.show();
 };
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     map = L.map('map').setView([33.5, -7.5], 6);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
 
@@ -291,63 +253,63 @@ document.addEventListener("DOMContentLoaded", function() {
 
     document.getElementById('saveMissionEdit').addEventListener('click', saveEditMission);
 
-    map.on('click', function(e) {
-        if(isSelectingMap) {
+    map.on('click', function (e) {
+        if (isSelectingMap) {
             const lat = e.latlng.lat.toFixed(6);
             const lng = e.latlng.lng.toFixed(6);
             document.getElementById(mapSelectionTarget.latId).value = lat;
             document.getElementById(mapSelectionTarget.lngId).value = lng;
-            
+
             isSelectingMap = false;
             document.getElementById('mapSelectionBanner').style.setProperty('display', 'none', 'important');
             document.getElementById('map').style.cursor = '';
-            if(currentModalInstance) currentModalInstance.show();
+            if (currentModalInstance) currentModalInstance.show();
         }
     });
 });
 
 let currentEditingId = null;
 
-window.prepareEdit = function(id) {
+window.prepareEdit = function (id) {
     const mission = allMissions.find(m => m.id === id);
     if (!mission) return;
-    
+
     currentEditingId = id;
     const modal = document.getElementById('editMissionModal');
     modal.querySelector('.modal-title span').textContent = mission.reference;
-    
+
     // Status
     document.getElementById('editStatutSelect').value = mission.statut;
     toggleEditStatutFields(mission.statut);
-    
+
     // Conducteur & Vehicule
     document.getElementById('edit_conducteur').value = mission.conducteurId;
     document.getElementById('edit_vehicule').value = mission.vehiculeId;
-    
+
     // Trajet
     document.getElementById('edit_adresse_depart').value = mission.adresseDepart || '';
     document.getElementById('edit-lat-start').value = mission.latitudeDepart || '';
     document.getElementById('edit-lng-start').value = mission.longitudeDepart || '';
-    
+
     document.getElementById('edit_adresse_destination').value = mission.adresseArrivee || '';
     document.getElementById('edit-lat-end').value = mission.latitudeDestination || '';
     document.getElementById('edit-lng-end').value = mission.longitudeDestination || '';
-    
+
     // Dates (Format for datetime-local: YYYY-MM-DDTHH:MM)
     if (mission.dateDebut) {
-        document.getElementById('edit_date_depart').value = mission.dateDebut + "T08:00"; // Defaulting time if only date is present
+        document.getElementById('edit_date_depart').value = mission.dateDebut.substring(0, 16);
     }
     if (mission.dateFinEstimee) {
-        document.getElementById('edit_date_fin_estimee').value = mission.dateFinEstimee + "T18:00";
+        document.getElementById('edit_date_fin_estimee').value = mission.dateFinEstimee.substring(0, 16);
     }
-    
+
     // Colis
     document.getElementById('edit_colis_description').value = mission.colisDescription || '';
     document.getElementById('edit_colis_code_suivi').value = mission.colisCodeSuivi || '';
     document.getElementById('edit_colis_type').value = mission.colisType || 'STANDARD';
     document.getElementById('edit_colis_poids').value = mission.colisPoids || '';
     document.getElementById('edit_colis_volume').value = mission.colisVolume || '';
-    
+
     // Instructions
     document.getElementById('edit_instructions').value = mission.instructionsSpeciales || '';
 };
@@ -369,9 +331,9 @@ async function saveEditMission() {
         dateArrivee: document.getElementById('edit_date_fin_estimee').value,
         description: document.getElementById('edit_colis_description').value,
         poids: parseFloat(document.getElementById('edit_colis_poids').value),
-        volume: parseFloat(document.getElementById('edit_colis_volume').value),
+        Volume: parseFloat(document.getElementById('edit_colis_volume').value),
         typeColis: document.getElementById('edit_colis_type').value,
-        instructionSpeciales: document.getElementById('edit_instructions').value
+        InstructionSpeciales: document.getElementById('edit_instructions').value
     };
 
     // First update the mission details
@@ -387,7 +349,7 @@ async function saveEditMission() {
         // Then update the status if changed
         const newStatus = document.getElementById('editStatutSelect').value;
         const currentMission = allMissions.find(m => m.id === currentEditingId);
-        
+
         if (newStatus !== currentMission.statut) {
             await fetch(`/api/missions/${currentEditingId}/status?status=${newStatus}`, { method: 'PATCH' });
         }
@@ -396,7 +358,7 @@ async function saveEditMission() {
         const modalEl = document.getElementById('editMissionModal');
         const modalInstance = bootstrap.Modal.getInstance(modalEl);
         if (modalInstance) modalInstance.hide();
-        
+
         fetchMissions();
         alert('Mission mise à jour avec succès !');
 

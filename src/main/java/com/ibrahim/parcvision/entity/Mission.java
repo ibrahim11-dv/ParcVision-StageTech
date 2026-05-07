@@ -56,7 +56,7 @@ public class Mission {
     @Column(name = "preuve_livraison_url")
     private String preuveLivraisonUrl;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "entreprise_id",
             nullable = false
@@ -64,14 +64,14 @@ public class Mission {
     @JsonBackReference
     private Entreprise entreprise;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "conducteur_id"
     )
     @JsonBackReference
     private Conducteur conducteur;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "vehicule_id"
     )
@@ -84,13 +84,13 @@ public class Mission {
     @JsonManagedReference
     private List<PointGPS> PointGPS;
 
-    @OneToOne(
+    @OneToOne(fetch = FetchType.LAZY,
             mappedBy = "mission"
     )
     @JsonManagedReference
     private Document document;
 
-    @OneToMany
+    @OneToMany(mappedBy = "mission")
     @JsonManagedReference
     private List<Colis> colis;
 

@@ -34,7 +34,7 @@ public class Conducteur {
     @Enumerated(EnumType.STRING)
     private Statut statut;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "utilisateur_id",
             nullable = false

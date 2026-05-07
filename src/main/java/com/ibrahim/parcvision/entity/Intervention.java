@@ -40,7 +40,7 @@ public abstract class Intervention {
     )
     private Long kilometrageAuMoment;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "vehicule_id",
             nullable = false
@@ -48,7 +48,7 @@ public abstract class Intervention {
     @JsonBackReference
     private Vehicule vehicule;
 
-    @OneToOne(
+    @OneToOne(fetch = FetchType.LAZY,
             mappedBy = "intervention"
     )
     @JsonManagedReference

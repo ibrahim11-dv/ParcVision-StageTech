@@ -53,7 +53,7 @@ public class Utilisateur implements UserDetails {
     )
     private Role role;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name ="entreprise_id",
             nullable = false
@@ -61,13 +61,13 @@ public class Utilisateur implements UserDetails {
     @JsonBackReference
     private Entreprise entreprise;
 
-    @OneToOne(
+    @OneToOne(fetch = FetchType.LAZY,
             mappedBy = "utilisateur"
     )
     @JsonManagedReference
     private Conducteur conducteur;
 
-    @OneToOne(
+    @OneToOne(fetch = FetchType.LAZY,
             mappedBy = "utilisateur"
     )
     @JsonManagedReference

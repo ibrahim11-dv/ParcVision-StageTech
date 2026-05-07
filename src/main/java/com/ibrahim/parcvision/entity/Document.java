@@ -39,42 +39,42 @@ public class Document {
     )
     private String metaDonneesIndex;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "conducteur_id"
     )
     @JsonBackReference
     private Conducteur conducteur;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "vehicule_id"
     )
     @JsonBackReference
     private Vehicule vehicule;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "mission_id"
     )
     @JsonBackReference
     private Mission mission;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "intervention_id"
     )
     @JsonBackReference
     private Intervention intervention;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "entreprise_id"
     )
     @JsonBackReference
     private Entreprise entreprise;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "dossier_archivage_id"
     )

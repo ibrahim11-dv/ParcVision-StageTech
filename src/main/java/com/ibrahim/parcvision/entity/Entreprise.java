@@ -60,7 +60,7 @@ public class Entreprise {
     private List<Mission> mission;
 
 
-    @OneToOne(
+    @OneToOne(fetch = FetchType.LAZY,
             mappedBy = "entreprise"
     )
     @JsonManagedReference

@@ -53,7 +53,7 @@ public class Vehicule {
     @Enumerated(EnumType.STRING)
     private StatutVehicule statutVehicule;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "entreprise_id",
             nullable = false
@@ -73,7 +73,7 @@ public class Vehicule {
     @JsonManagedReference
     private List<Intervention> intervention;
 
-    @OneToOne(
+    @OneToOne(fetch = FetchType.LAZY,
             mappedBy = "vehicule"
     )
     @JsonManagedReference

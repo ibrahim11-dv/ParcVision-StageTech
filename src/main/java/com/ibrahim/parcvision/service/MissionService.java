@@ -99,6 +99,7 @@ public class MissionService {
         return savedMission;
     }
 
+    @Transactional(readOnly = true)
     public List<MissionResponseDao> getMissionsByEntreprise(Entreprise entreprise) {
         List<Mission> missions = missionRepository.findByEntreprise(entreprise);
         return missions.stream()
