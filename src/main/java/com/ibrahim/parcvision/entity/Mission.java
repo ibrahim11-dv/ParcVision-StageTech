@@ -103,27 +103,27 @@ public class Mission {
         this.id = id;
     }
 
-    public LocalDate getDataDebut() {
+    public LocalDateTime getDataDebut() {
         return dataDebut;
     }
 
-    public void setDataDebut(LocalDate dataDebut) {
+    public void setDataDebut(LocalDateTime dataDebut) {
         this.dataDebut = dataDebut;
     }
 
-    public LocalDate getDateFinEstimee() {
+    public LocalDateTime getDateFinEstimee() {
         return dateFinEstimee;
     }
 
-    public void setDateFinEstimee(LocalDate dateFinEstimee) {
+    public void setDateFinEstimee(LocalDateTime dateFinEstimee) {
         this.dateFinEstimee = dateFinEstimee;
     }
 
-    public LocalDate getDateFinReelle() {
+    public LocalDateTime getDateFinReelle() {
         return dateFinReelle;
     }
 
-    public void setDateFinReelle(LocalDate dateFinReelle) {
+    public void setDateFinReelle(LocalDateTime dateFinReelle) {
         this.dateFinReelle = dateFinReelle;
     }
 

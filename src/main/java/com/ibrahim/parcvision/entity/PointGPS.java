@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.ibrahim.parcvision.enums.TypePoint;
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 public class PointGPS {
@@ -16,7 +16,7 @@ public class PointGPS {
 
     private double longitude;
 
-    private LocalDate timeStamp;
+    private LocalDateTime timeStamp;
 
     private double vitesse;
 
@@ -58,11 +58,11 @@ public class PointGPS {
         this.longitude = longitude;
     }
 
-    public LocalDate getTimeStamp() {
+    public LocalDateTime getTimeStamp() {
         return timeStamp;
     }
 
-    public void setTimeStamp(LocalDate timeStamp) {
+    public void setTimeStamp(LocalDateTime timeStamp) {
         this.timeStamp = timeStamp;
     }
 

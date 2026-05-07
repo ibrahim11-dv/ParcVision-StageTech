@@ -141,7 +141,7 @@ public class DatabaseSeeder implements CommandLineRunner {
                 m.setAdresseDepart(faker.address().city());
                 m.setAdressArrivee(faker.address().city());
                 m.setInstructionsSpeciales(faker.lorem().sentence());
-                m.setDataDebut(faker.date().past(10, java.util.concurrent.TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+                m.setDataDebut(faker.date().past(10, java.util.concurrent.TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
                 m.setDateFinEstimee(m.getDataDebut().plusDays(random.nextInt(3) + 1));
                 
                 if (m.getStatut() == StatutMission.TERMINEE) {

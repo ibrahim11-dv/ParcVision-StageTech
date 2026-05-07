@@ -2,6 +2,7 @@ package com.ibrahim.parcvision.service;
 
 import com.ibrahim.parcvision.dao.AddMissionDao;
 import com.ibrahim.parcvision.dao.MissionResponseDao;
+import com.ibrahim.parcvision.dao.UpdateMissionDao;
 import com.ibrahim.parcvision.entity.*;
 import com.ibrahim.parcvision.enums.StatutMission;
 import com.ibrahim.parcvision.enums.TypeColis;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,8 +45,8 @@ public class MissionService {
         Mission mission = new Mission();
         
         // Basic fields
-        mission.setDataDebut(addMissionDao.getDateDepart().toLocalDate());
-        mission.setDateFinEstimee(addMissionDao.getDateArrivee().toLocalDate());
+        mission.setDataDebut(addMissionDao.getDateDepart());
+        mission.setDateFinEstimee(addMissionDao.getDateArrivee());
         mission.setAdresseDepart(addMissionDao.getAdressDepart());
         mission.setAdressArrivee(addMissionDao.getAdressDestination());
         mission.setInstructionsSpeciales(addMissionDao.getInstructionSpeciales());
@@ -71,7 +73,7 @@ public class MissionService {
         startPoint.setLaltitude(addMissionDao.getLatitudeDepart());
         startPoint.setLongitude(addMissionDao.getLongitudeDepart());
         startPoint.setTypePoint(TypePoint.DEBUT);
-        startPoint.setTimeStamp(LocalDate.now());
+        startPoint.setTimeStamp(LocalDateTime.now());
         startPoint.setMission(savedMission);
         pointGpsRepository.save(startPoint);
 
@@ -80,7 +82,7 @@ public class MissionService {
         endPoint.setLaltitude(addMissionDao.getLatitudeDestination());
         endPoint.setLongitude(addMissionDao.getLongitudeDestination());
         endPoint.setTypePoint(TypePoint.FIN);
-        endPoint.setTimeStamp(LocalDate.now());
+        endPoint.setTimeStamp(LocalDateTime.now());
         endPoint.setMission(savedMission);
         pointGpsRepository.save(endPoint);
 
@@ -186,7 +188,7 @@ public class MissionService {
                 .orElseThrow(() -> new RuntimeException("Mission not found"));
         mission.setStatut(status);
         if (status == StatutMission.TERMINEE) {
-            mission.setDateFinReelle(LocalDate.now());
+            mission.setDateFinReelle(LocalDateTime.now());
         }
         missionRepository.save(mission);
     }
@@ -197,8 +199,8 @@ public class MissionService {
                 .orElseThrow(() -> new RuntimeException("Mission not found"));
 
         // Update basic fields
-        mission.setDataDebut(updateDao.getDateDepart().toLocalDate());
-        mission.setDateFinEstimee(updateDao.getDateArrivee().toLocalDate());
+        mission.setDataDebut(updateDao.getDateDepart());
+        mission.setDateFinEstimee(updateDao.getDateArrivee());
         mission.setAdresseDepart(updateDao.getAdressDepart());
         mission.setAdressArrivee(updateDao.getAdressDestination());
         mission.setInstructionsSpeciales(updateDao.getInstructionSpeciales());

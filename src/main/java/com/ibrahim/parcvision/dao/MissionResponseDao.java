@@ -4,7 +4,7 @@ import com.ibrahim.parcvision.enums.StatutMission;
 import com.ibrahim.parcvision.enums.TypeColis;
 import jakarta.validation.constraints.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class MissionResponseDao {
     @NotNull
@@ -59,9 +59,9 @@ public class MissionResponseDao {
     
     // Dates
     @NotNull
-    private LocalDate dateDebut;
-    private LocalDate dateFinEstimee;
-    private LocalDate dateFinReelle;
+    private LocalDateTime dateDebut;
+    private LocalDateTime dateFinEstimee;
+    private LocalDateTime dateFinReelle;
     
     private String instructionsSpeciales;
     private String preuveLivraisonUrl;
@@ -237,27 +237,27 @@ public class MissionResponseDao {
         this.statut = statut;
     }
 
-    public LocalDate getDateDebut() {
+    public LocalDateTime getDateDebut() {
         return dateDebut;
     }
 
-    public void setDateDebut(LocalDate dateDebut) {
+    public void setDateDebut(LocalDateTime dateDebut) {
         this.dateDebut = dateDebut;
     }
 
-    public LocalDate getDateFinEstimee() {
+    public LocalDateTime getDateFinEstimee() {
         return dateFinEstimee;
     }
 
-    public void setDateFinEstimee(LocalDate dateFinEstimee) {
+    public void setDateFinEstimee(LocalDateTime dateFinEstimee) {
         this.dateFinEstimee = dateFinEstimee;
     }
 
-    public LocalDate getDateFinReelle() {
+    public LocalDateTime getDateFinReelle() {
         return dateFinReelle;
     }
 
-    public void setDateFinReelle(LocalDate dateFinReelle) {
+    public void setDateFinReelle(LocalDateTime dateFinReelle) {
         this.dateFinReelle = dateFinReelle;
     }
 
