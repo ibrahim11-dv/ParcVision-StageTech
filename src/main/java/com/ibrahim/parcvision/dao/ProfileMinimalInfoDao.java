@@ -14,6 +14,16 @@ public class ProfileMinimalInfoDao {
     @NotBlank
     private String prenom;
 
+    private String photoProfileUrl;
+
+    public String getPhotoProfileUrl() {
+        return photoProfileUrl;
+    }
+
+    public void setPhotoProfileUrl(String photoProfileUrl) {
+        this.photoProfileUrl = photoProfileUrl;
+    }
+
     public String getEmail() {
         return email;
     }

@@ -78,4 +78,108 @@ public class Vehicule {
     )
     @JsonManagedReference
     private Document document;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getMarque() {
+        return marque;
+    }
+
+    public void setMarque(String marque) {
+        this.marque = marque;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public Long getKilometrageActuel() {
+        return KilometrageActuel;
+    }
+
+    public void setKilometrageActuel(Long kilometrageActuel) {
+        KilometrageActuel = kilometrageActuel;
+    }
+
+    public LocalDate getDateMiseCirculation() {
+        return dateMiseCirculation;
+    }
+
+    public void setDateMiseCirculation(LocalDate dateMiseCirculation) {
+        this.dateMiseCirculation = dateMiseCirculation;
+    }
+
+    public Long getCapaciteChargeKg() {
+        return capaciteChargeKg;
+    }
+
+    public void setCapaciteChargeKg(Long capaciteChargeKg) {
+        this.capaciteChargeKg = capaciteChargeKg;
+    }
+
+    public String getImmatriculation() {
+        return immatriculation;
+    }
+
+    public void setImmatriculation(String immatriculation) {
+        this.immatriculation = immatriculation;
+    }
+
+    public TypeVehicule getTypeVehicule() {
+        return typeVehicule;
+    }
+
+    public void setTypeVehicule(TypeVehicule typeVehicule) {
+        this.typeVehicule = typeVehicule;
+    }
+
+    public StatutVehicule getStatutVehicule() {
+        return statutVehicule;
+    }
+
+    public void setStatutVehicule(StatutVehicule statutVehicule) {
+        this.statutVehicule = statutVehicule;
+    }
+
+    public Entreprise getEntreprise() {
+        return entreprise;
+    }
+
+    public void setEntreprise(Entreprise entreprise) {
+        this.entreprise = entreprise;
+    }
+
+    public List<Mission> getMission() {
+        return mission;
+    }
+
+    public void setMission(List<Mission> mission) {
+        this.mission = mission;
+    }
+
+    public List<Intervention> getIntervention() {
+        return intervention;
+    }
+
+    public void setIntervention(List<Intervention> intervention) {
+        this.intervention = intervention;
+    }
+
+    public Document getDocument() {
+        return document;
+    }
+
+    public void setDocument(Document document) {
+        this.document = document;
+    }
 }

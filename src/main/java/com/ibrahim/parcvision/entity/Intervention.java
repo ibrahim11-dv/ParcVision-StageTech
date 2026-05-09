@@ -54,5 +54,67 @@ public abstract class Intervention {
     @JsonManagedReference
     private Document document;
 
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public LocalDate getDateIntervention() {
+        return dateIntervention;
+    }
+
+    public void setDateIntervention(LocalDate dateIntervention) {
+        this.dateIntervention = dateIntervention;
+    }
+
+    public String getDescriptionPanne() {
+        return descriptionPanne;
+    }
+
+    public void setDescriptionPanne(String descriptionPanne) {
+        this.descriptionPanne = descriptionPanne;
+    }
+
+    public String getActionsMenees() {
+        return actionsMenees;
+    }
+
+    public void setActionsMenees(String actionsMenees) {
+        this.actionsMenees = actionsMenees;
+    }
+
+    public double getCoutTotal() {
+        return coutTotal;
+    }
+
+    public void setCoutTotal(double coutTotal) {
+        this.coutTotal = coutTotal;
+    }
+
+    public Long getKilometrageAuMoment() {
+        return kilometrageAuMoment;
+    }
+
+    public void setKilometrageAuMoment(Long kilometrageAuMoment) {
+        this.kilometrageAuMoment = kilometrageAuMoment;
+    }
+
+    public Vehicule getVehicule() {
+        return vehicule;
+    }
+
+    public void setVehicule(Vehicule vehicule) {
+        this.vehicule = vehicule;
+    }
+
+    public Document getDocument() {
+        return document;
+    }
+
+    public void setDocument(Document document) {
+        this.document = document;
+    }
 }
