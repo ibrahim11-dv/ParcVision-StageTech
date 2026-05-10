@@ -361,7 +361,7 @@
                         <!-- Statut -->
                         <div class="col-md-12 mb-2">
                             <label class="form-label text-muted">Statut de la mission</label>
-                            <select class="form-select" id="editStatutSelect" onchange="toggleEditStatutFields(this.value)">
+                            <select class="form-select" id="editStatutSelect">
                                 <option value="PLANIFIEE">🔵 Planifiée</option>
                                 <option value="EN_COURS" selected>🟠 En cours</option>
                                 <option value="TERMINEE">🟢 Terminée</option>
@@ -369,15 +369,7 @@
                             </select>
                         </div>
 
-                        <!-- Date fin réelle + Preuve livraison (affichés si TERMINEE) -->
-                        <div class="col-md-6" id="editFinReelleField" style="display:none;">
-                            <label class="form-label text-muted">Date & Heure de fin réelle</label>
-                            <input type="datetime-local" class="form-control">
-                        </div>
-                        <div class="col-md-6" id="editPreuveField" style="display:none;">
-                            <label class="form-label text-muted">Preuve de livraison (URL photo/signature)</label>
-                            <input type="text" class="form-control" placeholder="Ex: https://... ou chemin fichier">
-                        </div>
+
 
                         <!-- Conducteur + Véhicule -->
                         <div class="col-md-6">
@@ -498,15 +490,26 @@
     </div>
 </div>
 
-<script>
-    function toggleEditStatutFields(val) {
-        const finReelle = document.getElementById('editFinReelleField');
-        const preuve    = document.getElementById('editPreuveField');
-        const show = val === 'TERMINEE';
-        finReelle.style.display = show ? '' : 'none';
-        preuve.style.display    = show ? '' : 'none';
-    }
-</script>
+<!-- Modal Confirmation Livraison -->
+<div class="modal fade" id="confirmDeliveryModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 1.25rem;">
+            <div class="modal-body text-center p-4">
+                <div class="mb-3">
+                    <div class="d-inline-flex align-items-center justify-content-center bg-success bg-opacity-10 rounded-circle" style="width: 80px; height: 80px;">
+                        <i class="bi bi-check-circle-fill text-success" style="font-size: 2.5rem;"></i>
+                    </div>
+                </div>
+                <h5 class="fw-bold mb-2" style="font-family: 'Outfit', sans-serif;">Confirmer la livraison ?</h5>
+                <p class="text-muted mb-4" style="font-size: 0.9rem;">Voulez-vous marquer cette mission comme terminée ? Cette action enregistrera l'heure actuelle comme heure de fin.</p>
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-light w-100 fw-semibold" data-bs-dismiss="modal" style="border-radius: 0.75rem;">Annuler</button>
+                    <button type="button" class="btn btn-success w-100 fw-semibold" id="confirmDeliveryAction" style="border-radius: 0.75rem;">Confirmer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

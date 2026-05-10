@@ -53,6 +53,7 @@ initTheme();
 let map;
 let markers = [];
 let allMissions = [];
+let missionIdToConfirm = null;
 
 async function fetchMissions() {
     try {
@@ -196,18 +197,30 @@ async function populateDropdowns() {
 
 
 async function confirmDelivery(missionId) {
-    if (!confirm('Marquer cette mission comme terminée ?')) return;
+    missionIdToConfirm = missionId;
+    const modal = new bootstrap.Modal(document.getElementById('confirmDeliveryModal'));
+    modal.show();
+}
+
+document.getElementById('confirmDeliveryAction')?.addEventListener('click', async () => {
+    if (!missionIdToConfirm) return;
+    
     try {
-        const response = await fetch(`/api/missions/${missionId}/status?status=TERMINEE`, { method: 'PATCH' });
+        const response = await fetch(`/api/missions/${missionIdToConfirm}/status?status=TERMINEE`, { method: 'PATCH' });
         if (response.ok) {
+            const modalEl = document.getElementById('confirmDeliveryModal');
+            const modalInstance = bootstrap.Modal.getInstance(modalEl);
+            if (modalInstance) modalInstance.hide();
+            
             fetchMissions();
+            missionIdToConfirm = null;
         } else {
             alert('Erreur lors de la mise à jour');
         }
     } catch (error) {
         console.error(error);
     }
-}
+});
 
 window.focusMap = function (coords) {
     if (map && coords[0] && coords[1]) {
@@ -280,7 +293,6 @@ window.prepareEdit = function (id) {
 
     // Status
     document.getElementById('editStatutSelect').value = mission.statut;
-    toggleEditStatutFields(mission.statut);
 
     // Conducteur & Vehicule
     document.getElementById('edit_conducteur').value = mission.conducteurId;

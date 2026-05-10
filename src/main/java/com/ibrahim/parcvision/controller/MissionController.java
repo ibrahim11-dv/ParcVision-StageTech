@@ -44,9 +44,7 @@ public class MissionController {
     }
 
     @PostMapping
-    public ResponseEntity<?> saveMission(
-            @Valid @RequestBody AddMissionDao missionDao
-    ) {
+    public ResponseEntity<?> saveMission(@Valid @RequestBody AddMissionDao missionDao) {
         try {
             Mission savedMission = missionService.addMission(missionDao);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedMission);

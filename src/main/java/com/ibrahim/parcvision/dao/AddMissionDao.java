@@ -42,7 +42,7 @@ public class AddMissionDao {
     @NotNull
     private LocalDateTime dateDepart;
 
-    @Future
+    @NotNull
     private LocalDateTime dateArrivee;
 
     @NotBlank

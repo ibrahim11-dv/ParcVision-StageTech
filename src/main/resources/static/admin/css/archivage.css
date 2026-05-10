@@ -1292,7 +1292,10 @@ body.dark .explorer-toolbar {
     gap: 20px;
     overflow-y: auto;
     flex: 1;
+    align-content: start;   /* ← prevents items from stretching to fill height */
+    align-items: start;
 }
+
 
 .explorer-item {
     display: flex;
@@ -1346,4 +1349,23 @@ body.dark .explorer-toolbar {
     .explorer-tree {
         display: none;
     }
-}
+}
+
+/* Extra file-type colours */
+.icon-excel { color: #22c55e; }
+.icon-ppt   { color: #f97316; }
+.icon-video { color: #a855f7; }
+
+/* Selected item state */
+.explorer-item.selected {
+    background: var(--accent-soft);
+    border-color: var(--accent-mid);
+    outline: 2px solid rgba(34,34,177,0.25);
+}
+
+/* p-blue pulse */
+.p-blue {
+    background: #3b82f6;
+    box-shadow: 0 0 5px rgba(59,130,246,0.5);
+}
+
