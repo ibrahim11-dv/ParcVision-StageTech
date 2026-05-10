@@ -30,7 +30,14 @@ public class DatabaseSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        try{
+        try {
+            // ✅ Vérifier si les données existent déjà
+            if (utilisateurRepository.findByEmail("test@gmail.com").isPresent()) {
+                System.out.println("✅ Les données de test existent déjà. Seeding ignoré.");
+                return;
+            }
+
+            // Création de l'entreprise
             Entreprise entreprise = new Entreprise();
             entreprise.setNom("charikat ra7a");
             entreprise.setEmail("prof@domain.com");
@@ -39,6 +46,8 @@ public class DatabaseSeeder implements CommandLineRunner {
             entreprise.setDateCreation(LocalDate.now());
             entreprise.setSecteurActivite("ra7a");
             entreprise = entrepriseRepository.save(entreprise);
+
+            // Création de l'utilisateur
             Utilisateur user = new Utilisateur();
             user.setEmail("test@gmail.com");
             user.setNom("chehlafi");
@@ -48,16 +57,19 @@ public class DatabaseSeeder implements CommandLineRunner {
             user.setPassword(passwordEncoder.encode("test123"));
             user.setEntreprise(entreprise);
             user = utilisateurRepository.save(user);
+
+            // Création de l'admin
             Admin admin = new Admin();
             admin.setUtilisateur(user);
             adminRepository.save(admin);
-            System.out.println("User Created !!!");
 
-        }catch (Exception e){
+            System.out.println("Utilisateur créé avec succès !");
+            System.out.println("Email: test@gmail.com");
+            System.out.println("Mot de passe: test123");
+
+        } catch (Exception e) {
+            System.err.println("Erreur lors du seeding: " + e.getMessage());
             e.printStackTrace();
-            System.out.println("User not Created ???");
         }
-
-
     }
 }

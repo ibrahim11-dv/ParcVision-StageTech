@@ -1,6 +1,7 @@
 package com.ibrahim.parcvision.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.ibrahim.parcvision.enums.Statut;
 import jakarta.persistence.*;
@@ -35,11 +36,8 @@ public class Conducteur {
     private Statut statut;
 
     @OneToOne
-    @JoinColumn(
-            name = "utilisateur_id",
-            nullable = false
-    )
-    @JsonBackReference
+    @JoinColumn(name = "utilisateur_id", nullable = false)
+    @JsonIgnoreProperties({"conducteur"})
     private Utilisateur utilisateur;
 
     @OneToMany(

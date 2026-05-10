@@ -1,11 +1,14 @@
 package com.ibrahim.parcvision.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.time.LocalDate;
 
+@Data
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "type_intervention")
@@ -41,18 +44,9 @@ public abstract class Intervention {
     private Long kilometrageAuMoment;
 
     @ManyToOne()
-    @JoinColumn(
-            name = "vehicule_id",
-            nullable = false
-    )
-    @JsonBackReference
+    @JoinColumn(name = "vehicule_id", nullable = false)
+    @JsonIgnoreProperties({"interventions", "documents"})
     private Vehicule vehicule;
-
-    @OneToOne(
-            mappedBy = "intervention"
-    )
-    @JsonManagedReference
-    private Document document;
 
 
 }
