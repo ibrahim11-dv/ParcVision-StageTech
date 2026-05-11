@@ -84,11 +84,6 @@ public class Mission {
     @JsonManagedReference
     private List<PointGPS> PointGPS;
 
-    @OneToOne(fetch = FetchType.LAZY,
-            mappedBy = "mission"
-    )
-    @JsonManagedReference
-    private Document document;
 
     @OneToMany(mappedBy = "mission")
     @JsonManagedReference
@@ -207,13 +202,6 @@ public class Mission {
         this.PointGPS = PointGPS;
     }
 
-    public Document getDocument() {
-        return document;
-    }
-
-    public void setDocument(Document document) {
-        this.document = document;
-    }
 
     public List<Colis> getColis() {
         return colis;

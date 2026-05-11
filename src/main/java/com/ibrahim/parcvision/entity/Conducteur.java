@@ -34,7 +34,7 @@ public class Conducteur {
     @Enumerated(EnumType.STRING)
     private Statut statut;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(
             name = "utilisateur_id",
             nullable = false
@@ -104,7 +104,9 @@ public class Conducteur {
         this.mission = mission;
     }
 
+
     public Entreprise getEntreprise() {
         return (utilisateur != null) ? utilisateur.getEntreprise() : null;
     }
+
 }

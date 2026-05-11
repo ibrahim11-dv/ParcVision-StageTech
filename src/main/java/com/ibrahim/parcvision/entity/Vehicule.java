@@ -73,11 +73,6 @@ public class Vehicule {
     @JsonManagedReference
     private List<Intervention> intervention;
 
-    @OneToOne(fetch = FetchType.LAZY,
-            mappedBy = "vehicule"
-    )
-    @JsonManagedReference
-    private Document document;
 
     public Long getId() {
         return id;
@@ -175,11 +170,5 @@ public class Vehicule {
         this.intervention = intervention;
     }
 
-    public Document getDocument() {
-        return document;
-    }
-
-    public void setDocument(Document document) {
-        this.document = document;
-    }
 }
+

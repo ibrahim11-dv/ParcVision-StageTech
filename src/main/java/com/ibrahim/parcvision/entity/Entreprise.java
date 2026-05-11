@@ -60,13 +60,8 @@ public class Entreprise {
     private List<Mission> mission;
 
 
-    @OneToOne(fetch = FetchType.LAZY,
-            mappedBy = "entreprise"
-    )
-    @JsonManagedReference
-    private Document document;
 
-    public Entreprise(Long id, String nom, String adresse, String telephone, String email, String secteurActivite, LocalDate dateCreation, List<Utilisateur> utilisateur, List<Vehicule> vehicule, List<Mission> mission, Document document) {
+    public Entreprise(Long id, String nom, String adresse, String telephone, String email, String secteurActivite, LocalDate dateCreation, List<Utilisateur> utilisateur, List<Vehicule> vehicule, List<Mission> mission) {
         this.id = id;
         this.nom = nom;
         this.adresse = adresse;
@@ -77,7 +72,6 @@ public class Entreprise {
         this.utilisateur = utilisateur;
         this.vehicule = vehicule;
         this.mission = mission;
-        this.document = document;
     }
 
     public Entreprise() {
@@ -164,11 +158,5 @@ public class Entreprise {
         this.mission = mission;
     }
 
-    public Document getDocument() {
-        return document;
-    }
-
-    public void setDocument(Document document) {
-        this.document = document;
-    }
 }
+
