@@ -7,6 +7,9 @@ let rootId        = null;          // DB id of "/"  root folder
 let currentStack  = [];            // [{ id, nom, chemin }, …] — navigation stack
 let filesToUpload = [];            // staged File objects
 let deleteCallback = null;         // for custom delete confirmation modal
+let currentSort    = 'nomFichier';
+let currentDir     = 'asc';
+let currentPreviewDoc = null;      // Track doc for printing
 
 // ── API helpers ───────────────────────────────────────────
 const API = '/api/archivage';
@@ -27,6 +30,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     initTheme();
     setupProfilePopup();
     setupModals();
+    setupGlobalSearch();
+    setupSorting();
+    setupPrint();
 
     try {
         const root = await apiFetch(`${API}/root`);
@@ -37,6 +43,58 @@ document.addEventListener('DOMContentLoaded', async () => {
         showError('Impossible de charger l\'arborescence : ' + e.message);
     }
 });
+
+function setupPrint() {
+    const printBtn = document.getElementById('printBtn');
+    if (!printBtn) return;
+
+    printBtn.addEventListener('click', () => {
+        if (!currentPreviewDoc) return;
+        const viewUrl = `${API}/documents/${currentPreviewDoc.id}/view`;
+        const mime = currentPreviewDoc.typeMime || '';
+
+        if (mime === 'application/pdf') {
+            const iframe = document.querySelector('#previewContent iframe');
+            if (iframe) {
+                iframe.contentWindow.focus();
+                iframe.contentWindow.print();
+            } else {
+                window.open(viewUrl, '_blank');
+            }
+        } else if (mime.startsWith('image/')) {
+            const win = window.open('', '_blank');
+            win.document.write(`<html><body style="margin:0;display:flex;justify-content:center;align-items:center;"><img src="${viewUrl}" style="max-width:100%;max-height:100%;" onload="window.print();window.close();"></body></html>`);
+            win.document.close();
+        } else {
+            const content = document.getElementById('previewContent').innerHTML;
+            const win = window.open('', '_blank');
+            win.document.write(`<html><head><title>${currentPreviewDoc.nomFichier}</title></head><body>${content}<script>window.print();window.close();<\/script></body></html>`);
+            win.document.close();
+        }
+    });
+}
+
+function setupSorting() {
+    const sortMenu = document.getElementById('sortMenu');
+    if (!sortMenu) return;
+
+    sortMenu.querySelectorAll('.dropdown-item').forEach(item => {
+        item.addEventListener('click', async (e) => {
+            e.preventDefault();
+            
+            // Update state
+            currentSort = item.dataset.sort;
+            currentDir  = item.dataset.dir;
+
+            // UI update
+            sortMenu.querySelectorAll('.dropdown-item').forEach(i => i.classList.remove('active'));
+            item.classList.add('active');
+
+            // Refresh
+            await refreshGrid();
+        });
+    });
+}
 
 // ── Current folder ────────────────────────────────────────
 function currentFolderId() {
@@ -59,9 +117,12 @@ async function navigateTo(id, nom, chemin) {
 async function refreshGrid() {
     renderBreadcrumbs();
     try {
+        // Folders are usually sorted by name
+        const folderSort = (currentSort === 'nomFichier') ? 'nom' : 'nom';
+        
         const [folders, docs] = await Promise.all([
-            apiFetch(`${API}/${currentFolderId()}/dossiers`),
-            apiFetch(`${API}/${currentFolderId()}/documents`)
+            apiFetch(`${API}/${currentFolderId()}/dossiers?sortBy=${folderSort}&direction=${currentDir}`),
+            apiFetch(`${API}/${currentFolderId()}/documents?sortBy=${currentSort}&direction=${currentDir}`)
         ]);
         renderGrid(folders, docs);
         await refreshTree();
@@ -99,14 +160,10 @@ function renderBreadcrumbs() {
 
 // ── Grid rendering ────────────────────────────────────────
 function renderGrid(folders, docs) {
-    const grid   = document.getElementById('explorerGrid');
-    const filter = document.getElementById('filterInput').value.toLowerCase();
+    const grid = document.getElementById('explorerGrid');
     grid.innerHTML = '';
 
-    const fFiltered = folders.filter(f => f.nom.toLowerCase().includes(filter));
-    const dFiltered = docs.filter(d => d.nomFichier.toLowerCase().includes(filter));
-
-    if (fFiltered.length === 0 && dFiltered.length === 0) {
+    if (folders.length === 0 && docs.length === 0) {
         grid.innerHTML = `
             <div id="emptyState">
                 <i class="bi bi-folder2-open"></i>
@@ -116,7 +173,7 @@ function renderGrid(folders, docs) {
         return;
     }
 
-    fFiltered.forEach(folder => {
+    folders.forEach(folder => {
         const item = document.createElement('div');
         item.className = 'explorer-item';
         item.innerHTML = `
@@ -137,12 +194,16 @@ function renderGrid(folders, docs) {
         grid.appendChild(item);
     });
 
-    dFiltered.forEach(doc => {
+    docs.forEach(doc => {
         const fi = getFileIcon(doc.nomFichier);
         const item = document.createElement('div');
         item.className = 'explorer-item';
         item.innerHTML = `
             <div class="item-actions">
+                <div class="item-action-btn" title="Imprimer"
+                     onclick="event.stopPropagation(); printFile(${doc.id}, '${doc.typeMime}', '${escHtml(doc.nomFichier)}')">
+                    <i class="bi bi-printer"></i>
+                </div>
                 <div class="item-action-btn danger" title="Supprimer"
                      onclick="event.stopPropagation(); confirmDeleteDoc(${doc.id}, '${escHtml(doc.nomFichier)}')">
                     <i class="bi bi-trash3"></i>
@@ -151,7 +212,8 @@ function renderGrid(folders, docs) {
             <div class="explorer-item-icon ${fi.cls}"><i class="bi ${fi.icon}"></i></div>
             <div class="explorer-item-name">${escHtml(doc.nomFichier)}</div>
             <div class="explorer-item-info">${formatSize(doc.taille)}</div>`;
-        item.onclick = () => selectItem(item);
+        item.onclick    = () => selectItem(item);
+        item.ondblclick = () => openPreview(doc);
         grid.appendChild(item);
     });
 }
@@ -159,6 +221,58 @@ function renderGrid(folders, docs) {
 function selectItem(el) {
     document.querySelectorAll('.explorer-item.selected').forEach(i => i.classList.remove('selected'));
     el.classList.add('selected');
+}
+
+// ── Preview ───────────────────────────────────────────────
+function openPreview(doc) {
+    currentPreviewDoc = doc; // Track for printing
+    const modal = document.getElementById('previewModal');
+    const title = document.getElementById('previewTitle');
+    const icon  = document.getElementById('previewIcon');
+    const content = document.getElementById('previewContent');
+    const download = document.getElementById('downloadBtn');
+    
+    const size  = document.getElementById('previewSize');
+    const date  = document.getElementById('previewDate');
+    const desc  = document.getElementById('previewDesc');
+
+    const fi = getFileIcon(doc.nomFichier);
+    const viewUrl = `${API}/documents/${doc.id}/view`;
+
+    title.textContent = doc.nomFichier;
+    icon.className = `bi ${fi.icon} ${fi.cls}`;
+    download.href = viewUrl;
+    
+    size.textContent = formatSize(doc.taille);
+    date.textContent = new Date(doc.dateUpload).toLocaleDateString('fr-FR', {
+        day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+    });
+    desc.textContent = doc.description || 'Pas de description disponible.';
+
+    content.innerHTML = '<div class="spinner-border text-primary" role="status"></div>';
+
+    // Simple heuristic for preview type
+    const mime = doc.typeMime || '';
+    if (mime.startsWith('image/')) {
+        content.innerHTML = `<img src="${viewUrl}" style="max-width:100%; max-height:100%; object-fit:contain; border-radius:8px; box-shadow:var(--shadow-md);">`;
+    } else if (mime === 'application/pdf') {
+        content.innerHTML = `<iframe src="${viewUrl}" style="width:100%; height:100%; border:none; border-radius:4px;"></iframe>`;
+    } else if (mime.startsWith('text/') || mime === 'application/json' || mime === 'application/javascript') {
+        // For text files, try to fetch and show
+        fetch(viewUrl).then(r => r.text()).then(t => {
+            content.innerHTML = `<pre class="bg-white p-3 w-100 h-100 border rounded" style="margin:0; overflow:auto; font-size:0.85rem;">${escHtml(t)}</pre>`;
+        }).catch(() => {
+            content.innerHTML = `<div class="text-center"><i class="bi bi-file-earmark-text fs-1 text-muted"></i><p class="mt-2">Aperçu non disponible</p></div>`;
+        });
+    } else {
+        content.innerHTML = `
+            <div class="text-center p-5">
+                <i class="bi ${fi.icon} display-1 text-muted"></i>
+                <p class="mt-3 fw-medium">L'aperçu n'est pas disponible pour ce type de fichier.</p>
+            </div>`;
+    }
+
+    openModal('previewModal');
 }
 
 // ── Tree ──────────────────────────────────────────────────
@@ -518,4 +632,123 @@ function initTheme() {
 function updateThemeUI(isDark) {
     document.getElementById('themeIcon').className = isDark ? 'bi bi-sun' : 'bi bi-moon-stars';
     document.getElementById('themeText').textContent  = isDark ? 'Mode clair' : 'Mode sombre';
+}
+
+// ── Global Search with Suggestions ────────────────────────
+function setupGlobalSearch() {
+    const input = document.getElementById('globalSearchInput');
+    const suggestionsBox = document.getElementById('searchSuggestions');
+    let debounceTimer;
+    let selectedIdx = -1;
+
+    input.addEventListener('input', () => {
+        clearTimeout(debounceTimer);
+        const q = input.value.trim();
+        if (q.length < 2) {
+            hideSuggestions();
+            return;
+        }
+
+        debounceTimer = setTimeout(async () => {
+            try {
+                const results = await apiFetch(`${API}/search?q=${encodeURIComponent(q)}`);
+                renderSuggestions(results, q);
+            } catch (e) {
+                console.error('Search error:', e);
+            }
+        }, 300);
+    });
+
+    input.addEventListener('keydown', (e) => {
+        const items = suggestionsBox.querySelectorAll('.suggestion-item');
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            selectedIdx = Math.min(selectedIdx + 1, items.length - 1);
+            updateSelection(items);
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            selectedIdx = Math.max(selectedIdx - 1, -1);
+            updateSelection(items);
+        } else if (e.key === 'Enter') {
+            if (selectedIdx >= 0 && items[selectedIdx]) {
+                items[selectedIdx].click();
+            }
+        } else if (e.key === 'Escape') {
+            hideSuggestions();
+        }
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!document.getElementById('globalSearchWrapper').contains(e.target)) {
+            hideSuggestions();
+        }
+    });
+
+    function updateSelection(items) {
+        items.forEach((item, i) => {
+            item.classList.toggle('selected', i === selectedIdx);
+            if (i === selectedIdx) item.scrollIntoView({ block: 'nearest' });
+        });
+    }
+
+    function renderSuggestions(results, query) {
+        suggestionsBox.innerHTML = '';
+        selectedIdx = -1;
+
+        if (results.length === 0) {
+            suggestionsBox.innerHTML = '<div id="emptySuggestions">Aucun résultat trouvé pour "' + escHtml(query) + '"</div>';
+        } else {
+            results.forEach(res => {
+                const item = document.createElement('div');
+                item.className = 'suggestion-item';
+                
+                const icon = res.type === 'FOLDER' ? 'bi-folder-fill' : getFileIcon(res.name).icon;
+                const iconClass = res.type === 'FOLDER' ? 'folder' : 'file';
+                const matchBadgeClass = res.matchType === 'NAME' ? 'match-name' : 'match-content';
+                const matchLabel = res.matchType === 'NAME' ? 'Nom' : 'Contenu';
+
+                let contextHtml = '';
+                if (res.matchType === 'CONTENT' && res.context) {
+                    const highlighted = highlightMatch(res.context, query);
+                    contextHtml = `<div class="suggestion-context">${highlighted}</div>`;
+                }
+
+                item.innerHTML = `
+                    <div class="suggestion-icon ${iconClass}"><i class="bi ${icon}"></i></div>
+                    <div class="suggestion-content">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="suggestion-name">${highlightMatch(res.name, query)}</span>
+                            <span class="suggestion-match-type ${matchBadgeClass}">${matchLabel}</span>
+                        </div>
+                        <div class="suggestion-path">
+                            <i class="bi bi-folder2-open"></i> ${escHtml(res.chemin || '/')}
+                        </div>
+                        ${contextHtml}
+                    </div>
+                `;
+
+                item.onclick = () => {
+                    input.value = '';
+                    hideSuggestions();
+                    navigateTo(res.dossierId, res.dossierNom, res.chemin);
+                    // If it's a file, maybe highlight it in the grid later? 
+                    // For now just navigate to its parent folder.
+                };
+                suggestionsBox.appendChild(item);
+            });
+        }
+        suggestionsBox.classList.add('active');
+    }
+
+    function hideSuggestions() {
+        suggestionsBox.classList.remove('active');
+        selectedIdx = -1;
+    }
+
+    function highlightMatch(text, query) {
+        if (!query) return escHtml(text);
+        const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+        return escHtml(text).replace(regex, '<mark>$1</mark>');
+    }
 }

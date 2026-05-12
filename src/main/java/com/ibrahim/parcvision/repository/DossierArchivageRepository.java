@@ -15,8 +15,11 @@ public interface DossierArchivageRepository extends JpaRepository<DossierArchiva
     List<DossierArchivage> findByEntrepriseAndParentIsNull(Entreprise entreprise);
 
     /** Get children of a specific folder */
-    List<DossierArchivage> findByParent(DossierArchivage parent);
+    List<DossierArchivage> findByParent(DossierArchivage parent, org.springframework.data.domain.Sort sort);
 
     /** Find root folder by enterprise (parent null, nom = "/") */
     Optional<DossierArchivage> findByEntrepriseAndParentIsNullAndNom(Entreprise entreprise, String nom);
+
+    @Query("SELECT d FROM DossierArchivage d WHERE d.entreprise = :entreprise AND LOWER(d.nom) LIKE LOWER(CONCAT('%', :query, '%')) AND d.nom <> '/'")
+    List<DossierArchivage> searchDossiers(@Param("entreprise") Entreprise entreprise, @Param("query") String query);
 }

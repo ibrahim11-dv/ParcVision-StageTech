@@ -65,7 +65,18 @@ public class DatabaseSeeder implements CommandLineRunner {
     private void seedData() {
         // 1. Seed Enterprises
         List<Entreprise> enterprises = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
+        
+        // First enterprise has a FIXED name to keep "uploads" folder consistent
+        Entreprise defaultEnt = new Entreprise();
+        defaultEnt.setNom("ParcVision_Sarl");
+        defaultEnt.setEmail("contact@parcvision.com");
+        defaultEnt.setAdresse("123 Rue de la Flotte, Casablanca");
+        defaultEnt.setTelephone("0522001122");
+        defaultEnt.setDateCreation(LocalDate.now().minusYears(2));
+        defaultEnt.setSecteurActivite("Transport & Logistique");
+        enterprises.add(entrepriseRepository.save(defaultEnt));
+
+        for (int i = 0; i < 2; i++) {
             Entreprise e = new Entreprise();
             e.setNom(faker.company().name());
             e.setEmail(faker.internet().emailAddress());

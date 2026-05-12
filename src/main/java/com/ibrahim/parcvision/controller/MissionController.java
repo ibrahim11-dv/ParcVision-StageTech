@@ -10,6 +10,10 @@ import com.ibrahim.parcvision.service.JwtService;
 import com.ibrahim.parcvision.service.MissionService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,12 +38,18 @@ public class MissionController {
     }
 
     @GetMapping
-    public ResponseEntity<List<MissionResponseDao>> getAllMissions(HttpServletRequest request) {
+    public ResponseEntity<Page<MissionResponseDao>> getAllMissions(
+            HttpServletRequest request,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String search
+    ) {
         String email = jwtService.extractEmailFromCookie(request);
         Utilisateur user = utilisateurRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         
-        List<MissionResponseDao> missions = missionService.getMissionsByEntreprise(user.getEntreprise());
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+        Page<MissionResponseDao> missions = missionService.getMissionsPaged(user.getEntreprise(), search, pageable);
         return ResponseEntity.ok(missions);
     }
 

@@ -55,23 +55,36 @@ let markers = [];
 let allMissions = [];
 let missionIdToConfirm = null;
 
+let currentPage = 0;
+let pageSize = 5;
+let searchQuery = '';
+
 async function fetchMissions() {
     try {
-        const response = await fetch('/api/missions');
+        const url = `/api/missions?page=${currentPage}&size=${pageSize}&search=${encodeURIComponent(searchQuery)}`;
+        const response = await fetch(url);
         if (!response.ok) throw new Error('Failed to fetch missions');
-        allMissions = await response.json();
+        const data = await response.json();
+        
+        allMissions = data.content;
         renderMissions(allMissions);
+        renderPagination(data);
     } catch (error) {
         console.error('Error fetching missions:', error);
     }
 }
 
 function renderMissions(missions) {
-    const tableBody = document.querySelector('table tbody');
+    const tableBody = document.getElementById('missionsTableBody');
     tableBody.innerHTML = '';
 
     markers.forEach(marker => map.removeLayer(marker));
     markers = [];
+
+    if (missions.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-muted">Aucune mission trouvée</td></tr>';
+        return;
+    }
 
     missions.forEach(mission => {
         const row = document.createElement('tr');
@@ -148,6 +161,57 @@ function renderMissions(missions) {
         map.fitBounds(group.getBounds().pad(0.5));
     }
 }
+
+function renderPagination(data) {
+    const controls = document.getElementById('paginationControls');
+    const info = document.getElementById('paginationInfo');
+    
+    controls.innerHTML = '';
+    
+    const { number, totalPages, totalElements, size } = data;
+    const start = totalElements === 0 ? 0 : number * size + 1;
+    const end = Math.min((number + 1) * size, totalElements);
+    
+    info.textContent = `Affichage de ${start} à ${end} sur ${totalElements} missions`;
+
+    if (totalPages <= 1) return;
+
+    // Previous
+    const prevLi = document.createElement('li');
+    prevLi.className = `page-item ${number === 0 ? 'disabled' : ''}`;
+    prevLi.innerHTML = `<a class="page-link" href="#" onclick="changePage(${number - 1})"><i class="bi bi-chevron-left"></i></a>`;
+    controls.appendChild(prevLi);
+
+    // Pages
+    for (let i = 0; i < totalPages; i++) {
+        const li = document.createElement('li');
+        li.className = `page-item ${number === i ? 'active' : ''}`;
+        li.innerHTML = `<a class="page-link" href="#" onclick="changePage(${i})">${i + 1}</a>`;
+        controls.appendChild(li);
+    }
+
+    // Next
+    const nextLi = document.createElement('li');
+    nextLi.className = `page-item ${number === totalPages - 1 ? 'disabled' : ''}`;
+    nextLi.innerHTML = `<a class="page-link" href="#" onclick="changePage(${number + 1})"><i class="bi bi-chevron-right"></i></a>`;
+    controls.appendChild(nextLi);
+}
+
+window.changePage = function(page) {
+    currentPage = page;
+    fetchMissions();
+};
+
+// Search with debounce
+let searchTimeout;
+document.getElementById('missionSearchInput').addEventListener('input', (e) => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+        searchQuery = e.target.value;
+        currentPage = 0;
+        fetchMissions();
+    }, 500);
+});
 
 function getStatusBadge(statut) {
     const configs = {

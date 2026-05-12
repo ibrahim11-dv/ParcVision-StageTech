@@ -8,6 +8,9 @@ import com.ibrahim.parcvision.enums.StatutMission;
 import com.ibrahim.parcvision.enums.TypeColis;
 import com.ibrahim.parcvision.enums.TypePoint;
 import com.ibrahim.parcvision.repository.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -97,6 +100,22 @@ public class MissionService {
         colisRepository.save(colis);
         
         return savedMission;
+    }
+
+    @Transactional(readOnly = true)
+    public Page<MissionResponseDao> getMissionsPaged(Entreprise entreprise, String query, Pageable pageable) {
+        Page<Mission> missionsPage;
+        if (query != null && !query.trim().isEmpty()) {
+            missionsPage = missionRepository.searchMissions(entreprise, query, pageable);
+        } else {
+            missionsPage = missionRepository.findByEntreprise(entreprise, pageable);
+        }
+
+        List<MissionResponseDao> dtos = missionsPage.getContent().stream()
+                .map(this::mapToResponseDao)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(dtos, pageable, missionsPage.getTotalElements());
     }
 
     @Transactional(readOnly = true)
