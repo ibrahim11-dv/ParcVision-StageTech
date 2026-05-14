@@ -127,6 +127,9 @@
                 <p class="page-subtitle">Documents, contrats, et historique de la flotte</p>
             </div>
             <div class="d-flex gap-2">
+                <button class="btn-secondary-custom" id="btnScanDoc">
+                    <i class="bi bi-printer-fill"></i> Numériser
+                </button>
                 <button class="btn-secondary-custom" id="btnNewFolder">
                     <i class="bi bi-folder-plus"></i> Nouveau dossier
                 </button>
@@ -273,22 +276,29 @@
      MODAL — Confirmation de suppression
      ══════════════════════════════════════ -->
 <div class="custom-modal-overlay" id="deleteConfirmModal">
+...
+</div>
+
+<!-- ══════════════════════════════════════
+     MODAL — Scanner Confirmation
+══════════════════════════════════════ -->
+<div class="custom-modal-overlay" id="scanModal">
     <div class="custom-modal" onclick="event.stopPropagation()" style="max-width:400px;">
         <div class="custom-modal-header">
-            <h3 class="custom-modal-title">Confirmer la suppression</h3>
-            <button class="custom-modal-close" onclick="closeModal('deleteConfirmModal')"><i class="bi bi-x"></i></button>
+            <h3 class="custom-modal-title">Numérisation</h3>
+            <button class="custom-modal-close" onclick="closeModal('scanModal')"><i class="bi bi-x"></i></button>
         </div>
         <div class="custom-modal-body text-center py-4">
             <div class="mb-3">
-                <i class="bi bi-exclamation-octagon text-danger" style="font-size: 3.5rem;"></i>
+                <i class="bi bi-printer-fill text-primary" style="font-size: 3.5rem;"></i>
             </div>
-            <h5 id="deleteConfirmTitle">Supprimer cet élément ?</h5>
-            <p class="text-muted small" id="deleteConfirmMessage">Cette action est irréversible et supprimera définitivement l'élément ainsi que son contenu.</p>
+            <h5>Scanner prêt</h5>
+            <p class="text-muted small">Voulez-vous lancer la numérisation du document placé dans le chargeur ?</p>
         </div>
         <div class="custom-modal-footer">
-            <button class="btn-secondary-custom" onclick="closeModal('deleteConfirmModal')">Annuler</button>
-            <button class="btn-danger-custom" id="confirmDeleteBtn">
-                <i class="bi bi-trash3 me-1"></i>Supprimer
+            <button class="btn-secondary-custom" onclick="closeModal('scanModal')">Annuler</button>
+            <button class="btn-primary-custom" id="confirmScanBtn">
+                <i class="bi bi-play-fill me-1"></i>Lancer le scan
             </button>
         </div>
     </div>

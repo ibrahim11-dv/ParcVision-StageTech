@@ -33,6 +33,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupGlobalSearch();
     setupSorting();
     setupPrint();
+    setupScanner();
 
     try {
         const root = await apiFetch(`${API}/root`);
@@ -751,4 +752,47 @@ function setupGlobalSearch() {
         const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
         return escHtml(text).replace(regex, '<mark>$1</mark>');
     }
+}
+
+// ── Scanner Integration ──────────────────────────────────
+function setupScanner() {
+    const btn = document.getElementById('btnScanDoc');
+    if (!btn) return;
+
+    btn.addEventListener('click', () => {
+        showToast('<i class="bi bi-printer"></i> Recherche du scanner...', 'info');
+        
+        // Simulation de la connexion au matériel
+        setTimeout(() => {
+            openModal('scanModal');
+        }, 800);
+    });
+
+    document.getElementById('confirmScanBtn').addEventListener('click', async () => {
+        closeModal('scanModal');
+        showToast('<i class="bi bi-hourglass-split"></i> Numérisation en cours... Veuillez patienter.', 'info');
+        
+        // Simulation de la numérisation et de l'upload
+        setTimeout(async () => {
+            try {
+                const dummyBlob = new Blob(["Document numérisé"], { type: 'text/plain' });
+                const scanName = `Scan_${new Date().toISOString().slice(0,10)}_${Math.floor(Math.random()*1000)}.pdf`;
+                const dummyFile = new File([dummyBlob], scanName, { type: 'application/pdf' });
+
+                const formData = new FormData();
+                formData.append('files', dummyFile);
+                formData.append('description', 'Document ajouté via scanner local');
+
+                await apiFetch(`${API}/${currentFolderId()}/upload`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                showToast('<i class="bi bi-check-circle-fill"></i> Document numérisé et archivé !', 'success');
+                await refreshGrid();
+            } catch (e) {
+                showError('Erreur scanner : ' + e.message);
+            }
+        }, 3000);
+    });
 }
