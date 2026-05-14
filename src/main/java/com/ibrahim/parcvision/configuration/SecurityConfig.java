@@ -82,7 +82,8 @@ public class SecurityConfig {
                 "/static/**",
                 "/home/**",
                 "/auth/**",
-                "/assets/**"
+                "/assets/**",
+                "/uploads/**"
         );
     }
 

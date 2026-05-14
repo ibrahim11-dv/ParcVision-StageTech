@@ -21,7 +21,8 @@ public class DatabaseSeeder implements CommandLineRunner {
     private UtilisateurRepository utilisateurRepository;
     private AdminRepository adminRepository;
 
-    public DatabaseSeeder(AdminRepository adminRepository ,PasswordEncoder passwordEncoder, EntrepriseRepository entrepriseRepository, UtilisateurRepository utilisateurRepository) {
+    public DatabaseSeeder(AdminRepository adminRepository, PasswordEncoder passwordEncoder,
+            EntrepriseRepository entrepriseRepository, UtilisateurRepository utilisateurRepository) {
         this.passwordEncoder = passwordEncoder;
         this.entrepriseRepository = entrepriseRepository;
         this.utilisateurRepository = utilisateurRepository;
@@ -30,7 +31,7 @@ public class DatabaseSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        try{
+        try {
             Entreprise entreprise = new Entreprise();
             entreprise.setNom("charikat ra7a");
             entreprise.setEmail("prof@domain.com");
@@ -53,11 +54,10 @@ public class DatabaseSeeder implements CommandLineRunner {
             adminRepository.save(admin);
             System.out.println("User Created !!!");
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             System.out.println("User not Created ???");
         }
-
 
     }
 }
