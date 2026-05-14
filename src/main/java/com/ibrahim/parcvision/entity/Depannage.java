@@ -5,6 +5,7 @@ import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
 @Entity
+@lombok.Data
 @DiscriminatorValue("depannage")
 public class Depannage extends Intervention{
 
@@ -22,4 +23,7 @@ public class Depannage extends Intervention{
             name = "nom_depanneur_externe"
     )
     private String nomDepanneurExterne;
+
+    @Column(name = "statut")
+    private String statut;
 }

@@ -1,6 +1,8 @@
 package com.ibrahim.parcvision.repository;
 
 import com.ibrahim.parcvision.entity.Accident;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -8,7 +10,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface AccidentRepository extends JpaRepository<Accident, Long> {
-    long count();
 
     long countByEtat(String etat);
 
@@ -21,8 +22,8 @@ public interface AccidentRepository extends JpaRepository<Accident, Long> {
             "WHERE LOWER(u.nom) LIKE LOWER(CONCAT('%', :query, '%')) " +
             "OR LOWER(u.prenom) LIKE LOWER(CONCAT('%', :query, '%')) " +
             "OR LOWER(a.vehicule.immatriculation) LIKE LOWER(CONCAT('%', :query, '%'))")
-    List<Accident> searchByConducteurNom(@Param("query") String query);
+    Page<Accident> searchByConducteurNom(@Param("query") String query, Pageable pageable);
 
-    List<Accident> findByEtat(String query);
-    List<Accident> findAll();
+    Page<Accident> findByEtat(String query, Pageable pageable);
+    Page<Accident> findAll(Pageable pageable);
 }

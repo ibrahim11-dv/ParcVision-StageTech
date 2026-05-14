@@ -2,6 +2,10 @@ package com.ibrahim.parcvision.service;
 
 import com.ibrahim.parcvision.entity.Accident;
 import com.ibrahim.parcvision.repository.AccidentRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,16 +32,19 @@ public class AccidentService {
         return result != null ? result : 0.0;
     }
 
-    public List<Accident> Search(String query){
-        return accidentRepository.searchByConducteurNom(query);
+    public Page<Accident> Search(String query, int page, int size){
+        Pageable pageable = PageRequest.of(page, size, Sort.by("dateIntervention").descending());
+        return accidentRepository.searchByConducteurNom(query, pageable);
     }
 
-    public List<Accident> findByetat(String etat){
-        return accidentRepository.findByEtat(etat);
+    public Page<Accident> findByetat(String etat, int page, int size){
+        Pageable pageable = PageRequest.of(page, size, Sort.by("dateIntervention").descending());
+        return accidentRepository.findByEtat(etat, pageable);
     }
 
-    public List<Accident> AffichAll(){
-        return accidentRepository.findAll();
+    public Page<Accident> AffichAll(int page, int size){
+        Pageable pageable = PageRequest.of(page, size, Sort.by("dateIntervention").descending());
+        return accidentRepository.findAll(pageable);
     }
 
     public Accident updateAccident(Long id, Map<String, Object> updates){
