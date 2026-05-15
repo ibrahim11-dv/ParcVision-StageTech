@@ -9,14 +9,20 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api/vehicules")
+@CrossOrigin(origins = "*")
 public class VehiculeController {
 
+    private final VehiculeService vehiculeService;
+
     @Autowired
-    private VehiculeService vehiculeService;
+    public VehiculeController(VehiculeService vehiculeService) {
+        this.vehiculeService = vehiculeService;
+    }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> creerVehicule(@ModelAttribute VehiculeRequestDao dto) {
@@ -36,6 +42,11 @@ public class VehiculeController {
             @RequestParam(required = false) String statut) {
         Page<Vehicule> vehicules = vehiculeService.listerVehicules(page, size, search, statut);
         return ResponseEntity.ok(vehicules);
+    }
+
+    @GetMapping("/all")
+    public List<Vehicule> findAll() {
+        return vehiculeService.findAll();
     }
 
     @GetMapping("/stats")
@@ -69,5 +80,8 @@ public class VehiculeController {
         }
     }
 
-
+    @PostMapping("/save")
+    public Vehicule save(@RequestBody Vehicule vehicule) {
+        return vehiculeService.save(vehicule);
+    }
 }

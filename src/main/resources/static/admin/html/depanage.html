@@ -161,7 +161,7 @@
                             <p class="page-subtitle">Suivi des interventions de remorquage et assistance routière.</p>
                         </div>
                         <div class="d-flex gap-2">
-                            <button class="btn btn-warning" onclick="openModal('addDepanageModal')"><i class="bi bi-plus-lg me-1"></i> Nouvelle Intervention</button>
+                            <button class="btn btn-primary" onclick="openModal('addDepanageModal')"><i class="bi bi-plus-lg me-1"></i> Nouvelle Intervention</button>
                         </div>
                     </div>
                 </div>
@@ -271,6 +271,12 @@
                             </tbody>
                         </table>
                     </div>
+                    <!-- Pagination -->
+                    <div style="padding:14px 20px;border-top:1px solid var(--border-color);display:flex;align-items:center;justify-content:space-between">
+                        <span id="paginationSummary" style="font-size:.82rem;color:var(--text-muted)"></span>
+                        <div id="paginationContainer" style="display:flex;gap:6px">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -319,6 +325,14 @@
                 <div class="form-group">
                     <label class="form-label">Motif</label>
                     <textarea class="form-control" rows="2"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Statut</label>
+                    <select class="form-control">
+                        <option value="encours">En cours</option>
+                        <option value="attente">En attente</option>
+                        <option value="termine">Terminé</option>
+                    </select>
                 </div>
             </form>
         </div>

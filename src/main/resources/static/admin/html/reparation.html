@@ -171,7 +171,7 @@
                 <div class="stat-card">
                     <div class="stat-icon blue"><i class="bi bi-wrench"></i></div>
                     <div class="stat-body">
-                        <div class="stat-val">42</div>
+                        <div class="stat-val total_reparation">0</div>
                         <div class="stat-label">Total Réparations</div>
                     </div>
                 </div>
@@ -180,7 +180,7 @@
                 <div class="stat-card">
                     <div class="stat-icon orange"><i class="bi bi-hourglass-split"></i></div>
                     <div class="stat-body">
-                        <div class="stat-val">5</div>
+                        <div class="stat-val" id="EnCours"></div>
                         <div class="stat-label">En cours</div>
                     </div>
                 </div>
@@ -189,7 +189,7 @@
                 <div class="stat-card">
                     <div class="stat-icon green"><i class="bi bi-cash-stack"></i></div>
                     <div class="stat-body">
-                        <div class="stat-val">12k</div>
+                        <div class="stat-val" id="Budget"></div>
                         <div class="stat-label">Coût (DH)</div>
                     </div>
                 </div>
@@ -198,7 +198,7 @@
                 <div class="stat-card">
                     <div class="stat-icon red"><i class="bi bi-cone-striped"></i></div>
                     <div class="stat-body">
-                        <div class="stat-val">3</div>
+                        <div class="stat-val" id="urgences"></div>
                         <div class="stat-label">Urgences</div>
                     </div>
                 </div>
@@ -213,9 +213,9 @@
                 <div style="display:flex;gap:10px;flex-wrap:wrap">
                     <div class="search-bar" style="min-width:200px">
                         <i class="bi bi-search"></i>
-                        <input type="text" placeholder="Rechercher un véhicule...">
+                        <input type="text" placeholder="Rechercher un véhicule..." id="searchInput">
                     </div>
-                    <select class="form-select-custom" style="width:auto;padding:9px 14px">
+                    <select id="statutFilter" class="form-select-custom" style="width:auto;padding:9px 14px">
                         <option value="all">Tous les statuts</option>
                         <option value="encours">En cours</option>
                         <option value="termine">Terminé</option>
@@ -237,89 +237,15 @@
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr class="hist-row">
-                            <td>
-                                <div style="display:flex;align-items:center;gap:10px">
-                                    <div class="profile-av bg-light text-primary" style="width: 36px; height: 36px; border-radius: 8px;"><i class="bi bi-truck"></i></div>
-                                    <div>
-                                        <b class="mission-id" style="color:var(--text-main); display:block; line-height:1.2;">1234-A-6</b>
-                                        <span class="mission-dist" style="font-size:0.75rem;">Renault Master</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><span class="mission-date">20 Avril 2026</span></td>
-                            <td><span class="mission-dist">Garage Central</span></td>
-                            <td><span class="mission-dist">Changement d'embrayage</span></td>
-                            <td><span style="font-family:'Outfit',sans-serif;font-weight:600;">4,500 DH</span></td>
-                            <td><span class="prio-badge prio-normale">En cours</span></td>
-                            <td>
-                                <div style="display:flex;gap:5px">
-                                    <button class="btn-icon" title="Voir détails" onclick="viewRepair('1234-A-6', 'Renault Master', '20 Avril 2026', 'Garage Central', 'Changement d\'embrayage', '4,500 DH', 'En cours')"><i class="bi bi-eye"></i></button>
-                                    <button class="btn-icon" title="Modifier" onclick="editRepair('1234-A-6', 'Renault Master', '2026-04-20', 'Garage Central', 'Changement d\'embrayage', '4500', 'encours')"><i class="bi bi-pencil-square"></i></button>
-                                    <button class="btn-icon" title="Supprimer" onclick="deleteRepair()"><i class="bi bi-trash" style="color:#ef4444"></i></button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="hist-row">
-                            <td>
-                                <div style="display:flex;align-items:center;gap:10px">
-                                    <div class="profile-av bg-light text-primary" style="width: 36px; height: 36px; border-radius: 8px;"><i class="bi bi-car-front"></i></div>
-                                    <div>
-                                        <b class="mission-id" style="color:var(--text-main); display:block; line-height:1.2;">5678-B-12</b>
-                                        <span class="mission-dist" style="font-size:0.75rem;">Dacia Duster</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><span class="mission-date">15 Avril 2026</span></td>
-                            <td><span class="mission-dist">Auto Services Plus</span></td>
-                            <td><span class="mission-dist">Révision freins</span></td>
-                            <td><span style="font-family:'Outfit',sans-serif;font-weight:600;">1,200 DH</span></td>
-                            <td><span class="prio-badge prio-faible">Terminé</span></td>
-                            <td>
-                                <div style="display:flex;gap:5px">
-                                    <button class="btn-icon" title="Voir détails" onclick="viewRepair('5678-B-12', 'Dacia Duster', '15 Avril 2026', 'Auto Services Plus', 'Révision freins et plaquettes', '1,200 DH', 'Terminé')"><i class="bi bi-eye"></i></button>
-                                    <button class="btn-icon" title="Modifier" onclick="editRepair('5678-B-12', 'Dacia Duster', '2026-04-15', 'Auto Services Plus', 'Révision freins et plaquettes', '1200', 'termine')"><i class="bi bi-pencil-square"></i></button>
-                                    <button class="btn-icon" title="Supprimer" onclick="deleteRepair()"><i class="bi bi-trash" style="color:#ef4444"></i></button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="hist-row">
-                            <td>
-                                <div style="display:flex;align-items:center;gap:10px">
-                                    <div class="profile-av bg-light text-primary" style="width: 36px; height: 36px; border-radius: 8px;"><i class="bi bi-truck"></i></div>
-                                    <div>
-                                        <b class="mission-id" style="color:var(--text-main); display:block; line-height:1.2;">9012-H-33</b>
-                                        <span class="mission-dist" style="font-size:0.75rem;">Iveco Daily</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><span class="mission-date">18 Avril 2026</span></td>
-                            <td><span class="mission-dist">Garage Maghreb</span></td>
-                            <td><span class="mission-dist">Réparation turbo</span></td>
-                            <td><span style="font-family:'Outfit',sans-serif;font-weight:600;">8,700 DH</span></td>
-                            <td><span class="prio-badge prio-haute">En attente</span></td>
-                            <td>
-                                <div style="display:flex;gap:5px">
-                                    <button class="btn-icon" title="Voir détails" onclick="viewRepair('9012-H-33', 'Iveco Daily', '18 Avril 2026', 'Garage Maghreb', 'Réparation turbo', '8,700 DH', 'En attente')"><i class="bi bi-eye"></i></button>
-                                    <button class="btn-icon" title="Modifier" onclick="editRepair('9012-H-33', 'Iveco Daily', '2026-04-18', 'Garage Maghreb', 'Réparation turbo', '8700', 'attente')"><i class="bi bi-pencil-square"></i></button>
-                                    <button class="btn-icon" title="Supprimer" onclick="deleteRepair()"><i class="bi bi-trash" style="color:#ef4444"></i></button>
-                                </div>
-                            </td>
-                        </tr>
+                    <tbody id="reparationsTableBody">
                     </tbody>
                 </table>
             </div>
             
             <!-- Pagination -->
             <div style="padding:14px 20px;border-top:1px solid var(--border-color);display:flex;align-items:center;justify-content:space-between">
-                <span style="font-size:.82rem;color:var(--text-muted)">Affichage de 1 à 3 sur 42 réparations</span>
-                <div style="display:flex;gap:6px">
-                    <button class="btn-ghost" style="padding:6px 12px;font-size:.8rem" disabled><i class="bi bi-chevron-left"></i></button>
-                    <button class="btn-ghost" style="padding:6px 14px;font-size:.8rem;background:var(--accent);color:white;border-color:var(--accent)">1</button>
-                    <button class="btn-ghost" style="padding:6px 14px;font-size:.8rem">2</button>
-                    <button class="btn-ghost" style="padding:6px 14px;font-size:.8rem">3</button>
-                    <button class="btn-ghost" style="padding:6px 12px;font-size:.8rem"><i class="bi bi-chevron-right"></i></button>
+                <span id="paginationSummary" style="font-size:.82rem;color:var(--text-muted)"></span>
+                <div id="paginationContainer" style="display:flex;gap:6px">
                 </div>
             </div>
         </div> <!-- w-100 end -->
@@ -338,34 +264,31 @@
                 <div class="row">
                     <div class="col-md-6 form-group">
                         <label class="form-label">Véhicule</label>
-                        <select class="form-control">
-                            <option>Sélectionner un véhicule</option>
-                            <option>1234-A-6 (Renault Master)</option>
-                            <option>5678-B-12 (Dacia Duster)</option>
-                            <option>9012-H-33 (Iveco Daily)</option>
+                        <select class="form-control" id="vehicule">
+                            <option value="">Chargement des véhicules...</option>
                         </select>
                     </div>
                     <div class="col-md-6 form-group">
                         <label class="form-label">Date Entrée</label>
-                        <input type="date" class="form-control">
+                        <input type="date" class="form-control" id="date">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Garage / Prestataire</label>
-                    <input type="text" class="form-control" placeholder="Nom du garage">
+                    <input type="text" class="form-control" placeholder="Nom du garage" id="garage">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Description de l'intervention</label>
-                    <textarea class="form-control" rows="3" placeholder="Ex: Changement d'embrayage..."></textarea>
+                    <textarea class="form-control" rows="3" placeholder="Ex: Changement d'embrayage..." id="description"></textarea>
                 </div>
                 <div class="row">
                     <div class="col-md-6 form-group">
                         <label class="form-label">Coût Estimé (DH)</label>
-                        <input type="number" class="form-control" placeholder="0.00">
+                        <input type="number" class="form-control" placeholder="0.00" id="cout">
                     </div>
                     <div class="col-md-6 form-group">
                         <label class="form-label">Statut Initial</label>
-                        <select class="form-control">
+                        <select class="form-control" id="statut">
                             <option value="encours">En cours</option>
                             <option value="attente">En attente</option>
                             <option value="termine">Terminé</option>
@@ -390,32 +313,32 @@
         <div class="custom-modal-body">
             <div class="view-detail-row">
                 <span class="view-detail-label">Véhicule</span>
-                <span class="view-detail-value" id="viewVehicle">Renault Master (1234-A-6)</span>
+                <span class="view-detail-value" id="viewVehicle"></span>
             </div>
             <div class="view-detail-row">
                 <span class="view-detail-label">Date Entrée</span>
-                <span class="view-detail-value" id="viewDate">20 Avril 2026</span>
+                <span class="view-detail-value" id="viewDate"></span>
             </div>
             <div class="view-detail-row">
                 <span class="view-detail-label">Garage / Prestataire</span>
-                <span class="view-detail-value" id="viewGarage">Garage Central</span>
+                <span class="view-detail-value" id="viewGarage"></span>
             </div>
             <div class="view-detail-row">
                 <span class="view-detail-label">Description</span>
-                <span class="view-detail-value" id="viewDescription">Changement d'embrayage</span>
+                <span class="view-detail-value" id="viewDescription"></span>
             </div>
             <div class="view-detail-row">
                 <span class="view-detail-label">Coût</span>
-                <span class="view-detail-value" id="viewCost">4,500 DH</span>
+                <span class="view-detail-value" id="viewCost"></span>
             </div>
             <div class="view-detail-row">
                 <span class="view-detail-label">Statut</span>
-                <span class="view-detail-value" id="viewStatus"><span class="badge-status status-encours">En cours</span></span>
+                <span class="view-detail-value" id="viewStatus"></span>
             </div>
         </div>
         <div class="custom-modal-footer">
             <button class="btn btn-secondary" onclick="closeModal('viewRepairModal')">Fermer</button>
-            <button class="btn btn-primary" onclick="closeModal('viewRepairModal'); openModal('editRepairModal')">Modifier</button>
+            <button class="btn btn-primary" onclick="submitEditModal()">Modifier</button>
         </div>
     </div>
 </div>
@@ -469,7 +392,7 @@
         </div>
         <div class="custom-modal-footer">
             <button class="btn btn-secondary" onclick="closeModal('editRepairModal')">Annuler</button>
-            <button class="btn btn-primary" onclick="updateRepair()">Mettre à jour</button>
+            <button class="btn btn-primary" onclick="submitEditModal()()">Mettre à jour</button>
         </div>
     </div>
 </div>

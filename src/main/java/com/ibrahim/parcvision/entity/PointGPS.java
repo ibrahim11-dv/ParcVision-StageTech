@@ -12,7 +12,7 @@ public class PointGPS {
     @GeneratedValue
     private Long id;
 
-    private double altitude ;
+    private Double altitude ;
 
     private double longitude;
 
@@ -20,7 +20,8 @@ public class PointGPS {
 
     private double vitesse;
 
-    private double precision;
+    private Double precisionGps;
+
 
     @Column(
             name = "type_point",

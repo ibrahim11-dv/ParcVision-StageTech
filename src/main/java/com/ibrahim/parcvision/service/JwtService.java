@@ -19,9 +19,9 @@ import java.util.Map;
 
 @Component
 public class JwtService {
-    @Value("${jwt.secret}")
+    @Value("${jwt.secret:SUPER-DUPER-SECRET-KEY-NIHAHAHAHh9ufehufwe0h0hwiuohsfeh08ah0s808fh80ewhfh0weh0fodsaH28H2V8FE80H8E2F038Q2H08FWEH08FEH08FEHF8E0H08FEH8HH8FEH8EHFHH80H80FWofuidsubof}")
     private String secret;
-    @Value("${jwt.expiration}")
+    @Value("${jwt.expiration:28800000}")
     private Long expiration;
     private Key signingKey ;
 

@@ -163,12 +163,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: new FormData(addForm)
                 });
                 if (res.ok) {
-                    alert('Conducteur ajouté avec succès');
                     const modal = bootstrap.Modal.getInstance(document.getElementById('addDriverModal'));
                     modal.hide();
                     chargerConducteurs();
                     chargerStats();
                     addForm.reset();
+                    showSuccess('Conducteur ajouté', 'Le nouveau conducteur a été enregistré avec succès.');
                 } else {
                     const err = await res.json();
                     alert(err.error || 'Erreur lors de l\'ajout');
@@ -198,10 +198,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: new FormData(editForm)
                 });
                 if (res.ok) {
-                    alert('Modifications enregistrées');
                     bootstrap.Modal.getInstance(document.getElementById('editDriverModal')).hide();
                     chargerConducteurs();
                     chargerStats();
+                    showSuccess('Modification réussie', 'Les informations du conducteur ont été mises à jour.');
                 } else {
                     const err = await res.json();
                     alert(err.error || 'Erreur modification');
@@ -229,6 +229,16 @@ async function chargerStats() {
 function setText(id, text) {
     const el = document.getElementById(id);
     if (el) el.textContent = text;
+}
+
+/* ───── HELPER SUCCESS MODAL ───── */
+function showSuccess(title, message) {
+    const titleEl = document.getElementById('successTitle');
+    const msgEl = document.getElementById('successMessage');
+    if (titleEl) titleEl.textContent = title;
+    if (msgEl) msgEl.textContent = message;
+    const modal = new bootstrap.Modal(document.getElementById('successModal'));
+    modal.show();
 }
 
 /* ───── CHARGER LISTE CONDUCTEURS ───── */
@@ -278,7 +288,14 @@ function afficherConducteurs(liste) {
             <td><b style="color:var(--text-main);">${u.prenom} ${u.nom}</b></td>
             <td>${u.email}</td>
             <td>${u.telephone}</td>
-            <td><span class="prio-badge ${statutClass(c.statut)}">${statutLabel(c.statut)}</span></td>
+            <td>
+                <select class="form-select form-select-sm" style="width:auto; font-size:0.75rem;" onchange="changerStatutRapide(${c.id}, this.value)">
+                    <option value="DISPONIBLE" ${c.statut === 'DISPONIBLE' ? 'selected' : ''}>Disponible</option>
+                    <option value="EN_MISSION" ${c.statut === 'EN_MISSION' ? 'selected' : ''}>En Mission</option>
+                    <option value="EN_CONGE" ${c.statut === 'EN_CONGE' ? 'selected' : ''}>En Congé</option>
+                    <option value="SUSPENDU" ${c.statut === 'SUSPENDU' ? 'selected' : ''}>Suspendu</option>
+                </select>
+            </td>
             <td>
                 <div style="display:flex;gap:5px">
                     <button class="btn-icon" title="Modifier" onclick="ouvrirModification(${c.id})">
@@ -293,6 +310,33 @@ function afficherConducteurs(liste) {
         tbody.appendChild(tr);
     });
 }
+
+async function changerStatutRapide(id, nouveauStatut) {
+    try {
+        // On utilise l'API de modification partielle ou complète
+        // Ici on va juste envoyer le statut dans un FormData (car le controlleur attend ConducteurRequestDao)
+        const formData = new FormData();
+        formData.append('statut', nouveauStatut);
+
+        const res = await fetch(`/api/conducteurs/${id}`, {
+            method: 'PUT',
+            headers: { 'Authorization': 'Bearer ' + getToken() },
+            body: formData
+        });
+
+        if (res.ok) {
+            chargerStats();
+            // Pas besoin de recharger toute la liste si on veut juste un feedback visuel rapide
+            // Mais pour être sûr de la cohérence, on peut le faire
+            chargerConducteurs();
+        } else {
+            alert('Erreur lors du changement de statut');
+        }
+    } catch (err) {
+        alert('Erreur réseau');
+    }
+}
+
 
 function statutClass(statut) {
     if (statut === 'DISPONIBLE') return 'prio-faible';
@@ -334,20 +378,46 @@ function afficherPagination(page) {
 }
 
 /* ───── SUPPRESSION ───── */
+let idToDelete = null;
+
 async function supprimerConducteur(id, nom) {
-    if (!confirm(`Supprimer définitivement ${nom} ?`)) return;
-    const res = await fetch(`/api/conducteurs/${id}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': 'Bearer ' + getToken() }
-    });
-    if (res.ok) {
-        chargerConducteurs();
-        chargerStats();
-    } else {
-        const err = await res.json();
-        alert(err.error || 'Erreur suppression');
-    }
+    idToDelete = id;
+    const textEl = document.getElementById('deleteConfirmText');
+    if (textEl) textEl.textContent = `Voulez-vous vraiment supprimer définitivement ${nom} ?`;
+    const modal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+    modal.show();
 }
+
+// Handler pour le bouton de confirmation dans le modal
+document.addEventListener('DOMContentLoaded', () => {
+    const confirmBtn = document.getElementById('confirmDeleteBtn');
+    if (confirmBtn) {
+        confirmBtn.addEventListener('click', async () => {
+            if (!idToDelete) return;
+            const modalEl = document.getElementById('confirmDeleteModal');
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            
+            try {
+                const res = await fetch(`/api/conducteurs/${idToDelete}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': 'Bearer ' + getToken() }
+                });
+                if (res.ok) {
+                    if (modal) modal.hide();
+                    chargerConducteurs();
+                    chargerStats();
+                    showSuccess('Supprimé', 'Le conducteur a été supprimé.');
+                } else {
+                    const err = await res.json();
+                    alert(err.error || 'Erreur suppression');
+                }
+            } catch (err) {
+                alert('Erreur réseau');
+            }
+            idToDelete = null;
+        });
+    }
+});
 
 /* ───── MODIFICATION (REMPLIR LE MODAL) ───── */
 async function ouvrirModification(id) {

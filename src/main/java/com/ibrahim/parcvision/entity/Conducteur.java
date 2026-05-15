@@ -34,9 +34,11 @@ public class Conducteur {
     @Enumerated(EnumType.STRING)
     private Statut statut;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "utilisateur_id", nullable = false)
+    @JsonIgnoreProperties({"conducteur"})
     private Utilisateur utilisateur;
+
 
     @OneToMany(mappedBy = "conducteur")
     @JsonIgnore

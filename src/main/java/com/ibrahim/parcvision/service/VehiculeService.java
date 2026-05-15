@@ -18,19 +18,22 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class VehiculeService {
 
-    @Autowired
-    private VehiculeRepository vehiculeRepository;
+    private final VehiculeRepository vehiculeRepository;
+    private final UtilisateurRepository utilisateurRepository;
+    private final FileStorageService fileStorageService;
 
     @Autowired
-    private UtilisateurRepository utilisateurRepository;
-
-    @Autowired
-    private FileStorageService fileStorageService;
+    public VehiculeService(VehiculeRepository vehiculeRepository,
+                           UtilisateurRepository utilisateurRepository,
+                           FileStorageService fileStorageService) {
+        this.vehiculeRepository = vehiculeRepository;
+        this.utilisateurRepository = utilisateurRepository;
+        this.fileStorageService = fileStorageService;
+    }
 
     @Transactional
     public Vehicule ajouterVehicule(VehiculeRequestDao dto) throws IOException {
@@ -189,6 +192,14 @@ public class VehiculeService {
         stats.put("mission", vehiculeRepository.countByStatutVehicule(StatutVehicule.EN_MISSION));
         stats.put("maintenance", vehiculeRepository.countByStatutVehicule(StatutVehicule.EN_MAINTENANCE));
         return stats;
+    }
+
+    public List<Vehicule> findAll() {
+        return vehiculeRepository.findAll();
+    }
+
+    public Vehicule save(Vehicule vehicule) {
+        return vehiculeRepository.save(vehicule);
     }
 
     /**

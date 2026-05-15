@@ -14,7 +14,9 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/conducteurs")
+@CrossOrigin(origins = "*")
 public class ConducteurController {
+
 
     @Autowired
     private ConducteurService conducteurService;
