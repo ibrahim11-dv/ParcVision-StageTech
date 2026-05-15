@@ -6,81 +6,72 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "document")
 public class Document {
+
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(
-            name = "nom_fichier"
-    )
+    @Column(name = "nom_fichier", nullable = false)
     private String nomFichier;
 
-    private String type;
+    /** MIME type: application/pdf, image/png … */
+    @Column(name = "type_mime")
+    private String typeMime;
 
+    /** File size in bytes */
     private Long taille;
 
-    @Column(
-            name = "chemin_stockage"
-    )
+    /** Relative path on disk / S3 key */
+    @Column(name = "chemin_stockage")
     private String cheminStockage;
 
-    @Column(
-            name = "date_upload"
-    )
+    @Column(name = "date_upload")
     private LocalDateTime dateUpload;
 
-    @Column(
-            name = "text_extrait_ocr"
-    )
-    private String textExtraitOCR;
-    @Column(
-            name = "meta_donees_index"
-    )
-    private String metaDonneesIndex;
+    /** Optional description / notes */
+    @Column(length = 1000)
+    private String description;
 
-    @OneToOne
-    @JoinColumn(
-            name = "conducteur_id"
-    )
+    /** Extracted text via OCR */
+    @Column(columnDefinition = "TEXT")
+    private String ocrContent;
+
+    // ── Relations ─────────────────────────────────────────
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "dossier_id", nullable = false)
     @JsonBackReference
-    private Conducteur conducteur;
+    private DossierArchivage dossier;
 
-    @OneToOne
-    @JoinColumn(
-            name = "vehicule_id"
-    )
-    @JsonBackReference
-    private Vehicule vehicule;
+    // ── Constructors ──────────────────────────────────────
+    public Document() {}
 
-    @OneToOne
-    @JoinColumn(
-            name = "mission_id"
-    )
-    @JsonBackReference
-    private Mission mission;
+    // ── Getters / Setters ─────────────────────────────────
+    public Long getId()                        { return id; }
+    public void setId(Long id)                 { this.id = id; }
 
-    @OneToOne
-    @JoinColumn(
-            name = "intervention_id"
-    )
-    @JsonBackReference
-    private Intervention intervention;
+    public String getNomFichier()              { return nomFichier; }
+    public void setNomFichier(String n)        { this.nomFichier = n; }
 
-    @OneToOne
-    @JoinColumn(
-            name = "entreprise_id"
-    )
-    @JsonBackReference
-    private Entreprise entreprise;
+    public String getTypeMime()                { return typeMime; }
+    public void setTypeMime(String t)          { this.typeMime = t; }
 
-    @ManyToOne
-    @JoinColumn(
-            name = "dossier_archivage_id"
-    )
-    @JsonBackReference
-    private DossierArchivage dossierArchivage;
+    public Long getTaille()                    { return taille; }
+    public void setTaille(Long t)              { this.taille = t; }
 
+    public String getCheminStockage()          { return cheminStockage; }
+    public void setCheminStockage(String c)    { this.cheminStockage = c; }
 
+    public LocalDateTime getDateUpload()       { return dateUpload; }
+    public void setDateUpload(LocalDateTime d) { this.dateUpload = d; }
 
+    public String getDescription()             { return description; }
+    public void setDescription(String d)       { this.description = d; }
+
+    public DossierArchivage getDossier()       { return dossier; }
+    public void setDossier(DossierArchivage d) { this.dossier = d; }
+
+    public String getOcrContent()              { return ocrContent; }
+    public void setOcrContent(String o)        { this.ocrContent = o; }
 }

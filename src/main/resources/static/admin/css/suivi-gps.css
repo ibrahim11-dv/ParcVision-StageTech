@@ -537,3 +537,53 @@ body.dark .form-control, body.dark .form-select {
 body.dark .form-label {
     color: var(--gray-400);
 }
+
+/* Pagination Styling */
+.pagination .page-link {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--gray-600);
+    padding: 0.5rem 0.8rem;
+    transition: all 0.2s ease;
+}
+
+.pagination .page-link:hover {
+    background-color: var(--gray-100);
+    color: var(--primary);
+}
+
+.pagination .active .page-link {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: white;
+}
+
+.pagination .disabled .page-link {
+    background-color: var(--bg-body);
+    border-color: var(--border-color);
+    color: var(--gray-400);
+}
+
+/* Search Box Styling */
+.search-box .input-group-text {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--gray-400);
+    padding-left: 1.25rem;
+}
+
+.search-box .form-control {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    padding-right: 1.25rem;
+}
+
+.search-box .form-control:focus {
+    box-shadow: none;
+    border-color: var(--primary-light);
+}
+
+body.dark .search-box .input-group-text,
+body.dark .search-box .form-control {
+    background-color: var(--gray-100);
+}

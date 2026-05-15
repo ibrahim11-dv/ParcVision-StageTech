@@ -185,9 +185,17 @@
 
                 <!-- Liste des Missions en cours -->
                 <div class="form-card w-100" style="max-width: 1100px; animation-delay: 0.2s;">
-                    <h2 class="page-title fs-5">Missions en cours</h2>
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
+                        <h2 class="page-title fs-5 mb-0">Missions en cours</h2>
+                        <div class="search-box" style="min-width: 300px;">
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+                                <input type="text" id="missionSearchInput" class="form-control border-start-0" placeholder="Rechercher une mission, conducteur, véhicule...">
+                            </div>
+                        </div>
+                    </div>
                     
-                    <div class="table-responsive mt-3">
+                    <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0">
                             <thead class="table-light">
                                 <tr>
@@ -200,61 +208,22 @@
                                     <th scope="col" class="border-0 rounded-end">Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <!-- Mission 1 -->
-                                <tr onclick="focusMap([33.5731, -7.5898])" style="cursor: pointer;">
-                                    <td class="border-bottom-0"><span class="fw-bold text-primary">#MSN-001</span></td>
-                                    <td class="border-bottom-0">
-                                        <div class="d-flex align-items-center gap-2">
-                                            <div class="profile-av" style="width: 28px; height: 28px; border-radius: 8px; font-size: 0.65rem;">JD</div>
-                                            <span class="fw-semibold text-dark">Jean Dupont</span>
-                                        </div>
-                                    </td>
-                                    <td class="border-bottom-0">
-                                        <div class="text-dark"><i class="bi bi-truck me-1 text-muted"></i> Renault Master</div>
-                                        <small class="text-muted">12345 | A | 1</small>
-                                    </td>
-                                    <td class="border-bottom-0">
-                                        <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 rounded-pill px-2">Colis Lourd (150kg)</span>
-                                    </td>
-                                    <td class="border-bottom-0">
-                                        <small class="d-block text-muted"><i class="bi bi-record-circle text-success me-1"></i> Casablanca</small>
-                                        <small class="d-block text-muted"><i class="bi bi-geo-alt text-danger me-1"></i> Rabat</small>
-                                    </td>
-                                    <td class="border-bottom-0"><span class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 rounded-pill px-2"><span class="pulse-dot"></span> En route</span></td>
-                                    <td class="border-bottom-0">
-                                        <button class="btn btn-sm btn-light text-success border-0" title="Confirmer Livraison"><i class="bi bi-check-circle"></i></button>
-                                        <button class="btn btn-sm btn-light text-primary border-0" title="Modifier la mission" data-bs-toggle="modal" data-bs-target="#editMissionModal" onclick="event.stopPropagation();"><i class="bi bi-pencil-square"></i></button>
-                                    </td>
-                                </tr>
-                                <!-- Mission 2 -->
-                                <tr onclick="focusMap([34.0208, -6.8416])" style="cursor: pointer;">
-                                    <td class="border-bottom-0"><span class="fw-bold text-primary">#MSN-002</span></td>
-                                    <td class="border-bottom-0">
-                                        <div class="d-flex align-items-center gap-2">
-                                            <div class="profile-av" style="width: 28px; height: 28px; border-radius: 8px; font-size: 0.65rem; background: linear-gradient(135deg, #f59e0b, #d97706);">KA</div>
-                                            <span class="fw-semibold text-dark">Karim Alaoui</span>
-                                        </div>
-                                    </td>
-                                    <td class="border-bottom-0">
-                                        <div class="text-dark"><i class="bi bi-car-front me-1 text-muted"></i> Peugeot Partner</div>
-                                        <small class="text-muted">67890 | B | 6</small>
-                                    </td>
-                                    <td class="border-bottom-0">
-                                        <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 rounded-pill px-2">Fragile (Électronique)</span>
-                                    </td>
-                                    <td class="border-bottom-0">
-                                        <small class="d-block text-muted"><i class="bi bi-record-circle text-success me-1"></i> Rabat</small>
-                                        <small class="d-block text-muted"><i class="bi bi-geo-alt text-danger me-1"></i> Kenitra</small>
-                                    </td>
-                                    <td class="border-bottom-0"><span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-2">Livré</span></td>
-                                    <td class="border-bottom-0">
-                                        <button class="btn btn-sm btn-light text-muted border-0" disabled title="Déjà Livré"><i class="bi bi-check-circle-fill"></i></button>
-                                        <button class="btn btn-sm btn-light text-primary border-0" title="Modifier la mission" data-bs-toggle="modal" data-bs-target="#editMissionModal" onclick="event.stopPropagation();"><i class="bi bi-pencil-square"></i></button>
-                                    </td>
-                                </tr>
+                            <tbody id="missionsTableBody">
+                                <!-- Data will be loaded here dynamically -->
                             </tbody>
                         </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="d-flex justify-content-between align-items-center mt-4 flex-wrap gap-3">
+                        <div class="text-muted small" id="paginationInfo">
+                            Affichage de 0 à 0 sur 0 missions
+                        </div>
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination pagination-sm mb-0" id="paginationControls">
+                                <!-- Pagination items will be loaded here -->
+                            </ul>
+                        </nav>
                     </div>
                 </div>
 
@@ -264,6 +233,7 @@
 
 </div>
 
+<!-- Modal Ajouter Mission -->
 <!-- Modal Ajouter Mission -->
 <div class="modal fade" id="addMissionModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -278,30 +248,27 @@
             <div class="modal-body">
                 <form>
                     <div class="row g-3">
+
+                        <!-- Conducteur + Véhicule -->
                         <div class="col-md-6">
-                            <label class="form-label text-muted">Conducteur</label>
-                            <select class="form-select" required>
+                            <label class="form-label text-muted">Conducteur <span class="text-danger">*</span></label>
+                            <select class="form-select" id="add_conducteur" required>
                                 <option value="" selected disabled>Choisir un conducteur...</option>
-                                <option value="1">Jean Dupont</option>
-                                <option value="2">Karim Alaoui</option>
-                                <option value="3">Said Amrani</option>
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label text-muted">Véhicule</label>
-                            <select class="form-select" required>
+                            <label class="form-label text-muted">Véhicule <span class="text-danger">*</span></label>
+                            <select class="form-select" id="add_vehicule" required>
                                 <option value="" selected disabled>Choisir un véhicule...</option>
-                                <option value="1">Renault Master (12345 | A | 1)</option>
-                                <option value="2">Peugeot Partner (67890 | B | 6)</option>
-                                <option value="3">Dacia Dokker (77889 | B | 1)</option>
                             </select>
                         </div>
-                        
+
+                        <!-- Point de départ -->
                         <div class="col-md-6">
-                            <label class="form-label text-muted fw-bold">Point de départ</label>
+                            <label class="form-label text-muted fw-bold">Point de départ <span class="text-danger">*</span></label>
                             <div class="row g-2">
                                 <div class="col-12">
-                                    <input type="text" class="form-control" placeholder="Ville ou Adresse (ex: Casablanca)" required>
+                                    <input type="text" id="adress_depart" class="form-control" placeholder="Ville ou Adresse (ex: Casablanca)" required>
                                 </div>
                                 <div class="col-6">
                                     <input type="number" id="add-lat-start" step="any" class="form-control form-control-sm text-muted" placeholder="Latitude (ex: 33.57)">
@@ -314,11 +281,13 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Destination -->
                         <div class="col-md-6">
-                            <label class="form-label text-muted fw-bold">Destination</label>
+                            <label class="form-label text-muted fw-bold">Destination <span class="text-danger">*</span></label>
                             <div class="row g-2">
                                 <div class="col-12">
-                                    <input type="text" class="form-control" placeholder="Ville ou Adresse (ex: Rabat)" required>
+                                    <input type="text" class="form-control" id="adress_fin" placeholder="Ville ou Adresse (ex: Rabat)" required>
                                 </div>
                                 <div class="col-6">
                                     <input type="number" id="add-lat-end" step="any" class="form-control form-control-sm text-muted" placeholder="Latitude (ex: 34.02)">
@@ -331,36 +300,69 @@
                                 </div>
                             </div>
                         </div>
-                        
-                        <div class="col-md-12">
-                            <label class="form-label text-muted">Type de marchandise / Colis</label>
-                            <input type="text" class="form-control" placeholder="Ex: Colis Lourd (150kg), Fragile, etc." required>
-                        </div>
-                        
+
+                        <!-- Dates -->
                         <div class="col-md-6">
-                            <label class="form-label text-muted">Date & Heure de départ prévues</label>
-                            <input type="datetime-local" class="form-control" required>
+                            <label class="form-label text-muted">Date & Heure de départ prévues <span class="text-danger">*</span></label>
+                            <input type="datetime-local" id="date_heure_depart" class="form-control" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label text-muted">Date & Heure de fin estimées</label>
-                            <input type="datetime-local" class="form-control" required>
+                            <input type="datetime-local" id="date_heure_fin" class="form-control">
                         </div>
-                        
+
+                        <!-- Séparateur Colis -->
+                        <div class="col-12 mt-2">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="fw-bold text-muted" style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px;">Colis transporté</span>
+                                <div style="flex:1; height:1px; background:var(--border-color, #e5e7eb);"></div>
+                            </div>
+                        </div>
+
+                        <!-- Colis : description + code_suivi -->
+                        <div class="col-md-8">
+                            <label class="form-label text-muted">Description du colis <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="description" placeholder="Ex: Équipements électroniques, pièces mécaniques..." required>
+                        </div>
+
+                        <!-- Colis : type + poids + volume -->
+                        <div class="col-md-4">
+                            <label class="form-label text-muted">Type de colis <span class="text-danger">*</span></label>
+                            <select class="form-select" id="type_colis" required>
+                                <option value="" selected disabled>Choisir...</option>
+                                <option value="STANDARD">Standard</option>
+                                <option value="FRAGILE">Fragile</option>
+                                <option value="LOURD">Lourd</option>
+                                <option value="TEMPERATURE_DIRIGEE">Température dirigée</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label text-muted">Poids (kg)</label>
+                            <input type="number" id="poids" step="0.01" min="0" class="form-control" placeholder="Ex: 150.5">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label text-muted">Volume (m³)</label>
+                            <input type="number" id="volume" step="0.001" min="0" class="form-control" placeholder="Ex: 2.3">
+                        </div>
+
+                        <!-- Instructions -->
                         <div class="col-12">
                             <label class="form-label text-muted">Instructions Spéciales / Remarques</label>
-                            <textarea class="form-control" rows="3" placeholder="Ex: Contacter le client avant l'arrivée, attention fragile..."></textarea>
+                            <textarea class="form-control" id="instruction" rows="3" placeholder="Ex: Contacter le client avant l'arrivée, attention fragile..."></textarea>
                         </div>
+
                     </div>
                 </form>
             </div>
             <div class="modal-footer border-top-0 pt-0 mt-3">
                 <button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
-                <button type="button" class="btn btn-primary">Créer la mission</button>
+                <button type="button" class="btn btn-primary" id="addMission">Créer la mission</button>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Modal Modifier Mission -->
 <!-- Modal Modifier Mission -->
 <div class="modal fade" id="editMissionModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -375,86 +377,125 @@
             <div class="modal-body">
                 <form>
                     <div class="row g-3">
+
+                        <!-- Statut -->
                         <div class="col-md-12 mb-2">
                             <label class="form-label text-muted">Statut de la mission</label>
-                            <select class="form-select fw-bold border-warning text-warning" style="background-color: rgba(245, 158, 11, 0.05);">
-                                <option value="planifiee">Planifiée</option>
-                                <option value="en_route" selected>🟠 En route</option>
-                                <option value="livree">🟢 Livrée</option>
-                                <option value="annulee">🔴 Annulée</option>
+                            <select class="form-select" id="editStatutSelect">
+                                <option value="PLANIFIEE">🔵 Planifiée</option>
+                                <option value="EN_COURS" selected>🟠 En cours</option>
+                                <option value="TERMINEE">🟢 Terminée</option>
+                                <option value="ANNULEE">🔴 Annulée</option>
                             </select>
                         </div>
-                        
+
+
+
+                        <!-- Conducteur + Véhicule -->
                         <div class="col-md-6">
                             <label class="form-label text-muted">Conducteur</label>
-                            <select class="form-select" required>
-                                <option value="1" selected>Jean Dupont</option>
-                                <option value="2">Karim Alaoui</option>
-                                <option value="3">Said Amrani</option>
+                            <select class="form-select" id="edit_conducteur" required>
+                                <option value="" disabled>Choisir un conducteur...</option>
                             </select>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label text-muted">Véhicule</label>
-                            <select class="form-select" required>
-                                <option value="1" selected>Renault Master (12345 | A | 1)</option>
-                                <option value="2">Peugeot Partner (67890 | B | 6)</option>
-                                <option value="3">Dacia Dokker (77889 | B | 1)</option>
+                            <select class="form-select" id="edit_vehicule" required>
+                                <option value="" disabled>Choisir un véhicule...</option>
                             </select>
                         </div>
-                        
+
+                        <!-- Point de départ -->
                         <div class="col-md-6">
                             <label class="form-label text-muted fw-bold">Point de départ</label>
                             <div class="row g-2">
                                 <div class="col-12">
-                                    <input type="text" class="form-control" value="Casablanca" required>
+                                    <input type="text" id="edit_adresse_depart" class="form-control" required>
                                 </div>
                                 <div class="col-6">
-                                    <input type="number" id="edit-lat-start" step="any" class="form-control form-control-sm text-muted" value="33.5731">
+                                    <input type="number" id="edit-lat-start" step="any" class="form-control form-control-sm text-muted">
                                 </div>
                                 <div class="col-6">
-                                    <input type="number" id="edit-lng-start" step="any" class="form-control form-control-sm text-muted" value="-7.5898">
+                                    <input type="number" id="edit-lng-start" step="any" class="form-control form-control-sm text-muted">
                                 </div>
                                 <div class="col-12 mt-1">
                                     <button type="button" class="btn btn-sm btn-outline-primary w-100" onclick="startMapSelection('edit-lat-start', 'edit-lng-start', 'editMissionModal')"><i class="bi bi-geo-alt"></i> Pointer sur la carte</button>
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Destination -->
                         <div class="col-md-6">
                             <label class="form-label text-muted fw-bold">Destination</label>
                             <div class="row g-2">
                                 <div class="col-12">
-                                    <input type="text" class="form-control" value="Rabat" required>
+                                    <input type="text" id="edit_adresse_destination" class="form-control" required>
                                 </div>
                                 <div class="col-6">
-                                    <input type="number" id="edit-lat-end" step="any" class="form-control form-control-sm text-muted" value="34.0208">
+                                    <input type="number" id="edit-lat-end" step="any" class="form-control form-control-sm text-muted">
                                 </div>
                                 <div class="col-6">
-                                    <input type="number" id="edit-lng-end" step="any" class="form-control form-control-sm text-muted" value="-6.8416">
+                                    <input type="number" id="edit-lng-end" step="any" class="form-control form-control-sm text-muted">
                                 </div>
                                 <div class="col-12 mt-1">
                                     <button type="button" class="btn btn-sm btn-outline-primary w-100" onclick="startMapSelection('edit-lat-end', 'edit-lng-end', 'editMissionModal')"><i class="bi bi-geo-alt"></i> Pointer sur la carte</button>
                                 </div>
                             </div>
                         </div>
-                        
-                        <div class="col-md-12">
-                            <label class="form-label text-muted">Type de marchandise / Colis</label>
-                            <input type="text" class="form-control" value="Colis Lourd (150kg)" required>
-                        </div>
-                        
+
+                        <!-- Dates -->
                         <div class="col-md-6">
                             <label class="form-label text-muted">Date & Heure de départ prévues</label>
-                            <input type="datetime-local" class="form-control" value="2026-05-01T08:00" required>
+                            <input type="datetime-local" id="edit_date_depart" class="form-control" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label text-muted">Date & Heure de fin estimées</label>
-                            <input type="datetime-local" class="form-control" value="2026-05-01T12:30" required>
+                            <input type="datetime-local" id="edit_date_fin_estimee" class="form-control">
                         </div>
-                        
+
+                        <!-- Séparateur Colis -->
+                        <div class="col-12 mt-2">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="fw-bold text-muted" style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px;">Colis transporté</span>
+                                <div style="flex:1; height:1px; background:var(--border-color, #e5e7eb);"></div>
+                            </div>
+                        </div>
+
+                        <!-- Colis : description + code_suivi -->
+                        <div class="col-md-8">
+                            <label class="form-label text-muted">Description du colis</label>
+                            <input type="text" id="edit_colis_description" class="form-control" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label text-muted">Code suivi</label>
+                            <input type="text" id="edit_colis_code_suivi" class="form-control">
+                        </div>
+
+                        <!-- Colis : type + poids + volume -->
+                        <div class="col-md-4">
+                            <label class="form-label text-muted">Type de colis</label>
+                            <select class="form-select" id="edit_colis_type" required>
+                                <option value="STANDARD">Standard</option>
+                                <option value="FRAGILE">Fragile</option>
+                                <option value="LOURD">Lourd</option>
+                                <option value="TEMPERATURE_DIRIGEE">Température dirigée</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label text-muted">Poids (kg)</label>
+                            <input type="number" id="edit_colis_poids" step="0.01" min="0" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label text-muted">Volume (m³)</label>
+                            <input type="number" id="edit_colis_volume" step="0.001" min="0" class="form-control">
+                        </div>
+
+                        <!-- Instructions -->
                         <div class="col-12">
                             <label class="form-label text-muted">Instructions Spéciales / Remarques</label>
-                            <textarea class="form-control" rows="3">Appeler le client 30min avant d'arriver au dépôt. (Tél: 0612345678)</textarea>
+                            <textarea class="form-control" id="edit_instructions" rows="3"></textarea>
                         </div>
+
                     </div>
                 </form>
             </div>
@@ -462,7 +503,28 @@
                 <button type="button" class="btn btn-outline-danger border-0"><i class="bi bi-trash3 me-1"></i> Supprimer</button>
                 <div>
                     <button type="button" class="btn btn-light me-2" data-bs-dismiss="modal">Annuler</button>
-                    <button type="button" class="btn btn-primary">Enregistrer</button>
+                    <button type="button" class="btn btn-primary" id="saveMissionEdit">Enregistrer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Confirmation Livraison -->
+<div class="modal fade" id="confirmDeliveryModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 1.25rem;">
+            <div class="modal-body text-center p-4">
+                <div class="mb-3">
+                    <div class="d-inline-flex align-items-center justify-content-center bg-success bg-opacity-10 rounded-circle" style="width: 80px; height: 80px;">
+                        <i class="bi bi-check-circle-fill text-success" style="font-size: 2.5rem;"></i>
+                    </div>
+                </div>
+                <h5 class="fw-bold mb-2" style="font-family: 'Outfit', sans-serif;">Confirmer la livraison ?</h5>
+                <p class="text-muted mb-4" style="font-size: 0.9rem;">Voulez-vous marquer cette mission comme terminée ? Cette action enregistrera l'heure actuelle comme heure de fin.</p>
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-light w-100 fw-semibold" data-bs-dismiss="modal" style="border-radius: 0.75rem;">Annuler</button>
+                    <button type="button" class="btn btn-success w-100 fw-semibold" id="confirmDeliveryAction" style="border-radius: 0.75rem;">Confirmer</button>
                 </div>
             </div>
         </div>
@@ -476,6 +538,7 @@
 <script src="../js/suivi-gps.js"></script>
 <script src="../js/logout.js"></script>
 <script src="../js/navbarInfo.js"></script>
+<script src="../js/addMission.js"></script>
 
 </body>
 </html>

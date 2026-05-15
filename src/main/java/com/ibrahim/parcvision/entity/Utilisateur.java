@@ -56,6 +56,7 @@ public class Utilisateur implements UserDetails {
 
     @OneToOne(mappedBy = "utilisateur", fetch = FetchType.LAZY)
     @JsonIgnore
+
     private Admin admin;
 
     // Constructeurs

@@ -1,5 +1,6 @@
 package com.ibrahim.parcvision.repository;
 
+import com.ibrahim.parcvision.entity.Entreprise;
 import com.ibrahim.parcvision.entity.Vehicule;
 import com.ibrahim.parcvision.enums.StatutVehicule;
 import org.springframework.data.domain.Page;
@@ -9,10 +10,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface VehiculeRepository extends JpaRepository<Vehicule, Long> {
 
     long countByStatutVehicule(StatutVehicule statut);
+
+    List<Vehicule> findByEntreprise(Entreprise entreprise);
 
     Page<Vehicule> findByStatutVehicule(StatutVehicule statut, Pageable pageable);
 

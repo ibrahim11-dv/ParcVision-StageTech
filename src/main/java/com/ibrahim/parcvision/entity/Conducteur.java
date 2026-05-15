@@ -51,7 +51,7 @@ public class Conducteur {
     // Constructeurs
     public Conducteur() {}
 
-    // Getters / Setters (existants)
+    // Getters / Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -64,7 +64,6 @@ public class Conducteur {
     public String getPhotoProfileUrl() { return photoProfileUrl; }
     public void setPhotoProfileUrl(String photoProfileUrl) { this.photoProfileUrl = photoProfileUrl; }
 
-    // Nouveaux getters/setters
     public LocalDate getDateEmbauche() { return dateEmbauche; }
     public void setDateEmbauche(LocalDate dateEmbauche) { this.dateEmbauche = dateEmbauche; }
 
@@ -85,4 +84,8 @@ public class Conducteur {
 
     public Document getDocument() { return document; }
     public void setDocument(Document document) { this.document = document; }
+
+    public Entreprise getEntreprise() {
+        return (utilisateur != null) ? utilisateur.getEntreprise() : null;
+    }
 }

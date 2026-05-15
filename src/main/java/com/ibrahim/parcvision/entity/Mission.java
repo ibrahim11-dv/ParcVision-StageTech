@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.ibrahim.parcvision.enums.StatutMission;
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -18,16 +18,16 @@ public class Mission {
             name = "date_debut",
             nullable = false
     )
-    private LocalDate dataDebut;
+    private LocalDateTime dataDebut;
 
     @Column(
             name = "date_fin_estimee",
             nullable = false
     )
-    private LocalDate dateFinEstimee;
+    private LocalDateTime dateFinEstimee;
 
     @Column(name = "date_fin_reelle")
-    private LocalDate dateFinReelle;
+    private LocalDateTime dateFinReelle;
 
     @Column(
             name = "adresse_depart",
@@ -56,7 +56,7 @@ public class Mission {
     @Column(name = "preuve_livraison_url")
     private String preuveLivraisonUrl;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "entreprise_id",
             nullable = false
@@ -64,14 +64,14 @@ public class Mission {
     @JsonBackReference
     private Entreprise entreprise;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "conducteur_id"
     )
     @JsonBackReference
     private Conducteur conducteur;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "vehicule_id"
     )
@@ -84,9 +84,130 @@ public class Mission {
     @JsonManagedReference
     private List<PointGPS> PointGPS;
 
-    @OneToOne(
-            mappedBy = "mission"
-    )
+
+    @OneToMany(mappedBy = "mission")
     @JsonManagedReference
-    private Document document;
+    private List<Colis> colis;
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public LocalDateTime getDataDebut() {
+        return dataDebut;
+    }
+
+    public void setDataDebut(LocalDateTime dataDebut) {
+        this.dataDebut = dataDebut;
+    }
+
+    public LocalDateTime getDateFinEstimee() {
+        return dateFinEstimee;
+    }
+
+    public void setDateFinEstimee(LocalDateTime dateFinEstimee) {
+        this.dateFinEstimee = dateFinEstimee;
+    }
+
+    public LocalDateTime getDateFinReelle() {
+        return dateFinReelle;
+    }
+
+    public void setDateFinReelle(LocalDateTime dateFinReelle) {
+        this.dateFinReelle = dateFinReelle;
+    }
+
+    public String getAdresseDepart() {
+        return adresseDepart;
+    }
+
+    public void setAdresseDepart(String adresseDepart) {
+        this.adresseDepart = adresseDepart;
+    }
+
+    public String getAdressArrivee() {
+        return adressArrivee;
+    }
+
+    public void setAdressArrivee(String adressArrivee) {
+        this.adressArrivee = adressArrivee;
+    }
+
+    public String getInstructionsSpeciales() {
+        return instructionsSpeciales;
+    }
+
+    public void setInstructionsSpeciales(String instructionsSpeciales) {
+        this.instructionsSpeciales = instructionsSpeciales;
+    }
+
+    public String getReference() {
+        return reference;
+    }
+
+    public void setReference(String reference) {
+        this.reference = reference;
+    }
+
+    public StatutMission getStatut() {
+        return statut;
+    }
+
+    public void setStatut(StatutMission statut) {
+        this.statut = statut;
+    }
+
+    public String getPreuveLivraisonUrl() {
+        return preuveLivraisonUrl;
+    }
+
+    public void setPreuveLivraisonUrl(String preuveLivraisonUrl) {
+        this.preuveLivraisonUrl = preuveLivraisonUrl;
+    }
+
+    public Entreprise getEntreprise() {
+        return entreprise;
+    }
+
+    public void setEntreprise(Entreprise entreprise) {
+        this.entreprise = entreprise;
+    }
+
+    public Conducteur getConducteur() {
+        return conducteur;
+    }
+
+    public void setConducteur(Conducteur conducteur) {
+        this.conducteur = conducteur;
+    }
+
+    public Vehicule getVehicule() {
+        return vehicule;
+    }
+
+    public void setVehicule(Vehicule vehicule) {
+        this.vehicule = vehicule;
+    }
+
+    public List<PointGPS> getPointGPS() {
+        return PointGPS;
+    }
+
+    public void setPointGPS(List<PointGPS> PointGPS) {
+        this.PointGPS = PointGPS;
+    }
+
+
+    public List<Colis> getColis() {
+        return colis;
+    }
+
+    public void setColis(List<Colis> colis) {
+        this.colis = colis;
+    }
 }

@@ -29,17 +29,8 @@ public class RegistrationService {
     }
 
     public ResponseEntity<?> registerEntreprise(
-            @Valid RegistrationRequestDao registrationRequestDao,
-            BindingResult bindingResult
+            RegistrationRequestDao registrationRequestDao
     ){
-        if (bindingResult.hasErrors()) {
-            StringBuilder errors = new StringBuilder();
-            bindingResult.getAllErrors().forEach(error ->
-                    errors.append(error.getDefaultMessage()).append("; ")
-            );
-            return ResponseEntity.badRequest().body(errors.toString());
-        }
-
         try {
             if (entrepriseRepository.existsByNom(registrationRequestDao.getEntrepriseNom())) {
                 return ResponseEntity.badRequest().body("Nom d'entreprise déjà utilisé");

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.ibrahim.parcvision.enums.TypePoint;
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 public class PointGPS {
@@ -12,11 +12,12 @@ public class PointGPS {
     @GeneratedValue
     private Long id;
 
-    private Double altitude ;
+    private double laltitude ;
+
 
     private double longitude;
 
-    private LocalDate timeStamp;
+    private LocalDateTime timeStamp;
 
     private double vitesse;
 
@@ -35,5 +36,67 @@ public class PointGPS {
     @JsonBackReference
     private Mission mission;
 
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public double getLaltitude() {
+        return laltitude;
+    }
+
+    public void setLaltitude(double laltitude) {
+        this.laltitude = laltitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public LocalDateTime getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(LocalDateTime timeStamp) {
+        this.timeStamp = timeStamp;
+    }
+
+    public double getVitesse() {
+        return vitesse;
+    }
+
+    public void setVitesse(double vitesse) {
+        this.vitesse = vitesse;
+    }
+
+    public double getPrecision() {
+        return precision;
+    }
+
+    public void setPrecision(double precision) {
+        this.precision = precision;
+    }
+
+    public TypePoint getTypePoint() {
+        return typePoint;
+    }
+
+    public void setTypePoint(TypePoint typePoint) {
+        this.typePoint = typePoint;
+    }
+
+    public Mission getMission() {
+        return mission;
+    }
+
+    public void setMission(Mission mission) {
+        this.mission = mission;
+    }
 }
