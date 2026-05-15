@@ -72,9 +72,6 @@ public class Vehicule {
     @JsonIgnore
     private List<Intervention> intervention;
 
-    @OneToOne(mappedBy = "vehicule", fetch = FetchType.LAZY)
-    @JsonIgnore
-    private Document document;
 
     // Constructeurs
     public Vehicule() {}
@@ -134,6 +131,4 @@ public class Vehicule {
     public List<Intervention> getIntervention() { return intervention; }
     public void setIntervention(List<Intervention> intervention) { this.intervention = intervention; }
 
-    public Document getDocument() { return document; }
-    public void setDocument(Document document) { this.document = document; }
 }

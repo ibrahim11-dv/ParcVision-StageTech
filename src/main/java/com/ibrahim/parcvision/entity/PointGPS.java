@@ -76,12 +76,12 @@ public class PointGPS {
         this.vitesse = vitesse;
     }
 
-    public double getPrecision() {
-        return precision;
+    public Double getPrecisionGps() {
+        return precisionGps;
     }
 
-    public void setPrecision(double precision) {
-        this.precision = precision;
+    public void setPrecisionGps(Double precisionGps) {
+        this.precisionGps = precisionGps;
     }
 
     public TypePoint getTypePoint() {

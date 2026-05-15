@@ -2,12 +2,10 @@ package com.ibrahim.parcvision.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.Data;
 
-@Data
 @Entity
-@DiscriminatorValue("accident")  // Pour distinguer Accident des autres types d'Intervention
-public class Accident extends Intervention {  // ← Doit extends Intervention
+@DiscriminatorValue("accident")
+public class Accident extends Intervention {
 
     @Column(name = "lieu")
     private String lieu;
@@ -32,4 +30,25 @@ public class Accident extends Intervention {  // ← Doit extends Intervention
     @Column(name = "notes")
     private String notes;
 
+    // Getters and Setters
+    public String getLieu() { return lieu; }
+    public void setLieu(String lieu) { this.lieu = lieu; }
+
+    public String getContexte() { return contexte; }
+    public void setContexte(String contexte) { this.contexte = contexte; }
+
+    public String getGravite() { return gravite; }
+    public void setGravite(String gravite) { this.gravite = gravite; }
+
+    public double getBudgetEstime() { return budgetEstime; }
+    public void setBudgetEstime(double budgetEstime) { this.budgetEstime = budgetEstime; }
+
+    public String getEtat() { return etat; }
+    public void setEtat(String etat) { this.etat = etat; }
+
+    public Conducteur getConducteur() { return conducteur; }
+    public void setConducteur(Conducteur conducteur) { this.conducteur = conducteur; }
+
+    public String getNotes() { return notes; }
+    public void setNotes(String notes) { this.notes = notes; }
 }

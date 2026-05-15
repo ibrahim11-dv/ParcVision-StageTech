@@ -44,9 +44,6 @@ public class Conducteur {
     @JsonIgnore
     private List<Mission> mission;
 
-    @OneToOne(mappedBy = "conducteur", fetch = FetchType.LAZY)
-    @JsonIgnore
-    private Document document;
 
     // Constructeurs
     public Conducteur() {}
@@ -82,8 +79,6 @@ public class Conducteur {
     public List<Mission> getMission() { return mission; }
     public void setMission(List<Mission> mission) { this.mission = mission; }
 
-    public Document getDocument() { return document; }
-    public void setDocument(Document document) { this.document = document; }
 
     public Entreprise getEntreprise() {
         return (utilisateur != null) ? utilisateur.getEntreprise() : null;
