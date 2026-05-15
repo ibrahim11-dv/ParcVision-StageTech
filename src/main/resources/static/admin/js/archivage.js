@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupSorting();
     setupPrint();
     setupScanner();
+    setupActionButtons();
 
     try {
         const root = await apiFetch(`${API}/root`);
@@ -343,21 +344,86 @@ async function filterItems() {
     renderGrid(_lastFolders, _lastDocs);
 }
 
+function setupActionButtons() {
+    const btnNewFolder = document.getElementById('btnNewFolder');
+    if (btnNewFolder) {
+        btnNewFolder.addEventListener('click', () => {
+            if (currentStack.length === 0) return;
+            document.getElementById('newFolderName').value = '';
+            document.getElementById('newFolderName').style.borderColor = '';
+            const cur = currentStack[currentStack.length - 1];
+            document.getElementById('folderModalLocationText').textContent = cur.chemin;
+            openModal('folderModal');
+            setTimeout(() => document.getElementById('newFolderName').focus(), 120);
+        });
+    }
+
+    const createFolderBtn = document.getElementById('createFolderBtn');
+    if (createFolderBtn) {
+        createFolderBtn.addEventListener('click', createFolder);
+    }
+
+    const newFolderName = document.getElementById('newFolderName');
+    if (newFolderName) {
+        newFolderName.addEventListener('keydown', e => {
+            if (e.key === 'Enter') createFolder();
+        });
+    }
+
+    const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+    if (confirmDeleteBtn) {
+        confirmDeleteBtn.addEventListener('click', () => {
+            if (deleteCallback) deleteCallback();
+        });
+    }
+
+    const btnUploadDoc = document.getElementById('btnUploadDoc');
+    if (btnUploadDoc) {
+        btnUploadDoc.addEventListener('click', () => {
+            if (currentStack.length === 0) return;
+            filesToUpload = [];
+            renderFileQueue();
+            const cur = currentStack[currentStack.length - 1];
+            document.getElementById('uploadModalLocation').textContent = cur.chemin;
+            openModal('uploadModal');
+        });
+    }
+
+    const dropzone = document.getElementById('dropzone');
+    if (dropzone) {
+        dropzone.addEventListener('dragover',  e => { e.preventDefault(); dropzone.classList.add('drag-over'); });
+        dropzone.addEventListener('dragleave', ()  => dropzone.classList.remove('drag-over'));
+        dropzone.addEventListener('drop', e => {
+            e.preventDefault();
+            dropzone.classList.remove('drag-over');
+            addFilesToQueue(e.dataTransfer.files);
+        });
+    }
+
+    const fileInput = document.getElementById('fileInput');
+    if (fileInput) {
+        fileInput.addEventListener('change', () => {
+            addFilesToQueue(fileInput.files);
+            fileInput.value = '';
+        });
+    }
+
+    const uploadBtn = document.getElementById('uploadBtn');
+    if (uploadBtn) {
+        uploadBtn.addEventListener('click', async () => {
+            if (filesToUpload.length === 0) {
+                const dz = document.getElementById('dropzone');
+                if (dz) {
+                    dz.style.borderColor = '#ef4444';
+                    setTimeout(() => dz.style.borderColor = '', 1500);
+                }
+                return;
+            }
+            performUpload();
+        });
+    }
+}
 // ── Create folder ─────────────────────────────────────────
-document.getElementById('btnNewFolder').addEventListener('click', () => {
-    document.getElementById('newFolderName').value = '';
-    document.getElementById('newFolderName').style.borderColor = '';
-    const cur = currentStack[currentStack.length - 1];
-    document.getElementById('folderModalLocationText').textContent = cur.chemin;
-    openModal('folderModal');
-    setTimeout(() => document.getElementById('newFolderName').focus(), 120);
-});
-
-document.getElementById('createFolderBtn').addEventListener('click', createFolder);
-document.getElementById('newFolderName').addEventListener('keydown', e => {
-    if (e.key === 'Enter') createFolder();
-});
-
 async function createFolder() {
     const nameInput = document.getElementById('newFolderName');
     const nom = nameInput.value.trim();
@@ -434,34 +500,6 @@ function confirmDeleteDoc(id, nom) {
     openModal('deleteConfirmModal');
 }
 
-// Set up the listener for the confirm button
-document.getElementById('confirmDeleteBtn').addEventListener('click', () => {
-    if (deleteCallback) deleteCallback();
-});
-
-// ── Upload files ──────────────────────────────────────────
-document.getElementById('btnUploadDoc').addEventListener('click', () => {
-    filesToUpload = [];
-    renderFileQueue();
-    const cur = currentStack[currentStack.length - 1];
-    document.getElementById('uploadModalLocation').textContent = cur.chemin;
-    openModal('uploadModal');
-});
-
-const dropzone = document.getElementById('dropzone');
-const fileInput = document.getElementById('fileInput');
-
-dropzone.addEventListener('dragover',  e => { e.preventDefault(); dropzone.classList.add('drag-over'); });
-dropzone.addEventListener('dragleave', ()  => dropzone.classList.remove('drag-over'));
-dropzone.addEventListener('drop', e => {
-    e.preventDefault();
-    dropzone.classList.remove('drag-over');
-    addFilesToQueue(e.dataTransfer.files);
-});
-fileInput.addEventListener('change', () => {
-    addFilesToQueue(fileInput.files);
-    fileInput.value = '';
-});
 
 function addFilesToQueue(fileList) {
     Array.from(fileList).forEach(f => {
@@ -495,12 +533,7 @@ function renderFileQueue() {
     });
 }
 
-document.getElementById('uploadBtn').addEventListener('click', async () => {
-    if (filesToUpload.length === 0) {
-        dropzone.style.borderColor = '#ef4444';
-        setTimeout(() => dropzone.style.borderColor = '', 1500);
-        return;
-    }
+async function performUpload() {
 
     const description = document.getElementById('addFileDescription')?.value || '';
     const formData = new FormData();
@@ -530,7 +563,7 @@ document.getElementById('uploadBtn').addEventListener('click', async () => {
         uploadToast.remove();
         showToast('Erreur upload : ' + e.message, 'error');
     }
-});
+}
 
 // ── Utility functions ─────────────────────────────────────
 function getFileIcon(name) {

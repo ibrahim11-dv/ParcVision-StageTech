@@ -276,7 +276,24 @@
      MODAL — Confirmation de suppression
      ══════════════════════════════════════ -->
 <div class="custom-modal-overlay" id="deleteConfirmModal">
-...
+    <div class="custom-modal" onclick="event.stopPropagation()" style="max-width:420px;">
+        <div class="custom-modal-header">
+            <h3 class="custom-modal-title" id="deleteConfirmTitle">Supprimer ?</h3>
+            <button class="custom-modal-close" onclick="closeModal('deleteConfirmModal')"><i class="bi bi-x"></i></button>
+        </div>
+        <div class="custom-modal-body text-center py-3">
+            <div class="mb-3">
+                <i class="bi bi-exclamation-circle text-danger" style="font-size: 3rem;"></i>
+            </div>
+            <p id="deleteConfirmMessage" class="mb-0">Voulez-vous vraiment supprimer cet élément ? Cette action est irréversible.</p>
+        </div>
+        <div class="custom-modal-footer">
+            <button class="btn-secondary-custom" onclick="closeModal('deleteConfirmModal')">Annuler</button>
+            <button class="btn-danger-custom" id="confirmDeleteBtn">
+                <i class="bi bi-trash3 me-1"></i>Supprimer
+            </button>
+        </div>
+    </div>
 </div>
 
 <!-- ══════════════════════════════════════
