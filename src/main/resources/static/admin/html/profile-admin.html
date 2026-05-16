@@ -172,12 +172,12 @@
                     <!-- Profile Summary Card -->
                     <div class="col-12">
                         <div class="form-card d-flex align-items-center gap-4">
-                            <div class="profile-av" style="width: 80px; height: 80px; border-radius: 18px; font-size: 1.8rem; box-shadow: none;">
+                            <div class="profile-av" id="profileAvatar" style="width: 80px; height: 80px; border-radius: 18px; font-size: 1.8rem; box-shadow: none; cursor: pointer;" title="Cliquez pour changer la photo">
                                 AD
                             </div>
                             <div>
-                                <h4 class="fw-bold mb-1 text-dark">Admin Principal</h4>
-                                <p class="text-muted mb-2 small">admin@parcauto.ma</p>
+                                <h4 class="fw-bold mb-1 text-dark" id="profileName">Chargement...</h4>
+                                <p class="text-muted mb-2 small" id="profileEmail">...</p>
                                 <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-1 rounded-pill fw-medium border border-primary border-opacity-10">Administrateur</span>
                             </div>
                         </div>
@@ -206,19 +206,19 @@
                                             <div class="row g-3">
                                                 <div class="col-md-6">
                                                     <label class="form-label">Nom</label>
-                                                    <input type="text" class="form-control" value="Admin" required>
+                                                    <input type="text" class="form-control" id="adminNom" value="" required>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label class="form-label">Prénom</label>
-                                                    <input type="text" class="form-control" value="Principal" required>
+                                                    <input type="text" class="form-control" id="adminPrenom" value="" required>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label class="form-label">Email</label>
-                                                    <input type="email" class="form-control" value="admin@parcauto.ma" required>
+                                                    <input type="email" class="form-control" id="adminEmail" value="" required>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label class="form-label">Téléphone</label>
-                                                    <input type="tel" class="form-control" value="+212 6 00 00 00 00" required>
+                                                    <input type="tel" class="form-control" id="adminTelephone" value="" required>
                                                 </div>
                                                 <div class="col-12 mt-4 pt-2 border-top">
                                                     <button type="submit" class="btn btn-primary">Enregistrer</button>

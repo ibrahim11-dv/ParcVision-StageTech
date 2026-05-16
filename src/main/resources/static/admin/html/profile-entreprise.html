@@ -172,12 +172,12 @@
                     <!-- Profile Summary Card -->
                     <div class="col-12">
                         <div class="form-card d-flex align-items-center gap-4">
-                            <div class="profile-av" style="width: 80px; height: 80px; border-radius: 18px; font-size: 1.8rem; box-shadow: none; background: linear-gradient(135deg, #10b981, #059669);">
+                            <div class="profile-av" id="entAvatar" style="width: 80px; height: 80px; border-radius: 18px; font-size: 1.8rem; box-shadow: none; background: linear-gradient(135deg, #10b981, #059669); cursor: pointer;" title="Cliquez pour changer le logo">
                                 EN
                             </div>
                             <div>
-                                <h4 class="fw-bold mb-1 text-dark">Entreprise Example</h4>
-                                <p class="text-muted mb-2 small">contact@entreprise.ma</p>
+                                <h4 class="fw-bold mb-1 text-dark" id="entName">Chargement...</h4>
+                                <p class="text-muted mb-2 small" id="entEmail">...</p>
                                 <span class="badge bg-success bg-opacity-10 text-success px-3 py-1 rounded-pill fw-medium border border-success border-opacity-10">Compte vérifié</span>
                             </div>
                         </div>
@@ -203,27 +203,27 @@
                                             <div class="row g-3">
                                                 <div class="col-md-6">
                                                     <label class="form-label">Nom de l'entreprise</label>
-                                                    <input type="text" class="form-control" value="Entreprise Example" required>
+                                                    <input type="text" class="form-control" id="entNom" value="" required>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label class="form-label">Secteur d'activité</label>
-                                                    <input type="text" class="form-control" value="Logistique" required>
+                                                    <input type="text" class="form-control" id="entSecteur" value="" required>
                                                 </div>
                                                 <div class="col-md-12">
                                                     <label class="form-label">Adresse</label>
-                                                    <input type="text" class="form-control" value="123 Rue de la Logistique, Casablanca" required>
+                                                    <input type="text" class="form-control" id="entAdresse" value="" required>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label class="form-label">Email</label>
-                                                    <input type="email" class="form-control" value="contact@entreprise.ma" required>
+                                                    <input type="email" class="form-control" id="entEmail" value="" required>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label class="form-label">Téléphone</label>
-                                                    <input type="tel" class="form-control" value="+212 5 00 00 00 00" required>
+                                                    <input type="tel" class="form-control" id="entTelephone" value="" required>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label class="form-label">Date de création</label>
-                                                    <input type="date" class="form-control" value="2010-05-15" required>
+                                                    <input type="date" class="form-control" id="entDateCreation" value="" required>
                                                 </div>
                                                 
                                                 <div class="col-12 mt-4 pt-2 border-top">

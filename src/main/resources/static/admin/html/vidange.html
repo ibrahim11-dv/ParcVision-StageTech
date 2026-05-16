@@ -239,72 +239,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr class="hist-row">
-                                    <td>
-                                        <div style="display:flex;align-items:center;gap:10px">
-                                            <div class="profile-av bg-light text-primary" style="width: 36px; height: 36px; border-radius: 8px;"><i class="bi bi-truck"></i></div>
-                                            <div>
-                                                <b class="mission-id" style="color:var(--text-main); display:block; line-height:1.2;">1234-A-6</b>
-                                                <span class="mission-dist" style="font-size:0.75rem;">Renault Master</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td><span class="mission-date">10 Mars 2026</span></td>
-                                    <td><span style="font-weight:500;">5W30 Synthétique</span></td>
-                                    <td><span class="mission-dist">85,200 km</span></td>
-                                    <td><b style="color:var(--text-main);">95,000 km</b></td>
-                                    <td><span class="prio-badge prio-faible">À jour</span></td>
-                                    <td>
-                                        <div style="display:flex;gap:5px">
-                                            <button class="btn-icon" title="Voir" onclick="viewOilChange('1234-A-6', 'Renault Master', '10 Mars 2026', '5W30 Synthétique', '85,000 km', '95,000 km', '450 DH', 'Garage Central', 'À jour')"><i class="bi bi-eye"></i></button>
-                                            <button class="btn-icon" title="Modifier" onclick="editOilChange('1234-A-6', 'Renault Master', '2026-03-10', '5W30 Synthétique', '85000', '95000', '450', 'Garage Central', 'ajour')"><i class="bi bi-pencil-square"></i></button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr class="hist-row">
-                                    <td>
-                                        <div style="display:flex;align-items:center;gap:10px">
-                                            <div class="profile-av bg-light text-primary" style="width: 36px; height: 36px; border-radius: 8px;"><i class="bi bi-car-front"></i></div>
-                                            <div>
-                                                <b class="mission-id" style="color:var(--text-main); display:block; line-height:1.2;">5678-B-12</b>
-                                                <span class="mission-dist" style="font-size:0.75rem;">Dacia Duster</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td><span class="mission-date">05 Janvier 2026</span></td>
-                                    <td><span style="font-weight:500;">10W40 Semi-Synth</span></td>
-                                    <td><span class="mission-dist">119,500 km</span></td>
-                                    <td><b style="color:var(--text-main);">120,000 km</b></td>
-                                    <td><span class="prio-badge prio-normale">Bientôt</span></td>
-                                    <td>
-                                        <div style="display:flex;gap:5px">
-                                            <button class="btn-icon" title="Voir" onclick="viewOilChange('5678-B-12', 'Dacia Duster', '05 Janvier 2026', '10W40 Semi-Synth', '110,000 km', '120,000 km', '350 DH', 'Auto Services Plus', 'Bientôt')"><i class="bi bi-eye"></i></button>
-                                            <button class="btn-icon" title="Modifier" onclick="editOilChange('5678-B-12', 'Dacia Duster', '2026-01-05', '10W40 Semi-Synth', '110000', '120000', '350', 'Auto Services Plus', 'bientot')"><i class="bi bi-pencil-square"></i></button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr class="hist-row">
-                                    <td>
-                                        <div style="display:flex;align-items:center;gap:10px">
-                                            <div class="profile-av bg-light text-danger" style="width: 36px; height: 36px; border-radius: 8px;"><i class="bi bi-truck"></i></div>
-                                            <div>
-                                                <b class="mission-id" style="color:var(--text-main); display:block; line-height:1.2;">9012-H-33</b>
-                                                <span class="mission-dist" style="font-size:0.75rem;">Iveco Daily</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td><span class="mission-date">15 Novembre 2025</span></td>
-                                    <td><span style="font-weight:500;">5W40 Synthétique</span></td>
-                                    <td><span class="mission-dist">156,200 km</span></td>
-                                    <td><b class="text-danger">155,000 km</b></td>
-                                    <td><span class="prio-badge prio-haute">En retard</span></td>
-                                    <td>
-                                        <div style="display:flex;gap:5px">
-                                            <button class="btn-icon" title="Voir" onclick="viewOilChange('9012-H-33', 'Iveco Daily', '15 Novembre 2025', '5W40 Synthétique', '140,000 km', '155,000 km', '550 DH', 'Garage Maghreb', 'En retard')"><i class="bi bi-eye"></i></button>
-                                            <button class="btn-icon" title="Modifier" onclick="editOilChange('9012-H-33', 'Iveco Daily', '2025-11-15', '5W40 Synthétique', '140000', '155000', '550', 'Garage Maghreb', 'retard')"><i class="bi bi-pencil-square"></i></button>
-                                        </div>
-                                    </td>
-                                </tr>
+                                <!-- Dynamically populated by vidange.js -->
                             </tbody>
                         </table>
                     </div>
@@ -327,22 +262,19 @@
                 <div class="row">
                     <div class="col-md-6 form-group">
                         <label class="form-label">Véhicule</label>
-                        <select class="form-control">
-                            <option>Sélectionner un véhicule</option>
-                            <option>1234-A-6 (Renault Master)</option>
-                            <option>5678-B-12 (Dacia Duster)</option>
-                            <option>9012-H-33 (Iveco Daily)</option>
+                        <select class="form-control" id="addVehiculeSelect">
+                            <option value="">Sélectionner un véhicule</option>
                         </select>
                     </div>
                     <div class="col-md-6 form-group">
                         <label class="form-label">Date de Vidange</label>
-                        <input type="date" class="form-control">
+                        <input type="date" class="form-control" id="addDate">
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6 form-group">
                         <label class="form-label">Type d'Huile</label>
-                        <select class="form-control">
+                        <select class="form-control" id="addOilType">
                             <option>5W30 Synthétique</option>
                             <option>5W40 Synthétique</option>
                             <option>10W40 Semi-Synthétique</option>
@@ -351,7 +283,7 @@
                     </div>
                     <div class="col-md-6 form-group">
                         <label class="form-label">Kilométrage actuel</label>
-                        <input type="number" class="form-control" placeholder="Ex: 85000">
+                        <input type="number" class="form-control" placeholder="Ex: 85000" id="addKm">
                     </div>
                 </div>
                 <div class="row">
@@ -361,12 +293,12 @@
                     </div>
                     <div class="col-md-6 form-group">
                         <label class="form-label">Coût (DH)</label>
-                        <input type="number" class="form-control" placeholder="0.00">
+                        <input type="number" class="form-control" placeholder="0.00" id="addCost">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Garage / Centre auto</label>
-                    <input type="text" class="form-control" placeholder="Nom du garage">
+                    <input type="text" class="form-control" placeholder="Nom du garage" id="addGarage">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Statut</label>
@@ -446,9 +378,7 @@
                     <div class="col-md-6 form-group">
                         <label class="form-label">Véhicule</label>
                         <select class="form-control" id="editVehicle">
-                            <option>1234-A-6 (Renault Master)</option>
-                            <option>5678-B-12 (Dacia Duster)</option>
-                            <option>9012-H-33 (Iveco Daily)</option>
+                            <!-- Populated by JS -->
                         </select>
                     </div>
                     <div class="col-md-6 form-group">

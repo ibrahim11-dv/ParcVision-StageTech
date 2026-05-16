@@ -467,17 +467,176 @@ body {
     background: var(--primary-dark);
 }
 
-/* Fix Dark Mode additions */
-body.dark .text-dark {
+/* ══════════════════════════════════════════════════════════
+   DARK MODE FIXES
+   Comprehensive overrides for a polished dark experience
+══════════════════════════════════════════════════════════ */
+body.dark {
+    color-scheme: dark;
+}
+
+/* Global Background & Text Fixes */
+body.dark .text-dark { color: #ffffff !important; }
+body.dark .text-secondary, 
+body.dark .text-muted { color: var(--gray-400) !important; }
+body.dark .bg-white { background-color: var(--card-bg) !important; }
+body.dark .bg-light { background-color: var(--gray-100) !important; }
+body.dark .border { border-color: var(--border-color) !important; }
+
+/* Dashboard Specifics */
+body.dark .search-bar { background: var(--gray-100); border-color: var(--border-color); }
+body.dark .search-bar input { color: var(--text-main); }
+body.dark .btn-icon, 
+body.dark .btn-ghost { background: var(--gray-100); color: var(--text-main); border-color: var(--border-color); }
+body.dark .btn-icon:hover, 
+body.dark .btn-ghost:hover { background: var(--gray-200); }
+
+/* Table Overrides */
+body.dark .table {
+    --bs-table-bg: transparent;
+    --bs-table-color: var(--text-main);
+    --bs-table-border-color: var(--border-color);
+    --bs-table-hover-color: var(--text-main);
+    --bs-table-hover-bg: rgba(255, 255, 255, 0.03);
+}
+
+body.dark .table th {
+    background: var(--gray-100);
+    color: var(--gray-400);
+    border-bottom-color: var(--border-color);
+}
+body.dark .table td {
+    color: var(--text-main);
+    border-bottom-color: var(--border-color);
+}
+
+/* Form Styling in Dark Mode */
+body.dark .form-control,
+body.dark .form-select,
+body.dark .form-select-custom {
+    background-color: var(--gray-100);
+    border-color: var(--border-color);
+    color: var(--text-main);
+}
+
+body.dark .form-control:focus,
+body.dark .form-select:focus,
+body.dark .form-select-custom:focus {
+    background-color: var(--gray-100);
+    border-color: var(--primary);
+    color: var(--text-main);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+body.dark .form-label {
+    color: var(--gray-400);
+}
+
+body.dark .input-group-text {
+    background-color: var(--gray-200);
+    border-color: var(--border-color);
+    color: var(--gray-400);
+}
+
+/* Tabs */
+body.dark .custom-tabs .nav-link { color: var(--gray-400); }
+body.dark .custom-tabs .nav-link:hover { background: rgba(255,255,255,0.05); color: #ffffff; }
+body.dark .custom-tabs .nav-link.active { background: var(--accent-soft); color: var(--accent); }
+
+/* Modals */
+body.dark .custom-modal {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-lg);
+}
+
+body.dark .custom-modal-header,
+body.dark .custom-modal-footer {
+    border-color: var(--border-color);
+}
+
+body.dark .view-detail-row {
+    border-bottom-color: var(--border-color);
+}
+
+/* Fixes for specific mission elements */
+body.dark .mission-id { color: #ffffff !important; }
+body.dark .mission-date, 
+body.dark .mission-dist { color: var(--gray-400) !important; }
+body.dark .stat-val { color: #ffffff; }
+body.dark .stat-label { color: var(--gray-400); }
+
+/* Bootstrap Cards */
+body.dark .card, body.dark .form-card {
+    background: var(--card-bg);
+    border-color: var(--border-color);
+}
+
+/* ── DARK MODE FORM FIXES (Universal) ── */
+body.dark .form-control,
+body.dark .form-select,
+body.dark .form-select-custom,
+body.dark .search-bar input,
+body.dark input,
+body.dark select,
+body.dark textarea {
+    background-color: var(--gray-100) !important;
+    border-color: var(--border-color) !important;
     color: #ffffff !important;
 }
-body.dark .text-muted {
+
+body.dark .form-control::placeholder,
+body.dark .form-select::placeholder,
+body.dark .form-select-custom::placeholder,
+body.dark .search-bar input::placeholder,
+body.dark input::placeholder,
+body.dark textarea::placeholder {
+    color: #cbd5e1 !important;
+    opacity: 0.8 !important;
+}
+
+/* File Input Styling */
+body.dark .form-control[type="file"],
+body.dark input[type="file"] {
+    background-color: var(--gray-100) !important;
     color: var(--gray-400) !important;
 }
-body.dark .bg-light {
-    background-color: var(--gray-100) !important;
-}
-body.dark .card {
-    background-color: var(--card-bg);
+
+body.dark .form-control[type="file"]::file-selector-button,
+body.dark input[type="file"]::file-selector-button {
+    background-color: var(--gray-200) !important;
+    color: #ffffff !important;
     border: 1px solid var(--border-color) !important;
+    border-radius: 6px;
+    padding: 4px 12px;
+    margin-right: 12px;
+    transition: all 0.2s;
 }
+
+body.dark .form-control[type="file"]:hover::file-selector-button,
+body.dark input[type="file"]:hover::file-selector-button {
+    background-color: var(--gray-300) !important;
+}
+
+body.dark .form-label,
+body.dark label {
+    color: var(--gray-400) !important;
+}
+
+body.dark .input-group-text {
+    background-color: var(--gray-200) !important;
+    border-color: var(--border-color) !important;
+    color: #ffffff !important;
+}
+
+/* Modal and Card Fixes */
+body.dark .card,
+body.dark .form-card,
+body.dark .modal-content,
+body.dark .custom-modal {
+    background-color: var(--card-bg) !important;
+    border-color: var(--border-color) !important;
+}
+
+body.dark .text-dark { color: #ffffff !important; }
+body.dark .text-muted { color: var(--gray-400) !important; }
