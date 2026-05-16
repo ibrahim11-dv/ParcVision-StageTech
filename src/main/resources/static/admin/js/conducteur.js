@@ -218,8 +218,9 @@ document.addEventListener('DOMContentLoaded', () => {
 /* ───── CHARGER STATISTIQUES ───── */
 async function chargerStats() {
     const res = await fetch('/api/conducteurs/stats', { headers: authHeaders() });
-    if (!res.ok) return; // L’échec silencieux ici est acceptable, mais vous pouvez alerter aussi
+    if (!res.ok) return;
     const stats = await res.json();
+    console.log('Conducteur Stats:', stats);
     setText('kpi-total', stats.total || 0);
     setText('kpi-dispo', stats.disponible || 0);
     setText('kpi-mission', stats.mission || 0);
@@ -266,75 +267,62 @@ function afficherConducteurs(liste) {
     const tbody = document.getElementById('conducteurs-tbody');
     if (!tbody) return;
     tbody.innerHTML = '';
+    
+    console.log('Affichage de la liste:', liste);
+
     if (!liste || liste.length === 0) {
         tbody.innerHTML = '<tr><td colspan="6" class="text-center">Aucun conducteur trouvé</td></tr>';
         return;
     }
     liste.forEach(c => {
-        const u = c.utilisateur;
-        const tr = document.createElement('tr');
-        const initiales = (u.prenom.charAt(0) + u.nom.charAt(0)).toUpperCase();
-        const avatarStyle = c.photoProfileUrl
-            ? `background-image: url('/${c.photoProfileUrl}'); background-size: cover; background-position: center;`
-            : `background: linear-gradient(135deg, var(--primary), var(--primary-light));`;
-        const avatarContent = c.photoProfileUrl ? '' : initiales;
+        try {
+            const u = c.utilisateur;
+            if (!u) {
+                console.warn('Conducteur sans utilisateur:', c);
+                return;
+            }
+            const tr = document.createElement('tr');
+            const photoUrl = c.photoProfileUrl 
+                ? (c.photoProfileUrl.startsWith('http') ? c.photoProfileUrl : '/' + c.photoProfileUrl)
+                : null;
 
-        tr.innerHTML = `
-            <td>
-                <div class="profile-av" style="width:34px;height:34px;border-radius:9px;font-size:0.75rem; ${avatarStyle}">
-                    ${avatarContent}
-                </div>
-            </td>
-            <td><b style="color:var(--text-main);">${u.prenom} ${u.nom}</b></td>
-            <td>${u.email}</td>
-            <td>${u.telephone}</td>
-            <td>
-                <select class="form-select form-select-sm" style="width:auto; font-size:0.75rem;" onchange="changerStatutRapide(${c.id}, this.value)">
-                    <option value="DISPONIBLE" ${c.statut === 'DISPONIBLE' ? 'selected' : ''}>Disponible</option>
-                    <option value="EN_MISSION" ${c.statut === 'EN_MISSION' ? 'selected' : ''}>En Mission</option>
-                    <option value="EN_CONGE" ${c.statut === 'EN_CONGE' ? 'selected' : ''}>En Congé</option>
-                    <option value="SUSPENDU" ${c.statut === 'SUSPENDU' ? 'selected' : ''}>Suspendu</option>
-                </select>
-            </td>
-            <td>
-                <div style="display:flex;gap:5px">
-                    <button class="btn-icon" title="Modifier" onclick="ouvrirModification(${c.id})">
-                        <i class="bi bi-pencil-square"></i>
-                    </button>
-                    <button class="btn-icon" title="Supprimer" onclick="supprimerConducteur(${c.id}, '${u.prenom} ${u.nom}')">
-                        <i class="bi bi-trash" style="color:#ef4444"></i>
-                    </button>
-                </div>
-            </td>
-        `;
-        tbody.appendChild(tr);
-    });
-}
+            const avatarStyle = photoUrl
+                ? `background-image: url('${photoUrl}'); background-size: cover; background-position: center;`
+                : `background: #e2e8f0; color: #94a3b8; display: flex; align-items: center; justify-content: center;`;
+            
+            // Silhouette style "FB/Insta"
+            const placeholderSvg = `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+                </svg>`;
+            const avatarContent = photoUrl ? '' : placeholderSvg;
 
-async function changerStatutRapide(id, nouveauStatut) {
-    try {
-        // On utilise l'API de modification partielle ou complète
-        // Ici on va juste envoyer le statut dans un FormData (car le controlleur attend ConducteurRequestDao)
-        const formData = new FormData();
-        formData.append('statut', nouveauStatut);
-
-        const res = await fetch(`/api/conducteurs/${id}`, {
-            method: 'PUT',
-            headers: { 'Authorization': 'Bearer ' + getToken() },
-            body: formData
-        });
-
-        if (res.ok) {
-            chargerStats();
-            // Pas besoin de recharger toute la liste si on veut juste un feedback visuel rapide
-            // Mais pour être sûr de la cohérence, on peut le faire
-            chargerConducteurs();
-        } else {
-            alert('Erreur lors du changement de statut');
+            tr.innerHTML = `
+                <td>
+                    <div class="profile-av" style="width:34px;height:34px;border-radius:9px;font-size:0.75rem; ${avatarStyle}">
+                        ${avatarContent}
+                    </div>
+                </td>
+                <td><b style="color:var(--text-main);">${u.prenom || ''} ${u.nom || ''}</b></td>
+                <td>${u.email || ''}</td>
+                <td>${u.telephone || ''}</td>
+                <td><span class="prio-badge ${statutClass(c.statut)}">${statutLabel(c.statut || 'DISPONIBLE')}</span></td>
+                <td>
+                    <div style="display:flex;gap:5px">
+                        <button class="btn-icon" title="Modifier" onclick="ouvrirModification(${c.id})">
+                            <i class="bi bi-pencil-square"></i>
+                        </button>
+                        <button class="btn-icon" title="Supprimer" onclick="supprimerConducteur(${c.id}, '${(u.prenom || '')} ${(u.nom || '')}')">
+                            <i class="bi bi-trash" style="color:#ef4444"></i>
+                        </button>
+                    </div>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        } catch (err) {
+            console.error('Erreur lors du rendu d\'un conducteur:', err, c);
         }
-    } catch (err) {
-        alert('Erreur réseau');
-    }
+    });
 }
 
 

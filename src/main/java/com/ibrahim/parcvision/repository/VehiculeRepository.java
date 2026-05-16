@@ -15,33 +15,36 @@ import java.util.List;
 @Repository
 public interface VehiculeRepository extends JpaRepository<Vehicule, Long> {
 
-    long countByStatutVehicule(StatutVehicule statut);
+    long countByEntreprise(Entreprise entreprise);
+    long countByStatutVehiculeAndEntreprise(StatutVehicule statut, Entreprise entreprise);
 
     List<Vehicule> findByEntreprise(Entreprise entreprise);
+    Page<Vehicule> findByEntreprise(Entreprise entreprise, Pageable pageable);
 
-    Page<Vehicule> findByStatutVehicule(StatutVehicule statut, Pageable pageable);
+    Page<Vehicule> findByStatutVehiculeAndEntreprise(StatutVehicule statut, Entreprise entreprise, Pageable pageable);
 
-    @Query(value = "SELECT v FROM Vehicule v WHERE " +
+    @Query(value = "SELECT v FROM Vehicule v WHERE v.entreprise = :entreprise AND (" +
             "LOWER(v.marque) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
             "LOWER(v.model) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
-            "LOWER(v.immatriculation) LIKE LOWER(CONCAT('%', :search, '%'))",
-           countQuery = "SELECT count(v) FROM Vehicule v WHERE " +
+            "LOWER(v.immatriculation) LIKE LOWER(CONCAT('%', :search, '%')))",
+            countQuery = "SELECT count(v) FROM Vehicule v WHERE v.entreprise = :entreprise AND (" +
             "LOWER(v.marque) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
             "LOWER(v.model) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
-            "LOWER(v.immatriculation) LIKE LOWER(CONCAT('%', :search, '%'))")
-    Page<Vehicule> findBySearch(@Param("search") String search, Pageable pageable);
+            "LOWER(v.immatriculation) LIKE LOWER(CONCAT('%', :search, '%')))")
+    Page<Vehicule> findBySearch(@Param("search") String search, @Param("entreprise") Entreprise entreprise, Pageable pageable);
 
-    @Query(value = "SELECT v FROM Vehicule v WHERE " +
+    @Query(value = "SELECT v FROM Vehicule v WHERE v.entreprise = :entreprise AND " +
             "(LOWER(v.marque) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
             "LOWER(v.model) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
             "LOWER(v.immatriculation) LIKE LOWER(CONCAT('%', :search, '%'))) AND " +
             "v.statutVehicule = :statut",
-           countQuery = "SELECT count(v) FROM Vehicule v WHERE " +
+            countQuery = "SELECT count(v) FROM Vehicule v WHERE v.entreprise = :entreprise AND " +
             "(LOWER(v.marque) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
             "LOWER(v.model) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
             "LOWER(v.immatriculation) LIKE LOWER(CONCAT('%', :search, '%'))) AND " +
             "v.statutVehicule = :statut")
     Page<Vehicule> findBySearchAndStatut(@Param("search") String search,
                                          @Param("statut") StatutVehicule statut,
+                                         @Param("entreprise") Entreprise entreprise,
                                          Pageable pageable);
 }

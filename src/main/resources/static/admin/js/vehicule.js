@@ -54,6 +54,7 @@ function authHeaders() {
 
 /* ───── VARIABLES GLOBALES ───── */
 let currentPage = 0, pageSize = 6, currentSearch = '', currentStatut = '';
+let idToDelete = null;
 
 /* ───── INITIALISATION ───── */
 document.addEventListener('DOMContentLoaded', () => {
@@ -90,12 +91,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: formData
             });
             if (res.ok) {
-                alert('Véhicule ajouté');
                 bootstrap.Modal.getInstance(document.getElementById('addVehicleModal')).hide();
                 chargerVehicules();
                 chargerStats();
                 e.target.reset();
                 document.getElementById('imagePreviewContainer').innerHTML = '';
+                showSuccess('Véhicule ajouté', 'Le nouveau véhicule a été enregistré avec succès.');
             } else {
                 const err = await res.json();
                 alert(err.error || 'Erreur');
@@ -120,10 +121,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: formData
             });
             if (res.ok) {
-                alert('Modifications enregistrées');
                 bootstrap.Modal.getInstance(document.getElementById('editVehicleModal')).hide();
                 chargerVehicules();
                 chargerStats();
+                showSuccess('Modification réussie', 'Les informations du véhicule ont été mises à jour.');
             } else {
                 const err = await res.json();
                 alert(err.error || 'Erreur');
@@ -132,6 +133,25 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.innerHTML = 'Enregistrer les modifications';
         btn.disabled = false;
     });
+
+    // Confirmation suppression
+    const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+    if (confirmDeleteBtn) {
+        confirmDeleteBtn.addEventListener('click', async () => {
+            if (!idToDelete) return;
+            const res = await fetch(`/api/vehicules/${idToDelete}`, { method: 'DELETE', headers: authHeaders() });
+            if (res.ok) {
+                bootstrap.Modal.getInstance(document.getElementById('confirmDeleteModal')).hide();
+                chargerVehicules();
+                chargerStats();
+                showSuccess('Supprimé', 'Le véhicule a été supprimé.');
+            } else {
+                const err = await res.json();
+                alert(err.error || 'Erreur');
+            }
+            idToDelete = null;
+        });
+    }
 });
 
 /* ───── STATISTIQUES ───── */
@@ -143,6 +163,13 @@ async function chargerStats() {
     document.getElementById('kpi-dispo-veh').textContent = s.disponible || 0;
     document.getElementById('kpi-mission-veh').textContent = s.mission || 0;
     document.getElementById('kpi-maintenance-veh').textContent = s.maintenance || 0;
+}
+
+/* ───── HELPERS MODALS ───── */
+function showSuccess(title, message) {
+    document.getElementById('successTitle').textContent = title;
+    document.getElementById('successMessage').textContent = message;
+    new bootstrap.Modal(document.getElementById('successModal')).show();
 }
 
 /* ───── LISTE VÉHICULES ───── */
@@ -216,10 +243,9 @@ function afficherPagination(page) {
 
 /* ───── SUPPRESSION ───── */
 async function supprimerVehicule(id, immat) {
-    if (!confirm(`Supprimer le véhicule ${immat} ?`)) return;
-    const res = await fetch(`/api/vehicules/${id}`, { method: 'DELETE', headers: authHeaders() });
-    if (res.ok) { chargerVehicules(); chargerStats(); }
-    else { const err = await res.json(); alert(err.error || 'Erreur'); }
+    idToDelete = id;
+    document.getElementById('deleteConfirmText').textContent = `Voulez-vous vraiment supprimer définitivement le véhicule ${immat} ?`;
+    new bootstrap.Modal(document.getElementById('confirmDeleteModal')).show();
 }
 
 /* ───── MODIFICATION ───── */

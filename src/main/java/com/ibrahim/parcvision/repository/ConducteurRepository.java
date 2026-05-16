@@ -15,34 +15,42 @@ import java.util.List;
 @Repository
 public interface ConducteurRepository extends JpaRepository<Conducteur, Long> {
 
-    long countByStatut(Statut statut);
+    long countByStatutAndUtilisateurEntreprise(Statut statut, Entreprise entreprise);
+    long countByUtilisateurEntreprise(Entreprise entreprise);
 
     List<Conducteur> findByUtilisateurEntreprise(Entreprise entreprise);
 
-    // Recherche par nom, prénom, email (sur l'utilisateur lié)
+    // Recherche par nom, prénom, email (sur l'utilisateur lié) + Entreprise
     @Query(value = "SELECT c FROM Conducteur c JOIN c.utilisateur u WHERE " +
+            "u.entreprise = :entreprise AND (" +
             "LOWER(u.nom) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
             "LOWER(u.prenom) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
-            "LOWER(u.email) LIKE LOWER(CONCAT('%', :search, '%'))",
-           countQuery = "SELECT COUNT(c) FROM Conducteur c JOIN c.utilisateur u WHERE " +
+            "LOWER(u.email) LIKE LOWER(CONCAT('%', :search, '%')))",
+            countQuery = "SELECT COUNT(c) FROM Conducteur c JOIN c.utilisateur u WHERE " +
+            "u.entreprise = :entreprise AND (" +
             "LOWER(u.nom) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
             "LOWER(u.prenom) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
-            "LOWER(u.email) LIKE LOWER(CONCAT('%', :search, '%'))")
-    Page<Conducteur> findBySearch(@Param("search") String search, Pageable pageable);
+            "LOWER(u.email) LIKE LOWER(CONCAT('%', :search, '%')))")
+    Page<Conducteur> findBySearch(@Param("search") String search, @Param("entreprise") Entreprise entreprise, Pageable pageable);
 
-    // Recherche + filtre statut
+    // Recherche + filtre statut + Entreprise
     @Query(value = "SELECT c FROM Conducteur c JOIN c.utilisateur u WHERE " +
+            "u.entreprise = :entreprise AND " +
             "(LOWER(u.nom) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
             "LOWER(u.prenom) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
             "LOWER(u.email) LIKE LOWER(CONCAT('%', :search, '%'))) AND c.statut = :statut",
-           countQuery = "SELECT COUNT(c) FROM Conducteur c JOIN c.utilisateur u WHERE " +
+            countQuery = "SELECT COUNT(c) FROM Conducteur c JOIN c.utilisateur u WHERE " +
+            "u.entreprise = :entreprise AND " +
             "(LOWER(u.nom) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
             "LOWER(u.prenom) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
             "LOWER(u.email) LIKE LOWER(CONCAT('%', :search, '%'))) AND c.statut = :statut")
     Page<Conducteur> findBySearchAndStatut(@Param("search") String search,
                                            @Param("statut") Statut statut,
+                                           @Param("entreprise") Entreprise entreprise,
                                            Pageable pageable);
 
-    // Filtre par statut seul
-    Page<Conducteur> findByStatut(Statut statut, Pageable pageable);
+    // Filtre par statut seul + Entreprise
+    Page<Conducteur> findByStatutAndUtilisateurEntreprise(Statut statut, Entreprise entreprise, Pageable pageable);
+
+    Page<Conducteur> findByUtilisateurEntreprise(Entreprise entreprise, Pageable pageable);
 }

@@ -2,6 +2,7 @@ package com.ibrahim.parcvision.service;
 
 import com.ibrahim.parcvision.dao.ConducteurRequestDao;
 import com.ibrahim.parcvision.entity.Conducteur;
+import com.ibrahim.parcvision.entity.Entreprise;
 import com.ibrahim.parcvision.entity.Utilisateur;
 import com.ibrahim.parcvision.enums.Role;
 import com.ibrahim.parcvision.enums.Statut;
@@ -79,15 +80,16 @@ public class ConducteurService {
     @Transactional(readOnly = true)
     public Page<Conducteur> listerConducteurs(int page, int size, String search, String statut) {
         Pageable pageable = PageRequest.of(page, size);
+        Entreprise entreprise = getCurrentEntreprise();
 
         if (search != null && !search.isBlank() && statut != null && !statut.isBlank()) {
-            return conducteurRepository.findBySearchAndStatut(search, Statut.valueOf(statut.toUpperCase()), pageable);
+            return conducteurRepository.findBySearchAndStatut(search, Statut.valueOf(statut.toUpperCase()), entreprise, pageable);
         } else if (search != null && !search.isBlank()) {
-            return conducteurRepository.findBySearch(search, pageable);
+            return conducteurRepository.findBySearch(search, entreprise, pageable);
         } else if (statut != null && !statut.isBlank()) {
-            return conducteurRepository.findByStatut(Statut.valueOf(statut.toUpperCase()), pageable);
+            return conducteurRepository.findByStatutAndUtilisateurEntreprise(Statut.valueOf(statut.toUpperCase()), entreprise, pageable);
         } else {
-            return conducteurRepository.findAll(pageable);
+            return conducteurRepository.findByUtilisateurEntreprise(entreprise, pageable);
         }
     }
 
@@ -173,12 +175,23 @@ public class ConducteurService {
     // ---------- STATISTIQUES ----------
     @Transactional(readOnly = true)
     public Map<String, Long> getStats() {
+        Entreprise entreprise = getCurrentEntreprise();
         Map<String, Long> stats = new HashMap<>();
-        stats.put("total", conducteurRepository.count());
-        stats.put("disponible", conducteurRepository.countByStatut(Statut.DISPONIBLE));
-        stats.put("mission", conducteurRepository.countByStatut(Statut.EN_MISSION));
-        stats.put("conge", conducteurRepository.countByStatut(Statut.EN_CONGE));
+        stats.put("total", conducteurRepository.countByUtilisateurEntreprise(entreprise));
+        stats.put("disponible", conducteurRepository.countByStatutAndUtilisateurEntreprise(Statut.DISPONIBLE, entreprise));
+        stats.put("mission", conducteurRepository.countByStatutAndUtilisateurEntreprise(Statut.EN_MISSION, entreprise));
+        stats.put("conge", conducteurRepository.countByStatutAndUtilisateurEntreprise(Statut.EN_CONGE, entreprise));
         return stats;
+    }
+
+    private Entreprise getCurrentEntreprise() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Utilisateur user = utilisateurRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+        if (user.getEntreprise() == null) {
+            throw new RuntimeException("L'utilisateur n'est rattaché à aucune entreprise");
+        }
+        return user.getEntreprise();
     }
 
     // ---------- MÉTHODE UTILITAIRE ----------

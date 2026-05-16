@@ -1,6 +1,7 @@
 package com.ibrahim.parcvision.service;
 
 import com.ibrahim.parcvision.dao.VehiculeRequestDao;
+import com.ibrahim.parcvision.entity.Entreprise;
 import com.ibrahim.parcvision.entity.Utilisateur;
 import com.ibrahim.parcvision.entity.Vehicule;
 import com.ibrahim.parcvision.enums.StatutVehicule;
@@ -92,15 +93,16 @@ public class VehiculeService {
     @Transactional(readOnly = true)
     public Page<Vehicule> listerVehicules(int page, int size, String search, String statut) {
         Pageable pageable = PageRequest.of(page, size);
+        Entreprise entreprise = getCurrentEntreprise();
 
         if (search != null && !search.isBlank() && statut != null && !statut.isBlank()) {
-            return vehiculeRepository.findBySearchAndStatut(search, StatutVehicule.valueOf(statut.toUpperCase()), pageable);
+            return vehiculeRepository.findBySearchAndStatut(search, StatutVehicule.valueOf(statut.toUpperCase()), entreprise, pageable);
         } else if (search != null && !search.isBlank()) {
-            return vehiculeRepository.findBySearch(search, pageable);
+            return vehiculeRepository.findBySearch(search, entreprise, pageable);
         } else if (statut != null && !statut.isBlank()) {
-            return vehiculeRepository.findByStatutVehicule(StatutVehicule.valueOf(statut.toUpperCase()), pageable);
+            return vehiculeRepository.findByStatutVehiculeAndEntreprise(StatutVehicule.valueOf(statut.toUpperCase()), entreprise, pageable);
         } else {
-            return vehiculeRepository.findAll(pageable);
+            return vehiculeRepository.findByEntreprise(entreprise, pageable);
         }
     }
 
@@ -186,12 +188,23 @@ public class VehiculeService {
 
     @Transactional(readOnly = true)
     public Map<String, Long> getStats() {
+        Entreprise entreprise = getCurrentEntreprise();
         Map<String, Long> stats = new HashMap<>();
-        stats.put("total", vehiculeRepository.count());
-        stats.put("disponible", vehiculeRepository.countByStatutVehicule(StatutVehicule.DISPONIBLE));
-        stats.put("mission", vehiculeRepository.countByStatutVehicule(StatutVehicule.EN_MISSION));
-        stats.put("maintenance", vehiculeRepository.countByStatutVehicule(StatutVehicule.EN_MAINTENANCE));
+        stats.put("total", vehiculeRepository.countByEntreprise(entreprise));
+        stats.put("disponible", vehiculeRepository.countByStatutVehiculeAndEntreprise(StatutVehicule.DISPONIBLE, entreprise));
+        stats.put("mission", vehiculeRepository.countByStatutVehiculeAndEntreprise(StatutVehicule.EN_MISSION, entreprise));
+        stats.put("maintenance", vehiculeRepository.countByStatutVehiculeAndEntreprise(StatutVehicule.EN_MAINTENANCE, entreprise));
         return stats;
+    }
+
+    private Entreprise getCurrentEntreprise() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Utilisateur user = utilisateurRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+        if (user.getEntreprise() == null) {
+            throw new RuntimeException("L'utilisateur n'est rattaché à aucune entreprise");
+        }
+        return user.getEntreprise();
     }
 
     public List<Vehicule> findAll() {

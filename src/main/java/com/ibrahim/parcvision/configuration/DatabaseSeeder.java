@@ -137,8 +137,9 @@ public class DatabaseSeeder implements CommandLineRunner {
                 c.setUtilisateur(u);
                 c.setNumeroPermis(faker.idNumber().valid());
                 c.setDateValiditePermis(LocalDate.now().plusYears(random.nextInt(10) + 1));
-                c.setPhotoProfileUrl("https://i.pravatar.cc/150?u=" + u.getEmail());
-                conducteurs.add(conducteurRepository.save(c));
+                c.setPhotoProfileUrl(null);
+                c.setStatut(Statut.DISPONIBLE);
+                conducteurs.add( conducteurRepository.save(c));
             }
 
             // Seed Missions
