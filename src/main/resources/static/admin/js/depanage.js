@@ -98,6 +98,32 @@ function fetchDepannages(page = 0) {
 
 fetchDepannages(0);
 
+async function loadVehicles() {
+    try {
+        const res = await fetch('http://localhost:8080/api/vehicules/all');
+        if (!res.ok) throw new Error('Erreur chargement véhicules');
+        const vehicules = await res.json();
+        
+        const selects = ['addVehiculeSelect', 'e_veh'];
+        selects.forEach(id => {
+            const select = document.getElementById(id);
+            if (select) {
+                select.innerHTML = '<option value="">Sélectionner un véhicule</option>';
+                vehicules.forEach(v => {
+                    const opt = document.createElement('option');
+                    opt.value = v.id;
+                    opt.textContent = `${v.immatriculation} (${v.marque} ${v.model})`;
+                    select.appendChild(opt);
+                });
+            }
+        });
+    } catch (err) {
+        console.error('Erreur chargement véhicules:', err);
+    }
+}
+
+loadVehicles();
+
 // Search and Filter Listeners
 document.querySelector('.search-bar input').addEventListener('input', () => fetchDepannages(0));
 document.querySelector('select.form-select-custom').addEventListener('change', () => fetchDepannages(0));
@@ -248,14 +274,17 @@ function updateDepanage() {
 }
 
 function saveDepanage() {
-    // Basic implementation for add
+    const vehiculeId = document.getElementById('addVehiculeSelect').value;
+    if (!vehiculeId) {
+        alert("Veuillez sélectionner un véhicule");
+        return;
+    }
+
     const body = {
         statut: document.querySelector('#addDepanageModal select').value,
         lieuPanne: document.querySelector('#addDepanageModal input[type="text"]').value,
         descriptionPanne: document.querySelector('#addDepanageModal textarea').value,
-        // vehicule needs ID, but HTML select is missing values. 
-        // For now, let's assume first vehicle ID 1 if not specified.
-        vehicule: { id: 1 } 
+        vehicule: { id: parseInt(vehiculeId) } 
     };
 
     fetch(`${API_BASE}/add`, {

@@ -208,7 +208,8 @@ public class VehiculeService {
     }
 
     public List<Vehicule> findAll() {
-        return vehiculeRepository.findAll();
+        Entreprise entreprise = getCurrentEntreprise();
+        return vehiculeRepository.findByEntreprise(entreprise);
     }
 
     public Vehicule save(Vehicule vehicule) {

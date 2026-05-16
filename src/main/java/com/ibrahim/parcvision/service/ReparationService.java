@@ -1,21 +1,20 @@
 package com.ibrahim.parcvision.service;
 
 
-import com.ibrahim.parcvision.controller.ReparationController;
-import com.ibrahim.parcvision.entity.Accident;
+import com.ibrahim.parcvision.entity.Entreprise;
 import com.ibrahim.parcvision.entity.Reparation;
-import com.ibrahim.parcvision.repository.AccidentRepository;
+import com.ibrahim.parcvision.entity.Utilisateur;
 import com.ibrahim.parcvision.repository.ReparationRepository;
+import com.ibrahim.parcvision.repository.UtilisateurRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -23,48 +22,54 @@ public class ReparationService {
 
     @Autowired
     private ReparationRepository reparationRepository;
-    public  ReparationService(ReparationRepository reparationRepository) {
+
+    @Autowired
+    private UtilisateurRepository utilisateurRepository;
+
+    public ReparationService(ReparationRepository reparationRepository) {
         this.reparationRepository = reparationRepository;
     }
 
-    public long countReparation(){
-        return reparationRepository.count();
+    public long countReparation() {
+        return reparationRepository.countByVehiculeEntreprise(getCurrentEntreprise());
     }
 
-    public long countByEtat(String etat){
-        return reparationRepository.countByStatut(etat);
+    public long countByEtat(String etat) {
+        return reparationRepository.countByStatutAndVehiculeEntreprise(etat, getCurrentEntreprise());
     }
 
-    public double BudgetTotal(){
-        Double result = reparationRepository.SumBudget();
+    public double BudgetTotal() {
+        Double result = reparationRepository.SumBudget(getCurrentEntreprise());
         return result != null ? result : 0.0;
     }
 
-    //Serach
+    //Search
     public Page<Reparation> search(String immat, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("dateIntervention").descending());
-        return reparationRepository.search(immat, pageable);
+        return reparationRepository.search(immat, getCurrentEntreprise(), pageable);
     }
+
     //Afficher d apres les statut !
     public Page<Reparation> findByStatut(String statut, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("dateIntervention").descending());
-        return reparationRepository.findByStatut(statut, pageable);
+        return reparationRepository.findByStatutAndVehiculeEntreprise(statut, getCurrentEntreprise(), pageable);
     }
+
     //Affichage la Liste des reparations !
     public Page<Reparation> findAll(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("dateIntervention").descending());
-        return reparationRepository.findAll(pageable);
+        return reparationRepository.findByVehiculeEntreprise(getCurrentEntreprise(), pageable);
     }
 
 
     //button supp
-    public void Delete(long id){
-         reparationRepository.deleteById(id);
+    public void Delete(long id) {
+        reparationRepository.deleteById(id);
     }
 
     //Pour button d affichage des informations ne necessite pas une method dans service
     //button modifier:
-    public Reparation updateReparation(Long id, Map<String, Object> updates){
+    public Reparation updateReparation(Long id, Map<String, Object> updates) {
         Reparation reparation = reparationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Réparation non trouvée"));
 
@@ -85,9 +90,20 @@ public class ReparationService {
 
         return reparationRepository.save(reparation);
     }
+
     //Ajouter une reparation :
-    public Reparation saveReparation(Reparation reparation){
+    public Reparation saveReparation(Reparation reparation) {
         return reparationRepository.save(reparation);
+    }
+
+    private Entreprise getCurrentEntreprise() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Utilisateur user = utilisateurRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+        if (user.getEntreprise() == null) {
+            throw new RuntimeException("L'utilisateur n'est rattaché à aucune entreprise");
+        }
+        return user.getEntreprise();
     }
 
 }

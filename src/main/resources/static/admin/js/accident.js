@@ -179,8 +179,53 @@ function fetchAccidents(page = 0) {
         .catch(err => console.error("Error fetching accidents:", err));
 }
 
+async function loadVehicles() {
+    try {
+        const res = await fetch('http://localhost:8080/api/vehicules/all');
+        if (!res.ok) throw new Error('Erreur chargement véhicules');
+        const vehicules = await res.json();
+        
+        const select = document.getElementById('vehicule');
+        if (select) {
+            select.innerHTML = '<option value="">Sélectionnez un véhicule</option>';
+            vehicules.forEach(v => {
+                const opt = document.createElement('option');
+                opt.value = v.id;
+                opt.textContent = `${v.immatriculation} (${v.marque} ${v.model})`;
+                select.appendChild(opt);
+            });
+        }
+    } catch (err) {
+        console.error('Erreur chargement véhicules:', err);
+    }
+}
+
+async function loadDrivers() {
+    try {
+        const res = await fetch('http://localhost:8080/api/conducteurs/all');
+        if (!res.ok) throw new Error('Erreur chargement conducteurs');
+        const conducteurs = await res.json();
+        
+        const select = document.getElementById('conducteur');
+        if (select) {
+            select.innerHTML = '<option value="">Sélectionnez un conducteur</option>';
+            conducteurs.forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c.id;
+                const user = c.utilisateur || {};
+                opt.textContent = `${user.nom} ${user.prenom}`;
+                select.appendChild(opt);
+            });
+        }
+    } catch (err) {
+        console.error('Erreur chargement conducteurs:', err);
+    }
+}
+
 // Initial load
 fetchAccidents(0);
+loadVehicles();
+loadDrivers();
 
 // Search listener
 document.getElementById('searchInput').addEventListener('input', function () {

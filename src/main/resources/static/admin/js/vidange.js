@@ -41,7 +41,7 @@ async function loadVidanges() {
 
 async function loadVehicules() {
     try {
-        const response = await fetch('/api/vidanges/vehicules');
+        const response = await fetch('http://localhost:8080/api/vehicules/all');
         if (response.ok) {
             vehiculesData = await response.json();
             populateVehiculeDropdowns();

@@ -43,6 +43,11 @@ public class ConducteurController {
         return ResponseEntity.ok(conducteurs);
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<java.util.List<Conducteur>> findAll() {
+        return ResponseEntity.ok(conducteurService.findAll());
+    }
+
     // 3. Statistiques rapides (KPI)
     @GetMapping("/stats")
     public ResponseEntity<Map<String, Long>> getStats() {

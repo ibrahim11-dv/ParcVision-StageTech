@@ -184,6 +184,12 @@ public class ConducteurService {
         return stats;
     }
 
+    @Transactional(readOnly = true)
+    public List<Conducteur> findAll() {
+        Entreprise entreprise = getCurrentEntreprise();
+        return conducteurRepository.findByUtilisateurEntreprise(entreprise);
+    }
+
     private Entreprise getCurrentEntreprise() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Utilisateur user = utilisateurRepository.findByEmail(email)

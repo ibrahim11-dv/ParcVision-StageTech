@@ -379,7 +379,7 @@ if (window.self !== window.top || new URLSearchParams(window.location.search).ge
 
     async function loadVehicles() {
         try {
-            const res = await fetch('http://localhost:8080/api/vehicules');
+            const res = await fetch('http://localhost:8080/api/vehicules/all');
             if (!res.ok) throw new Error('Erreur chargement véhicules');
             const vehicules = await res.json();
             
