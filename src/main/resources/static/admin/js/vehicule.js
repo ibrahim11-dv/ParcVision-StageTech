@@ -1,5 +1,22 @@
 // vehicule.js – CRUD véhicules + stats + upload multiples + thème (harmonisé conducteur)
 
+/* ───── GESTION DES MODALS PERSONNALISÉES ───── */
+function openModal(id) {
+    const modal = document.getElementById(id);
+    if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeModal(id) {
+    const modal = document.getElementById(id);
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+}
+
 /* ───── GESTION DU THÈME SOMBRE (identique conducteur) ───── */
 function initTheme() {
     const saved = localStorage.getItem('theme');
@@ -59,6 +76,15 @@ let idToDelete = null;
 /* ───── INITIALISATION ───── */
 document.addEventListener('DOMContentLoaded', () => {
     initTheme();
+
+    // Fermeture des modals en cliquant sur l'overlay
+    document.querySelectorAll('.custom-modal-overlay').forEach(overlay => {
+        overlay.addEventListener('click', function (e) {
+            if (e.target === this) {
+                closeModal(this.id);
+            }
+        });
+    });
 
     chargerStats();
     chargerVehicules();
@@ -141,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!idToDelete) return;
             const res = await fetch(`/api/vehicules/${idToDelete}`, { method: 'DELETE', headers: authHeaders() });
             if (res.ok) {
-                bootstrap.Modal.getInstance(document.getElementById('confirmDeleteModal')).hide();
+                closeModal('confirmDeleteModal');
                 chargerVehicules();
                 chargerStats();
                 showSuccess('Supprimé', 'Le véhicule a été supprimé.');
@@ -245,7 +271,7 @@ function afficherPagination(page) {
 async function supprimerVehicule(id, immat) {
     idToDelete = id;
     document.getElementById('deleteConfirmText').textContent = `Voulez-vous vraiment supprimer définitivement le véhicule ${immat} ?`;
-    new bootstrap.Modal(document.getElementById('confirmDeleteModal')).show();
+    openModal('confirmDeleteModal');
 }
 
 /* ───── MODIFICATION ───── */

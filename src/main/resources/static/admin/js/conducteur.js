@@ -2,6 +2,23 @@
 // conducteur.js – CRUD complet + stats + upload + thème
 // ══════════════════════════════════════════
 
+/* ───── GESTION DES MODALS PERSONNALISÉES ───── */
+function openModal(id) {
+    const modal = document.getElementById(id);
+    if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeModal(id) {
+    const modal = document.getElementById(id);
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+}
+
 /* ───── GESTION DU THÈME SOMBRE ───── */
 function initTheme() {
     const saved = localStorage.getItem('theme');
@@ -112,6 +129,15 @@ let currentStatut = '';
 /* ───── INITIALISATION AU CHARGEMENT ───── */
 document.addEventListener('DOMContentLoaded', () => {
     initTheme();
+
+    // Fermeture des modals en cliquant sur l'overlay
+    document.querySelectorAll('.custom-modal-overlay').forEach(overlay => {
+        overlay.addEventListener('click', function (e) {
+            if (e.target === this) {
+                closeModal(this.id);
+            }
+        });
+    });
 
     // Upload zone pour l'ajout
     setupUploadArea(
@@ -372,8 +398,7 @@ async function supprimerConducteur(id, nom) {
     idToDelete = id;
     const textEl = document.getElementById('deleteConfirmText');
     if (textEl) textEl.textContent = `Voulez-vous vraiment supprimer définitivement ${nom} ?`;
-    const modal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
-    modal.show();
+    openModal('confirmDeleteModal');
 }
 
 // Handler pour le bouton de confirmation dans le modal
@@ -382,8 +407,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (confirmBtn) {
         confirmBtn.addEventListener('click', async () => {
             if (!idToDelete) return;
-            const modalEl = document.getElementById('confirmDeleteModal');
-            const modal = bootstrap.Modal.getInstance(modalEl);
             
             try {
                 const res = await fetch(`/api/conducteurs/${idToDelete}`, {
@@ -391,7 +414,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     headers: { 'Authorization': 'Bearer ' + getToken() }
                 });
                 if (res.ok) {
-                    if (modal) modal.hide();
+                    closeModal('confirmDeleteModal');
                     chargerConducteurs();
                     chargerStats();
                     showSuccess('Supprimé', 'Le conducteur a été supprimé.');

@@ -159,17 +159,25 @@ if (window.self !== window.top || new URLSearchParams(window.location.search).ge
         openModal('viewRepairModal');
     }
     //button de suppression :
+    let repairToDelete = null;
+
     function deleteReparation(id) {
-        if (confirm('Voulez-vous vraiment supprimer cette réparation ?')) {
-            fetch('/admin/reparation/delete/' + id, {
-                method: 'DELETE'
+        repairToDelete = id;
+        openModal('deleteRepairModal');
+    }
+
+    function submitDeleteRepair() {
+        if (!repairToDelete) return;
+        fetch('/admin/reparation/delete/' + repairToDelete, {
+            method: 'DELETE'
+        })
+            .then(res => {
+                if (!res.ok) throw new Error('Erreur suppression');
+                closeModal('deleteRepairModal');
+                fetchReparations(0);
+                fetchStats();
             })
-                .then(res => {
-                    if (!res.ok) throw new Error('Erreur suppression');
-                    fetchReparations(0);
-                })
-                .catch(err => alert('Erreur : ' + err.message));
-        }
+            .catch(err => alert('Erreur : ' + err.message));
     }
     //button de modification :
 //methode openEditModel et subEditModel !

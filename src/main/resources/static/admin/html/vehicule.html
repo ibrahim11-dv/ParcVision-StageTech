@@ -453,20 +453,21 @@
 </div>
 
 <!-- Modal Confirmation Suppression -->
-<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" style="max-width: 400px;">
-        <div class="modal-content border-0 shadow-lg">
-            <div class="modal-body text-center p-4">
-                <div class="mb-3">
-                    <i class="bi bi-exclamation-octagon text-danger" style="font-size: 3rem;"></i>
-                </div>
-                <h5 class="fw-bold mb-2">Confirmer la suppression</h5>
-                <p class="text-muted mb-4" id="deleteConfirmText">Voulez-vous vraiment supprimer ce véhicule ? Cette action est irréversible.</p>
-                <div class="d-flex gap-2 justify-content-center">
-                    <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">Annuler</button>
-                    <button type="button" class="btn btn-danger px-4" id="confirmDeleteBtn">Supprimer</button>
-                </div>
+<div class="custom-modal-overlay" id="confirmDeleteModal">
+    <div class="custom-modal">
+        <div class="custom-modal-header">
+            <h5 class="custom-modal-title">Confirmer la suppression</h5>
+            <button type="button" class="custom-modal-close" onclick="closeModal('confirmDeleteModal')">&times;</button>
+        </div>
+        <div class="custom-modal-body text-center">
+            <div class="mb-3">
+                <i class="bi bi-exclamation-octagon text-danger" style="font-size: 3rem;"></i>
             </div>
+            <p class="text-muted" id="deleteConfirmText">Voulez-vous vraiment supprimer ce véhicule ? Cette action est irréversible.</p>
+        </div>
+        <div class="custom-modal-footer">
+            <button type="button" class="btn btn-light px-4" onclick="closeModal('confirmDeleteModal')">Annuler</button>
+            <button type="button" class="btn btn-danger px-4" id="confirmDeleteBtn">Supprimer</button>
         </div>
     </div>
 </div>

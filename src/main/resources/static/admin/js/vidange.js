@@ -148,7 +148,7 @@ function renderVidangesTable(data) {
                 <div style="display:flex;gap:5px">
                     <button class="btn-icon" title="Voir" onclick="viewVidangeById(${v.id})"><i class="bi bi-eye"></i></button>
                     <button class="btn-icon" title="Modifier" onclick="editVidangeById(${v.id})"><i class="bi bi-pencil-square"></i></button>
-                    <button class="btn-icon" title="Supprimer" onclick="deleteVidangeById(${v.id})"><i class="bi bi-trash"></i></button>
+                    <button class="btn-icon" title="Supprimer" style="color: #dc3545 !important;" onclick="deleteVidangeById(${v.id})"><i class="bi bi-trash"></i></button>
                 </div>
             </td>
         `;
@@ -312,27 +312,27 @@ async function updateOilChange() {
 }
 
 // ── Delete Vidange ──
-async function deleteVidangeById(id) {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer cette vidange ?')) return;
-    try {
-        const response = await fetch(`/api/vidanges/${id}`, {
-            method: 'DELETE'
-        });
-        if (response.ok) {
-            await loadVidanges();
-        } else {
-            alert('Erreur lors de la suppression');
-        }
-    } catch (err) {
-        console.error(err);
-        alert('Erreur lors de la suppression');
-    }
+let vidangeToDelete = null;
+
+function deleteVidangeById(id) {
+    vidangeToDelete = id;
+    openModal('deleteVidangeModal');
 }
 
-function deleteOilChange() {
-    if (currentEditId) {
-        deleteVidangeById(currentEditId);
-    }
+function submitDeleteVidange() {
+    if (!vidangeToDelete) return;
+    fetch(`/api/vidanges/${vidangeToDelete}`, {
+        method: 'DELETE'
+    })
+    .then(res => {
+        if (!res.ok) throw new Error('Erreur lors de la suppression');
+        closeModal('deleteVidangeModal');
+        loadVidanges();
+    })
+    .catch(err => {
+        console.error(err);
+        alert('Erreur lors de la suppression');
+    });
 }
 
 // ── Search & Filter ──

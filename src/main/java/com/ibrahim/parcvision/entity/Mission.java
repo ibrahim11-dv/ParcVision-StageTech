@@ -78,13 +78,14 @@ public class Mission {
     private Vehicule vehicule;
 
     @OneToMany(
-            mappedBy = "mission"
+            mappedBy = "mission",
+            cascade = CascadeType.REMOVE
     )
     @JsonIgnore
     private List<PointGPS> PointGPS;
 
 
-    @OneToMany(mappedBy = "mission")
+    @OneToMany(mappedBy = "mission", cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<Colis> colis;
 

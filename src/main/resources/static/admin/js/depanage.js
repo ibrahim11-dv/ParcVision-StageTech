@@ -128,6 +128,29 @@ loadVehicles();
 document.querySelector('.search-bar input').addEventListener('input', () => fetchDepannages(0));
 document.querySelector('select.form-select-custom').addEventListener('change', () => fetchDepannages(0));
 
+// ── Delete Depannage ──
+let depannageToDelete = null;
+
+function openDeleteModal(id) {
+    depannageToDelete = id;
+    openModal('deleteDepanageModal');
+}
+
+function submitDeleteDepannage() {
+    if (!depannageToDelete) return;
+
+    fetch(`${API_BASE}/delete/${depannageToDelete}`, {
+        method: 'DELETE'
+    })
+    .then(res => {
+        if (!res.ok) throw new Error("Erreur suppression");
+        closeModal('deleteDepanageModal');
+        fetchDepannages(0);
+        fetchStats();
+    })
+    .catch(err => alert(err.message));
+}
+
 function renderTableau(data) {
     const tbody = document.querySelector('table tbody');
     tbody.innerHTML = '';
@@ -159,6 +182,7 @@ function renderTableau(data) {
                     <div style="display:flex;gap:5px">
                         <button class="btn-icon" title="Voir" onclick="openViewModal(${JSON.stringify(d).replace(/"/g, '&quot;')})"><i class="bi bi-eye"></i></button>
                         <button class="btn-icon" title="Modifier" onclick="openEditModal(${JSON.stringify(d).replace(/"/g, '&quot;')})"><i class="bi bi-pencil-square"></i></button>
+                        <button class="btn-icon" title="Supprimer" style="color: #dc3545 !important;" onclick="openDeleteModal(${d.id})"><i class="bi bi-trash"></i></button>
                     </div>
                 </td>
             </tr>

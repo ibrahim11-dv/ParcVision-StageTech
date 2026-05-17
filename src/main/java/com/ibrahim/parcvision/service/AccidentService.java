@@ -71,6 +71,10 @@ public class AccidentService {
         return accidentRepository.save(accident);
     }
 
+    public void deleteAccident(Long id) {
+        accidentRepository.deleteById(id);
+    }
+
     public Accident saveAccident(Accident accident) {
         return accidentRepository.save(accident);
     }

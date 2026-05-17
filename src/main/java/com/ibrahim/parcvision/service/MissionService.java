@@ -203,6 +203,14 @@ public class MissionService {
     }
 
     @Transactional
+    public void deleteMission(Long id) {
+        if (!missionRepository.existsById(id)) {
+            throw new RuntimeException("Mission non trouvée");
+        }
+        missionRepository.deleteById(id);
+    }
+
+    @Transactional
     public void updateMissionStatus(Long id, StatutMission status) {
         Mission mission = missionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Mission not found"));

@@ -1,3 +1,67 @@
+// ==========================================
+// Modal & Helper functions
+// ==========================================
+
+function openModal(id) {
+    const modal = document.getElementById(id);
+    if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeModal(id) {
+    const modal = document.getElementById(id);
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+}
+
+function openDeleteModal(id) {
+    missionIdToDelete = id;
+    const mission = allMissions.find(m => m.id === id);
+    const textEl = document.getElementById('deleteConfirmText');
+    if (textEl && mission) {
+        textEl.textContent = `Voulez-vous vraiment supprimer la mission ${mission.reference} ? Cette action est irréversible.`;
+    }
+    openModal('confirmDeleteModal');
+}
+
+async function submitDeleteMission() {
+    if (!missionIdToDelete) return;
+    try {
+        const response = await fetch(`/api/missions/${missionIdToDelete}`, {
+            method: 'DELETE'
+        });
+        if (response.ok) {
+            closeModal('confirmDeleteModal');
+            fetchMissions();
+            showSuccess('Mission supprimée', 'La mission a été supprimée avec succès.');
+        } else {
+            const error = await response.text();
+            alert("Erreur lors de la suppression: " + error);
+        }
+    } catch (error) {
+        console.error('Error deleting mission:', error);
+        alert("Une erreur est survenue lors de la suppression.");
+    } finally {
+        missionIdToDelete = null;
+    }
+}
+
+// Click outside modal to close
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.custom-modal-overlay').forEach(overlay => {
+        overlay.addEventListener('click', function (e) {
+            if (e.target === this) {
+                closeModal(this.id);
+            }
+        });
+    });
+});
+
+// ==========================================
 // Profile popup
 document.getElementById('profileRow').addEventListener('click', e => {
     e.stopPropagation();
@@ -54,6 +118,7 @@ let map;
 let markers = [];
 let allMissions = [];
 let missionIdToConfirm = null;
+let missionIdToDelete = null;
 
 let currentPage = 0;
 let pageSize = 6; // Standard pageSize for tables in this project
@@ -139,6 +204,7 @@ function renderMissions(missions) {
                         <button class="btn-icon" disabled><i class="bi bi-check-circle-fill text-muted"></i></button>
                     `}
                     <button class="btn-icon" title="Modifier" data-bs-toggle="modal" data-bs-target="#editMissionModal" onclick="event.stopPropagation(); prepareEdit(${mission.id})"><i class="bi bi-pencil-square text-primary"></i></button>
+                    <button class="btn-icon" title="Supprimer" style="color: #dc3545 !important;" onclick="event.stopPropagation(); openDeleteModal(${mission.id})"><i class="bi bi-trash"></i></button>
                 </div>
             </td>
         `;
@@ -334,7 +400,20 @@ window.cancelMapSelection = function () {
     if (currentModalInstance) currentModalInstance.show();
 };
 
+function showSuccess(title, message) {
+    const titleEl = document.getElementById('successTitle');
+    const msgEl = document.getElementById('successMessage');
+    if (titleEl) titleEl.textContent = title;
+    if (msgEl) msgEl.textContent = message;
+    const modal = new bootstrap.Modal(document.getElementById('successModal'));
+    modal.show();
+}
+
 document.addEventListener("DOMContentLoaded", function () {
+    const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+    if (confirmDeleteBtn) {
+        confirmDeleteBtn.addEventListener('click', submitDeleteMission);
+    }
     map = L.map('map').setView([33.5, -7.5], 6);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
 
@@ -365,8 +444,11 @@ window.prepareEdit = function (id) {
     if (!mission) return;
 
     currentEditingId = id;
+    document.getElementById('edit_mission_id').value = id;
     const modal = document.getElementById('editMissionModal');
-    modal.querySelector('.modal-title span').textContent = mission.reference;
+    const refEl = document.getElementById('edit_mission_ref');
+    if (refEl) refEl.textContent = mission.reference;
+    else modal.querySelector('.modal-title span').textContent = mission.reference;
 
     // Status
     document.getElementById('editStatutSelect').value = mission.statut;

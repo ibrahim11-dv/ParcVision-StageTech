@@ -237,6 +237,29 @@ document.getElementById('etat').addEventListener('change', function () {
     fetchAccidents(0);
 });
 
+// ── Delete Accident ──
+let accidentToDelete = null;
+
+function openDeleteModal(id) {
+    accidentToDelete = id;
+    openModal('deleteModal');
+}
+
+function submitDeleteAccident() {
+    if (!accidentToDelete) return;
+
+    fetch(`${API_BASE}/delete/${accidentToDelete}`, {
+        method: 'DELETE'
+    })
+        .then(res => {
+            if (!res.ok) throw new Error('Erreur lors de la suppression');
+            closeModal('deleteModal');
+            fetchAccidents(0);
+            fetchStats();
+        })
+        .catch(err => alert('Erreur : ' + err.message));
+}
+
 function renderTableau(data) {
     const id_tab = document.getElementById('conductors');
     id_tab.innerHTML = '';
@@ -318,6 +341,10 @@ function renderTableau(data) {
                         <button class="btn-icon" title="Modifier"
                             onclick="openEditModal(${JSON.stringify(a).replace(/"/g, '&quot;')})">
                             <i class="bi bi-pencil-square"></i>
+                        </button>
+                        <button class="btn-icon" title="Supprimer" style="color: #dc3545 !important;"
+                            onclick="openDeleteModal(${a.id})">
+                            <i class="bi bi-trash"></i>
                         </button>
                     </div>
                 </td>

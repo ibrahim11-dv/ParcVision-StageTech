@@ -397,6 +397,22 @@
     </div>
 </div>
 
+<!-- Modal Delete -->
+<div class="custom-modal-overlay" id="deleteRepairModal">
+    <div class="custom-modal" onclick="event.stopPropagation()" style="max-width:400px;">
+        <div class="custom-modal-header">
+            <h3 class="custom-modal-title">Supprimer cette réparation</h3>
+        </div>
+        <div class="custom-modal-body">
+            <p>Êtes-vous sûr de vouloir supprimer cette réparation ? Cette action est irréversible.</p>
+        </div>
+        <div class="custom-modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal('deleteRepairModal')">Annuler</button>
+            <button class="btn btn-danger" onclick="submitDeleteRepair()">Supprimer</button>
+        </div>
+    </div>
+</div>
+
 <script src="../js/reparation.js"></script>
 <script src="../js/logout.js"></script>
 <script src="../js/navbarInfo.js"></script>

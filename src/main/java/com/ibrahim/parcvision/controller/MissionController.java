@@ -89,6 +89,16 @@ public class MissionController {
         }
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteMission(@PathVariable Long id) {
+        try {
+            missionService.deleteMission(id);
+            return ResponseEntity.ok().body("Mission deleted successfully");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Failed to delete mission: " + e.getMessage());
+        }
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<?> updateMission(
             @PathVariable Long id,

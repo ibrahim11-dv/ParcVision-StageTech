@@ -57,6 +57,12 @@ public class AccidentController {
         return ResponseEntity.ok(accidentService.updateAccident(id, updates));
     }
 
+    @DeleteMapping("/admin/delete/{id}")
+    public ResponseEntity<Void> deleteAccident(@PathVariable Long id) {
+        accidentService.deleteAccident(id);
+        return ResponseEntity.noContent().build();
+    }
+
     @PostMapping("/admin/Add")
     public Accident AddAccident(@RequestBody Accident accident){
         return accidentService.saveAccident(accident);
