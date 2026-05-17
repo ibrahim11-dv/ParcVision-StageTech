@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Parc Auto — Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
@@ -428,6 +429,147 @@
         .nav-item:nth-child(9)  { animation-delay: .27s; }
         .nav-item:nth-child(10) { animation-delay: .30s; }
 
+        /* ── DASHBOARD STYLES ── */
+        .page {
+            flex: 1; 
+            padding: 40px;
+            display: block; /* Surcharge du flex original pour le dashboard */
+            overflow-y: auto;
+            height: 100vh;
+        }
+
+        .dashboard-header {
+            margin-bottom: 30px;
+        }
+        
+        .dashboard-header h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+        
+        .dashboard-header p {
+            color: var(--gray-400);
+            font-size: 0.95rem;
+            margin-top: 5px;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+            width: 100%;
+            margin-bottom: 40px;
+        }
+
+        .kpi-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+            border-color: rgba(34,34,177,0.15);
+        }
+
+        .kpi-card:hover::before {
+            opacity: 1;
+        }
+
+        .kpi-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            flex-shrink: 0;
+            background: var(--accent-soft);
+            color: var(--accent);
+        }
+
+        .kpi-icon.kpi-green { background: rgba(16,185,129,0.1); color: #10b981; }
+        .kpi-icon.kpi-amber { background: rgba(245,158,11,0.1); color: #f59e0b; }
+        .kpi-icon.kpi-red { background: rgba(239,68,68,0.1); color: #ef4444; }
+
+        .kpi-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .kpi-info span {
+            font-size: 0.8rem;
+            color: var(--gray-400);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .kpi-info h4 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+            line-height: 1.2;
+        }
+
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 24px;
+            width: 100%;
+            margin-bottom: 40px;
+        }
+
+        .chart-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chart-card h5 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            margin: 0 0 24px 0;
+            color: var(--text-main);
+            font-size: 1.2rem;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 280px;
+            width: 100%;
+        }
+
         @media (max-width: 900px) {
             .sidebar { transform: translateX(-100%); width: var(--sw) !important; transition: transform .28s ease; }
             .sidebar.open { transform: translateX(0); }
@@ -435,6 +577,7 @@
             .main { margin-left: 0 !important; }
             .mob-toggle { display: flex; }
             .collapse-row { display: none; }
+            .page { padding: 80px 20px 20px; }
         }
     </style>
 </head>
@@ -471,8 +614,8 @@
                             <i class="bi bi-person-badge"></i>
                             <span class="pulse p-green"></span>
                         </span>
-                    <span class="nt">Conducteurs<small class="nt-sub">18 actifs</small></span>
-                    <span class="nb nb-blue">18</span>
+                    <span class="nt">Conducteurs<small class="nt-sub" id="sb-cond-sub">18 actifs</small></span>
+                    <span class="nb nb-blue" id="sb-cond-total">18</span>
                 </a>
             </div>
 
@@ -482,8 +625,8 @@
                             <i class="bi bi-truck"></i>
                             <span class="pulse p-amber"></span>
                         </span>
-                    <span class="nt">Véhicules<small class="nt-sub">24 en flotte</small></span>
-                    <span class="nb nb-blue">24</span>
+                    <span class="nt">Véhicules<small class="nt-sub" id="sb-veh-sub">24 en flotte</small></span>
+                    <span class="nb nb-blue" id="sb-veh-total">24</span>
                 </a>
             </div>
 
@@ -493,8 +636,8 @@
                             <i class="bi bi-geo-alt"></i>
                             <span class="pulse p-green"></span>
                         </span>
-                    <span class="nt">Suivi GPS<small class="nt-sub">3 en déplacement</small></span>
-                    <span class="nb nb-green"
+                    <span class="nt">Suivi GPS<small class="nt-sub" id="sb-gps-sub">0 en déplacement</small></span>
+                    <span class="nb nb-green" id="sb-gps-total"
                           style="background:rgba(34,197,94,0.1); color:#15803d; border-color:rgba(34,197,94,0.2);">LIVE</span>
                 </a>
             </div>
@@ -508,8 +651,8 @@
                             <i class="bi bi-wrench-adjustable"></i>
                             <span class="pulse p-amber"></span>
                         </span>
-                    <span class="nt">Réparation<small class="nt-sub">5 en cours</small></span>
-                    <span class="nb nb-amber">5</span>
+                    <span class="nt">Réparation<small class="nt-sub" id="sb-rep-sub">--</small></span>
+                    <span class="nb nb-amber" id="sb-rep-total">0</span>
                 </a>
             </div>
 
@@ -519,24 +662,24 @@
                             <i class="bi bi-exclamation-triangle"></i>
                             <span class="pulse p-red"></span>
                         </span>
-                    <span class="nt">Accident<small class="nt-sub">3 ce mois</small></span>
-                    <span class="nb nb-red">3</span>
+                    <span class="nt">Accident<small class="nt-sub" id="sb-acc-sub">--</small></span>
+                    <span class="nb nb-red" id="sb-acc-total">0</span>
                 </a>
             </div>
 
             <div class="nav-item">
                 <a href="/admin/depannage" class="nav-link" data-tip="Dépannage">
                     <span class="ni"><i class="bi bi-cone-striped"></i><span class="pulse p-amber"></span></span>
-                    <span class="nt">Dépannage<small class="nt-sub">2 interventions</small></span>
-                    <span class="nb nb-amber">2</span>
+                    <span class="nt">Dépannage<small class="nt-sub" id="sb-dep-sub">--</small></span>
+                    <span class="nb nb-amber" id="sb-dep-total">0</span>
                 </a>
             </div>
 
             <div class="nav-item">
                 <a href="/admin/vidanges" class="nav-link" data-tip="Vidange">
                     <span class="ni"><i class="bi bi-droplet-half"></i><span class="pulse p-blue"></span></span>
-                    <span class="nt">Vidange<small class="nt-sub">7 planifiées</small></span>
-                    <span class="nb nb-blue">7</span>
+                    <span class="nt">Vidange<small class="nt-sub" id="sb-vid-sub">--</small></span>
+                    <span class="nb nb-blue" id="sb-vid-total">0</span>
                 </a>
             </div>
 
@@ -585,10 +728,65 @@
 
     <div class="main" id="main">
         <div class="page">
-            <div class="page-hint">
-                <i class="bi bi-layout-sidebar-inset"></i>
-                <span>Sélectionne une section</span>
+            
+            <div class="dashboard-header">
+                <h2>Vue d'ensemble</h2>
+                <p>Bienvenue sur votre tableau de bord central.</p>
             </div>
+
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-icon"><i class="bi bi-truck"></i></div>
+                    <div class="kpi-info">
+                        <span>Total Véhicules</span>
+                        <h4 id="kpi-vehicules">--</h4>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon kpi-green"><i class="bi bi-person-badge"></i></div>
+                    <div class="kpi-info">
+                        <span>Total Conducteurs</span>
+                        <h4 id="kpi-conducteurs">--</h4>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon kpi-amber"><i class="bi bi-geo-alt"></i></div>
+                    <div class="kpi-info">
+                        <span>Missions en cours</span>
+                        <h4 id="kpi-missions">--</h4>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon kpi-red"><i class="bi bi-currency-dollar"></i></div>
+                    <div class="kpi-info">
+                        <span>Coût Interventions</span>
+                        <h4 id="kpi-cout">-- MAD</h4>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-grid">
+                <div class="chart-card">
+                    <h5>Répartition des Véhicules</h5>
+                    <div class="chart-container">
+                        <canvas id="vehiculeChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h5>Statut des Conducteurs</h5>
+                    <div class="chart-container">
+                        <canvas id="conducteurChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-card" style="width: 100%; margin-bottom: 40px;">
+                <h5>Missions par Jour</h5>
+                <div class="chart-container" style="height: 350px;">
+                    <canvas id="missionLineChart"></canvas>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -630,10 +828,41 @@
         }
     }
 
+    function updateChartsTheme(isDark) {
+        if (typeof Chart === 'undefined') return;
+        
+        const textColor = isDark ? '#e5e7eb' : '#1f2937';
+        const gridColor = isDark ? '#374151' : '#e5e7eb';
+
+        for (let id in Chart.instances) {
+            let chart = Chart.instances[id];
+            
+            // Update Legend Color
+            if (chart.options.plugins && chart.options.plugins.legend && chart.options.plugins.legend.labels) {
+                chart.options.plugins.legend.labels.color = textColor;
+            }
+            
+            // Update Axes Color
+            if (chart.options.scales) {
+                if (chart.options.scales.x) {
+                    if (chart.options.scales.x.ticks) chart.options.scales.x.ticks.color = textColor;
+                    if (chart.options.scales.x.grid) chart.options.scales.x.grid.color = gridColor;
+                }
+                if (chart.options.scales.y) {
+                    if (chart.options.scales.y.ticks) chart.options.scales.y.ticks.color = textColor;
+                    if (chart.options.scales.y.grid) chart.options.scales.y.grid.color = gridColor;
+                }
+            }
+            
+            chart.update();
+        }
+    }
+
     function toggleTheme() {
         const isDark = document.body.classList.toggle('dark');
         localStorage.setItem('theme', isDark ? 'dark' : 'light');
         updateThemeUI(isDark);
+        updateChartsTheme(isDark);
         
         // Notify iframe if present
         const iframe = document.querySelector('.page iframe');
@@ -699,6 +928,180 @@
             }
         });
     });
+
+    // ── CHARGEMENT DES STATISTIQUES ET GRAPHIQUES ──
+    async function initDashboard() {
+        try {
+            const res = await fetch('/api/dashboard/stats', {
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                }
+            });
+            if (!res.ok) throw new Error("Erreur lors de la récupération des stats");
+            const stats = await res.json();
+
+            // Remplir les KPIs principaux
+            document.getElementById('kpi-vehicules').textContent = stats.totalVehicules;
+            document.getElementById('kpi-conducteurs').textContent = stats.totalConducteurs;
+            document.getElementById('kpi-missions').textContent = stats.totalMissions;
+            document.getElementById('kpi-cout').textContent = new Intl.NumberFormat('fr-MA', { style: 'currency', currency: 'MAD' }).format(stats.coutTotalInterventions);
+
+            // Remplir la Sidebar (Barre Latérale)
+            document.getElementById('sb-cond-total').textContent = stats.totalConducteurs;
+            document.getElementById('sb-cond-sub').textContent = (stats.conducteursDisponibles + stats.conducteursEnMission) + " actifs";
+            
+            document.getElementById('sb-veh-total').textContent = stats.totalVehicules;
+            document.getElementById('sb-veh-sub').textContent = (stats.vehiculesDisponibles + stats.vehiculesEnMission) + " en flotte";
+
+            document.getElementById('sb-gps-sub').textContent = stats.missionsEnCours + " en déplacement";
+
+            document.getElementById('sb-rep-total').textContent = stats.nbReparations;
+            document.getElementById('sb-rep-sub').textContent = stats.nbReparations + " interventions";
+
+            document.getElementById('sb-acc-total').textContent = stats.nbAccidents;
+            document.getElementById('sb-acc-sub').textContent = stats.nbAccidents + " ce mois";
+
+            document.getElementById('sb-dep-total').textContent = stats.nbDepannages;
+            document.getElementById('sb-dep-sub').textContent = stats.nbDepannages + " interventions";
+
+            document.getElementById('sb-vid-total').textContent = stats.nbVidanges;
+            document.getElementById('sb-vid-sub').textContent = stats.nbVidanges + " planifiées";
+
+            // Couleurs pour les graphes (support du mode sombre)
+            const textColor = document.body.classList.contains('dark') ? '#e5e7eb' : '#1f2937';
+
+            // Graphique Véhicules
+            const ctxVehicule = document.getElementById('vehiculeChart').getContext('2d');
+            new Chart(ctxVehicule, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Disponible', 'En Mission', 'En Maintenance'],
+                    datasets: [{
+                        data: [stats.vehiculesDisponibles, stats.vehiculesEnMission, stats.vehiculesEnMaintenance],
+                        backgroundColor: ['#10b981', '#3b82f6', '#f59e0b'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: textColor } }
+                    }
+                }
+            });
+
+            // Graphique Conducteurs
+            const ctxConducteur = document.getElementById('conducteurChart').getContext('2d');
+            new Chart(ctxConducteur, {
+                type: 'pie',
+                data: {
+                    labels: ['Disponible', 'En Mission', 'En Congé'],
+                    datasets: [{
+                        data: [stats.conducteursDisponibles, stats.conducteursEnMission, stats.conducteursEnConge],
+                        backgroundColor: ['#10b981', '#3b82f6', '#ef4444'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: textColor } }
+                    }
+                }
+            });
+
+            // Graphique Ligne : Missions Par Jour
+            if (stats.missionsParJour) {
+                // Trier les dates par ordre chronologique
+                const dates = Object.keys(stats.missionsParJour).sort();
+                
+                const enCoursData = [];
+                const termineeData = [];
+                const annuleeData = [];
+
+                dates.forEach(date => {
+                    const daily = stats.missionsParJour[date];
+                    enCoursData.push(daily['EN_COURS'] || 0);
+                    termineeData.push(daily['TERMINEE'] || 0);
+                    annuleeData.push(daily['ANNULEE'] || 0);
+                });
+
+                const isDark = document.body.classList.contains('dark');
+                const gridColor = isDark ? '#374151' : '#e5e7eb';
+
+                const ctxMission = document.getElementById('missionLineChart').getContext('2d');
+                new Chart(ctxMission, {
+                    type: 'line',
+                    data: {
+                        labels: dates,
+                        datasets: [
+                            {
+                                label: 'En Cours',
+                                data: enCoursData,
+                                borderColor: '#3b82f6',
+                                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                                borderWidth: 3,
+                                tension: 0.4,
+                                fill: true,
+                                pointBackgroundColor: '#3b82f6'
+                            },
+                            {
+                                label: 'Terminées',
+                                data: termineeData,
+                                borderColor: '#10b981',
+                                backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                                borderWidth: 3,
+                                tension: 0.4,
+                                fill: true,
+                                pointBackgroundColor: '#10b981'
+                            },
+                            {
+                                label: 'Annulées',
+                                data: annuleeData,
+                                borderColor: '#ef4444',
+                                backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                                borderWidth: 3,
+                                tension: 0.4,
+                                fill: true,
+                                pointBackgroundColor: '#ef4444'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: {
+                            mode: 'index',
+                            intersect: false,
+                        },
+                        plugins: {
+                            legend: { position: 'top', labels: { color: textColor, font: { family: 'Outfit', weight: 600 } } }
+                        },
+                        scales: {
+                            x: { 
+                                ticks: { color: textColor }, 
+                                grid: { color: gridColor, drawBorder: false } 
+                            },
+                            y: { 
+                                ticks: { color: textColor, stepSize: 1 }, 
+                                grid: { color: gridColor, drawBorder: false },
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+
+        } catch (error) {
+            console.error("Erreur Dashboard:", error);
+        }
+    }
+
+    // Lancer au chargement
+    document.addEventListener('DOMContentLoaded', initDashboard);
+
 </script>
 <script src="../js/navbarInfo.js"></script>
 

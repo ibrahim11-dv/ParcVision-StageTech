@@ -29,19 +29,21 @@ public class DatabaseSeeder implements CommandLineRunner {
     private final MissionRepository missionRepository;
     private final ColisRepository colisRepository;
     private final PointGpsRepository pointGpsRepository;
-    
+    private final InterventionRepository interventionRepository;
+
     private final Faker faker = new Faker(new Locale("fr"));
     private final Random random = new Random();
 
-    public DatabaseSeeder(AdminRepository adminRepository, 
-                          PasswordEncoder passwordEncoder, 
-                          EntrepriseRepository entrepriseRepository, 
-                          UtilisateurRepository utilisateurRepository,
-                          VehiculeRepository vehiculeRepository,
-                          ConducteurRepository conducteurRepository,
-                          MissionRepository missionRepository,
-                          ColisRepository colisRepository,
-                          PointGpsRepository pointGpsRepository) {
+    public DatabaseSeeder(AdminRepository adminRepository,
+            PasswordEncoder passwordEncoder,
+            EntrepriseRepository entrepriseRepository,
+            UtilisateurRepository utilisateurRepository,
+            VehiculeRepository vehiculeRepository,
+            ConducteurRepository conducteurRepository,
+            MissionRepository missionRepository,
+            ColisRepository colisRepository,
+            PointGpsRepository pointGpsRepository,
+            InterventionRepository interventionRepository) {
         this.passwordEncoder = passwordEncoder;
         this.entrepriseRepository = entrepriseRepository;
         this.utilisateurRepository = utilisateurRepository;
@@ -51,6 +53,7 @@ public class DatabaseSeeder implements CommandLineRunner {
         this.missionRepository = missionRepository;
         this.colisRepository = colisRepository;
         this.pointGpsRepository = pointGpsRepository;
+        this.interventionRepository = interventionRepository;
     }
 
     @Override
@@ -58,15 +61,65 @@ public class DatabaseSeeder implements CommandLineRunner {
     public void run(String... args) throws Exception {
         if (entrepriseRepository.count() == 0) {
             seedData();
-        } else {
+        } 
+        
+        if (interventionRepository.count() == 0) {
+            System.out.println("Ajout des interventions manquantes...");
+            seedMissingInterventions();
+        } 
+        
+        if (entrepriseRepository.count() > 0 && interventionRepository.count() > 0) {
             System.out.println("Database already seeded.");
         }
+    }
+
+    private void seedMissingInterventions() {
+        List<Vehicule> vehicles = vehiculeRepository.findAll();
+        if (vehicles.isEmpty()) return;
+
+        for (int i = 0; i < 20; i++) {
+            int type = random.nextInt(3);
+            Intervention intervention;
+            
+            if (type == 0) {
+                Reparation r = new Reparation();
+                r.setPiecesRemplacees("Plaquettes de frein, Filtres");
+                r.setGaragePrestataire(faker.company().name() + " Auto");
+                r.setStatut("TERMINEE");
+                intervention = r;
+            } else if (type == 1) {
+                Depannage d = new Depannage();
+                d.setLieuPanne(faker.address().city());
+                d.setNecessiteRemorquage(random.nextBoolean());
+                d.setNomDepanneurExterne(faker.company().name() + " SOS");
+                d.setStatut("TERMINEE");
+                intervention = d;
+            } else {
+                Vidange v = new Vidange();
+                v.setTypeHuile("5W-30 Synthétique");
+                v.setViscosite("5W30");
+                v.setFilterHuileChange(true);
+                v.setFilterAirChange(random.nextBoolean());
+                v.setFilterCarburantChange(false);
+                intervention = v;
+            }
+
+            intervention.setDateIntervention(LocalDate.now().minusDays(random.nextInt(100)));
+            intervention.setDescriptionPanne(faker.lorem().sentence());
+            intervention.setActionsMenees(faker.lorem().sentence());
+            intervention.setCoutTotal(random.nextDouble() * 5000 + 500);
+            intervention.setKilometrageAuMoment((long) random.nextInt(150000) + 10000);
+            intervention.setVehicule(vehicles.get(random.nextInt(vehicles.size())));
+
+            interventionRepository.save(intervention);
+        }
+        System.out.println("Missing Interventions seeded successfully!");
     }
 
     private void seedData() {
         // 1. Seed Enterprises
         List<Entreprise> enterprises = new ArrayList<>();
-        
+
         // First enterprise has a FIXED name to keep "uploads" folder consistent
         Entreprise defaultEnt = new Entreprise();
         defaultEnt.setNom("ParcVision_Sarl");
@@ -139,7 +192,7 @@ public class DatabaseSeeder implements CommandLineRunner {
                 c.setDateValiditePermis(LocalDate.now().plusYears(random.nextInt(10) + 1));
                 c.setPhotoProfileUrl(null);
                 c.setStatut(Statut.DISPONIBLE);
-                conducteurs.add( conducteurRepository.save(c));
+                conducteurs.add(conducteurRepository.save(c));
             }
 
             // Seed Missions
@@ -149,18 +202,19 @@ public class DatabaseSeeder implements CommandLineRunner {
                 m.setEntreprise(ent);
                 m.setConducteur(conducteurs.get(random.nextInt(conducteurs.size())));
                 m.setVehicule(vehicles.get(random.nextInt(vehicles.size())));
-                
+
                 m.setStatut(StatutMission.values()[random.nextInt(StatutMission.values().length)]);
                 m.setAdresseDepart(faker.address().city());
                 m.setAdressArrivee(faker.address().city());
                 m.setInstructionsSpeciales(faker.lorem().sentence());
-                m.setDataDebut(faker.date().past(10, java.util.concurrent.TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+                m.setDataDebut(faker.date().past(10, java.util.concurrent.TimeUnit.DAYS).toInstant()
+                        .atZone(ZoneId.systemDefault()).toLocalDateTime());
                 m.setDateFinEstimee(m.getDataDebut().plusDays(random.nextInt(3) + 1));
-                
+
                 if (m.getStatut() == StatutMission.TERMINEE) {
                     m.setDateFinReelle(m.getDateFinEstimee());
                 }
-                
+
                 m = missionRepository.save(m);
 
                 // Colis

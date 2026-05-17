@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const data = await response.json();
             if (nameEl) nameEl.textContent = data.nom + " " + data.prenom;
             if (emailEl) emailEl.textContent = data.email;
-            
+
             if (avatarEl) {
                 if (data.photoProfileUrl) {
                     avatarEl.innerHTML = "";

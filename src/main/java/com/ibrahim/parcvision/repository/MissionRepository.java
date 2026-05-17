@@ -12,6 +12,16 @@ import java.util.List;
 
 public interface MissionRepository extends JpaRepository<Mission, Long> {
     List<Mission> findByEntreprise(Entreprise entreprise);
+    long countByEntreprise(Entreprise entreprise);
+
+    @Query(value = "SELECT CAST(m.dataDebut AS DATE) AS dateStr, m.statut, COUNT(m) " +
+           "FROM Mission m WHERE m.entreprise = :entreprise " +
+           "GROUP BY CAST(m.dataDebut AS DATE), m.statut " +
+           "ORDER BY dateStr ASC")
+    List<Object[]> countMissionsByDayAndStatut(@Param("entreprise") Entreprise entreprise);
+
+    @Query("SELECT COUNT(m) FROM Mission m WHERE m.entreprise = :entreprise AND m.statut = 'EN_COURS'")
+    long countMissionsEnCoursByEntreprise(@Param("entreprise") Entreprise entreprise);
 
     @Query("SELECT m FROM Mission m WHERE m.entreprise = :entreprise AND (" +
            "LOWER(m.reference) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
