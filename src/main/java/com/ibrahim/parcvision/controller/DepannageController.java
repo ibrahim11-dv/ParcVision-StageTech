@@ -31,21 +31,21 @@ public class DepannageController {
 
     @GetMapping
     public Page<Depannage> findAll(@RequestParam(defaultValue = "0") int page,
-                                   @RequestParam(defaultValue = "3") int size) {
+                                   @RequestParam(defaultValue = "5") int size) {
         return depannageService.findAll(page, size);
     }
 
     @GetMapping("/search")
     public Page<Depannage> search(@RequestParam String query,
                                   @RequestParam(defaultValue = "0") int page,
-                                  @RequestParam(defaultValue = "3") int size) {
+                                  @RequestParam(defaultValue = "5") int size) {
         return depannageService.search(query, page, size);
     }
 
     @GetMapping("/filter")
     public Page<Depannage> filter(@RequestParam String statut,
                                   @RequestParam(defaultValue = "0") int page,
-                                  @RequestParam(defaultValue = "3") int size) {
+                                  @RequestParam(defaultValue = "5") int size) {
         return depannageService.findByStatut(statut, page, size);
     }
 

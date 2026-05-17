@@ -256,20 +256,22 @@ if (window.self !== window.top || new URLSearchParams(window.location.search).ge
         if (!container || !summary) return;
 
         container.innerHTML = '';
-        const totalPages = data.totalPages;
-        const currentPage = data.number; // 0-indexed
-        const totalElements = data.totalElements;
-        const size = data.size;
+        const totalPages = data.totalPages || 0;
+        const currentPage = data.number || 0; // 0-indexed
+        const totalElements = data.totalElements || 0;
+        const size = data.size || 5;
         const start = currentPage * size + 1;
-        const end = Math.min((currentPage + 1) * size, totalElements);
+        const end = Math.min(start + size - 1, totalElements);
 
-        summary.textContent = `Affichage de ${totalElements === 0 ? 0 : start} à ${end} sur ${totalElements} réparations`;
+        summary.textContent = totalElements > 0 
+            ? `Affichage de ${start} à ${end} sur ${totalElements} réparations`
+            : 'Aucune réparation à afficher';
+
+        if (totalPages <= 1) return;
 
         // Button Previous
         const btnPrev = document.createElement('button');
-        btnPrev.className = 'btn-ghost';
-        btnPrev.style.padding = '6px 12px';
-        btnPrev.style.fontSize = '.8rem';
+        btnPrev.className = `btn-icon ${currentPage === 0 ? 'disabled' : ''}`;
         btnPrev.innerHTML = '<i class="bi bi-chevron-left"></i>';
         btnPrev.disabled = currentPage === 0;
         btnPrev.onclick = () => fetchReparations(currentPage - 1);
@@ -277,29 +279,26 @@ if (window.self !== window.top || new URLSearchParams(window.location.search).ge
 
         // Page Numbers
         for (let i = 0; i < totalPages; i++) {
-            const btnPage = document.createElement('button');
-            btnPage.className = 'btn-ghost';
-            btnPage.style.padding = '6px 14px';
-            btnPage.style.fontSize = '.8rem';
-            btnPage.textContent = i + 1;
-            
-            if (i === currentPage) {
-                btnPage.style.background = 'var(--accent)';
-                btnPage.style.color = 'white';
-                btnPage.style.borderColor = 'var(--accent)';
+            if (i === 0 || i === totalPages - 1 || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                const btnPage = document.createElement('button');
+                btnPage.className = `btn-icon ${i === currentPage ? 'active' : ''}`;
+                btnPage.style.width = '32px';
+                btnPage.textContent = i + 1;
+                btnPage.onclick = () => fetchReparations(i);
+                container.appendChild(btnPage);
+            } else if (i === 1 || i === totalPages - 2) {
+                const dots = document.createElement('span');
+                dots.textContent = '...';
+                dots.style.alignSelf = 'center';
+                container.appendChild(dots);
             }
-
-            btnPage.onclick = () => fetchReparations(i);
-            container.appendChild(btnPage);
         }
 
         // Button Next
         const btnNext = document.createElement('button');
-        btnNext.className = 'btn-ghost';
-        btnNext.style.padding = '6px 12px';
-        btnNext.style.fontSize = '.8rem';
+        btnNext.className = `btn-icon ${currentPage === totalPages - 1 ? 'disabled' : ''}`;
         btnNext.innerHTML = '<i class="bi bi-chevron-right"></i>';
-        btnNext.disabled = currentPage === totalPages - 1 || totalPages === 0;
+        btnNext.disabled = currentPage === totalPages - 1;
         btnNext.onclick = () => fetchReparations(currentPage + 1);
         container.appendChild(btnNext);
     }

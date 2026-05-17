@@ -121,7 +121,7 @@ let missionIdToConfirm = null;
 let missionIdToDelete = null;
 
 let currentPage = 0;
-let pageSize = 6; // Standard pageSize for tables in this project
+let pageSize = 5; // Standard pageSize for tables in this project
 let searchQuery = '';
 let currentStatusFilter = 'EN_COURS'; // Default to "En route" as requested
 
@@ -244,36 +244,65 @@ function renderMissions(missions) {
     }
 }
 
-function renderPagination(page) {
-    const container = document.getElementById('paginationControls');
-    const info = document.getElementById('paginationInfo');
-    
+function renderPagination(data) {
+    const container = document.getElementById('pagination-container');
+    const summary = document.getElementById('pagination-info');
+    if (!container || !summary) return;
+
     container.innerHTML = '';
-    
-    // Page buttons using project's ghost style
-    for (let i = 0; i < page.totalPages; i++) {
-        const btn = document.createElement('button');
-        btn.className = 'btn-ghost';
-        btn.style.padding = '6px 14px';
-        btn.textContent = i + 1;
-        
-        if (i === page.number) {
-            btn.style.background = 'var(--accent)';
-            btn.style.color = 'white';
+    const totalPages = data.totalPages;
+    const totalElements = data.totalElements;
+    const start = data.totalElements === 0 ? 0 : data.number * data.size + 1;
+    const end = Math.min(start + data.size - 1, totalElements);
+
+    summary.textContent = totalElements > 0 
+        ? `Affichage de ${start} à ${end} sur ${totalElements} missions`
+        : 'Aucune mission à afficher';
+
+    if (totalPages <= 1) return;
+
+    // Previous
+    const prevBtn = document.createElement('button');
+    prevBtn.className = `btn-icon ${data.first ? 'disabled' : ''}`;
+    prevBtn.innerHTML = '<i class="bi bi-chevron-left"></i>';
+    prevBtn.disabled = data.first;
+    prevBtn.onclick = () => {
+        currentPage = data.number - 1;
+        fetchMissions();
+    };
+    container.appendChild(prevBtn);
+
+    // Pages
+    for (let i = 0; i < totalPages; i++) {
+        if (i === 0 || i === totalPages - 1 || (i >= data.number - 1 && i <= data.number + 1)) {
+            const pageBtn = document.createElement('button');
+            pageBtn.className = `btn-icon ${i === data.number ? 'active' : ''}`;
+            pageBtn.style.width = '32px';
+            pageBtn.textContent = i + 1;
+            pageBtn.onclick = () => {
+                currentPage = i;
+                fetchMissions();
+            };
+            container.appendChild(pageBtn);
+        } else if (i === 1 || i === totalPages - 2) {
+            const dots = document.createElement('span');
+            dots.textContent = '...';
+            dots.style.alignSelf = 'center';
+            dots.style.color = 'var(--text-muted)';
+            container.appendChild(dots);
         }
-        
-        btn.addEventListener('click', () => {
-            currentPage = i;
-            fetchMissions();
-        });
-        container.appendChild(btn);
     }
 
-    if (info) {
-        const start = page.totalElements === 0 ? 0 : page.number * page.size + 1;
-        const end = Math.min((page.number + 1) * page.size, page.totalElements);
-        info.textContent = `Affichage de ${start} à ${end} sur ${page.totalElements} missions`;
-    }
+    // Next
+    const nextBtn = document.createElement('button');
+    nextBtn.className = `btn-icon ${data.last ? 'disabled' : ''}`;
+    nextBtn.innerHTML = '<i class="bi bi-chevron-right"></i>';
+    nextBtn.disabled = data.last;
+    nextBtn.onclick = () => {
+        currentPage = data.number + 1;
+        fetchMissions();
+    };
+    container.appendChild(nextBtn);
 }
 
 window.changePage = function(page) {

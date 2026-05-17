@@ -92,7 +92,7 @@ public class VehiculeService {
 
     @Transactional(readOnly = true)
     public Page<Vehicule> listerVehicules(int page, int size, String search, String statut) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, org.springframework.data.domain.Sort.by("id").descending());
         Entreprise entreprise = getCurrentEntreprise();
 
         if (search != null && !search.isBlank() && statut != null && !statut.isBlank()) {

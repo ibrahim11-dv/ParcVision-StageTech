@@ -37,7 +37,7 @@ public class VehiculeController {
     @GetMapping
     public ResponseEntity<Page<Vehicule>> listerVehicules(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "6") int size,
+            @RequestParam(defaultValue = "5") int size,
             @RequestParam(required = false) String search,
             @RequestParam(required = false) String statut) {
         Page<Vehicule> vehicules = vehiculeService.listerVehicules(page, size, search, statut);

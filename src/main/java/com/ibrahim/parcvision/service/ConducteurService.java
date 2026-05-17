@@ -79,7 +79,7 @@ public class ConducteurService {
     // ---------- LISTE PAGINÉE + RECHERCHE + FILTRE ----------
     @Transactional(readOnly = true)
     public Page<Conducteur> listerConducteurs(int page, int size, String search, String statut) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, org.springframework.data.domain.Sort.by("id").descending());
         Entreprise entreprise = getCurrentEntreprise();
 
         if (search != null && !search.isBlank() && statut != null && !statut.isBlank()) {

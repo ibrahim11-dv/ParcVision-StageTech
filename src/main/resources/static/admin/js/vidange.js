@@ -2,6 +2,8 @@
 let vidangesData = [];
 let vehiculesData = [];
 let currentEditId = null;
+let currentPage = 0;
+let pageSize = 5;
 
 // ── Modal functions ──
 function openModal(id) {
@@ -18,25 +20,83 @@ function closeModal(id) {
 
 
 // ── API Calls ──
-async function loadVidanges() {
+async function loadVidanges(page = 0) {
+    currentPage = page;
+    const searchInput = document.querySelector('.search-bar input');
+    const query = searchInput ? searchInput.value : '';
+    const statusSelect = document.querySelector('.form-select-custom');
+    const statusFilter = statusSelect ? statusSelect.value : 'all';
+
+    let url = `/api/vidanges?page=${page}&size=${pageSize}`;
+    if (query) {
+        url = `/api/vidanges/search?query=${encodeURIComponent(query)}&page=${page}&size=${pageSize}`;
+    }
+
     try {
-        const response = await fetch('/api/vidanges');
+        const response = await fetch(url);
         if (response.ok) {
-            const apiData = await response.json();
-            if (apiData.length > 0) {
-                vidangesData = apiData;
-            } else {
-                vidangesData = staticVidanges;
-            }
-        } else {
-            vidangesData = staticVidanges;
+            const data = await response.json();
+            vidangesData = data.content;
+            renderVidangesTable(vidangesData);
+            renderPagination(data);
+            // KPIs are generally based on all data, but here we update with what we have
+            // Or we could have a separate endpoint for KPIs
+            updateKPIs(vidangesData); 
         }
     } catch (err) {
         console.error('Error loading vidanges:', err);
-        vidangesData = staticVidanges;
     }
-    renderVidangesTable(vidangesData);
-    updateKPIs(vidangesData);
+}
+
+function renderPagination(data) {
+    const container = document.getElementById('paginationContainer');
+    const summary = document.getElementById('paginationSummary');
+    if (!container || !summary) return;
+
+    container.innerHTML = '';
+    const totalPages = data.totalPages;
+    const totalElements = data.totalElements;
+    const start = data.totalElements === 0 ? 0 : data.number * data.size + 1;
+    const end = Math.min(start + data.size - 1, totalElements);
+
+    summary.textContent = totalElements > 0 
+        ? `Affichage de ${start} à ${end} sur ${totalElements} vidanges`
+        : 'Aucune vidange à afficher';
+
+    if (totalPages <= 1) return;
+
+    // Previous
+    const prevBtn = document.createElement('button');
+    prevBtn.className = `btn-icon ${data.first ? 'disabled' : ''}`;
+    prevBtn.innerHTML = '<i class="bi bi-chevron-left"></i>';
+    prevBtn.disabled = data.first;
+    prevBtn.onclick = () => loadVidanges(data.number - 1);
+    container.appendChild(prevBtn);
+
+    // Pages
+    for (let i = 0; i < totalPages; i++) {
+        if (i === 0 || i === totalPages - 1 || (i >= data.number - 1 && i <= data.number + 1)) {
+            const pageBtn = document.createElement('button');
+            pageBtn.className = `btn-icon ${i === data.number ? 'active' : ''}`;
+            pageBtn.style.width = '32px';
+            pageBtn.textContent = i + 1;
+            pageBtn.onclick = () => loadVidanges(i);
+            container.appendChild(pageBtn);
+        } else if (i === 1 || i === totalPages - 2) {
+            const dots = document.createElement('span');
+            dots.textContent = '...';
+            dots.style.alignSelf = 'center';
+            container.appendChild(dots);
+        }
+    }
+
+    // Next
+    const nextBtn = document.createElement('button');
+    nextBtn.className = `btn-icon ${data.last ? 'disabled' : ''}`;
+    nextBtn.innerHTML = '<i class="bi bi-chevron-right"></i>';
+    nextBtn.disabled = data.last;
+    nextBtn.onclick = () => loadVidanges(data.number + 1);
+    container.appendChild(nextBtn);
 }
 
 async function loadVehicules() {
@@ -340,31 +400,16 @@ function setupSearchAndFilter() {
     const searchInput = document.querySelector('.search-bar input');
     const statusSelect = document.querySelector('.form-select-custom');
 
-    function filterData() {
-        const searchTerm = (searchInput ? searchInput.value : '').toLowerCase();
-        const statusFilter = statusSelect ? statusSelect.value : 'all';
-
-        let filtered = vidangesData.filter(v => {
-            const vehicule = v.vehicule || {};
-            const immat = (vehicule.immatriculation || '').toLowerCase();
-            const marque = (vehicule.marque || '').toLowerCase();
-            const model = (vehicule.model || '').toLowerCase();
-            const matchSearch = !searchTerm || immat.includes(searchTerm) || marque.includes(searchTerm) || model.includes(searchTerm);
-
-            const status = getStatusFromVidange(v);
-            let matchStatus = true;
-            if (statusFilter === 'ajour') matchStatus = status === 'À jour';
-            else if (statusFilter === 'bientot') matchStatus = status === 'Bientôt';
-            else if (statusFilter === 'retard') matchStatus = status === 'En retard';
-
-            return matchSearch && matchStatus;
+    if (searchInput) {
+        searchInput.addEventListener('input', () => {
+            loadVidanges(0);
         });
-
-        renderVidangesTable(filtered);
     }
-
-    if (searchInput) searchInput.addEventListener('input', filterData);
-    if (statusSelect) statusSelect.addEventListener('change', filterData);
+    if (statusSelect) {
+        statusSelect.addEventListener('change', () => {
+            loadVidanges(0);
+        });
+    }
 }
 
 // ── Profile popup ──

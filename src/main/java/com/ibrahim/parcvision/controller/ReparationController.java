@@ -34,21 +34,21 @@ public class ReparationController {
 
     @GetMapping("/admin/reparation")
     public Page<Reparation> findAll(@RequestParam(defaultValue = "0") int page,
-                                    @RequestParam(defaultValue = "3") int size) {
+                                    @RequestParam(defaultValue = "5") int size) {
         return reparationService.findAll(page, size);
     }
 
     @GetMapping("/admin/reparation/filterByStatut")
     public Page<Reparation> filterByStatut(@RequestParam String statut,
                                            @RequestParam(defaultValue = "0") int page,
-                                           @RequestParam(defaultValue = "3") int size) {
+                                           @RequestParam(defaultValue = "5") int size) {
         return reparationService.findByStatut(statut, page, size);
     }
 
     @GetMapping("/admin/reparation/search")
     public Page<Reparation> search(@RequestParam String immat,
                                    @RequestParam(defaultValue = "0") int page,
-                                   @RequestParam(defaultValue = "3") int size) {
+                                   @RequestParam(defaultValue = "5") int size) {
         return reparationService.search(immat, page, size);
     }
 

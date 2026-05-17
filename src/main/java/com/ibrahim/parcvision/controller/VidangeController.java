@@ -2,6 +2,7 @@ package com.ibrahim.parcvision.controller;
 
 import com.ibrahim.parcvision.entity.Vidange;
 import com.ibrahim.parcvision.service.VidangeService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,13 +21,16 @@ public class VidangeController {
     }
 
     @GetMapping
-    public List<Vidange> findAll() {
-        return vidangeService.findAll();
+    public Page<Vidange> findAll(@RequestParam(defaultValue = "0") int page,
+                                 @RequestParam(defaultValue = "5") int size) {
+        return vidangeService.findAll(page, size);
     }
 
     @GetMapping("/search")
-    public List<Vidange> search(@RequestParam String query) {
-        return vidangeService.search(query);
+    public Page<Vidange> search(@RequestParam String query,
+                                @RequestParam(defaultValue = "0") int page,
+                                @RequestParam(defaultValue = "5") int size) {
+        return vidangeService.search(query, page, size);
     }
 
     @PostMapping

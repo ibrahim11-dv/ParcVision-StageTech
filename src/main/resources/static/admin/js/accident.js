@@ -362,44 +362,48 @@ function renderPagination(data, callback) {
     const totalPages = data.totalPages || 0;
     const currentPage = data.number || 0;
     const totalElements = data.totalElements || 0;
-    const size = data.size || 3;
+    const size = data.size || 5;
     const start = currentPage * size + 1;
-    const end = Math.min((currentPage + 1) * size, totalElements);
+    const end = Math.min(start + size - 1, totalElements);
 
-    summary.textContent = `Affichage de ${totalElements === 0 ? 0 : start} à ${end} sur ${totalElements} accidents`;
+    summary.textContent = totalElements > 0 
+        ? `Affichage de ${start} à ${end} sur ${totalElements} accidents`
+        : 'Aucun accident à afficher';
 
-    const btnPrev = document.createElement('button');
-    btnPrev.className = 'btn-ghost';
-    btnPrev.style.padding = '6px 12px';
-    btnPrev.style.fontSize = '.8rem';
-    btnPrev.innerHTML = '<i class="bi bi-chevron-left"></i>';
-    btnPrev.disabled = currentPage === 0;
-    btnPrev.onclick = () => callback(currentPage - 1);
-    container.appendChild(btnPrev);
+    if (totalPages <= 1) return;
 
+    // Previous
+    const prevBtn = document.createElement('button');
+    prevBtn.className = `btn-icon ${currentPage === 0 ? 'disabled' : ''}`;
+    prevBtn.innerHTML = '<i class="bi bi-chevron-left"></i>';
+    prevBtn.disabled = currentPage === 0;
+    prevBtn.onclick = () => callback(currentPage - 1);
+    container.appendChild(prevBtn);
+
+    // Pages
     for (let i = 0; i < totalPages; i++) {
-        const btnPage = document.createElement('button');
-        btnPage.className = 'btn-ghost';
-        btnPage.style.padding = '6px 14px';
-        btnPage.style.fontSize = '.8rem';
-        btnPage.textContent = i + 1;
-        if (i === currentPage) {
-            btnPage.style.background = 'var(--accent)';
-            btnPage.style.color = 'white';
-            btnPage.style.borderColor = 'var(--accent)';
+        if (i === 0 || i === totalPages - 1 || (i >= currentPage - 1 && i <= currentPage + 1)) {
+            const pageBtn = document.createElement('button');
+            pageBtn.className = `btn-icon ${i === currentPage ? 'active' : ''}`;
+            pageBtn.style.width = '32px';
+            pageBtn.textContent = i + 1;
+            pageBtn.onclick = () => callback(i);
+            container.appendChild(pageBtn);
+        } else if (i === 1 || i === totalPages - 2) {
+            const dots = document.createElement('span');
+            dots.textContent = '...';
+            dots.style.alignSelf = 'center';
+            container.appendChild(dots);
         }
-        btnPage.onclick = () => callback(i);
-        container.appendChild(btnPage);
     }
 
-    const btnNext = document.createElement('button');
-    btnNext.className = 'btn-ghost';
-    btnNext.style.padding = '6px 12px';
-    btnNext.style.fontSize = '.8rem';
-    btnNext.innerHTML = '<i class="bi bi-chevron-right"></i>';
-    btnNext.disabled = currentPage === totalPages - 1 || totalPages === 0;
-    btnNext.onclick = () => callback(currentPage + 1);
-    container.appendChild(btnNext);
+    // Next
+    const nextBtn = document.createElement('button');
+    nextBtn.className = `btn-icon ${currentPage === totalPages - 1 ? 'disabled' : ''}`;
+    nextBtn.innerHTML = '<i class="bi bi-chevron-right"></i>';
+    nextBtn.disabled = currentPage === totalPages - 1;
+    nextBtn.onclick = () => callback(currentPage + 1);
+    container.appendChild(nextBtn);
 }
 
 function getGraviteClass(gravite) {

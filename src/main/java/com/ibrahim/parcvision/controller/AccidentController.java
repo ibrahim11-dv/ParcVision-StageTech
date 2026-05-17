@@ -33,20 +33,20 @@ public class AccidentController {
     @GetMapping("/admin/search")
     public Page<Accident> SearchCond(@RequestParam String query,
                                      @RequestParam(defaultValue = "0") int page,
-                                     @RequestParam(defaultValue = "3") int size){
+                                     @RequestParam(defaultValue = "5") int size){
         return accidentService.Search(query, page, size);
     }
 
     @GetMapping("/admin/findByEtat")
     public Page<Accident> findEtat(@RequestParam String etat,
                                    @RequestParam(defaultValue = "0") int page,
-                                   @RequestParam(defaultValue = "3") int size){
+                                   @RequestParam(defaultValue = "5") int size){
         return accidentService.findByetat(etat, page, size);
     }
 
     @GetMapping("/admin/list")
     public Page<Accident> findall(@RequestParam(defaultValue = "0") int page,
-                                  @RequestParam(defaultValue = "3") int size){
+                                  @RequestParam(defaultValue = "5") int size){
         return accidentService.AffichAll(page, size);
     }
 

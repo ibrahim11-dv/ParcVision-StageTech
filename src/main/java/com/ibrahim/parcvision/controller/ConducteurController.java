@@ -36,7 +36,7 @@ public class ConducteurController {
     @GetMapping
     public ResponseEntity<Page<Conducteur>> listerConducteurs(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "6") int size,
+            @RequestParam(defaultValue = "5") int size,
             @RequestParam(required = false) String search,
             @RequestParam(required = false) String statut) {
         Page<Conducteur> conducteurs = conducteurService.listerConducteurs(page, size, search, statut);

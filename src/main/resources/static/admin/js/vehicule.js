@@ -70,7 +70,7 @@ function authHeaders() {
 }
 
 /* ───── VARIABLES GLOBALES ───── */
-let currentPage = 0, pageSize = 6, currentSearch = '', currentStatut = '';
+let currentPage = 0, pageSize = 5, currentSearch = '', currentStatut = '';
 let idToDelete = null;
 
 /* ───── INITIALISATION ───── */
@@ -247,24 +247,65 @@ function afficherVehicules(vehicules) {
 }
 
 /* ───── PAGINATION (avec IDs unifiés) ───── */
-function afficherPagination(page) {
+function afficherPagination(data) {
     const container = document.getElementById('pagination-container');   // id unifié
-    const info = document.getElementById('pagination-info');             // id unifié
+    const summary = document.getElementById('pagination-info');             // id unifié
+    if (!container || !summary) return;
+
     container.innerHTML = '';
-    for (let i = 0; i < page.totalPages; i++) {
-        const btn = document.createElement('button');
-        btn.className = 'btn-ghost';
-        btn.style.padding = '6px 14px';
-        btn.textContent = i + 1;
-        if (i === page.number) { btn.style.background = 'var(--accent)'; btn.style.color = 'white'; }
-        btn.addEventListener('click', () => { currentPage = i; chargerVehicules(); });
-        container.appendChild(btn);
+    const totalPages = data.totalPages;
+    const totalElements = data.totalElements;
+    const start = data.totalElements === 0 ? 0 : data.number * data.size + 1;
+    const end = Math.min(start + data.size - 1, totalElements);
+
+    summary.textContent = totalElements > 0 
+        ? `Affichage de ${start} à ${end} sur ${totalElements} véhicules`
+        : 'Aucun véhicule à afficher';
+
+    if (totalPages <= 1) return;
+
+    // Previous
+    const prevBtn = document.createElement('button');
+    prevBtn.className = `btn-icon ${data.first ? 'disabled' : ''}`;
+    prevBtn.innerHTML = '<i class="bi bi-chevron-left"></i>';
+    prevBtn.disabled = data.first;
+    prevBtn.onclick = () => {
+        currentPage = data.number - 1;
+        chargerVehicules();
+    };
+    container.appendChild(prevBtn);
+
+    // Pages
+    for (let i = 0; i < totalPages; i++) {
+        if (i === 0 || i === totalPages - 1 || (i >= data.number - 1 && i <= data.number + 1)) {
+            const pageBtn = document.createElement('button');
+            pageBtn.className = `btn-icon ${i === data.number ? 'active' : ''}`;
+            pageBtn.style.width = '32px';
+            pageBtn.textContent = i + 1;
+            pageBtn.onclick = () => {
+                currentPage = i;
+                chargerVehicules();
+            };
+            container.appendChild(pageBtn);
+        } else if (i === 1 || i === totalPages - 2) {
+            const dots = document.createElement('span');
+            dots.textContent = '...';
+            dots.style.alignSelf = 'center';
+            dots.style.color = 'var(--text-muted)';
+            container.appendChild(dots);
+        }
     }
-    if (info) {
-        const debut = page.number * page.size + 1;
-        const fin = Math.min((page.number + 1) * page.size, page.totalElements);
-        info.textContent = `Affichage de ${debut} à ${fin} sur ${page.totalElements} véhicules`;
-    }
+
+    // Next
+    const nextBtn = document.createElement('button');
+    nextBtn.className = `btn-icon ${data.last ? 'disabled' : ''}`;
+    nextBtn.innerHTML = '<i class="bi bi-chevron-right"></i>';
+    nextBtn.disabled = data.last;
+    nextBtn.onclick = () => {
+        currentPage = data.number + 1;
+        chargerVehicules();
+    };
+    container.appendChild(nextBtn);
 }
 
 /* ───── SUPPRESSION ───── */

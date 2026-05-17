@@ -10,7 +10,7 @@ public class Accident extends Intervention {
     @Column(name = "lieu")
     private String lieu;
 
-    @Column(name = "contexte")
+    @Column(name = "contexte", columnDefinition = "TEXT")
     private String contexte;
 
     @Column(name = "gravite")
@@ -27,7 +27,7 @@ public class Accident extends Intervention {
     @JsonIgnoreProperties({"accidents", "mission", "document"})
     private Conducteur conducteur;
 
-    @Column(name = "notes")
+    @Column(name = "notes", columnDefinition = "TEXT")
     private String notes;
 
     // Getters and Setters

@@ -20,7 +20,7 @@ public abstract class Intervention {
     @Column(length = 500, name = "description_panne")
     private String descriptionPanne;
 
-    @Column(name = "actions_menees")
+    @Column(name = "actions_menees", columnDefinition = "TEXT")
     private String actionsMenees;
 
     @Column(name = "cout_total")

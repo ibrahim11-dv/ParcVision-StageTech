@@ -41,7 +41,7 @@ public class MissionController {
     public ResponseEntity<Page<MissionResponseDao>> getAllMissions(
             HttpServletRequest request,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "5") int size,
             @RequestParam(required = false) String search
     ) {
         String email = jwtService.extractEmailFromCookie(request);

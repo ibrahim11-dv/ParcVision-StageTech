@@ -5,6 +5,9 @@ import com.ibrahim.parcvision.entity.Utilisateur;
 import com.ibrahim.parcvision.entity.Vidange;
 import com.ibrahim.parcvision.repository.UtilisateurRepository;
 import com.ibrahim.parcvision.repository.VidangeRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -23,12 +26,14 @@ public class VidangeService {
         this.utilisateurRepository = utilisateurRepository;
     }
 
-    public List<Vidange> findAll() {
-        return vidangeRepository.findByVehiculeEntreprise(getCurrentEntreprise());
+    public Page<Vidange> findAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, org.springframework.data.domain.Sort.by("id").descending());
+        return vidangeRepository.findByVehiculeEntreprise(getCurrentEntreprise(), pageable);
     }
 
-    public List<Vidange> search(String query) {
-        return vidangeRepository.search(query, getCurrentEntreprise());
+    public Page<Vidange> search(String query, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, org.springframework.data.domain.Sort.by("id").descending());
+        return vidangeRepository.search(query, getCurrentEntreprise(), pageable);
     }
 
     public Vidange save(Vidange vidange) {
