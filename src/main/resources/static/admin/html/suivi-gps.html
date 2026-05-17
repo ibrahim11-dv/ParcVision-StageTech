@@ -183,29 +183,36 @@
                     <div id="map" class="map-container"></div>
                 </div>
 
-                <!-- Liste des Missions en cours -->
-                <div class="form-card w-100" style="max-width: 1100px; animation-delay: 0.2s;">
-                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
-                        <h2 class="page-title fs-5 mb-0">Missions en cours</h2>
-                        <div class="search-box" style="min-width: 300px;">
-                            <div class="input-group">
-                                <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
-                                <input type="text" id="missionSearchInput" class="form-control border-start-0" placeholder="Rechercher une mission, conducteur, véhicule...">
+                <!-- Liste des Missions -->
+                <div class="card w-100" style="padding:0;overflow:hidden; animation: fadeUp 0.4s ease both;">
+                    <div style="padding:18px 20px;border-bottom:1px solid var(--border-color);display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap">
+                        <h5 style="font-family:'Outfit',sans-serif;font-weight:700;font-size:1rem;margin:0">Liste des Missions</h5>
+                        <div style="display:flex;gap:10px;flex-wrap:wrap">
+                            <div class="search-bar">
+                                <i class="bi bi-search"></i>
+                                <input type="text" id="missionSearchInput" placeholder="Rechercher une mission...">
                             </div>
+                            <select class="form-select-custom" id="statusFilter" style="width:auto;padding:9px 14px">
+                                <option value="ALL">Tous les statuts</option>
+                                <option value="PLANIFIEE">Planifiée</option>
+                                <option value="EN_COURS" selected>En route</option>
+                                <option value="TERMINEE">Livrée</option>
+                                <option value="ANNULEE">Annulée</option>
+                            </select>
                         </div>
                     </div>
-                    
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
-                            <thead class="table-light">
+
+                    <div class="table-wrapper" style="border:none;border-radius:0;box-shadow:none">
+                        <table class="table align-middle">
+                            <thead>
                                 <tr>
-                                    <th scope="col" class="border-0 rounded-start">N° Mission</th>
-                                    <th scope="col" class="border-0">Conducteur</th>
-                                    <th scope="col" class="border-0">Véhicule</th>
-                                    <th scope="col" class="border-0">Colis / Marchandise</th>
-                                    <th scope="col" class="border-0">Trajet</th>
-                                    <th scope="col" class="border-0">Statut</th>
-                                    <th scope="col" class="border-0 rounded-end">Action</th>
+                                    <th>N° Mission</th>
+                                    <th>Conducteur</th>
+                                    <th>Véhicule</th>
+                                    <th>Colis / Marchandise</th>
+                                    <th>Trajet</th>
+                                    <th>Statut</th>
+                                    <th class="text-end" style="padding-right: 20px;">Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="missionsTableBody">
@@ -214,16 +221,9 @@
                         </table>
                     </div>
 
-                    <!-- Pagination -->
-                    <div class="d-flex justify-content-between align-items-center mt-4 flex-wrap gap-3">
-                        <div class="text-muted small" id="paginationInfo">
-                            Affichage de 0 à 0 sur 0 missions
-                        </div>
-                        <nav aria-label="Page navigation">
-                            <ul class="pagination pagination-sm mb-0" id="paginationControls">
-                                <!-- Pagination items will be loaded here -->
-                            </ul>
-                        </nav>
+                    <div style="padding:14px 20px;border-top:1px solid var(--border-color);display:flex;align-items:center;justify-content:space-between">
+                        <span id="paginationInfo" style="font-size:.82rem;color:var(--text-muted)">Affichage de 0 à 0 sur 0 missions</span>
+                        <div id="paginationControls" style="display:flex;gap:6px"></div>
                     </div>
                 </div>
 
@@ -233,7 +233,6 @@
 
 </div>
 
-<!-- Modal Ajouter Mission -->
 <!-- Modal Ajouter Mission -->
 <div class="modal fade" id="addMissionModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -362,7 +361,6 @@
     </div>
 </div>
 
-<!-- Modal Modifier Mission -->
 <!-- Modal Modifier Mission -->
 <div class="modal fade" id="editMissionModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">

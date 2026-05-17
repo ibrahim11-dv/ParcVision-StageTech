@@ -56,8 +56,9 @@ let allMissions = [];
 let missionIdToConfirm = null;
 
 let currentPage = 0;
-let pageSize = 5;
+let pageSize = 6; // Standard pageSize for tables in this project
 let searchQuery = '';
+let currentStatusFilter = 'EN_COURS'; // Default to "En route" as requested
 
 async function fetchMissions() {
     try {
@@ -66,13 +67,26 @@ async function fetchMissions() {
         if (!response.ok) throw new Error('Failed to fetch missions');
         const data = await response.json();
         
-        allMissions = data.content;
+        // Filter content based on status
+        if (currentStatusFilter === 'ALL') {
+            allMissions = data.content;
+        } else {
+            allMissions = data.content.filter(m => m.statut === currentStatusFilter);
+        }
+        
         renderMissions(allMissions);
         renderPagination(data);
     } catch (error) {
         console.error('Error fetching missions:', error);
     }
 }
+
+// Add event listener for status filter
+document.getElementById('statusFilter').addEventListener('change', function(e) {
+    currentStatusFilter = e.target.value;
+    currentPage = 0;
+    fetchMissions();
+});
 
 function renderMissions(missions) {
     const tableBody = document.getElementById('missionsTableBody');
@@ -94,8 +108,8 @@ function renderMissions(missions) {
         const isDelivered = mission.statut === 'TERMINEE';
 
         row.innerHTML = `
-            <td class="border-bottom-0"><span class="fw-bold text-primary">${mission.reference}</span></td>
-            <td class="border-bottom-0">
+            <td style="padding-left: 18px;"><span class="fw-bold text-primary">${mission.reference}</span></td>
+            <td>
                 <div class="d-flex align-items-center gap-2">
                     <div class="profile-av" style="width: 28px; height: 28px; border-radius: 8px; font-size: 0.65rem;">
                         ${mission.conducteurNomComplet ? mission.conducteurNomComplet.split(' ').map(n => n[0]).join('') : '??'}
@@ -103,27 +117,29 @@ function renderMissions(missions) {
                     <span class="fw-semibold text-dark">${mission.conducteurNomComplet || 'Inconnu'}</span>
                 </div>
             </td>
-            <td class="border-bottom-0">
+            <td>
                 <div class="text-dark"><i class="bi bi-truck me-1 text-muted"></i> ${mission.vehiculeMarqueModele}</div>
                 <small class="text-muted">${mission.vehiculeImmatriculation}</small>
             </td>
-            <td class="border-bottom-0">
+            <td>
                 <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 rounded-pill px-2">
                     ${mission.colisType} (${mission.colisPoids ? mission.colisPoids.toFixed(2) : '0'}kg)
                 </span>
             </td>
-            <td class="border-bottom-0">
+            <td>
                 <small class="d-block text-muted"><i class="bi bi-record-circle text-success me-1"></i> ${mission.adresseDepart}</small>
                 <small class="d-block text-muted"><i class="bi bi-geo-alt text-danger me-1"></i> ${mission.adresseArrivee}</small>
             </td>
-            <td class="border-bottom-0">${getStatusBadge(mission.statut)}</td>
-            <td class="border-bottom-0 text-end">
-                ${!isDelivered ? `
-                    <button class="btn btn-sm btn-light text-success border-0" title="Confirmer Livraison" onclick="event.stopPropagation(); confirmDelivery(${mission.id})"><i class="bi bi-check-circle"></i></button>
-                ` : `
-                    <button class="btn btn-sm btn-light text-muted border-0" disabled><i class="bi bi-check-circle-fill"></i></button>
-                `}
-                <button class="btn btn-sm btn-light text-primary border-0" title="Modifier" data-bs-toggle="modal" data-bs-target="#editMissionModal" onclick="event.stopPropagation(); prepareEdit(${mission.id})"><i class="bi bi-pencil-square"></i></button>
+            <td>${getStatusBadge(mission.statut)}</td>
+            <td class="text-end" style="padding-right: 18px;">
+                <div class="d-flex justify-content-end gap-1">
+                    ${!isDelivered ? `
+                        <button class="btn-icon" title="Confirmer Livraison" onclick="event.stopPropagation(); confirmDelivery(${mission.id})"><i class="bi bi-check-circle text-success"></i></button>
+                    ` : `
+                        <button class="btn-icon" disabled><i class="bi bi-check-circle-fill text-muted"></i></button>
+                    `}
+                    <button class="btn-icon" title="Modifier" data-bs-toggle="modal" data-bs-target="#editMissionModal" onclick="event.stopPropagation(); prepareEdit(${mission.id})"><i class="bi bi-pencil-square text-primary"></i></button>
+                </div>
             </td>
         `;
         tableBody.appendChild(row);
@@ -162,39 +178,36 @@ function renderMissions(missions) {
     }
 }
 
-function renderPagination(data) {
-    const controls = document.getElementById('paginationControls');
+function renderPagination(page) {
+    const container = document.getElementById('paginationControls');
     const info = document.getElementById('paginationInfo');
     
-    controls.innerHTML = '';
+    container.innerHTML = '';
     
-    const { number, totalPages, totalElements, size } = data;
-    const start = totalElements === 0 ? 0 : number * size + 1;
-    const end = Math.min((number + 1) * size, totalElements);
-    
-    info.textContent = `Affichage de ${start} à ${end} sur ${totalElements} missions`;
-
-    if (totalPages <= 1) return;
-
-    // Previous
-    const prevLi = document.createElement('li');
-    prevLi.className = `page-item ${number === 0 ? 'disabled' : ''}`;
-    prevLi.innerHTML = `<a class="page-link" href="#" onclick="changePage(${number - 1})"><i class="bi bi-chevron-left"></i></a>`;
-    controls.appendChild(prevLi);
-
-    // Pages
-    for (let i = 0; i < totalPages; i++) {
-        const li = document.createElement('li');
-        li.className = `page-item ${number === i ? 'active' : ''}`;
-        li.innerHTML = `<a class="page-link" href="#" onclick="changePage(${i})">${i + 1}</a>`;
-        controls.appendChild(li);
+    // Page buttons using project's ghost style
+    for (let i = 0; i < page.totalPages; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'btn-ghost';
+        btn.style.padding = '6px 14px';
+        btn.textContent = i + 1;
+        
+        if (i === page.number) {
+            btn.style.background = 'var(--accent)';
+            btn.style.color = 'white';
+        }
+        
+        btn.addEventListener('click', () => {
+            currentPage = i;
+            fetchMissions();
+        });
+        container.appendChild(btn);
     }
 
-    // Next
-    const nextLi = document.createElement('li');
-    nextLi.className = `page-item ${number === totalPages - 1 ? 'disabled' : ''}`;
-    nextLi.innerHTML = `<a class="page-link" href="#" onclick="changePage(${number + 1})"><i class="bi bi-chevron-right"></i></a>`;
-    controls.appendChild(nextLi);
+    if (info) {
+        const start = page.totalElements === 0 ? 0 : page.number * page.size + 1;
+        const end = Math.min((page.number + 1) * page.size, page.totalElements);
+        info.textContent = `Affichage de ${start} à ${end} sur ${page.totalElements} missions`;
+    }
 }
 
 window.changePage = function(page) {
@@ -215,13 +228,13 @@ document.getElementById('missionSearchInput').addEventListener('input', (e) => {
 
 function getStatusBadge(statut) {
     const configs = {
-        'PLANIFIEE': { class: 'bg-primary', text: 'Planifiée' },
-        'EN_COURS': { class: 'bg-warning', text: 'En route', pulse: true },
-        'TERMINEE': { class: 'bg-success', text: 'Livré' },
-        'ANNULEE': { class: 'bg-danger', text: 'Annulée' }
+        'PLANIFIEE': { class: 'prio-faible', text: 'Planifiée' },
+        'EN_COURS': { class: 'prio-normale', text: 'En route', pulse: true },
+        'TERMINEE': { class: 'prio-faible', text: 'Livré' },
+        'ANNULEE': { class: 'prio-haute', text: 'Annulée' }
     };
-    const config = configs[statut] || { class: 'bg-secondary', text: statut };
-    return `<span class="badge ${config.class} bg-opacity-10 text-${config.class.replace('bg-', '')} border border-${config.class.replace('bg-', '')} border-opacity-25 rounded-pill px-2">
+    const config = configs[statut] || { class: 'prio-normale', text: statut };
+    return `<span class="prio-badge ${config.class}">
                 ${config.pulse ? '<span class="pulse-dot"></span> ' : ''}${config.text}
             </span>`;
 }

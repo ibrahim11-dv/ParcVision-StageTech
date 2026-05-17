@@ -44,7 +44,7 @@ public class AccidentController {
         return accidentService.findByetat(etat, page, size);
     }
 
-    @GetMapping("/admin")
+    @GetMapping("/admin/list")
     public Page<Accident> findall(@RequestParam(defaultValue = "0") int page,
                                   @RequestParam(defaultValue = "3") int size){
         return accidentService.AffichAll(page, size);

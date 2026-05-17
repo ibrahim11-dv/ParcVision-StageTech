@@ -1,6 +1,6 @@
 package com.ibrahim.parcvision.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -57,19 +57,19 @@ public class Entreprise {
     @OneToMany(
             mappedBy = "entreprise"
     )
-    @JsonManagedReference
+    @JsonIgnore
     private List<Utilisateur> utilisateur;
 
     @OneToMany(
             mappedBy = "entreprise"
     )
-    @JsonManagedReference
+    @JsonIgnore
     private List<Vehicule> vehicule;
 
     @OneToMany(
             mappedBy = "entreprise"
     )
-    @JsonManagedReference
+    @JsonIgnore
     private List<Mission> mission;
 
 

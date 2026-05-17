@@ -41,7 +41,7 @@ async function loadVidanges() {
 
 async function loadVehicules() {
     try {
-        const response = await fetch('http://localhost:8080/api/vehicules/all');
+        const response = await fetch('/api/vehicules/all');
         if (response.ok) {
             vehiculesData = await response.json();
             populateVehiculeDropdowns();
@@ -245,7 +245,7 @@ async function saveOilChange() {
     }
 
     const payload = {
-        vehiculeId: parseInt(vehiculeId),
+        vehicule: { id: parseInt(vehiculeId) },
         dateIntervention: dateInput || null,
         typeHuile: oilType,
         kilometrageAuMoment: km ? parseInt(km) : null,
@@ -285,7 +285,7 @@ async function updateOilChange() {
     const garage = document.getElementById('editGarage').value;
 
     const payload = {
-        vehiculeId: vehiculeId ? parseInt(vehiculeId) : null,
+        vehicule: vehiculeId ? { id: parseInt(vehiculeId) } : null,
         dateIntervention: dateInput || null,
         typeHuile: oilType ? oilType.options[oilType.selectedIndex].text : null,
         kilometrageAuMoment: km ? parseInt(km) : null,

@@ -1,0 +1,19 @@
+package com.ibrahim.parcvision.repository;
+
+import com.ibrahim.parcvision.entity.Entreprise;
+import com.ibrahim.parcvision.entity.Vidange;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface VidangeRepository extends JpaRepository<Vidange, Long> {
+    
+    List<Vidange> findByVehiculeEntreprise(Entreprise entreprise);
+
+    @Query("SELECT v FROM Vidange v JOIN v.vehicule veh WHERE (LOWER(veh.immatriculation) LIKE LOWER(CONCAT('%', :query, '%')) OR LOWER(v.descriptionPanne) LIKE LOWER(CONCAT('%', :query, '%'))) AND veh.entreprise = :entreprise")
+    List<Vidange> search(@Param("query") String query, @Param("entreprise") Entreprise entreprise);
+}

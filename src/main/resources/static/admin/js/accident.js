@@ -141,7 +141,7 @@ if (window.self !== window.top || new URLSearchParams(window.location.search).ge
 
 // ── Backend Integration ──
 
-const API_BASE = "http://localhost:8080/admin";
+const API_BASE = "/admin";
 
 // Fetch Stats
 function fetchStats() {
@@ -163,7 +163,7 @@ function fetchAccidents(page = 0) {
     const query = document.getElementById('searchInput').value.trim();
     const etat = document.getElementById('etat').value;
 
-    let url = `${API_BASE}?page=${page}`;
+    let url = `${API_BASE}/list?page=${page}`;
     if (query) {
         url = `${API_BASE}/search?query=${query}&page=${page}`;
     } else if (etat && etat !== 'all') {
@@ -181,7 +181,7 @@ function fetchAccidents(page = 0) {
 
 async function loadVehicles() {
     try {
-        const res = await fetch('http://localhost:8080/api/vehicules/all');
+        const res = await fetch('/api/vehicules/all');
         if (!res.ok) throw new Error('Erreur chargement véhicules');
         const vehicules = await res.json();
         
@@ -202,7 +202,7 @@ async function loadVehicles() {
 
 async function loadDrivers() {
     try {
-        const res = await fetch('http://localhost:8080/api/conducteurs/all');
+        const res = await fetch('/api/conducteurs/all');
         if (!res.ok) throw new Error('Erreur chargement conducteurs');
         const conducteurs = await res.json();
         

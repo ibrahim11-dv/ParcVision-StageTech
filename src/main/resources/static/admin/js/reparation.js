@@ -92,7 +92,7 @@ if (window.self !== window.top || new URLSearchParams(window.location.search).ge
     //count :
     // Statistique :
     function fetchStats() {
-        fetch("http://localhost:8080/admin/reparation/stats")
+        fetch("/admin/reparation/stats")
             .then(res => res.json())
             .then(data => {
                 const elements = document.getElementsByClassName('total_reparation');
@@ -108,7 +108,7 @@ if (window.self !== window.top || new URLSearchParams(window.location.search).ge
 
     // Centralized fetch function
     function fetchReparations(page = 0) {
-        fetch('http://localhost:8080/admin/reparation?page=' + page)
+        fetch('/admin/reparation?page=' + page)
             .then(res => res.json())
             .then(data => {
                 renderTableau(data);
@@ -122,7 +122,7 @@ if (window.self !== window.top || new URLSearchParams(window.location.search).ge
     //Chercher
     document.getElementById('searchInput').addEventListener('input', function () {
         const query = this.value.trim();
-        fetch('http://localhost:8080/admin/reparation/search?immat=' + query + '&page=0')
+        fetch('/admin/reparation/search?immat=' + query + '&page=0')
             .then(res => res.json())
             .then(data => {
                 renderTableau(data);
@@ -136,7 +136,7 @@ if (window.self !== window.top || new URLSearchParams(window.location.search).ge
         if (statut === 'all') {
             fetchReparations(0);
         } else {
-            fetch('http://localhost:8080/admin/reparation/filterByStatut?statut=' + statut + '&page=0')
+            fetch('/admin/reparation/filterByStatut?statut=' + statut + '&page=0')
                 .then(res => res.json())
                 .then(data => {
                     renderTableau(data);
@@ -161,7 +161,7 @@ if (window.self !== window.top || new URLSearchParams(window.location.search).ge
     //button de suppression :
     function deleteReparation(id) {
         if (confirm('Voulez-vous vraiment supprimer cette réparation ?')) {
-            fetch('http://localhost:8080/admin/reparation/delete/' + id, {
+            fetch('/admin/reparation/delete/' + id, {
                 method: 'DELETE'
             })
                 .then(res => {
@@ -199,7 +199,7 @@ if (window.self !== window.top || new URLSearchParams(window.location.search).ge
             statut: document.getElementById('editStatus').value
         };
 
-        fetch('http://localhost:8080/admin/reparation/update/' + id, {
+        fetch('/admin/reparation/update/' + id, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(body)
@@ -226,7 +226,7 @@ if (window.self !== window.top || new URLSearchParams(window.location.search).ge
             coutTotal:document.getElementById('cout').value,
             statut:document.getElementById('statut').value
         }
-        fetch('http://localhost:8080/admin/reparation/add',{
+        fetch('/admin/reparation/add',{
             method : 'POST',
             headers :  { 'Content-Type' : 'application/json' },
             body : JSON.stringify(body)
@@ -379,7 +379,7 @@ if (window.self !== window.top || new URLSearchParams(window.location.search).ge
 
     async function loadVehicles() {
         try {
-            const res = await fetch('http://localhost:8080/api/vehicules/all');
+            const res = await fetch('/api/vehicules/all');
             if (!res.ok) throw new Error('Erreur chargement véhicules');
             const vehicules = await res.json();
             

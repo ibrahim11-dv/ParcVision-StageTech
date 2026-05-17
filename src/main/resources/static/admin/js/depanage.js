@@ -58,7 +58,7 @@ initTheme();
 
 // ── Backend Integration ──
 
-const API_BASE = "http://localhost:8080/admin/depannage-api";
+const API_BASE = "/admin/depannage-api";
 
 function fetchStats() {
     fetch(`${API_BASE}/stats`)
@@ -100,7 +100,7 @@ fetchDepannages(0);
 
 async function loadVehicles() {
     try {
-        const res = await fetch('http://localhost:8080/api/vehicules/all');
+        const res = await fetch('/api/vehicules/all');
         if (!res.ok) throw new Error('Erreur chargement véhicules');
         const vehicules = await res.json();
         

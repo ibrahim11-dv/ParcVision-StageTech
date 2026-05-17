@@ -538,6 +538,95 @@ body.dark .form-label {
     color: var(--gray-400);
 }
 
+/* ══════════════════════════════════════════════════════════
+   HISTORIQUE TABLE STYLES
+══════════════════════════════════════════════════════════ */
+.table-wrapper {
+    background: var(--card-bg); border: 1px solid var(--border-color);
+    border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-sm);
+}
+.table { margin-bottom: 0; color: var(--text-main); }
+.table th {
+    background: var(--gray-50);
+    font-size: 0.72rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.8px;
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--border-color); color: var(--gray-600);
+    white-space: nowrap;
+}
+.table td { padding: 13px 18px; vertical-align: middle; border-bottom: 1px solid var(--border-color); font-size: 0.875rem; }
+.table tbody tr { transition: background .1s; background: transparent; }
+.table tbody tr:hover { background: var(--gray-50); }
+.table tbody tr:last-child td { border-bottom: none; }
+
+.search-bar {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--gray-100); border: 1px solid var(--border-color);
+    border-radius: 8px; padding: 0 12px; transition: all 0.2s;
+}
+.search-bar:focus-within { background: var(--card-bg); border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.search-bar i { color: var(--gray-400); font-size: 0.85rem; }
+.search-bar input { border: none; outline: none; background: none; padding: 9px 0; font-size: 0.875rem; color: var(--text-main); width: 100%; }
+.search-bar input::placeholder { color: var(--gray-400); }
+
+.form-select-custom {
+    width: 100%; padding: 9px 12px;
+    border: 1px solid var(--border-color); border-radius: 8px;
+    background: var(--card-bg); color: var(--text-main);
+    font-size: 0.875rem; transition: all 0.2s; outline: none;
+}
+.form-select-custom:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+
+.prio-badge {
+    padding: 3px 10px; border-radius: 20px;
+    font-size: 0.67rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.4px;
+}
+.prio-haute  { background: rgba(239,68,68,0.1); color: #ef4444; }
+.prio-normale{ background: rgba(245,158,11,0.1); color: #f59e0b; }
+.prio-faible { background: rgba(16,185,129,0.1); color: #10b981; }
+
+.btn-ghost {
+    background: transparent; color: var(--text-main);
+    border: 1px solid var(--border-color);
+    padding: 9px 20px; border-radius: 8px;
+    font-weight: 600; font-size: 0.875rem; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 7px;
+    transition: all 0.2s; text-decoration: none;
+    white-space: nowrap;
+}
+.btn-ghost:hover { background: var(--gray-100); border-color: var(--gray-400); }
+
+.btn-icon {
+    width: 34px; height: 34px;
+    border: 1px solid var(--border-color);
+    background: var(--card-bg); border-radius: 8px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 0.9rem; color: var(--gray-600); cursor: pointer;
+    transition: all 0.2s;
+}
+.btn-icon:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+
+body.dark .search-bar { background: var(--card-bg); border-color: var(--border-color); }
+body.dark .search-bar input { color: var(--text-main); }
+body.dark .btn-icon, body.dark .btn-ghost { background: var(--card-bg); color: var(--text-main); border-color: var(--border-color); }
+body.dark .btn-icon:hover, body.dark .btn-ghost:hover { background: var(--gray-100); }
+
+/* ══════════════════════════════════════════════════════════
+   DARK MODE FIXES
+══════════════════════════════════════════════════════════ */
+body.dark .table th {
+    background: var(--gray-100);
+    color: var(--gray-400);
+    border-bottom-color: var(--border-color);
+}
+body.dark .table td {
+    color: var(--text-main);
+    border-bottom-color: var(--border-color);
+}
+body.dark .table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
 
 /* Pagination Styling */
 .pagination .page-link {

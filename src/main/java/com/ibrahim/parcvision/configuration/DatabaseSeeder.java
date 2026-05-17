@@ -107,7 +107,7 @@ public class DatabaseSeeder implements CommandLineRunner {
             intervention.setDateIntervention(LocalDate.now().minusDays(random.nextInt(100)));
             intervention.setDescriptionPanne(faker.lorem().sentence());
             intervention.setActionsMenees(faker.lorem().sentence());
-            intervention.setCoutTotal(random.nextDouble() * 5000 + 500);
+            intervention.setCoutTotal(random.nextDouble() * 50 + 500);
             intervention.setKilometrageAuMoment((long) random.nextInt(150000) + 10000);
             intervention.setVehicule(vehicles.get(random.nextInt(vehicles.size())));
 

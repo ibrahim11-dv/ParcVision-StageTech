@@ -1,7 +1,6 @@
 package com.ibrahim.parcvision.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ibrahim.parcvision.enums.StatutMission;
 import jakarta.persistence.*;
 
@@ -61,32 +60,32 @@ public class Mission {
             name = "entreprise_id",
             nullable = false
     )
-    @JsonBackReference
+    @JsonIgnore
     private Entreprise entreprise;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "conducteur_id"
     )
-    @JsonBackReference
+    @JsonIgnore
     private Conducteur conducteur;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "vehicule_id"
     )
-    @JsonBackReference
+    @JsonIgnore
     private Vehicule vehicule;
 
     @OneToMany(
             mappedBy = "mission"
     )
-    @JsonManagedReference
+    @JsonIgnore
     private List<PointGPS> PointGPS;
 
 
     @OneToMany(mappedBy = "mission")
-    @JsonManagedReference
+    @JsonIgnore
     private List<Colis> colis;
 
 
