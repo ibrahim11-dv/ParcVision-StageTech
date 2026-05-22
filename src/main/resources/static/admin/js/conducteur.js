@@ -335,6 +335,9 @@ function afficherConducteurs(liste) {
                 <td><span class="prio-badge ${statutClass(c.statut)}">${statutLabel(c.statut || 'DISPONIBLE')}</span></td>
                 <td>
                     <div style="display:flex;gap:5px">
+                        <button class="btn-icon" title="Voir dÃ©tails" onclick="ouvrirDetailConducteur(${c.id})">
+                            <i class="bi bi-eye text-primary"></i>
+                        </button>
                         <button class="btn-icon" title="Modifier" onclick="ouvrirModification(${c.id})">
                             <i class="bi bi-pencil-square"></i>
                         </button>
@@ -461,6 +464,38 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+/* ───── DÉTAIL CONDUCTEUR ───── */
+async function ouvrirDetailConducteur(id) {
+    const res = await fetch(`/api/conducteurs/${id}`, { headers: authHeaders() });
+    if (!res.ok) return;
+    const c = await res.json();
+    document.getElementById('det-nom').textContent = c.utilisateur.nom + ' ' + c.utilisateur.prenom;
+    document.getElementById('det-email').textContent = c.utilisateur.email;
+    document.getElementById('det-tel').textContent = c.utilisateur.telephone;
+    document.getElementById('det-cin').textContent = c.utilisateur.cin || '-';
+    document.getElementById('det-naissance').textContent = c.utilisateur.dateNaissance || '-';
+    document.getElementById('det-permis').textContent = c.numeroPermis;
+    document.getElementById('det-val-permis').textContent = c.dateValiditePermis;
+    document.getElementById('det-embauche').textContent = c.dateEmbauche || '-';
+    document.getElementById('det-statut-cond').textContent = c.statut;
+
+    const preview = document.getElementById('det-photo');
+    if (c.photoProfileUrl) {
+        preview.src = c.photoProfileUrl.startsWith('http') ? c.photoProfileUrl : '/' + c.photoProfileUrl;
+        preview.style.display = 'block';
+    } else {
+        preview.style.display = 'none';
+    }
+
+    const docs = document.getElementById('det-cond-docs');
+    docs.innerHTML = '';
+    if (c.scanCinUrl) docs.innerHTML += `<a href="/api/files?path=${c.scanCinUrl}" target="_blank" class="btn btn-sm btn-outline-secondary me-2"><i class="bi bi-file-earmark-pdf"></i> CIN</a>`;
+    if (c.scanPermisUrl) docs.innerHTML += `<a href="/api/files?path=${c.scanPermisUrl}" target="_blank" class="btn btn-sm btn-outline-secondary"><i class="bi bi-file-earmark-pdf"></i> Permis</a>`;
+    if (!c.scanCinUrl && !c.scanPermisUrl) docs.innerHTML = '<span class="text-muted">Aucun document</span>';
+
+    new bootstrap.Modal(document.getElementById('detailDriverModal')).show();
+}
 
 /* ───── MODIFICATION (REMPLIR LE MODAL) ───── */
 async function ouvrirModification(id) {

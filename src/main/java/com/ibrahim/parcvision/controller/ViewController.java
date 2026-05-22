@@ -44,6 +44,16 @@ public class ViewController {
         return "forward:/admin/html/suivi-gps.html";
     }
 
+    @GetMapping("/admin/assurances")
+    public String adminAssurances() {
+        return "forward:/admin/html/assurance.html";
+    }
+
+    @GetMapping("/admin/infractions")
+    public String adminInfractions() {
+        return "forward:/admin/html/infraction.html";
+    }
+
     @GetMapping("/admin/reparations")
     public String adminReparations() {
         return "forward:/admin/html/reparation.html";

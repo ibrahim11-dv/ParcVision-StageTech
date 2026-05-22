@@ -8,55 +8,74 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
-        rel="stylesheet">
+            href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+            rel="stylesheet">
     <link rel="stylesheet" href="../css/conducteur.css">
 </head>
 
 <body>
 
-    <div class="shell">
+<div class="shell">
 
-        <aside class="sidebar" id="sidebar">
-            <a href="/admin/dashboard" class="sb-brand">
-                <div class="brand-icon"><i class="bi bi-car-front-fill"></i></div>
-                <div class="brand-text">
-                    <strong>Parc Auto</strong>
-                    <small>Gestion de flotte</small>
-                </div>
-            </a>
+    <aside class="sidebar" id="sidebar">
+        <a href="/admin/dashboard" class="sb-brand">
+            <div class="brand-icon"><i class="bi bi-car-front-fill"></i></div>
+            <div class="brand-text">
+                <strong>Parc Auto</strong>
+                <small>Gestion de flotte</small>
+            </div>
+        </a>
 
-            <div class="sb-body">
-                <div class="sb-section">Principal</div>
-                <div class="nav-item">
-                    <a href="/admin/dashboard" class="nav-link" data-tip="Dashboard">
-                        <span class="ni"><i class="bi bi-speedometer2"></i></span>
-                        <span class="nt">Dashboard<small class="nt-sub">Vue générale</small></span>
-                    </a>
-                </div>
+        <div class="sb-body">
+            <div class="sb-section">Principal</div>
+            <div class="nav-item">
+                <a href="/admin/dashboard" class="nav-link" data-tip="Dashboard">
+                    <span class="ni"><i class="bi bi-speedometer2"></i></span>
+                    <span class="nt">Dashboard<small class="nt-sub">Vue générale</small></span>
+                </a>
+            </div>
 
-                <div class="sb-section">Gestion</div>
-                <div class="nav-item">
-                    <a href="/admin/conducteurs" class="nav-link active" data-tip="Conducteurs">
-                        <span class="ni"><i class="bi bi-person-badge"></i><span class="pulse p-green"></span></span>
-                        <span class="nt">Conducteurs<small class="nt-sub" id="active-drivers-count">0
+            <div class="sb-section">Gestion</div>
+            <div class="nav-item">
+                <a href="/admin/conducteurs" class="nav-link active" data-tip="Conducteurs">
+                    <span class="ni"><i class="bi bi-person-badge"></i><span class="pulse p-green"></span></span>
+                    <span class="nt">Conducteurs<small class="nt-sub" id="active-drivers-count">0
                                 actifs</small></span>
-                        <span class="nb nb-blue" id="nb-total">0</span>
-                    </a>
-                </div>
-                <div class="nav-item">
-                    <a href="/admin/vehicules" class="nav-link" data-tip="Véhicules">
-                        <span class="ni"><i class="bi bi-truck"></i><span class="pulse p-amber"></span></span>
-                        <span class="nt">Véhicules<small class="nt-sub">24 en flotte</small></span>
-                        <span class="nb nb-blue">24</span>
-                    </a>
-                </div>
+                    <span class="nb nb-blue" id="nb-total">0</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="/admin/vehicules" class="nav-link" data-tip="Véhicules">
+                    <span class="ni"><i class="bi bi-truck"></i><span class="pulse p-amber"></span></span>
+                    <span class="nt">Véhicules<small class="nt-sub">24 en flotte</small></span>
+                    <span class="nb nb-blue">24</span>
+                </a>
+            </div>
+
+            <div class="nav-item">
+                <a href="/admin/assurances" class="nav-link" data-tip="Assurances">
+                    <span class="ni"><i class="bi bi-shield-check"></i><span class="pulse p-blue"></span></span>
+                    <span class="nt">Assurances<small class="nt-sub">Gestion</small></span>
+                </a>
+            </div>
+
+            <div class="nav-item">
+                <a href="/admin/infractions" class="nav-link" data-tip="Infractions">
+                    <span class="ni"><i class="bi bi-exclamation-triangle"></i><span class="pulse p-red"></span></span>
+                    <span class="nt">Infractions<small class="nt-sub">Suivi</small></span>
+                </a>
+            </div>
+
+            <div class="nav-item">
+            </div>
+
+            <div class="nav-item">
                 <div class="nav-item">
                     <a href="/admin/gps" class="nav-link" data-tip="Suivi GPS">
                         <span class="ni"><i class="bi bi-geo-alt"></i><span class="pulse p-green"></span></span>
                         <span class="nt">Suivi GPS<small class="nt-sub">3 en déplacement</small></span>
                         <span class="nb nb-green"
-                            style="background:rgba(34,197,94,0.1); color:#15803d; border-color:rgba(34,197,94,0.2);">LIVE</span>
+                              style="background:rgba(34,197,94,0.1); color:#15803d; border-color:rgba(34,197,94,0.2);">LIVE</span>
                     </a>
                 </div>
 
@@ -125,384 +144,446 @@
                     </div>
                 </div>
             </div>
-        </aside>
+    </aside>
 
-        <div class="overlay" id="overlay" onclick="closeMobile()"></div>
-        <button class="mob-toggle" onclick="openMobile()">
-            <i class="bi bi-list"></i>
-        </button>
+    <div class="overlay" id="overlay" onclick="closeMobile()"></div>
+    <button class="mob-toggle" onclick="openMobile()">
+        <i class="bi bi-list"></i>
+    </button>
 
-        <div class="main" id="main">
-            <div class="page">
-                <div class="w-100 d-flex flex-column align-items-center">
-                    <!-- En-tête de page -->
-                    <div class="page-header w-100 mb-4">
-                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-                            <div>
-                                <h2 class="page-title"><i class="bi bi-person-badge text-primary me-2"></i>Conducteurs
-                                    Enregistrés</h2>
-                                <p class="page-subtitle">Aperçu rapide des chauffeurs actuellement inscrits dans la
-                                    flotte.</p>
-                            </div>
-                            <div class="d-flex gap-2">
-                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDriverModal">
-                                    <i class="bi bi-plus-lg me-1"></i> Nouveau Conducteur
-                                </button>
+    <div class="main" id="main">
+        <div class="page">
+            <div class="w-100 d-flex flex-column align-items-center">
+                <!-- En-tête de page -->
+                <div class="page-header w-100 mb-4">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                        <div>
+                            <h2 class="page-title"><i class="bi bi-person-badge text-primary me-2"></i>Conducteurs
+                                Enregistrés</h2>
+                            <p class="page-subtitle">Aperçu rapide des chauffeurs actuellement inscrits dans la
+                                flotte.</p>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDriverModal">
+                                <i class="bi bi-plus-lg me-1"></i> Nouveau Conducteur
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ═══════ KPI ROW (identifiants dynamiques) ═══════ -->
+                <div class="row w-100 g-3 mb-4">
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-icon blue"><i class="bi bi-people-fill"></i></div>
+                            <div class="stat-body">
+                                <div class="stat-val" id="kpi-total">0</div>
+                                <div class="stat-label">Total Conducteurs</div>
                             </div>
                         </div>
                     </div>
-
-                    <!-- ═══════ KPI ROW (identifiants dynamiques) ═══════ -->
-                    <div class="row w-100 g-3 mb-4">
-                        <div class="col-6 col-md-3">
-                            <div class="stat-card">
-                                <div class="stat-icon blue"><i class="bi bi-people-fill"></i></div>
-                                <div class="stat-body">
-                                    <div class="stat-val" id="kpi-total">0</div>
-                                    <div class="stat-label">Total Conducteurs</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-6 col-md-3">
-                            <div class="stat-card">
-                                <div class="stat-icon green"><i class="bi bi-person-check-fill"></i></div>
-                                <div class="stat-body">
-                                    <div class="stat-val" id="kpi-dispo">0</div>
-                                    <div class="stat-label">Disponibles</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-6 col-md-3">
-                            <div class="stat-card">
-                                <div class="stat-icon orange"><i class="bi bi-car-front-fill"></i></div>
-                                <div class="stat-body">
-                                    <div class="stat-val" id="kpi-mission">0</div>
-                                    <div class="stat-label">En Mission</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-6 col-md-3">
-                            <div class="stat-card">
-                                <div class="stat-icon red"><i class="bi bi-calendar-x-fill"></i></div>
-                                <div class="stat-body">
-                                    <div class="stat-val" id="kpi-conge">0</div>
-                                    <div class="stat-label">En Congé</div>
-                                </div>
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-icon green"><i class="bi bi-person-check-fill"></i></div>
+                            <div class="stat-body">
+                                <div class="stat-val" id="kpi-dispo">0</div>
+                                <div class="stat-label">Disponibles</div>
                             </div>
                         </div>
                     </div>
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-icon orange"><i class="bi bi-car-front-fill"></i></div>
+                            <div class="stat-body">
+                                <div class="stat-val" id="kpi-mission">0</div>
+                                <div class="stat-label">En Mission</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-icon red"><i class="bi bi-calendar-x-fill"></i></div>
+                            <div class="stat-body">
+                                <div class="stat-val" id="kpi-conge">0</div>
+                                <div class="stat-label">En Congé</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                    <!-- Liste des conducteurs -->
-                    <div class="card w-100" style="padding:0;overflow:hidden; animation: fadeUp 0.4s ease both;">
-                        <div
+                <!-- Liste des conducteurs -->
+                <div class="card w-100" style="padding:0;overflow:hidden; animation: fadeUp 0.4s ease both;">
+                    <div
                             style="padding:18px 20px;border-bottom:1px solid var(--border-color);display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap">
-                            <h5 style="font-family:'Outfit',sans-serif;font-weight:700;font-size:1rem;margin:0">Liste
-                                des Conducteurs</h5>
-                            <div style="display:flex;gap:10px;flex-wrap:wrap">
-                                <div class="search-bar" style="min-width:200px">
-                                    <i class="bi bi-search"></i>
-                                    <input type="text" id="condSearch" placeholder="Rechercher un conducteur...">
-                                </div>
-                                <select class="form-select-custom" id="condFilter" style="width:auto;padding:9px 14px">
-                                    <option value="all">Tous les statuts</option>
-                                    <option value="DISPONIBLE">Disponible</option>
-                                    <option value="EN_MISSION">En Mission</option>
-                                    <option value="EN_CONGE">En Congé</option>
-                                </select>
+                        <h5 style="font-family:'Outfit',sans-serif;font-weight:700;font-size:1rem;margin:0">Liste
+                            des Conducteurs</h5>
+                        <div style="display:flex;gap:10px;flex-wrap:wrap">
+                            <div class="search-bar" style="min-width:200px">
+                                <i class="bi bi-search"></i>
+                                <input type="text" id="condSearch" placeholder="Rechercher un conducteur...">
                             </div>
+                            <select class="form-select-custom" id="condFilter" style="width:auto;padding:9px 14px">
+                                <option value="all">Tous les statuts</option>
+                                <option value="DISPONIBLE">Disponible</option>
+                                <option value="EN_MISSION">En Mission</option>
+                                <option value="EN_CONGE">En Congé</option>
+                            </select>
                         </div>
+                    </div>
 
-                        <div class="table-wrapper" style="border:none;border-radius:0;box-shadow:none">
-                            <table class="table align-middle">
-                                <thead>
-                                    <tr>
-                                        <th>Profil</th>
-                                        <th>Conducteur</th>
-                                        <th>Email</th>
-                                        <th>Téléphone</th>
-                                        <th>Statut</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <!-- ⚡ Corps dynamique -->
-                                <tbody id="conducteurs-tbody">
-                                    <!-- Rempli dynamiquement -->
-                                </tbody>
-                            </table>
-                        </div>
+                    <div class="table-wrapper" style="border:none;border-radius:0;box-shadow:none">
+                        <table class="table align-middle">
+                            <thead>
+                            <tr>
+                                <th>Profil</th>
+                                <th>Conducteur</th>
+                                <th>Email</th>
+                                <th>Téléphone</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <!-- ⚡ Corps dynamique -->
+                            <tbody id="conducteurs-tbody">
+                            <!-- Rempli dynamiquement -->
+                            </tbody>
+                        </table>
+                    </div>
 
-                        <!-- Pagination dynamique -->
-                        <div
+                    <!-- Pagination dynamique -->
+                    <div
                             style="padding:14px 20px;border-top:1px solid var(--border-color);display:flex;align-items:center;justify-content:space-between">
                             <span id="pagination-info" style="font-size:.82rem;color:var(--text-muted)">Affichage de 0 à
                                 0 sur 0 conducteurs</span>
-                            <div id="pagination-container" class="pagination-container" style="display:flex;gap:6px">
-                                <!-- Boutons de page générés par JS -->
-                            </div>
+                        <div id="pagination-container" class="pagination-container" style="display:flex;gap:6px">
+                            <!-- Boutons de page générés par JS -->
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- ──────────────────────────────────────────────
-     Modal AJOUTER CONDUCTEUR (formulaire complet)
-   ────────────────────────────────────────────── -->
-    <div class="modal fade" id="addDriverModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content border-0 shadow-lg">
-                <div class="modal-header border-bottom-0 pb-0">
-                    <div>
-                        <h5 class="modal-title fw-bold">Ajouter un Conducteur</h5>
-                        <p class="text-muted mb-0" style="font-size: 0.85rem;">Veuillez remplir les informations du
-                            nouveau conducteur.</p>
+<!-- ──────────────────────────────────────────────
+ Modal AJOUTER CONDUCTEUR (formulaire complet)
+────────────────────────────────────────────── -->
+<div class="modal fade" id="addDriverModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header border-bottom-0 pb-0">
+                <div>
+                    <h5 class="modal-title fw-bold">Ajouter un Conducteur</h5>
+                    <p class="text-muted mb-0" style="font-size: 0.85rem;">Veuillez remplir les informations du
+                        nouveau conducteur.</p>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addDriverForm">
+                    <!-- Drag and drop photo -->
+                    <div class="upload-circle" id="profileUploadArea">
+                        <i class="bi bi-cloud-arrow-up"></i>
+                        <span>Glissez et déposez une photo ici ou cliquez</span>
+                        <img src="" id="profilePreview" alt="Profile Preview">
+                        <input type="file" id="profileImageInput" name="photoProfile" accept="image/*"
+                               style="display:none;">
                     </div>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="addDriverForm">
-                        <!-- Drag and drop photo -->
-                        <div class="upload-circle" id="profileUploadArea">
-                            <i class="bi bi-cloud-arrow-up"></i>
-                            <span>Glissez et déposez une photo ici ou cliquez</span>
-                            <img src="" id="profilePreview" alt="Profile Preview">
-                            <input type="file" id="profileImageInput" name="photoProfile" accept="image/*"
-                                style="display:none;">
+
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Nom</label>
+                            <input type="text" name="nom" class="form-control" placeholder="Nom" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Prénom</label>
+                            <input type="text" name="prenom" class="form-control" placeholder="Prénom" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Date de naissance</label>
+                            <input type="date" name="dateNaissance" class="form-control" required>
                         </div>
 
-                        <div class="row g-3">
-                            <div class="col-md-4">
-                                <label class="form-label">Nom</label>
-                                <input type="text" name="nom" class="form-control" placeholder="Nom" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Prénom</label>
-                                <input type="text" name="prenom" class="form-control" placeholder="Prénom" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Date de naissance</label>
-                                <input type="date" name="dateNaissance" class="form-control" required>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">Email</label>
-                                <input type="email" name="email" class="form-control"
-                                    placeholder="prenom.nom@example.com" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Téléphone</label>
-                                <input type="tel" name="telephone" class="form-control" placeholder="0612345678"
-                                    required>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">CIN</label>
-                                <input type="text" name="cin" class="form-control"
-                                    placeholder="Numéro de la carte d'identité" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Mot de passe provisoire</label>
-                                <input type="password" name="motDePasse" class="form-control" placeholder="Mot de passe"
-                                    required>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">Numéro de Permis</label>
-                                <input type="text" name="numeroPermis" class="form-control"
-                                    placeholder="Ex: 12345678/90" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Validité du Permis</label>
-                                <input type="date" name="dateValiditePermis" class="form-control" required>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">Date d'embauche</label>
-                                <input type="date" name="dateEmbauche" class="form-control" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Statut</label>
-                                <select name="statut" class="form-select">
-                                    <option value="DISPONIBLE">Disponible</option>
-                                    <option value="EN_MISSION">En Mission</option>
-                                    <option value="EN_CONGE">En Congé</option>
-                                    <option value="SUSPENDU">Suspendu</option>
-                                </select>
-                            </div>
-
-                            <div class="col-12 mt-4">
-                                <h6 class="fw-bold text-primary mb-3"><i class="bi bi-file-earmark-pdf"></i> Documents
-                                    Joints (Archivage)</h6>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Scan Carte d'Identité (CIN)</label>
-                                <input type="file" name="scanCin" class="form-control" accept=".pdf,image/*">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Scan Permis de Conduire</label>
-                                <input type="file" name="scanPermis" class="form-control" accept=".pdf,image/*">
-                            </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Email</label>
+                            <input type="email" name="email" class="form-control"
+                                   placeholder="prenom.nom@example.com" required>
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer border-top-0 pt-0 mt-3">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
-                    <button type="submit" form="addDriverForm" class="btn btn-primary">
-                        Enregistrer le conducteur
-                    </button>
-                </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Téléphone</label>
+                            <input type="tel" name="telephone" class="form-control" placeholder="0612345678"
+                                   required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">CIN</label>
+                            <input type="text" name="cin" class="form-control"
+                                   placeholder="Numéro de la carte d'identité" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Mot de passe provisoire</label>
+                            <input type="password" name="motDePasse" class="form-control" placeholder="Mot de passe"
+                                   required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Numéro de Permis</label>
+                            <input type="text" name="numeroPermis" class="form-control"
+                                   placeholder="Ex: 12345678/90" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Validité du Permis</label>
+                            <input type="date" name="dateValiditePermis" class="form-control" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Date d'embauche</label>
+                            <input type="date" name="dateEmbauche" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Statut</label>
+                            <select name="statut" class="form-select">
+                                <option value="DISPONIBLE">Disponible</option>
+                                <option value="EN_MISSION">En Mission</option>
+                                <option value="EN_CONGE">En Congé</option>
+                                <option value="SUSPENDU">Suspendu</option>
+                            </select>
+                        </div>
+
+                        <div class="col-12 mt-4">
+                            <h6 class="fw-bold text-primary mb-3"><i class="bi bi-file-earmark-pdf"></i> Documents
+                                Joints (Archivage)</h6>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Scan Carte d'Identité (CIN)</label>
+                            <input type="file" name="scanCin" class="form-control" accept=".pdf,image/*">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Scan Permis de Conduire</label>
+                            <input type="file" name="scanPermis" class="form-control" accept=".pdf,image/*">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-top-0 pt-0 mt-3">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
+                <button type="submit" form="addDriverForm" class="btn btn-primary">
+                    Enregistrer le conducteur
+                </button>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- ──────────────────────────────────────────────
-     Modal MODIFIER CONDUCTEUR (avec identifiants)
-   ────────────────────────────────────────────── -->
-    <div class="modal fade" id="editDriverModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content border-0 shadow-lg">
-                <div class="modal-header border-bottom-0 pb-0">
-                    <h5 class="modal-title fw-bold">Modifier le Conducteur</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="editDriverForm">
-                        <!-- ID caché -->
-                        <input type="hidden" id="edit-id" name="id">
+<!-- ──────────────────────────────────────────────
+ Modal MODIFIER CONDUCTEUR (avec identifiants)
+────────────────────────────────────────────── -->
+<div class="modal fade" id="editDriverModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header border-bottom-0 pb-0">
+                <h5 class="modal-title fw-bold">Modifier le Conducteur</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editDriverForm">
+                    <!-- ID caché -->
+                    <input type="hidden" id="edit-id" name="id">
 
-                        <!-- Photo optionnelle pour modification -->
-                        <div class="upload-circle" id="editUploadArea">
-                            <i class="bi bi-cloud-arrow-up"></i>
-                            <span>Changer la photo (optionnel)</span>
-                            <img src="" id="editProfilePreview" alt="Profile Preview">
-                            <input type="file" id="editPhotoInput" name="photoProfile" accept="image/*"
-                                style="display:none;">
+                    <!-- Photo optionnelle pour modification -->
+                    <div class="upload-circle" id="editUploadArea">
+                        <i class="bi bi-cloud-arrow-up"></i>
+                        <span>Changer la photo (optionnel)</span>
+                        <img src="" id="editProfilePreview" alt="Profile Preview">
+                        <input type="file" id="editPhotoInput" name="photoProfile" accept="image/*"
+                               style="display:none;">
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Nom</label>
+                            <input type="text" id="edit-nom" name="nom" class="form-control" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Prénom</label>
+                            <input type="text" id="edit-prenom" name="prenom" class="form-control" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Date de naissance</label>
+                            <input type="date" id="edit-dateNaissance" name="dateNaissance" class="form-control">
                         </div>
 
-                        <div class="row g-3">
-                            <div class="col-md-4">
-                                <label class="form-label">Nom</label>
-                                <input type="text" id="edit-nom" name="nom" class="form-control" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Prénom</label>
-                                <input type="text" id="edit-prenom" name="prenom" class="form-control" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Date de naissance</label>
-                                <input type="date" id="edit-dateNaissance" name="dateNaissance" class="form-control">
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">Email</label>
-                                <input type="email" id="edit-email" name="email" class="form-control" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Téléphone</label>
-                                <input type="text" id="edit-telephone" name="telephone" class="form-control" required>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">CIN</label>
-                                <input type="text" id="edit-cin" name="cin" class="form-control">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Mot de passe (laisser vide pour ne pas changer)</label>
-                                <input type="password" id="edit-motDePasse" name="motDePasse" class="form-control">
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">Numéro de Permis</label>
-                                <input type="text" id="edit-numeroPermis" name="numeroPermis" class="form-control"
-                                    required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Validité du Permis</label>
-                                <input type="date" id="edit-dateValiditePermis" name="dateValiditePermis"
-                                    class="form-control" required>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">Date d'embauche</label>
-                                <input type="date" id="edit-dateEmbauche" name="dateEmbauche" class="form-control">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Statut</label>
-                                <select id="edit-statut" name="statut" class="form-select">
-                                    <option value="DISPONIBLE">Disponible</option>
-                                    <option value="EN_MISSION">En Mission</option>
-                                    <option value="EN_CONGE">En Congé</option>
-                                    <option value="SUSPENDU">Suspendu</option>
-                                </select>
-                            </div>
-
-                            <div class="col-12 mt-4">
-                                <h6 class="fw-bold text-primary mb-3"><i class="bi bi-file-earmark-pdf"></i> Mettre à
-                                    jour les documents</h6>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Scan CIN</label>
-                                <input type="file" name="scanCin" class="form-control" accept=".pdf,image/*">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Scan Permis</label>
-                                <input type="file" name="scanPermis" class="form-control" accept=".pdf,image/*">
-                            </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Email</label>
+                            <input type="email" id="edit-email" name="email" class="form-control" required>
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer border-top-0 pt-0 mt-3">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
-                    <button type="submit" form="editDriverForm" class="btn btn-primary">
-                        Enregistrer les modifications
-                    </button>
-                </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Téléphone</label>
+                            <input type="text" id="edit-telephone" name="telephone" class="form-control" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">CIN</label>
+                            <input type="text" id="edit-cin" name="cin" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Mot de passe (laisser vide pour ne pas changer)</label>
+                            <input type="password" id="edit-motDePasse" name="motDePasse" class="form-control">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Numéro de Permis</label>
+                            <input type="text" id="edit-numeroPermis" name="numeroPermis" class="form-control"
+                                   required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Validité du Permis</label>
+                            <input type="date" id="edit-dateValiditePermis" name="dateValiditePermis"
+                                   class="form-control" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Date d'embauche</label>
+                            <input type="date" id="edit-dateEmbauche" name="dateEmbauche" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Statut</label>
+                            <select id="edit-statut" name="statut" class="form-select">
+                                <option value="DISPONIBLE">Disponible</option>
+                                <option value="EN_MISSION">En Mission</option>
+                                <option value="EN_CONGE">En Congé</option>
+                                <option value="SUSPENDU">Suspendu</option>
+                            </select>
+                        </div>
+
+                        <div class="col-12 mt-4">
+                            <h6 class="fw-bold text-primary mb-3"><i class="bi bi-file-earmark-pdf"></i> Mettre à
+                                jour les documents</h6>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Scan CIN</label>
+                            <input type="file" name="scanCin" class="form-control" accept=".pdf,image/*">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Scan Permis</label>
+                            <input type="file" name="scanPermis" class="form-control" accept=".pdf,image/*">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-top-0 pt-0 mt-3">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
+                <button type="submit" form="editDriverForm" class="btn btn-primary">
+                    Enregistrer les modifications
+                </button>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Modal Confirmation Suppression -->
-    <div class="custom-modal-overlay" id="confirmDeleteModal">
-        <div class="custom-modal">
-            <div class="custom-modal-header">
-                <h5 class="custom-modal-title">Confirmer la suppression</h5>
-                <button type="button" class="custom-modal-close" onclick="closeModal('confirmDeleteModal')">&times;</button>
+<!-- Modal Détail Conducteur -->
+<div class="modal fade" id="detailDriverModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header border-bottom-0 pb-0">
+                <h5 class="modal-title fw-bold">Détails du Conducteur</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="custom-modal-body text-center">
+            <div class="modal-body">
+                <div class="row g-3">
+                    <div class="col-12 text-center mb-3">
+                        <img id="det-photo" src="" style="width:100px;height:100px;border-radius:50%;object-fit:cover;display:none;margin:0 auto;border:3px solid #eee;">
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-1 text-muted small">Nom & Prénom</p>
+                        <h6 id="det-nom" class="fw-bold">-</h6>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-1 text-muted small">Email</p>
+                        <h6 id="det-email" class="fw-bold">-</h6>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="mb-1 text-muted small">Téléphone</p>
+                        <h6 id="det-tel" class="fw-bold">-</h6>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="mb-1 text-muted small">CIN</p>
+                        <h6 id="det-cin" class="fw-bold">-</h6>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="mb-1 text-muted small">Date Naissance</p>
+                        <h6 id="det-naissance" class="fw-bold">-</h6>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="mb-1 text-muted small">N° Permis</p>
+                        <h6 id="det-permis" class="fw-bold">-</h6>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="mb-1 text-muted small text-danger"><i class="bi bi-exclamation-circle"></i> Validité Permis</p>
+                        <h6 id="det-val-permis" class="fw-bold">-</h6>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="mb-1 text-muted small">Statut</p>
+                        <h6 id="det-statut-cond" class="fw-bold">-</h6>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="mb-1 text-muted small">Date Embauche</p>
+                        <h6 id="det-embauche" class="fw-bold">-</h6>
+                    </div>
+                    <div class="col-12 mt-3">
+                        <h6 class="fw-bold">Documents Joints</h6>
+                        <div id="det-cond-docs"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-top-0 pt-0 mt-3">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Confirmation Suppression -->
+<div class="custom-modal-overlay" id="confirmDeleteModal">
+    <div class="custom-modal">
+        <div class="custom-modal-header">
+            <h5 class="custom-modal-title">Confirmer la suppression</h5>
+            <button type="button" class="custom-modal-close" onclick="closeModal('confirmDeleteModal')">&times;</button>
+        </div>
+        <div class="custom-modal-body text-center">
+            <div class="mb-3">
+                <i class="bi bi-exclamation-octagon text-danger" style="font-size: 3rem;"></i>
+            </div>
+            <p class="text-muted" id="deleteConfirmText">Voulez-vous vraiment supprimer ce conducteur ? Cette action est irréversible.</p>
+        </div>
+        <div class="custom-modal-footer">
+            <button type="button" class="btn btn-light px-4" onclick="closeModal('confirmDeleteModal')">Annuler</button>
+            <button type="button" class="btn btn-danger px-4" id="confirmDeleteBtn">Supprimer</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Succès -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 380px;">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-body text-center p-4">
                 <div class="mb-3">
-                    <i class="bi bi-exclamation-octagon text-danger" style="font-size: 3rem;"></i>
+                    <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
                 </div>
-                <p class="text-muted" id="deleteConfirmText">Voulez-vous vraiment supprimer ce conducteur ? Cette action est irréversible.</p>
-            </div>
-            <div class="custom-modal-footer">
-                <button type="button" class="btn btn-light px-4" onclick="closeModal('confirmDeleteModal')">Annuler</button>
-                <button type="button" class="btn btn-danger px-4" id="confirmDeleteBtn">Supprimer</button>
+                <h5 class="fw-bold mb-2" id="successTitle">Succès !</h5>
+                <p class="text-muted mb-4" id="successMessage">L'opération a été réalisée avec succès.</p>
+                <button type="button" class="btn btn-primary w-100" data-bs-dismiss="modal">Continuer</button>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Modal Succès -->
-    <div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" style="max-width: 380px;">
-            <div class="modal-content border-0 shadow-lg">
-                <div class="modal-body text-center p-4">
-                    <div class="mb-3">
-                        <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
-                    </div>
-                    <h5 class="fw-bold mb-2" id="successTitle">Succès !</h5>
-                    <p class="text-muted mb-4" id="successMessage">L'opération a été réalisée avec succès.</p>
-                    <button type="button" class="btn btn-primary w-100" data-bs-dismiss="modal">Continuer</button>
-                </div>
-            </div>
-        </div>
-    </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script src="../js/conducteur.js"></script>
-    <script src="../js/logout.js"></script>
-    <script src="../js/navbarInfo.js"></script>
+<script src="../js/conducteur.js"></script>
+<script src="../js/logout.js"></script>
+<script src="../js/navbarInfo.js"></script>
 
 </body>
 
