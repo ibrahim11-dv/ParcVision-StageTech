@@ -41,7 +41,7 @@ async function loadVidanges(page = 0) {
             renderPagination(data);
             // KPIs are generally based on all data, but here we update with what we have
             // Or we could have a separate endpoint for KPIs
-            updateKPIs(vidangesData); 
+            updateKPIs(vidangesData);
         }
     } catch (err) {
         console.error('Error loading vidanges:', err);
@@ -59,7 +59,7 @@ function renderPagination(data) {
     const start = data.totalElements === 0 ? 0 : data.number * data.size + 1;
     const end = Math.min(start + data.size - 1, totalElements);
 
-    summary.textContent = totalElements > 0 
+    summary.textContent = totalElements > 0
         ? `Affichage de ${start} à ${end} sur ${totalElements} vidanges`
         : 'Aucune vidange à afficher';
 
@@ -384,15 +384,15 @@ function submitDeleteVidange() {
     fetch(`/api/vidanges/${vidangeToDelete}`, {
         method: 'DELETE'
     })
-    .then(res => {
-        if (!res.ok) throw new Error('Erreur lors de la suppression');
-        closeModal('deleteVidangeModal');
-        loadVidanges();
-    })
-    .catch(err => {
-        console.error(err);
-        alert('Erreur lors de la suppression');
-    });
+        .then(res => {
+            if (!res.ok) throw new Error('Erreur lors de la suppression');
+            closeModal('deleteVidangeModal');
+            loadVidanges();
+        })
+        .catch(err => {
+            console.error(err);
+            alert('Erreur lors de la suppression');
+        });
 }
 
 // ── Search & Filter ──

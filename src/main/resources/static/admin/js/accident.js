@@ -429,6 +429,121 @@ function getStatutStyle(etat) {
     }
 }
 
+let addSelectedFiles = [];
+let editSelectedFiles = [];
+let editDeletedPhotos = [];
+
+function setupMultiUploadArea(uploadAreaId, fileInputId, previewContainerId, filesArray) {
+    const uploadArea = document.getElementById(uploadAreaId);
+    const fileInput = document.getElementById(fileInputId);
+    const previewContainer = document.getElementById(previewContainerId);
+
+    if (!uploadArea || !fileInput || !previewContainer) return;
+
+    uploadArea.addEventListener('click', () => fileInput.click());
+
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(event => {
+        uploadArea.addEventListener(event, e => {
+            e.preventDefault();
+            e.stopPropagation();
+        });
+    });
+
+    ['dragenter', 'dragover'].forEach(event => {
+        uploadArea.addEventListener(event, () => uploadArea.classList.add('dragover'));
+    });
+
+    ['dragleave', 'drop'].forEach(event => {
+        uploadArea.addEventListener(event, () => uploadArea.classList.remove('dragover'));
+    });
+
+    uploadArea.addEventListener('drop', e => {
+        const files = Array.from(e.dataTransfer.files);
+        handleFiles(files, filesArray, previewContainer);
+    });
+
+    fileInput.addEventListener('change', function () {
+        const files = Array.from(this.files);
+        handleFiles(files, filesArray, previewContainer);
+        fileInput.value = ''; // Reset input so same file can be selected again
+    });
+}
+
+function handleFiles(files, filesArray, previewContainer) {
+    const imageFiles = files.filter(f => f.type.startsWith('image/'));
+    imageFiles.forEach(file => {
+        filesArray.push(file);
+        
+        const reader = new FileReader();
+        reader.onload = e => {
+            const thumb = document.createElement('div');
+            thumb.className = 'preview-thumb';
+            thumb.innerHTML = `
+                <img src="${e.target.result}" alt="Preview">
+                <button type="button" class="delete-btn"><i class="bi bi-trash"></i></button>
+            `;
+            
+            thumb.querySelector('.delete-btn').addEventListener('click', (ev) => {
+                ev.stopPropagation();
+                const index = filesArray.indexOf(file);
+                if (index > -1) {
+                    filesArray.splice(index, 1);
+                }
+                thumb.remove();
+            });
+            
+            previewContainer.appendChild(thumb);
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+function cleanPhotoUrl(url) {
+    if (!url) return '';
+    if (url.startsWith('http')) return url;
+    
+    const index = url.indexOf('uploads/');
+    if (index !== -1) {
+        return '/' + url.substring(index);
+    }
+    return url.startsWith('/') ? url : '/' + url;
+}
+
+function renderExistingPhotosForEdit(photosUrl) {
+    const container = document.getElementById('editExistingPhotos');
+    if (!container) return;
+    container.innerHTML = '';
+    editDeletedPhotos = [];
+    
+    if (!photosUrl || photosUrl.length === 0) {
+        container.innerHTML = '<span class="text-muted" style="font-size:0.85rem">Aucune photo enregistrée</span>';
+        return;
+    }
+    
+    photosUrl.forEach(url => {
+        const fullUrl = cleanPhotoUrl(url);
+        const thumb = document.createElement('div');
+        thumb.className = 'preview-thumb';
+        thumb.innerHTML = `
+            <img src="${fullUrl}" alt="Photo">
+            <button type="button" class="delete-btn"><i class="bi bi-trash"></i></button>
+        `;
+        
+        thumb.querySelector('.delete-btn').addEventListener('click', (ev) => {
+            ev.stopPropagation();
+            editDeletedPhotos.push(url);
+            thumb.remove();
+        });
+        
+        container.appendChild(thumb);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    setupMultiUploadArea('addPhotosUploadArea', 'addPhotosInput', 'addPhotosPreview', addSelectedFiles);
+    setupMultiUploadArea('editPhotosUploadArea', 'editPhotosInput', 'editPhotosPreview', editSelectedFiles);
+});
+
 function openViewModal(a) {
     const values = document.querySelectorAll('#viewModal .view-detail-value');
     values[0].textContent = (a.vehicule?.immatriculation || '') + ' ' + (a.vehicule?.model || '');
@@ -439,6 +554,24 @@ function openViewModal(a) {
     values[5].textContent = (a.budgetEstime || 0).toLocaleString() + ' DH';
     values[6].textContent = a.descriptionPanne || '';
 
+    // Rendu des photos dans la galerie
+    const gallery = document.getElementById('viewPhotosGallery');
+    if (gallery) {
+        gallery.innerHTML = '';
+        if (a.photosUrl && a.photosUrl.length > 0) {
+            a.photosUrl.forEach(url => {
+                const fullUrl = cleanPhotoUrl(url);
+                gallery.innerHTML += `
+                    <div class="gallery-item" onclick="window.open('${fullUrl}', '_blank')">
+                        <img src="${fullUrl}" alt="Photo de l'accident">
+                    </div>
+                `;
+            });
+        } else {
+            gallery.innerHTML = '<span class="text-muted" style="font-size:0.85rem">Aucune photo disponible</span>';
+        }
+    }
+
     openModal('viewModal');
 }
 
@@ -447,21 +580,41 @@ function openEditModal(a) {
     document.getElementById('statutSelectEdit').value = a.etat || 'En expertise';
     document.getElementById('budgetInputEdit').value = a.budgetEstime || '';
     document.getElementById('notesTextarea').value = a.notes || '';
+    
+    // Reset new photos
+    editSelectedFiles = [];
+    document.getElementById('editPhotosPreview').innerHTML = '';
+    
+    // Render existing photos
+    renderExistingPhotosForEdit(a.photosUrl);
+    
     openModal('editModal');
 }
 
 function submitEditModal() {
     const id = document.getElementById('editModal').dataset.accidentId;
-    const body = {
-        etat: document.getElementById('statutSelectEdit').value,
-        budgetEstime: document.getElementById('budgetInputEdit').value,
-        notes: document.getElementById('notesTextarea').value
-    };
+    const formData = new FormData();
+    
+    formData.append("etat", document.getElementById('statutSelectEdit').value);
+    formData.append("budgetEstime", document.getElementById('budgetInputEdit').value);
+    formData.append("notes", document.getElementById('notesTextarea').value);
+    
+    editDeletedPhotos.forEach(url => {
+        formData.append("deletedPhotos", url);
+    });
+    
+    editSelectedFiles.forEach(file => {
+        formData.append("photos", file);
+    });
+
+    const btn = document.querySelector('#editModal button.btn-primary');
+    const originalText = btn.textContent;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Mise à jour...';
+    btn.disabled = true;
 
     fetch(`${API_BASE}/update/${id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
+        body: formData
     })
         .then(res => {
             if (!res.ok) throw new Error('Erreur mise à jour');
@@ -471,8 +624,15 @@ function submitEditModal() {
             closeModal('editModal');
             fetchAccidents(0);
             fetchStats();
+            editSelectedFiles = [];
+            editDeletedPhotos = [];
+            document.getElementById('editPhotosPreview').innerHTML = '';
         })
-        .catch(err => alert('Erreur : ' + err.message));
+        .catch(err => alert('Erreur : ' + err.message))
+        .finally(() => {
+            btn.textContent = originalText;
+            btn.disabled = false;
+        });
 }
 
 function submitAddModal() {
@@ -491,22 +651,29 @@ function submitAddModal() {
         return;
     }
 
-    const body = {
-        vehicule: { id: parseInt(vehiculeId) },
-        dateIntervention: time,
-        descriptionPanne: description,
-        lieu: lieu,
-        contexte: contexte,
-        gravite: gravite,
-        budgetEstime: parseFloat(budget) || 0,
-        etat: statut,
-        conducteur: { id: parseInt(conducteurId) }
-    };
+    const formData = new FormData();
+    formData.append("vehiculeId", vehiculeId);
+    formData.append("conducteurId", conducteurId);
+    formData.append("dateIntervention", time);
+    formData.append("descriptionPanne", description);
+    formData.append("lieu", lieu);
+    formData.append("contexte", contexte);
+    formData.append("gravite", gravite);
+    formData.append("etat", statut);
+    formData.append("budgetEstime", parseFloat(budget) || 0);
+
+    addSelectedFiles.forEach(file => {
+        formData.append("photos", file);
+    });
+
+    const btn = document.querySelector('#addModal button.btn-primary');
+    const originalText = btn.textContent;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Enregistrement...';
+    btn.disabled = true;
 
     fetch(`${API_BASE}/Add`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
+        body: formData
     })
         .then(res => {
             if (!res.ok) return res.text().then(text => { throw new Error(text) });
@@ -514,15 +681,22 @@ function submitAddModal() {
         })
         .then(() => {
             closeModal('addModal');
-            // Reset form
             document.getElementById("vehicule").value = "";
             document.getElementById("conducteur").value = "";
             document.getElementById("time").value = "";
             document.getElementById("lieu").value = "";
             document.getElementById("description").value = "";
             
+            addSelectedFiles = [];
+            document.getElementById('addPhotosPreview').innerHTML = '';
+
             fetchAccidents(0);
             fetchStats();
         })
-        .catch(err => alert('Erreur : ' + err.message));
+        .catch(err => alert('Erreur : ' + err.message))
+        .finally(() => {
+            btn.textContent = originalText;
+            btn.disabled = false;
+        });
 }
+

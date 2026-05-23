@@ -90,6 +90,10 @@ public class DatabaseSeeder implements CommandLineRunner {
                 r.setPiecesRemplacees("Plaquettes de frein, Filtres, Courroie, Bougies");
                 r.setGaragePrestataire(faker.company().name() + " Auto Service");
                 r.setStatut("TERMINEE");
+                r.setEstPaye(random.nextBoolean());
+                if (r.getEstPaye()) {
+                    r.setDatePayement(LocalDate.now().minusDays(random.nextInt(30)));
+                }
                 intervention = r;
             } else if (type == 1) {
                 Depannage d = new Depannage();

@@ -7,7 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.http.MediaType;
+import org.springframework.web.multipart.MultipartFile;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -50,11 +53,20 @@ public class AccidentController {
         return accidentService.AffichAll(page, size);
     }
 
-    @PutMapping("/admin/update/{id}")
-    public ResponseEntity<Accident> updateAccident(
+    @PutMapping(value = "/admin/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> updateAccident(
             @PathVariable Long id,
-            @RequestBody Map<String, Object> updates) {
-        return ResponseEntity.ok(accidentService.updateAccident(id, updates));
+            @RequestParam("etat") String etat,
+            @RequestParam("budgetEstime") Double budgetEstime,
+            @RequestParam("notes") String notes,
+            @RequestParam(value = "deletedPhotos", required = false) List<String> deletedPhotos,
+            @RequestParam(value = "photos", required = false) MultipartFile[] photos) {
+        try {
+            Accident updated = accidentService.updateAccident(id, etat, budgetEstime, notes, deletedPhotos, photos);
+            return ResponseEntity.ok(updated);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
     }
 
     @DeleteMapping("/admin/delete/{id}")
@@ -63,8 +75,24 @@ public class AccidentController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/admin/Add")
-    public Accident AddAccident(@RequestBody Accident accident){
-        return accidentService.saveAccident(accident);
+    @PostMapping(value = "/admin/Add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> AddAccident(
+            @RequestParam("vehiculeId") Long vehiculeId,
+            @RequestParam("conducteurId") Long conducteurId,
+            @RequestParam("dateIntervention") String dateIntervention,
+            @RequestParam("descriptionPanne") String descriptionPanne,
+            @RequestParam("lieu") String lieu,
+            @RequestParam("contexte") String contexte,
+            @RequestParam("gravite") String gravite,
+            @RequestParam("etat") String etat,
+            @RequestParam("budgetEstime") Double budgetEstime,
+            @RequestParam(value = "photos", required = false) MultipartFile[] photos) {
+        try {
+            Accident saved = accidentService.addAccident(vehiculeId, conducteurId, dateIntervention,
+                    descriptionPanne, lieu, contexte, gravite, etat, budgetEstime, photos);
+            return ResponseEntity.ok(saved);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
     }
 }

@@ -8,6 +8,7 @@ import com.ibrahim.parcvision.enums.StatutVehicule;
 import com.ibrahim.parcvision.repository.ConducteurRepository;
 import com.ibrahim.parcvision.repository.InterventionRepository;
 import com.ibrahim.parcvision.repository.MissionRepository;
+import com.ibrahim.parcvision.repository.FournisseurRepository;
 import com.ibrahim.parcvision.repository.UtilisateurRepository;
 import com.ibrahim.parcvision.repository.VehiculeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,9 @@ public class DashboardService {
     @Autowired
     private UtilisateurRepository utilisateurRepository;
 
+    @Autowired
+    private FournisseurRepository fournisseurRepository;
+
     public DashboardStatsDao getDashboardStats() {
         String emailAdmin = SecurityContextHolder.getContext().getAuthentication().getName();
         Utilisateur admin = utilisateurRepository.findByEmail(emailAdmin)
@@ -73,6 +77,7 @@ public class DashboardService {
         stats.setCoutTotalInterventions(coutTotal != null ? coutTotal : 0.0);
 
         stats.setMissionsEnCours(missionRepository.countMissionsEnCoursByEntreprise(entreprise));
+        stats.setNbFournisseurs(fournisseurRepository.countByEntreprise(entreprise));
 
         List<Object[]> interventionsByType = interventionRepository.countInterventionsByType(entreprise);
         for (Object[] row : interventionsByType) {

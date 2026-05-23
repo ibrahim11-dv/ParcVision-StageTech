@@ -88,6 +88,24 @@ public class ReparationService {
         if (updates.containsKey("statut"))
             reparation.setStatut((String) updates.get("statut"));
 
+        if (updates.containsKey("estPaye")) {
+            Object val = updates.get("estPaye");
+            if (val instanceof Boolean) {
+                reparation.setEstPaye((Boolean) val);
+            } else {
+                reparation.setEstPaye(Boolean.parseBoolean(val.toString()));
+            }
+        }
+
+        if (updates.containsKey("datePayement")) {
+            Object val = updates.get("datePayement");
+            if (val == null || val.toString().isEmpty()) {
+                reparation.setDatePayement(null);
+            } else {
+                reparation.setDatePayement(LocalDate.parse(val.toString()));
+            }
+        }
+
         return reparationRepository.save(reparation);
     }
 

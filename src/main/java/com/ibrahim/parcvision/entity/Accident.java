@@ -2,6 +2,8 @@ package com.ibrahim.parcvision.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @DiscriminatorValue("accident")
@@ -30,6 +32,11 @@ public class Accident extends Intervention {
     @Column(name = "notes", columnDefinition = "TEXT")
     private String notes;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "accident_photos", joinColumns = @JoinColumn(name = "accident_id"))
+    @Column(name = "photo_url")
+    private List<String> photosUrl = new ArrayList<>();
+
     // Getters and Setters
     public String getLieu() { return lieu; }
     public void setLieu(String lieu) { this.lieu = lieu; }
@@ -51,4 +58,7 @@ public class Accident extends Intervention {
 
     public String getNotes() { return notes; }
     public void setNotes(String notes) { this.notes = notes; }
+
+    public List<String> getPhotosUrl() { return photosUrl; }
+    public void setPhotosUrl(List<String> photosUrl) { this.photosUrl = photosUrl; }
 }

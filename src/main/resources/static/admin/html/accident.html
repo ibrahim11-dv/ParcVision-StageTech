@@ -115,6 +115,14 @@
                     </a>
                 </div>
 
+                <div class="nav-item">
+                    <a href="/admin/fournisseurs" class="nav-link" data-tip="Fournisseurs">
+                        <span class="ni"><i class="bi bi-people-fill"></i><span class="pulse p-green"></span></span>
+                        <span class="nt">Fournisseurs<small class="nt-sub">Gestion prestataires</small></span>
+                        <span class="nb nb-blue">0</span>
+                    </a>
+                </div>
+
                 <div class="sb-hr"></div>
                 <div class="sb-section">Données</div>
 
@@ -323,6 +331,16 @@
                                 <textarea class="form-control" rows="3"
                                           placeholder="Décrivez les dégâts matériels..." id="description"></textarea>
                             </div>
+
+                            <div class="form-group mt-3">
+                                <label class="form-label">Photos de l'accident</label>
+                                <div class="upload-area" id="addPhotosUploadArea">
+                                    <i class="bi bi-cloud-upload"></i>
+                                    <span>Glissez-déposez des photos ici ou cliquez pour choisir</span>
+                                    <input type="file" id="addPhotosInput" multiple accept="image/*" style="display: none;">
+                                </div>
+                                <div id="addPhotosPreview" class="previews-container"></div>
+                            </div>
                         </div>
                         <div class="custom-modal-footer">
                             <button class="btn btn-secondary" onclick="closeModal('addModal')">Annuler</button>
@@ -367,6 +385,12 @@
                                 <span class="view-detail-label">Description</span>
                                 <span class="view-detail-value"></span>
                             </div>
+                            <div class="view-detail-row flex-column align-items-start gap-1" style="border:none">
+                                <span class="view-detail-label">Photos de l'accident</span>
+                                <div id="viewPhotosGallery" class="view-photos-gallery w-100">
+                                    <!-- Photos will be inserted dynamically here -->
+                                </div>
+                            </div>
                         </div>
                         <div class="custom-modal-footer">
                             <button class="btn btn-secondary" onclick="closeModal('viewModal')">Fermer</button>
@@ -400,6 +424,19 @@
                     <div class="form-group">
                         <label class="form-label">Notes supplémentaires</label>
                         <textarea class="form-control" rows="3" id="notesTextarea">L'assurance prend en charge 80% des frais.</textarea>
+                    </div>
+                    <div class="form-group mt-3">
+                        <label class="form-label">Photos actuelles (cliquez sur l'icône corbeille pour supprimer)</label>
+                        <div id="editExistingPhotos" class="previews-container mb-3"></div>
+                    </div>
+                    <div class="form-group mt-3">
+                        <label class="form-label">Ajouter de nouvelles photos</label>
+                        <div class="upload-area" id="editPhotosUploadArea">
+                            <i class="bi bi-cloud-upload"></i>
+                            <span>Glissez-déposez des photos ici ou cliquez pour choisir</span>
+                            <input type="file" id="editPhotosInput" multiple accept="image/*" style="display: none;">
+                        </div>
+                        <div id="editPhotosPreview" class="previews-container"></div>
                     </div>
                 </div>
                 <div class="custom-modal-footer">
