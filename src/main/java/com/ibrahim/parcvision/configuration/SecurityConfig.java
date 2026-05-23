@@ -44,7 +44,8 @@ public class SecurityConfig {
                                           "/register",
                                           "/error",
                                           "/api/auth/login",
-                                          "/api/registration/register-Enterprise"
+                                          "/api/registration/register-Enterprise",
+                                          "/api/files"
                                   ).permitAll()
                                   .anyRequest().authenticated()
                 ).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

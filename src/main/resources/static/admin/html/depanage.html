@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -60,92 +60,110 @@
             </div>
 
             <div class="nav-item">
-                <a href="/admin/gps" class="nav-link" data-tip="Suivi GPS">
+                <a href="/admin/assurances" class="nav-link" data-tip="Assurances">
+                    <span class="ni"><i class="bi bi-shield-check"></i><span class="pulse p-blue"></span></span>
+                    <span class="nt">Assurances<small class="nt-sub">Gestion</small></span>
+                </a>
+            </div>
+
+            <div class="nav-item">
+                <a href="/admin/infractions" class="nav-link" data-tip="Infractions">
+                    <span class="ni"><i class="bi bi-exclamation-triangle"></i><span class="pulse p-red"></span></span>
+                    <span class="nt">Infractions<small class="nt-sub">Suivi</small></span>
+                </a>
+            </div>
+
+            <div class="nav-item">
+            </div>
+
+            <div class="nav-item">
+                <div class="nav-item">
+                    <a href="/admin/gps" class="nav-link" data-tip="Suivi GPS">
                         <span class="ni">
                             <i class="bi bi-geo-alt"></i>
                             <span class="pulse p-green"></span>
                         </span>
-                    <span class="nt">Suivi GPS<small class="nt-sub">3 en déplacement</small></span>
-                    <span class="nb nb-green"
-                          style="background:rgba(34,197,94,0.1); color:#15803d; border-color:rgba(34,197,94,0.2);">LIVE</span>
-                </a>
-            </div>
+                        <span class="nt">Suivi GPS<small class="nt-sub">3 en déplacement</small></span>
+                        <span class="nb nb-green"
+                              style="background:rgba(34,197,94,0.1); color:#15803d; border-color:rgba(34,197,94,0.2);">LIVE</span>
+                    </a>
+                </div>
 
-            <div class="sb-hr"></div>
-            <div class="sb-section">Interventions</div>
+                <div class="sb-hr"></div>
+                <div class="sb-section">Interventions</div>
 
-            <div class="nav-item">
-                <a href="/admin/reparations" class="nav-link" data-tip="Réparation">
+                <div class="nav-item">
+                    <a href="/admin/reparations" class="nav-link" data-tip="Réparation">
                         <span class="ni">
                             <i class="bi bi-wrench-adjustable"></i>
                             <span class="pulse p-amber"></span>
                         </span>
-                    <span class="nt">Réparation<small class="nt-sub">5 en cours</small></span>
-                    <span class="nb nb-amber">5</span>
-                </a>
-            </div>
+                        <span class="nt">Réparation<small class="nt-sub">5 en cours</small></span>
+                        <span class="nb nb-amber">5</span>
+                    </a>
+                </div>
 
-            <div class="nav-item">
-                <a href="/admin/accidents" class="nav-link" data-tip="Accident">
+                <div class="nav-item">
+                    <a href="/admin/accidents" class="nav-link" data-tip="Accident">
                         <span class="ni">
                             <i class="bi bi-exclamation-triangle"></i>
                             <span class="pulse p-red"></span>
                         </span>
-                    <span class="nt">Accident<small class="nt-sub">3 ce mois</small></span>
-                    <span class="nb nb-red">3</span>
-                </a>
-            </div>
-
-            <div class="nav-item">
-                <a href="/admin/depannage" class="nav-link active" data-tip="Dépannage">
-                    <span class="ni"><i class="bi bi-cone-striped"></i><span class="pulse p-amber"></span></span>
-                    <span class="nt">Dépannage<small class="nt-sub">2 interventions</small></span>
-                    <span class="nb nb-amber">2</span>
-                </a>
-            </div>
-
-            <div class="nav-item">
-                <a href="/admin/vidanges" class="nav-link" data-tip="Vidange">
-                    <span class="ni"><i class="bi bi-droplet-half"></i><span class="pulse p-blue"></span></span>
-                    <span class="nt">Vidange<small class="nt-sub">7 planifiées</small></span>
-                    <span class="nb nb-blue">7</span>
-                </a>
-            </div>
-
-            <div class="sb-hr"></div>
-            <div class="sb-section">Données</div>
-
-            <div class="nav-item">
-                <a href="/admin/archivage" class="nav-link" data-tip="Archivage">
-                    <span class="ni"><i class="bi bi-archive"></i></span>
-                    <span class="nt">Archivage<small class="nt-sub">Documents &amp; historique</small></span>
-                </a>
-            </div>
-
-        </div>
-
-        <div class="sb-foot">
-            <div class="profile-row" id="profileRow">
-                <div class="profile-av">AD</div>
-                <div class="profile-info">
-                    <b id="user-name"></b>
-                    <small id="user-email"></small>
+                        <span class="nt">Accident<small class="nt-sub">3 ce mois</small></span>
+                        <span class="nb nb-red">3</span>
+                    </a>
                 </div>
-                <i class="bi bi-three-dots-vertical profile-more"></i>
 
-                <div class="profile-popup" id="profilePopup" onclick="event.stopPropagation()">
-                    <a href="/admin/profil" class="pp-link"><i class="bi bi-person-gear"></i> Mon profil</a>
-                    <a href="/admin/profil-entreprise" class="pp-link"><i class="bi bi-building"></i> Entreprise</a>
-                    <div class="pp-hr"></div>
-                    <div class="pp-link" id="themeToggleBtn">
-                        <i class="bi bi-moon-stars" id="themeIcon"></i>
-                        <span id="themeText">Mode sombre</span>
+                <div class="nav-item">
+                    <a href="/admin/depannage" class="nav-link active" data-tip="Dépannage">
+                        <span class="ni"><i class="bi bi-cone-striped"></i><span class="pulse p-amber"></span></span>
+                        <span class="nt">Dépannage<small class="nt-sub">2 interventions</small></span>
+                        <span class="nb nb-amber">2</span>
+                    </a>
+                </div>
+
+                <div class="nav-item">
+                    <a href="/admin/vidanges" class="nav-link" data-tip="Vidange">
+                        <span class="ni"><i class="bi bi-droplet-half"></i><span class="pulse p-blue"></span></span>
+                        <span class="nt">Vidange<small class="nt-sub">7 planifiées</small></span>
+                        <span class="nb nb-blue">7</span>
+                    </a>
+                </div>
+
+                <div class="sb-hr"></div>
+                <div class="sb-section">Données</div>
+
+                <div class="nav-item">
+                    <a href="/admin/archivage" class="nav-link" data-tip="Archivage">
+                        <span class="ni"><i class="bi bi-archive"></i></span>
+                        <span class="nt">Archivage<small class="nt-sub">Documents &amp; historique</small></span>
+                    </a>
+                </div>
+
+            </div>
+
+            <div class="sb-foot">
+                <div class="profile-row" id="profileRow">
+                    <div class="profile-av">AD</div>
+                    <div class="profile-info">
+                        <b id="user-name"></b>
+                        <small id="user-email"></small>
                     </div>
-                    <div class="pp-hr"></div>
-                    <a href="#" id="logout-btn" class="pp-link pp-logout"><i class="bi bi-box-arrow-right"></i> Déconnexion</a>
+                    <i class="bi bi-three-dots-vertical profile-more"></i>
+
+                    <div class="profile-popup" id="profilePopup" onclick="event.stopPropagation()">
+                        <a href="/admin/profil" class="pp-link"><i class="bi bi-person-gear"></i> Mon profil</a>
+                        <a href="/admin/profil-entreprise" class="pp-link"><i class="bi bi-building"></i> Entreprise</a>
+                        <div class="pp-hr"></div>
+                        <div class="pp-link" id="themeToggleBtn">
+                            <i class="bi bi-moon-stars" id="themeIcon"></i>
+                            <span id="themeText">Mode sombre</span>
+                        </div>
+                        <div class="pp-hr"></div>
+                        <a href="#" id="logout-btn" class="pp-link pp-logout"><i class="bi bi-box-arrow-right"></i> Déconnexion</a>
+                    </div>
                 </div>
             </div>
-        </div>
 
     </aside>
 
@@ -219,55 +237,55 @@
                     <div class="table-wrapper" style="border:none;border-radius:0;box-shadow:none">
                         <table class="table align-middle">
                             <thead>
-                                <tr>
-                                    <th>Véhicule</th>
-                                    <th>Conducteur</th>
-                                    <th>Date & Heure</th>
-                                    <th>Lieu</th>
-                                    <th>Motif</th>
-                                    <th>Statut</th>
-                                    <th>Actions</th>
-                                </tr>
+                            <tr>
+                                <th>Véhicule</th>
+                                <th>Conducteur</th>
+                                <th>Date & Heure</th>
+                                <th>Lieu</th>
+                                <th>Motif</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
                             </thead>
                             <tbody>
-                                <tr class="hist-row">
-                                    <td>
-                                        <div style="display:flex;align-items:center;gap:10px">
-                                            <div class="profile-av bg-light text-primary" style="width: 36px; height: 36px; border-radius: 8px;"><i class="bi bi-truck"></i></div>
-                                            <b class="mission-id" style="color:var(--text-main);">1234-A-6</b>
-                                        </div>
-                                    </td>
-                                    <td><span style="font-weight:500;">Ahmed Alami</span></td>
-                                    <td><span class="mission-date">21 Avril, 10:30</span></td>
-                                    <td><span class="mission-dist">Autoroute A1, km 42</span></td>
-                                    <td><span class="mission-dist">Panne Moteur</span></td>
-                                    <td><span class="prio-badge prio-normale">En cours</span></td>
-                                    <td>
-                                        <div style="display:flex;gap:5px">
-                                            <button class="btn-icon" title="Voir" onclick="viewDepanage('1234-A-6', 'Ahmed Alami', '21 Avril, 10:30', 'Autoroute A1, km 42', 'Panne Moteur', 'En cours')"><i class="bi bi-eye"></i></button>
-                                            <button class="btn-icon" title="Modifier" onclick="editDepanage('1234-A-6', 'Ahmed Alami', '2026-04-21T10:30', 'Autoroute A1, km 42', 'Panne Moteur', 'encours')"><i class="bi bi-pencil-square"></i></button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr class="hist-row">
-                                    <td>
-                                        <div style="display:flex;align-items:center;gap:10px">
-                                            <div class="profile-av bg-light text-primary" style="width: 36px; height: 36px; border-radius: 8px;"><i class="bi bi-truck"></i></div>
-                                            <b class="mission-id" style="color:var(--text-main);">5678-B-12</b>
-                                        </div>
-                                    </td>
-                                    <td><span style="font-weight:500;">Said Benali</span></td>
-                                    <td><span class="mission-date">19 Avril, 14:15</span></td>
-                                    <td><span class="mission-dist">Centre Ville, Rabat</span></td>
-                                    <td><span class="mission-dist">Crevaison</span></td>
-                                    <td><span class="prio-badge prio-faible">Terminé</span></td>
-                                    <td>
-                                        <div style="display:flex;gap:5px">
-                                            <button class="btn-icon" title="Voir" onclick="viewDepanage('5678-B-12', 'Said Benali', '19 Avril, 14:15', 'Centre Ville, Rabat', 'Crevaison', 'Terminé')"><i class="bi bi-eye"></i></button>
-                                            <button class="btn-icon" title="Modifier" onclick="editDepanage('5678-B-12', 'Said Benali', '2026-04-19T14:15', 'Centre Ville, Rabat', 'Crevaison', 'termine')"><i class="bi bi-pencil-square"></i></button>
-                                        </div>
-                                    </td>
-                                </tr>
+                            <tr class="hist-row">
+                                <td>
+                                    <div style="display:flex;align-items:center;gap:10px">
+                                        <div class="profile-av bg-light text-primary" style="width: 36px; height: 36px; border-radius: 8px;"><i class="bi bi-truck"></i></div>
+                                        <b class="mission-id" style="color:var(--text-main);">1234-A-6</b>
+                                    </div>
+                                </td>
+                                <td><span style="font-weight:500;">Ahmed Alami</span></td>
+                                <td><span class="mission-date">21 Avril, 10:30</span></td>
+                                <td><span class="mission-dist">Autoroute A1, km 42</span></td>
+                                <td><span class="mission-dist">Panne Moteur</span></td>
+                                <td><span class="prio-badge prio-normale">En cours</span></td>
+                                <td>
+                                    <div style="display:flex;gap:5px">
+                                        <button class="btn-icon" title="Voir" onclick="viewDepanage('1234-A-6', 'Ahmed Alami', '21 Avril, 10:30', 'Autoroute A1, km 42', 'Panne Moteur', 'En cours')"><i class="bi bi-eye"></i></button>
+                                        <button class="btn-icon" title="Modifier" onclick="editDepanage('1234-A-6', 'Ahmed Alami', '2026-04-21T10:30', 'Autoroute A1, km 42', 'Panne Moteur', 'encours')"><i class="bi bi-pencil-square"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hist-row">
+                                <td>
+                                    <div style="display:flex;align-items:center;gap:10px">
+                                        <div class="profile-av bg-light text-primary" style="width: 36px; height: 36px; border-radius: 8px;"><i class="bi bi-truck"></i></div>
+                                        <b class="mission-id" style="color:var(--text-main);">5678-B-12</b>
+                                    </div>
+                                </td>
+                                <td><span style="font-weight:500;">Said Benali</span></td>
+                                <td><span class="mission-date">19 Avril, 14:15</span></td>
+                                <td><span class="mission-dist">Centre Ville, Rabat</span></td>
+                                <td><span class="mission-dist">Crevaison</span></td>
+                                <td><span class="prio-badge prio-faible">Terminé</span></td>
+                                <td>
+                                    <div style="display:flex;gap:5px">
+                                        <button class="btn-icon" title="Voir" onclick="viewDepanage('5678-B-12', 'Said Benali', '19 Avril, 14:15', 'Centre Ville, Rabat', 'Crevaison', 'Terminé')"><i class="bi bi-eye"></i></button>
+                                        <button class="btn-icon" title="Modifier" onclick="editDepanage('5678-B-12', 'Said Benali', '2026-04-19T14:15', 'Centre Ville, Rabat', 'Crevaison', 'termine')"><i class="bi bi-pencil-square"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
