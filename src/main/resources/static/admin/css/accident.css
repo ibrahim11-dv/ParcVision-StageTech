@@ -1537,3 +1537,95 @@ body.dark .border { border-color: var(--border-color) !important; }
     object-fit: cover;
 }
 
+/* Lightbox modal overrides */
+#lightboxModal .lightbox-container {
+    max-width: 800px;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+#lightboxModal .lightbox-header {
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 8px 8px 0 0;
+}
+
+#lightboxModal .lightbox-body {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 0 0 8px 8px;
+    padding: 10px !important;
+}
+
+/* Gallery item download overlay */
+.gallery-item .download-btn-overlay {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    font-size: 0.9rem;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s, background-color 0.2s, transform 0.2s;
+}
+
+.gallery-item:hover .download-btn-overlay {
+    opacity: 1;
+}
+
+.gallery-item .download-btn-overlay:hover {
+    background: var(--accent, #2222b1);
+    transform: scale(1.1);
+}
+
+/* Preview thumbnail download and delete adjustment */
+.preview-thumb .download-btn {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.15s, opacity 0.2s;
+    opacity: 0;
+}
+
+.preview-thumb:hover .download-btn {
+    opacity: 1;
+}
+
+.preview-thumb .download-btn:hover {
+    background: var(--accent, #2222b1);
+}
+
+/* Adjust delete button in preview-thumb to match download style */
+.preview-thumb .delete-btn {
+    width: 20px !important;
+    height: 20px !important;
+    font-size: 10px !important;
+    top: 4px !important;
+    right: 4px !important;
+    opacity: 0;
+    transition: opacity 0.2s, background-color 0.15s !important;
+}
+
+.preview-thumb:hover .delete-btn {
+    opacity: 1;
+}
+
+

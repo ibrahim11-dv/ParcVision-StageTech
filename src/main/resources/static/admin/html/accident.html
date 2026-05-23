@@ -461,7 +461,23 @@
                 </div>
             </div>
         </div>
-
+        <!-- Lightbox / Image Viewer Modal -->
+        <div class="custom-modal-overlay lightbox-overlay" id="lightboxModal" style="background: rgba(0, 0, 0, 0.85); z-index: 2000;">
+            <div class="custom-modal lightbox-container" onclick="event.stopPropagation()">
+                <div class="custom-modal-header lightbox-header" style="border: none; padding: 15px 24px;">
+                    <h3 class="custom-modal-title text-white">Visualisation de l'image</h3>
+                    <div class="d-flex align-items-center gap-2">
+                        <button id="lightboxDownloadBtn" class="btn btn-primary" style="padding: 6px 14px; font-size: 0.82rem; background: var(--accent); border: none;">
+                            <i class="bi bi-download"></i> Télécharger
+                        </button>
+                        <button class="custom-modal-close text-white" onclick="closeModal('lightboxModal')"><i class="bi bi-x"></i></button>
+                    </div>
+                </div>
+                <div class="custom-modal-body lightbox-body" style="padding: 0; display: flex; justify-content: center; align-items: center; overflow: hidden; background: transparent; min-height: 200px;">
+                    <img id="lightboxImage" src="" alt="Aperçu" style="max-width: 100%; max-height: 70vh; object-fit: contain; border-radius: 8px;">
+                </div>
+            </div>
+        </div>
 
     </div>
 

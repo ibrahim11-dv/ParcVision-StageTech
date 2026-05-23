@@ -9,6 +9,58 @@ function closeModal(id) {
     document.body.style.overflow = 'auto';
 }
 
+function downloadImage(url, filename) {
+    if (!url) return;
+    
+    // For data URLs (newly added files), they can be downloaded directly
+    if (url.startsWith('data:')) {
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename || 'photo_accident.png';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        return;
+    }
+    
+    // For server resources, use fetch to get Blob so that the download attribute works reliably
+    fetch(url)
+        .then(response => {
+            if (!response.ok) throw new Error('Network response was not ok');
+            return response.blob();
+        })
+        .then(blob => {
+            const blobUrl = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = blobUrl;
+            a.download = filename || url.substring(url.lastIndexOf('/') + 1) || 'photo_accident.png';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(blobUrl);
+        })
+        .catch(err => {
+            // Fallback: open in new tab
+            window.open(url, '_blank');
+        });
+}
+
+function openLightbox(src) {
+    const lightboxImg = document.getElementById('lightboxImage');
+    const downloadBtn = document.getElementById('lightboxDownloadBtn');
+    if (lightboxImg) {
+        lightboxImg.src = src;
+    }
+    if (downloadBtn) {
+        downloadBtn.onclick = (e) => {
+            e.stopPropagation();
+            downloadImage(src);
+        };
+    }
+    openModal('lightboxModal');
+}
+
+
 // Click outside modal to close
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.custom-modal-overlay').forEach(overlay => {
@@ -479,9 +531,19 @@ function handleFiles(files, filesArray, previewContainer) {
             const thumb = document.createElement('div');
             thumb.className = 'preview-thumb';
             thumb.innerHTML = `
-                <img src="${e.target.result}" alt="Preview">
+                <img src="${e.target.result}" alt="Preview" style="cursor: pointer;">
+                <button type="button" class="download-btn" title="Télécharger"><i class="bi bi-download"></i></button>
                 <button type="button" class="delete-btn"><i class="bi bi-trash"></i></button>
             `;
+            
+            thumb.querySelector('img').addEventListener('click', () => {
+                openLightbox(e.target.result);
+            });
+            
+            thumb.querySelector('.download-btn').addEventListener('click', (ev) => {
+                ev.stopPropagation();
+                downloadImage(e.target.result, file.name);
+            });
             
             thumb.querySelector('.delete-btn').addEventListener('click', (ev) => {
                 ev.stopPropagation();
@@ -525,9 +587,19 @@ function renderExistingPhotosForEdit(photosUrl) {
         const thumb = document.createElement('div');
         thumb.className = 'preview-thumb';
         thumb.innerHTML = `
-            <img src="${fullUrl}" alt="Photo">
+            <img src="${fullUrl}" alt="Photo" style="cursor: pointer;">
+            <button type="button" class="download-btn" title="Télécharger"><i class="bi bi-download"></i></button>
             <button type="button" class="delete-btn"><i class="bi bi-trash"></i></button>
         `;
+        
+        thumb.querySelector('img').addEventListener('click', () => {
+            openLightbox(fullUrl);
+        });
+        
+        thumb.querySelector('.download-btn').addEventListener('click', (ev) => {
+            ev.stopPropagation();
+            downloadImage(fullUrl);
+        });
         
         thumb.querySelector('.delete-btn').addEventListener('click', (ev) => {
             ev.stopPropagation();
@@ -561,11 +633,25 @@ function openViewModal(a) {
         if (a.photosUrl && a.photosUrl.length > 0) {
             a.photosUrl.forEach(url => {
                 const fullUrl = cleanPhotoUrl(url);
-                gallery.innerHTML += `
-                    <div class="gallery-item" onclick="window.open('${fullUrl}', '_blank')">
-                        <img src="${fullUrl}" alt="Photo de l'accident">
-                    </div>
+                const item = document.createElement('div');
+                item.className = 'gallery-item';
+                item.innerHTML = `
+                    <img src="${fullUrl}" alt="Photo de l'accident">
+                    <button type="button" class="download-btn-overlay" title="Télécharger">
+                        <i class="bi bi-download"></i>
+                    </button>
                 `;
+                
+                item.addEventListener('click', () => {
+                    openLightbox(fullUrl);
+                });
+                
+                item.querySelector('.download-btn-overlay').addEventListener('click', (ev) => {
+                    ev.stopPropagation();
+                    downloadImage(fullUrl);
+                });
+                
+                gallery.appendChild(item);
             });
         } else {
             gallery.innerHTML = '<span class="text-muted" style="font-size:0.85rem">Aucune photo disponible</span>';
