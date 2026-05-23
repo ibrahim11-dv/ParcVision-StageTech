@@ -56,3 +56,4 @@ window.closeMobile = function() {
     document.getElementById('sidebar').classList.remove('open');
     document.getElementById('overlay').style.display = 'none';
 };
+

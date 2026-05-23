@@ -1,1 +1,0 @@
-/* No internal JS found in incident.html */

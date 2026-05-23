@@ -60,18 +60,18 @@
             --card-bg: #1a1d24;
         }
 
-        html, body { height: 100%; }
+        html, body { height: 100%; overflow: hidden; }
 
         body {
             font-family: 'Inter', 'Outfit', sans-serif;
             background: var(--bg-body);
             color: var(--text-main);
-            min-height: 100vh;
-            overflow-x: hidden;
+            height: 100vh;
+            overflow: hidden;
             transition: background 0.2s ease, color 0.2s ease;
         }
 
-        .shell { display: flex; min-height: 100vh; }
+        .shell { display: flex; height: 100vh; overflow: hidden; }
 
         .sidebar {
             width: var(--sw);
@@ -431,17 +431,22 @@
 
         /* ── DASHBOARD STYLES ── */
         .page {
-            flex: 1; 
+            flex: 1;
             padding: 40px;
             display: block; /* Surcharge du flex original pour le dashboard */
             overflow-y: auto;
             height: 100vh;
+            scroll-behavior: smooth;
         }
+
+        .page::-webkit-scrollbar { width: 8px; }
+        .page::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 10px; }
+        .page::-webkit-scrollbar-track { background: transparent; }
 
         .dashboard-header {
             margin-bottom: 30px;
         }
-        
+
         .dashboard-header h2 {
             font-family: 'Outfit', sans-serif;
             font-size: 2rem;
@@ -450,7 +455,7 @@
             margin: 0;
             letter-spacing: -0.5px;
         }
-        
+
         .dashboard-header p {
             color: var(--gray-400);
             font-size: 0.95rem;
@@ -728,7 +733,7 @@
 
     <div class="main" id="main">
         <div class="page">
-            
+
             <div class="dashboard-header">
                 <h2>Vue d'ensemble</h2>
                 <p>Bienvenue sur votre tableau de bord central.</p>
@@ -778,7 +783,44 @@
                         <canvas id="conducteurChart"></canvas>
                     </div>
                 </div>
+                <div class="chart-card">
+                    <h5>
+                        Suivi GPS
+                        <span class="badge rounded-pill bg-danger" style="font-size: 0.65rem; vertical-align: middle; margin-left: 8px; animation: pulse-red 2s infinite;">
+                            <i class="bi bi-broadcast"></i> LIVE
+                        </span>
+                    </h5>
+                    <div class="chart-container">
+                        <canvas id="gpsChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h5>Interventions par Type</h5>
+                    <div class="chart-container">
+                        <canvas id="interventionChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h5>Archivage (Dossiers vs Documents)</h5>
+                    <div class="chart-container">
+                        <canvas id="archivageChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h5>Missions en cours vs Total</h5>
+                    <div class="chart-container">
+                        <canvas id="missionRadialChart"></canvas>
+                    </div>
+                </div>
             </div>
+
+            <style>
+                @keyframes pulse-red {
+                    0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+                    70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+                    100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+                }
+            </style>
 
             <div class="chart-card" style="width: 100%; margin-bottom: 40px;">
                 <h5>Missions par Jour</h5>
@@ -830,18 +872,18 @@
 
     function updateChartsTheme(isDark) {
         if (typeof Chart === 'undefined') return;
-        
+
         const textColor = isDark ? '#e5e7eb' : '#1f2937';
         const gridColor = isDark ? '#374151' : '#e5e7eb';
 
         for (let id in Chart.instances) {
             let chart = Chart.instances[id];
-            
+
             // Update Legend Color
             if (chart.options.plugins && chart.options.plugins.legend && chart.options.plugins.legend.labels) {
                 chart.options.plugins.legend.labels.color = textColor;
             }
-            
+
             // Update Axes Color
             if (chart.options.scales) {
                 if (chart.options.scales.x) {
@@ -853,7 +895,7 @@
                     if (chart.options.scales.y.grid) chart.options.scales.y.grid.color = gridColor;
                 }
             }
-            
+
             chart.update();
         }
     }
@@ -863,7 +905,7 @@
         localStorage.setItem('theme', isDark ? 'dark' : 'light');
         updateThemeUI(isDark);
         updateChartsTheme(isDark);
-        
+
         // Notify iframe if present
         const iframe = document.querySelector('.page iframe');
         if (iframe && iframe.contentWindow) {
@@ -894,15 +936,15 @@
         link.addEventListener('click', function(e) {
             const page = this.getAttribute('data-page');
             if (!page) return; // Ignore if no data-page
-            
+
             e.preventDefault();
-            
+
             // Handle active state
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
             this.classList.add('active');
-            
+
             const pageContainer = document.querySelector('.page');
-            
+
             if (page === 'Accident' || page === 'Réparation' || page === 'Dépannage' || page === 'Vidange') {
                 const map = { 'Accident': 'accident.html', 'Réparation': 'reparation.html', 'Dépannage': 'depanage.html', 'Vidange': 'vidange.html' };
                 const src = map[page];
@@ -921,7 +963,7 @@
                 pageContainer.style.alignItems = 'center';
                 pageContainer.style.justifyContent = 'center';
             }
-            
+
             // Close mobile sidebar if open
             if (window.innerWidth <= 900) {
                 closeMobile();
@@ -949,7 +991,7 @@
             // Remplir la Sidebar (Barre Latérale)
             document.getElementById('sb-cond-total').textContent = stats.totalConducteurs;
             document.getElementById('sb-cond-sub').textContent = (stats.conducteursDisponibles + stats.conducteursEnMission) + " actifs";
-            
+
             document.getElementById('sb-veh-total').textContent = stats.totalVehicules;
             document.getElementById('sb-veh-sub').textContent = (stats.vehiculesDisponibles + stats.vehiculesEnMission) + " en flotte";
 
@@ -966,6 +1008,12 @@
 
             document.getElementById('sb-vid-total').textContent = stats.nbVidanges;
             document.getElementById('sb-vid-sub').textContent = stats.nbVidanges + " planifiées";
+
+            // Stats Archivage dans la sidebar (Optionnel mais bien)
+            const sbArchivageSub = document.querySelector('a[href="/admin/archivage"] .nt-sub');
+            if (sbArchivageSub) {
+                sbArchivageSub.textContent = stats.totalDocuments + " documents";
+            }
 
             // Couleurs pour les graphes (support du mode sombre)
             const textColor = document.body.classList.contains('dark') ? '#e5e7eb' : '#1f2937';
@@ -1012,11 +1060,123 @@
                 }
             });
 
+            // Graphique Interventions (Barres)
+            const ctxIntervention = document.getElementById('interventionChart').getContext('2d');
+            new Chart(ctxIntervention, {
+                type: 'bar',
+                data: {
+                    labels: ['Réparations', 'Accidents', 'Dépannages', 'Vidanges'],
+                    datasets: [{
+                        label: 'Nombre d\'interventions',
+                        data: [stats.nbReparations, stats.nbAccidents, stats.nbDepannages, stats.nbVidanges],
+                        backgroundColor: ['#3b82f6', '#ef4444', '#f59e0b', '#10b981'],
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: textColor, stepSize: 1 },
+                            grid: { color: document.body.classList.contains('dark') ? '#374151' : '#e5e7eb' }
+                        },
+                        x: { ticks: { color: textColor } }
+                    }
+                }
+            });
+
+            // Graphique GPS (Polar Area pour un look pro/différent)
+            const ctxGps = document.getElementById('gpsChart').getContext('2d');
+            new Chart(ctxGps, {
+                type: 'polarArea',
+                data: {
+                    labels: ['Missions Actives', 'Points GPS Total', 'Missions Totales'],
+                    datasets: [{
+                        data: [stats.missionsEnCours, stats.totalPointsGPS, stats.totalMissions],
+                        backgroundColor: [
+                            'rgba(16, 185, 129, 0.7)',
+                            'rgba(59, 130, 246, 0.7)',
+                            'rgba(245, 158, 11, 0.7)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            ticks: { display: false },
+                            grid: { color: document.body.classList.contains('dark') ? '#374151' : '#e5e7eb' }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: textColor } }
+                    }
+                }
+            });
+
+            // Graphique Archivage (Radar ou Pie)
+            const ctxArchivage = document.getElementById('archivageChart').getContext('2d');
+            new Chart(ctxArchivage, {
+                type: 'pie',
+                data: {
+                    labels: ['Dossiers', 'Documents'],
+                    datasets: [{
+                        data: [stats.totalDossiers, stats.totalDocuments],
+                        backgroundColor: ['#6366f1', '#a855f7'],
+                        hoverOffset: 15
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: textColor } }
+                    }
+                }
+            });
+
+            // Graphique Missions Radial (Gauge style)
+            const ctxMissionRadial = document.getElementById('missionRadialChart').getContext('2d');
+            new Chart(ctxMissionRadial, {
+                type: 'doughnut',
+                data: {
+                    labels: ['En cours', 'Autres'],
+                    datasets: [{
+                        data: [stats.missionsEnCours, Math.max(0, stats.totalMissions - stats.missionsEnCours)],
+                        backgroundColor: ['#ef4444', '#e5e7eb'],
+                        circumference: 180,
+                        rotation: 270,
+                        cutout: '80%'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: textColor } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label + ': ' + context.raw;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
             // Graphique Ligne : Missions Par Jour
             if (stats.missionsParJour) {
                 // Trier les dates par ordre chronologique
                 const dates = Object.keys(stats.missionsParJour).sort();
-                
+
                 const enCoursData = [];
                 const termineeData = [];
                 const annuleeData = [];
@@ -1080,12 +1240,12 @@
                             legend: { position: 'top', labels: { color: textColor, font: { family: 'Outfit', weight: 600 } } }
                         },
                         scales: {
-                            x: { 
-                                ticks: { color: textColor }, 
-                                grid: { color: gridColor, drawBorder: false } 
+                            x: {
+                                ticks: { color: textColor },
+                                grid: { color: gridColor, drawBorder: false }
                             },
-                            y: { 
-                                ticks: { color: textColor, stepSize: 1 }, 
+                            y: {
+                                ticks: { color: textColor, stepSize: 1 },
                                 grid: { color: gridColor, drawBorder: false },
                                 beginAtZero: true
                             }
