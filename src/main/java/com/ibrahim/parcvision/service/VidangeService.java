@@ -20,10 +20,14 @@ public class VidangeService {
 
     private final VidangeRepository vidangeRepository;
     private final UtilisateurRepository utilisateurRepository;
+    private final com.ibrahim.parcvision.repository.FournisseurRepository fournisseurRepository;
 
-    public VidangeService(VidangeRepository vidangeRepository, UtilisateurRepository utilisateurRepository) {
+    public VidangeService(VidangeRepository vidangeRepository, 
+                         UtilisateurRepository utilisateurRepository,
+                         com.ibrahim.parcvision.repository.FournisseurRepository fournisseurRepository) {
         this.vidangeRepository = vidangeRepository;
         this.utilisateurRepository = utilisateurRepository;
+        this.fournisseurRepository = fournisseurRepository;
     }
 
     public Page<Vidange> findAll(int page, int size) {
@@ -46,6 +50,16 @@ public class VidangeService {
 
         if (updates.containsKey("dateIntervention") && updates.get("dateIntervention") != null)
             vidange.setDateIntervention(LocalDate.parse(updates.get("dateIntervention").toString()));
+
+        if (updates.containsKey("fournisseurId")) {
+            Object fId = updates.get("fournisseurId");
+            if (fId != null && !fId.toString().isEmpty()) {
+                vidange.setFournisseur(fournisseurRepository.findById(Long.parseLong(fId.toString())).orElse(null));
+            } else {
+                vidange.setFournisseur(null);
+            }
+        }
+
         if (updates.containsKey("descriptionPanne"))
             vidange.setDescriptionPanne((String) updates.get("descriptionPanne"));
         if (updates.containsKey("coutTotal") && updates.get("coutTotal") != null)

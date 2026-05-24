@@ -23,6 +23,7 @@ public class DashboardStatsDao {
     private long nbAccidents;
     private long nbDepannages;
     private long nbVidanges;
+    private long nbFournisseurs;
 
     private Map<String, Map<String, Long>> missionsParJour;
 
@@ -77,6 +78,9 @@ public class DashboardStatsDao {
 
     public long getNbVidanges() { return nbVidanges; }
     public void setNbVidanges(long nbVidanges) { this.nbVidanges = nbVidanges; }
+
+    public long getNbFournisseurs() { return nbFournisseurs; }
+    public void setNbFournisseurs(long nbFournisseurs) { this.nbFournisseurs = nbFournisseurs; }
 
     public Map<String, Map<String, Long>> getMissionsParJour() { return missionsParJour; }
     public void setMissionsParJour(Map<String, Map<String, Long>> missionsParJour) { this.missionsParJour = missionsParJour; }

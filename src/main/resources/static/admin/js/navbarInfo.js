@@ -75,6 +75,10 @@ function updateSidebarUI(stats) {
                 if (subEl) subEl.textContent = stats.nbVidanges + " planifiées";
                 if (totalEl) totalEl.textContent = stats.nbVidanges;
                 break;
+            case 'Fournisseurs':
+                if (subEl) subEl.textContent = stats.nbFournisseurs + " prestataires";
+                if (totalEl) totalEl.textContent = stats.nbFournisseurs;
+                break;
         }
     });
 }

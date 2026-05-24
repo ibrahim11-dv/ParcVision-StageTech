@@ -39,13 +39,17 @@ public class FileStorageService {
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
         // 5. Retourner le chemin URL relatif pour la base de données
-        return uploadDir + "/" + subFolder + "/" + finalFileName;
+        return "uploads/" + subFolder + "/" + finalFileName;
     }
 
     public void deleteFile(String fileUrl) {
         if (fileUrl == null || fileUrl.isBlank()) return;
         try {
-            Path filePath = Paths.get(fileUrl);
+            String pathStr = fileUrl;
+            if (pathStr.startsWith("/")) {
+                pathStr = pathStr.substring(1);
+            }
+            Path filePath = Paths.get(pathStr);
             Files.deleteIfExists(filePath);
         } catch (IOException e) {
             // Loguer l'erreur sans bloquer le processus

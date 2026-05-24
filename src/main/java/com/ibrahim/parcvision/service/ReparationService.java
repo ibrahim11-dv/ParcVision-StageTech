@@ -26,6 +26,9 @@ public class ReparationService {
     @Autowired
     private UtilisateurRepository utilisateurRepository;
 
+    @Autowired
+    private com.ibrahim.parcvision.repository.FournisseurRepository fournisseurRepository;
+
     public ReparationService(ReparationRepository reparationRepository) {
         this.reparationRepository = reparationRepository;
     }
@@ -76,6 +79,15 @@ public class ReparationService {
         if (updates.containsKey("garagePrestataire"))
             reparation.setGaragePrestataire((String) updates.get("garagePrestataire"));
 
+        if (updates.containsKey("fournisseurId")) {
+            Object fId = updates.get("fournisseurId");
+            if (fId != null && !fId.toString().isEmpty()) {
+                reparation.setFournisseur(fournisseurRepository.findById(Long.parseLong(fId.toString())).orElse(null));
+            } else {
+                reparation.setFournisseur(null);
+            }
+        }
+
         if (updates.containsKey("dateIntervention"))
             reparation.setDateIntervention(LocalDate.parse(updates.get("dateIntervention").toString()));
 
@@ -87,6 +99,24 @@ public class ReparationService {
 
         if (updates.containsKey("statut"))
             reparation.setStatut((String) updates.get("statut"));
+
+        if (updates.containsKey("estPaye")) {
+            Object val = updates.get("estPaye");
+            if (val instanceof Boolean) {
+                reparation.setEstPaye((Boolean) val);
+            } else {
+                reparation.setEstPaye(Boolean.parseBoolean(val.toString()));
+            }
+        }
+
+        if (updates.containsKey("datePayement")) {
+            Object val = updates.get("datePayement");
+            if (val == null || val.toString().isEmpty()) {
+                reparation.setDatePayement(null);
+            } else {
+                reparation.setDatePayement(LocalDate.parse(val.toString()));
+            }
+        }
 
         return reparationRepository.save(reparation);
     }

@@ -31,6 +31,7 @@ public class DatabaseSeeder implements CommandLineRunner {
     private final PointGpsRepository pointGpsRepository;
     private final InterventionRepository interventionRepository;
     private final AccidentRepository accidentRepository;
+    private final FournisseurRepository fournisseurRepository;
 
     private final Faker faker = new Faker(new Locale("fr"));
     private final Random random = new Random();
@@ -45,7 +46,8 @@ public class DatabaseSeeder implements CommandLineRunner {
             ColisRepository colisRepository,
             PointGpsRepository pointGpsRepository,
             InterventionRepository interventionRepository,
-            AccidentRepository accidentRepository) {
+            AccidentRepository accidentRepository,
+            FournisseurRepository fournisseurRepository) {
         this.passwordEncoder = passwordEncoder;
         this.entrepriseRepository = entrepriseRepository;
         this.utilisateurRepository = utilisateurRepository;
@@ -57,6 +59,7 @@ public class DatabaseSeeder implements CommandLineRunner {
         this.pointGpsRepository = pointGpsRepository;
         this.interventionRepository = interventionRepository;
         this.accidentRepository = accidentRepository;
+        this.fournisseurRepository = fournisseurRepository;
     }
 
     @Override
@@ -79,23 +82,33 @@ public class DatabaseSeeder implements CommandLineRunner {
     private void seedMissingInterventions() {
         List<Vehicule> vehicles = vehiculeRepository.findAll();
         List<Conducteur> conducteurs = conducteurRepository.findAll();
+        List<Fournisseur> fournisseurs = fournisseurRepository.findAll();
         if (vehicles.isEmpty()) return;
 
         for (int i = 0; i < 200; i++) {
             int type = random.nextInt(4); // 0: Reparation, 1: Depannage, 2: Vidange, 3: Accident
             Intervention intervention;
             
+            Fournisseur selectedFournisseur = null;
+            if (!fournisseurs.isEmpty() && random.nextBoolean()) {
+                selectedFournisseur = fournisseurs.get(random.nextInt(fournisseurs.size()));
+            }
+
             if (type == 0) {
                 Reparation r = new Reparation();
                 r.setPiecesRemplacees("Plaquettes de frein, Filtres, Courroie, Bougies");
-                r.setGaragePrestataire(faker.company().name() + " Auto Service");
+                r.setGaragePrestataire(selectedFournisseur != null ? selectedFournisseur.getNomFournisseur() : faker.company().name() + " Auto Service");
                 r.setStatut("TERMINEE");
+                r.setEstPaye(random.nextBoolean());
+                if (r.getEstPaye()) {
+                    r.setDatePayement(LocalDate.now().minusDays(random.nextInt(30)));
+                }
                 intervention = r;
             } else if (type == 1) {
                 Depannage d = new Depannage();
                 d.setLieuPanne(faker.address().city());
                 d.setNecessiteRemorquage(random.nextBoolean());
-                d.setNomDepanneurExterne(faker.company().name() + " SOS Depannage");
+                d.setNomDepanneurExterne(selectedFournisseur != null ? selectedFournisseur.getNomFournisseur() : faker.company().name() + " SOS Depannage");
                 d.setStatut("TERMINEE");
                 intervention = d;
             } else if (type == 2) {
@@ -135,6 +148,7 @@ public class DatabaseSeeder implements CommandLineRunner {
             intervention.setCoutTotal(random.nextDouble() * 200 + 300);
             intervention.setKilometrageAuMoment((long) random.nextInt(200000) + 5000);
             intervention.setVehicule(vehicles.get(random.nextInt(vehicles.size())));
+            intervention.setFournisseur(selectedFournisseur);
 
             interventionRepository.save(intervention);
         }
@@ -169,6 +183,21 @@ public class DatabaseSeeder implements CommandLineRunner {
 
         // 3. Seed Data for the Enterprise
         Entreprise ent = defaultEnt;
+
+        // Seed Fournisseurs
+        String[] types = {"Garage", "Station de Gazoil", "Fournisseur"};
+        List<Fournisseur> fournisseurs = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            Fournisseur f = new Fournisseur();
+            f.setNomFournisseur(faker.company().name());
+            f.setTypeFournisseur(types[random.nextInt(types.length)]);
+            f.setVille(faker.address().city());
+            f.setAdresse(faker.address().streetAddress());
+            f.setTelephone(faker.phoneNumber().phoneNumber());
+            f.setEntreprise(ent);
+            fournisseurs.add(fournisseurRepository.save(f));
+        }
+
         // Seed Vehicles
             List<Vehicule> vehicles = new ArrayList<>();
             for (int i = 0; i < 30; i++) {

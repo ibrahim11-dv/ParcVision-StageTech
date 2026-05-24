@@ -5,6 +5,10 @@ import com.ibrahim.parcvision.entity.Entreprise;
 import com.ibrahim.parcvision.entity.Utilisateur;
 import com.ibrahim.parcvision.repository.AccidentRepository;
 import com.ibrahim.parcvision.repository.UtilisateurRepository;
+import com.ibrahim.parcvision.entity.Vehicule;
+import com.ibrahim.parcvision.entity.Conducteur;
+import com.ibrahim.parcvision.repository.VehiculeRepository;
+import com.ibrahim.parcvision.repository.ConducteurRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,8 +16,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Map;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.*;
 
 @Service
 public class AccidentService {
@@ -22,6 +30,15 @@ public class AccidentService {
 
     @Autowired
     private UtilisateurRepository utilisateurRepository;
+
+    @Autowired
+    private VehiculeRepository vehiculeRepository;
+
+    @Autowired
+    private ConducteurRepository conducteurRepository;
+
+    @Autowired
+    private FileStorageService fileStorageService;
 
     public AccidentService(AccidentRepository accidentRepository) {
         this.accidentRepository = accidentRepository;
@@ -55,28 +72,116 @@ public class AccidentService {
         return accidentRepository.findByVehiculeEntreprise(getCurrentEntreprise(), pageable);
     }
 
-    public Accident updateAccident(Long id, Map<String, Object> updates) {
+    @Transactional
+    public Accident updateAccident(Long id, String etat, Double budgetEstime, String notes, List<String> deletedPhotos, MultipartFile[] newPhotos) throws IOException {
         Accident accident = accidentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Accident non trouvé"));
 
-        if (updates.containsKey("etat"))
-            accident.setEtat((String) updates.get("etat"));
+        accident.setEtat(etat);
+        accident.setBudgetEstime(budgetEstime);
+        accident.setNotes(notes);
 
-        if (updates.containsKey("budgetEstime"))
-            accident.setBudgetEstime(Double.parseDouble(updates.get("budgetEstime").toString()));
+        List<String> currentPhotos = accident.getPhotosUrl();
+        if (currentPhotos == null) {
+            currentPhotos = new ArrayList<>();
+        }
 
-        if (updates.containsKey("notes"))
-            accident.setNotes((String) updates.get("notes"));
+        // Supprimer les photos cochées/sélectionnées pour suppression
+        if (deletedPhotos != null && !deletedPhotos.isEmpty()) {
+            for (String url : deletedPhotos) {
+                fileStorageService.deleteFile(url);
+                currentPhotos.remove(url);
+            }
+        }
 
+        // Enregistrer les nouvelles photos
+        if (newPhotos != null && newPhotos.length > 0) {
+            String dossier = null;
+            if (!currentPhotos.isEmpty()) {
+                dossier = extractDossier(currentPhotos.get(0));
+            } else {
+                dossier = "accidents/" + UUID.randomUUID().toString();
+            }
+
+            for (int i = 0; i < newPhotos.length; i++) {
+                MultipartFile photo = newPhotos[i];
+                if (photo != null && !photo.isEmpty()) {
+                    String url = fileStorageService.storeFile(photo, dossier, "photo_" + i + "_" + System.currentTimeMillis());
+                    if (url != null) {
+                        currentPhotos.add(url);
+                    }
+                }
+            }
+        }
+
+        accident.setPhotosUrl(currentPhotos);
         return accidentRepository.save(accident);
     }
 
+    @Transactional
     public void deleteAccident(Long id) {
-        accidentRepository.deleteById(id);
+        Accident accident = accidentRepository.findById(id).orElse(null);
+        if (accident != null) {
+            if (accident.getPhotosUrl() != null) {
+                for (String url : accident.getPhotosUrl()) {
+                    fileStorageService.deleteFile(url);
+                }
+            }
+            accidentRepository.delete(accident);
+        }
     }
 
-    public Accident saveAccident(Accident accident) {
+    @Transactional
+    public Accident addAccident(Long vehiculeId, Long conducteurId, String dateIntervention, String descriptionPanne,
+                                 String lieu, String contexte, String gravite, String etat, Double budgetEstime,
+                                 MultipartFile[] photos) throws IOException {
+        Vehicule vehicule = vehiculeRepository.findById(vehiculeId)
+                .orElseThrow(() -> new RuntimeException("Véhicule non trouvé"));
+        Conducteur conducteur = conducteurRepository.findById(conducteurId)
+                .orElseThrow(() -> new RuntimeException("Conducteur non trouvé"));
+
+        Accident accident = new Accident();
+        accident.setVehicule(vehicule);
+        accident.setConducteur(conducteur);
+
+        if (dateIntervention != null && dateIntervention.contains("T")) {
+            dateIntervention = dateIntervention.split("T")[0];
+        }
+        accident.setDateIntervention(LocalDate.parse(dateIntervention));
+        accident.setDescriptionPanne(descriptionPanne);
+        accident.setLieu(lieu);
+        accident.setContexte(contexte);
+        accident.setGravite(gravite);
+        accident.setEtat(etat);
+        accident.setBudgetEstime(budgetEstime != null ? budgetEstime : 0.0);
+
+        String dossier = "accidents/" + UUID.randomUUID().toString();
+        List<String> photoUrls = new ArrayList<>();
+        if (photos != null && photos.length > 0) {
+            for (int i = 0; i < photos.length; i++) {
+                MultipartFile photo = photos[i];
+                if (photo != null && !photo.isEmpty()) {
+                    String url = fileStorageService.storeFile(photo, dossier, "photo_" + i + "_" + System.currentTimeMillis());
+                    if (url != null) {
+                        photoUrls.add(url);
+                    }
+                }
+            }
+        }
+        accident.setPhotosUrl(photoUrls);
+
         return accidentRepository.save(accident);
+    }
+
+    private String extractDossier(String fileUrl) {
+        if (fileUrl == null || fileUrl.isBlank()) {
+            return "accidents/" + UUID.randomUUID().toString();
+        }
+        String[] parts = fileUrl.split("/");
+        if (parts.length >= 3) {
+            return "accidents/" + parts[2];
+        }
+        return "accidents/" + UUID.randomUUID().toString();
     }
 
     private Entreprise getCurrentEntreprise() {

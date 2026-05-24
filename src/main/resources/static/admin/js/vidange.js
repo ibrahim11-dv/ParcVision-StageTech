@@ -41,7 +41,7 @@ async function loadVidanges(page = 0) {
             renderPagination(data);
             // KPIs are generally based on all data, but here we update with what we have
             // Or we could have a separate endpoint for KPIs
-            updateKPIs(vidangesData); 
+            updateKPIs(vidangesData);
         }
     } catch (err) {
         console.error('Error loading vidanges:', err);
@@ -59,7 +59,7 @@ function renderPagination(data) {
     const start = data.totalElements === 0 ? 0 : data.number * data.size + 1;
     const end = Math.min(start + data.size - 1, totalElements);
 
-    summary.textContent = totalElements > 0 
+    summary.textContent = totalElements > 0
         ? `Affichage de ${start} à ${end} sur ${totalElements} vidanges`
         : 'Aucune vidange à afficher';
 
@@ -187,6 +187,9 @@ function renderVidangesTable(data) {
         const iconClass = (vehicule.marque && vehicule.marque.toLowerCase().includes('camion')) ? 'bi-truck' : 'bi-car-front';
         const textColorClass = status === 'En retard' ? 'text-danger' : 'text-primary';
 
+        // Provider name from entity or fallback
+        const providerName = v.fournisseur ? v.fournisseur.nomFournisseur : (v.actionsMenees || '-');
+
         const row = document.createElement('tr');
         row.className = 'hist-row';
         row.innerHTML = `
@@ -250,7 +253,13 @@ function viewVidangeById(id) {
     document.getElementById('viewKm').textContent = formatKm(v.kilometrageAuMoment);
     document.getElementById('viewNextKm').textContent = formatKm(nextKm);
     document.getElementById('viewCost').textContent = v.coutTotal ? v.coutTotal + ' DH' : '-';
-    document.getElementById('viewGarage').textContent = v.actionsMenees || '-';
+    
+    // Fournisseur display
+    let providerText = '-';
+    if (v.fournisseur) {
+        providerText = v.fournisseur.nomFournisseur + (v.fournisseur.ville ? ` (${v.fournisseur.ville})` : '');
+    }
+    document.getElementById('viewGarage').textContent = providerText;
 
     const statusClass = getStatusBadgeClass(status);
     document.getElementById('viewStatus').innerHTML = `<span class="badge-status ${statusClass}">${status}</span>`;
@@ -259,7 +268,6 @@ function viewVidangeById(id) {
     openModal('viewOilChangeModal');
 }
 
-// ── Edit Vidange ──
 function editVidangeById(id) {
     const v = vidangesData.find(x => x.id === id);
     if (!v) return;
@@ -284,12 +292,21 @@ function editVidangeById(id) {
     document.getElementById('editKm').value = v.kilometrageAuMoment || '';
     document.getElementById('editNextKm').value = (v.kilometrageAuMoment || 0) + 10000;
     document.getElementById('editCost').value = v.coutTotal || '';
-    document.getElementById('editGarage').value = v.actionsMenees || '';
+    
+    // Fournisseur
+    if (v.fournisseur) {
+        document.getElementById('editTypeFournisseur').value = v.fournisseur.typeFournisseur;
+        populateFournisseurSelects('editTypeFournisseur', 'editFournisseurSelect');
+        document.getElementById('editFournisseurSelect').value = v.fournisseur.idFournisseur;
+    } else {
+        document.getElementById('editTypeFournisseur').value = '';
+        populateFournisseurSelects('editTypeFournisseur', 'editFournisseurSelect');
+        document.getElementById('editFournisseurSelect').value = '';
+    }
 
     openModal('editOilChangeModal');
 }
 
-// ── Save new Vidange ──
 async function saveOilChange() {
     const form = document.getElementById('oilChangeForm');
     const vehiculeId = document.getElementById('addVehiculeSelect').value;
@@ -297,7 +314,7 @@ async function saveOilChange() {
     const oilType = document.getElementById('addOilType').value;
     const km = document.getElementById('addKm').value;
     const cost = document.getElementById('addCost').value;
-    const garage = document.getElementById('addGarage').value;
+    const fournisseurId = document.getElementById('addFournisseurSelect').value;
 
     if (!vehiculeId) {
         alert('Veuillez sélectionner un véhicule');
@@ -310,7 +327,7 @@ async function saveOilChange() {
         typeHuile: oilType,
         kilometrageAuMoment: km ? parseInt(km) : null,
         coutTotal: cost ? parseFloat(cost) : 0,
-        actionsMenees: garage || null,
+        fournisseur: fournisseurId ? { idFournisseur: parseInt(fournisseurId) } : null,
         descriptionPanne: 'Vidange'
     };
 
@@ -333,7 +350,6 @@ async function saveOilChange() {
     }
 }
 
-// ── Update Vidange ──
 async function updateOilChange() {
     if (!currentEditId) return;
 
@@ -342,7 +358,7 @@ async function updateOilChange() {
     const oilType = document.getElementById('editOilType');
     const km = document.getElementById('editKm').value;
     const cost = document.getElementById('editCost').value;
-    const garage = document.getElementById('editGarage').value;
+    const fournisseurId = document.getElementById('editFournisseurSelect').value;
 
     const payload = {
         vehicule: vehiculeId ? { id: parseInt(vehiculeId) } : null,
@@ -350,7 +366,7 @@ async function updateOilChange() {
         typeHuile: oilType ? oilType.options[oilType.selectedIndex].text : null,
         kilometrageAuMoment: km ? parseInt(km) : null,
         coutTotal: cost ? parseFloat(cost) : 0,
-        actionsMenees: garage || null
+        fournisseurId: fournisseurId || null
     };
 
     try {
@@ -384,15 +400,15 @@ function submitDeleteVidange() {
     fetch(`/api/vidanges/${vidangeToDelete}`, {
         method: 'DELETE'
     })
-    .then(res => {
-        if (!res.ok) throw new Error('Erreur lors de la suppression');
-        closeModal('deleteVidangeModal');
-        loadVidanges();
-    })
-    .catch(err => {
-        console.error(err);
-        alert('Erreur lors de la suppression');
-    });
+        .then(res => {
+            if (!res.ok) throw new Error('Erreur lors de la suppression');
+            closeModal('deleteVidangeModal');
+            loadVidanges();
+        })
+        .catch(err => {
+            console.error(err);
+            alert('Erreur lors de la suppression');
+        });
 }
 
 // ── Search & Filter ──
@@ -490,9 +506,55 @@ if (window.self !== window.top || new URLSearchParams(window.location.search).ge
     });
 }
 
+let allFournisseurs = [];
+
+async function loadFournisseurs() {
+    try {
+        const res = await fetch('/admin/fournisseur/all');
+        if (!res.ok) throw new Error('Erreur chargement fournisseurs');
+        allFournisseurs = await res.json();
+        
+        populateFournisseurSelects('addTypeFournisseur', 'addFournisseurSelect');
+        populateFournisseurSelects('editTypeFournisseur', 'editFournisseurSelect');
+    } catch (err) {
+        console.error('Erreur chargement fournisseurs:', err);
+    }
+}
+
+function populateFournisseurSelects(typeSelectId, fournisseurSelectId) {
+    const typeSelect = document.getElementById(typeSelectId);
+    const fournisseurSelect = document.getElementById(fournisseurSelectId);
+    if (!fournisseurSelect) return;
+    
+    const selectedType = typeSelect ? typeSelect.value : '';
+    fournisseurSelect.innerHTML = '<option value="">Choisir un fournisseur...</option>';
+    
+    const filtered = selectedType ? allFournisseurs.filter(f => f.typeFournisseur === selectedType) : allFournisseurs;
+    
+    filtered.forEach(f => {
+        const opt = document.createElement('option');
+        opt.value = f.idFournisseur;
+        // Label format: Name (City) - [Type]
+        const cityInfo = f.ville ? ` (${f.ville})` : '';
+        const typeInfo = ` - [${f.typeFournisseur}]`;
+        opt.textContent = `${f.nomFournisseur}${cityInfo}${typeInfo}`;
+        fournisseurSelect.appendChild(opt);
+    });
+}
+
+// Add event listeners for type change
+document.getElementById('addTypeFournisseur')?.addEventListener('change', function() {
+    populateFournisseurSelects('addTypeFournisseur', 'addFournisseurSelect');
+});
+
+document.getElementById('editTypeFournisseur')?.addEventListener('change', function() {
+    populateFournisseurSelects('editTypeFournisseur', 'editFournisseurSelect');
+});
+
 // ── Init ──
 document.addEventListener('DOMContentLoaded', async () => {
     await loadVehicules();
+    await loadFournisseurs();
     await loadVidanges();
     setupSearchAndFilter();
 });

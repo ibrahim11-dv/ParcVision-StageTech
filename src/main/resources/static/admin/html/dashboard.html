@@ -650,20 +650,16 @@
             </div>
 
             <div class="nav-item">
+                <a href="/admin/gps" class="nav-link" data-tip="Suivi GPS">
+                    <span class="ni">
+                        <i class="bi bi-geo-alt"></i>
+                        <span class="pulse p-green"></span>
+                    </span>
+                    <span class="nt">Suivi GPS<small class="nt-sub" id="sb-gps-sub">0 en déplacement</small></span>
+                    <span class="nb nb-green" id="sb-gps-total"
+                            style="background:rgba(34,197,94,0.1); color:#15803d; border-color:rgba(34,197,94,0.2);">LIVE</span>
+                </a>
             </div>
-
-            <div class="nav-item">
-                <div class="nav-item">
-                    <a href="/admin/gps" class="nav-link" data-tip="Suivi GPS">
-                        <span class="ni">
-                            <i class="bi bi-geo-alt"></i>
-                            <span class="pulse p-green"></span>
-                        </span>
-                        <span class="nt">Suivi GPS<small class="nt-sub" id="sb-gps-sub">0 en déplacement</small></span>
-                        <span class="nb nb-green" id="sb-gps-total"
-                              style="background:rgba(34,197,94,0.1); color:#15803d; border-color:rgba(34,197,94,0.2);">LIVE</span>
-                    </a>
-                </div>
 
                 <div class="sb-hr"></div>
                 <div class="sb-section">Interventions</div>
@@ -685,47 +681,55 @@
                             <i class="bi bi-exclamation-triangle"></i>
                             <span class="pulse p-red"></span>
                         </span>
-                        <span class="nt">Accident<small class="nt-sub" id="sb-acc-sub">--</small></span>
-                        <span class="nb nb-red" id="sb-acc-total">0</span>
-                    </a>
-                </div>
-
-                <div class="nav-item">
-                    <a href="/admin/depannage" class="nav-link" data-tip="Dépannage">
-                        <span class="ni"><i class="bi bi-cone-striped"></i><span class="pulse p-amber"></span></span>
-                        <span class="nt">Dépannage<small class="nt-sub" id="sb-dep-sub">--</small></span>
-                        <span class="nb nb-amber" id="sb-dep-total">0</span>
-                    </a>
-                </div>
-
-                <div class="nav-item">
-                    <a href="/admin/vidanges" class="nav-link" data-tip="Vidange">
-                        <span class="ni"><i class="bi bi-droplet-half"></i><span class="pulse p-blue"></span></span>
-                        <span class="nt">Vidange<small class="nt-sub" id="sb-vid-sub">--</small></span>
-                        <span class="nb nb-blue" id="sb-vid-total">0</span>
-                    </a>
-                </div>
-
-                <div class="sb-hr"></div>
-                <div class="sb-section">Données</div>
-
-                <div class="nav-item">
-                    <a href="/admin/archivage" class="nav-link" data-tip="Archivage">
-                        <span class="ni"><i class="bi bi-archive"></i></span>
-                        <span class="nt">Archivage<small class="nt-sub">Documents &amp; historique</small></span>
-                    </a>
-                </div>
-
+                    <span class="nt">Accident<small class="nt-sub" id="sb-acc-sub">--</small></span>
+                    <span class="nb nb-red" id="sb-acc-total">0</span>
+                </a>
             </div>
 
-            <div class="sb-foot">
-                <div class="profile-row" id="profileRow">
-                    <div class="profile-av">AD</div>
-                    <div class="profile-info">
-                        <b id="user-name"></b>
-                        <small id="user-email"></small>
-                    </div>
-                    <i class="bi bi-three-dots-vertical profile-more"></i>
+            <div class="nav-item">
+                <a href="/admin/depannage" class="nav-link" data-tip="Dépannage">
+                    <span class="ni"><i class="bi bi-cone-striped"></i><span class="pulse p-amber"></span></span>
+                    <span class="nt">Dépannage<small class="nt-sub" id="sb-dep-sub">--</small></span>
+                    <span class="nb nb-amber" id="sb-dep-total">0</span>
+                </a>
+            </div>
+
+            <div class="nav-item">
+                <a href="/admin/vidanges" class="nav-link" data-tip="Vidange">
+                    <span class="ni"><i class="bi bi-droplet-half"></i><span class="pulse p-blue"></span></span>
+                    <span class="nt">Vidange<small class="nt-sub" id="sb-vid-sub">--</small></span>
+                    <span class="nb nb-blue" id="sb-vid-total">0</span>
+                </a>
+            </div>
+
+            <div class="nav-item">
+                <a href="/admin/fournisseurs" class="nav-link" data-tip="Fournisseurs">
+                    <span class="ni"><i class="bi bi-people-fill"></i><span class="pulse p-green"></span></span>
+                    <span class="nt">Fournisseurs<small class="nt-sub" id="sb-fournisseurs-sub">Gestion prestataires</small></span>
+                    <span class="nb nb-blue" id="sb-fournisseurs-total">0</span>
+                </a>
+            </div>
+
+            <div class="sb-hr"></div>
+            <div class="sb-section">Données</div>
+
+            <div class="nav-item">
+                <a href="/admin/archivage" class="nav-link" data-tip="Archivage">
+                    <span class="ni"><i class="bi bi-archive"></i></span>
+                    <span class="nt">Archivage<small class="nt-sub">Documents &amp; historique</small></span>
+                </a>
+            </div>
+
+        </div>
+
+        <div class="sb-foot">
+            <div class="profile-row" id="profileRow">
+                <div class="profile-av">AD</div>
+                <div class="profile-info">
+                    <b id="user-name"></b>
+                    <small id="user-email"></small>
+                </div>
+                <i class="bi bi-three-dots-vertical profile-more"></i>
 
                     <div class="profile-popup" id="profilePopup" onclick="event.stopPropagation()">
                         <a href="/admin/profil" class="pp-link"><i class="bi bi-person-gear"></i> Mon profil</a>
@@ -1032,6 +1036,9 @@
             if (sbArchivageSub) {
                 sbArchivageSub.textContent = stats.totalDocuments + " documents";
             }
+
+            document.getElementById('sb-fournisseurs-total').textContent = stats.nbFournisseurs;
+            document.getElementById('sb-fournisseurs-sub').textContent = stats.nbFournisseurs + " prestataires";
 
             // Couleurs pour les graphes (support du mode sombre)
             const textColor = document.body.classList.contains('dark') ? '#e5e7eb' : '#1f2937';

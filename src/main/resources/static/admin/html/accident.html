@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 
 <head>
@@ -130,6 +130,14 @@
                         <span class="ni"><i class="bi bi-droplet-half"></i><span class="pulse p-blue"></span></span>
                         <span class="nt">Vidange<small class="nt-sub">7 planifiées</small></span>
                         <span class="nb nb-blue">7</span>
+                    </a>
+                </div>
+
+                <div class="nav-item">
+                    <a href="/admin/fournisseurs" class="nav-link" data-tip="Fournisseurs">
+                        <span class="ni"><i class="bi bi-people-fill"></i><span class="pulse p-green"></span></span>
+                        <span class="nt">Fournisseurs<small class="nt-sub">Gestion prestataires</small></span>
+                        <span class="nb nb-blue">0</span>
                     </a>
                 </div>
 
@@ -341,6 +349,16 @@
                     <textarea class="form-control" rows="3"
                               placeholder="Décrivez les dégâts matériels..." id="description"></textarea>
                 </div>
+
+                <div class="form-group mt-3">
+                    <label class="form-label">Photos de l'accident</label>
+                    <div class="upload-area" id="addPhotosUploadArea">
+                        <i class="bi bi-cloud-upload"></i>
+                        <span>Glissez-déposez des photos ici ou cliquez pour choisir</span>
+                        <input type="file" id="addPhotosInput" multiple accept="image/*" style="display: none;">
+                    </div>
+                    <div id="addPhotosPreview" class="previews-container"></div>
+                </div>
             </div>
             <div class="custom-modal-footer">
                 <button class="btn btn-secondary" onclick="closeModal('addModal')">Annuler</button>
@@ -385,6 +403,12 @@
                     <span class="view-detail-label">Description</span>
                     <span class="view-detail-value"></span>
                 </div>
+                <div class="view-detail-row flex-column align-items-start gap-1" style="border:none">
+                    <span class="view-detail-label">Photos de l'accident</span>
+                    <div id="viewPhotosGallery" class="view-photos-gallery w-100">
+                        <!-- Photos will be inserted dynamically here -->
+                    </div>
+                </div>
             </div>
             <div class="custom-modal-footer">
                 <button class="btn btn-secondary" onclick="closeModal('viewModal')">Fermer</button>
@@ -419,6 +443,19 @@
                     <label class="form-label">Notes supplémentaires</label>
                     <textarea class="form-control" rows="3" id="notesTextarea">L'assurance prend en charge 80% des frais.</textarea>
                 </div>
+                <div class="form-group mt-3">
+                    <label class="form-label">Photos actuelles (cliquez sur l'icône corbeille pour supprimer)</label>
+                    <div id="editExistingPhotos" class="previews-container mb-3"></div>
+                </div>
+                <div class="form-group mt-3">
+                    <label class="form-label">Ajouter de nouvelles photos</label>
+                    <div class="upload-area" id="editPhotosUploadArea">
+                        <i class="bi bi-cloud-upload"></i>
+                        <span>Glissez-déposez des photos ici ou cliquez pour choisir</span>
+                        <input type="file" id="editPhotosInput" multiple accept="image/*" style="display: none;">
+                    </div>
+                    <div id="editPhotosPreview" class="previews-container"></div>
+                </div>
             </div>
             <div class="custom-modal-footer">
                 <button class="btn btn-secondary" onclick="closeModal('editModal')">Annuler</button>
@@ -439,6 +476,24 @@
             <div class="custom-modal-footer">
                 <button class="btn btn-secondary" onclick="closeModal('deleteModal')">Annuler</button>
                 <button class="btn btn-danger" onclick="submitDeleteAccident()">Supprimer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lightbox / Image Viewer Modal -->
+    <div class="custom-modal-overlay lightbox-overlay" id="lightboxModal" style="background: rgba(0, 0, 0, 0.85); z-index: 2000;">
+        <div class="custom-modal lightbox-container" onclick="event.stopPropagation()">
+            <div class="custom-modal-header lightbox-header" style="border: none; padding: 15px 24px;">
+                <h3 class="custom-modal-title text-white">Visualisation de l'image</h3>
+                <div class="d-flex align-items-center gap-2">
+                    <button id="lightboxDownloadBtn" class="btn btn-primary" style="padding: 6px 14px; font-size: 0.82rem; background: var(--accent); border: none;">
+                        <i class="bi bi-download"></i> Télécharger
+                    </button>
+                    <button class="custom-modal-close text-white" onclick="closeModal('lightboxModal')"><i class="bi bi-x"></i></button>
+                </div>
+            </div>
+            <div class="custom-modal-body lightbox-body" style="padding: 0; display: flex; justify-content: center; align-items: center; overflow: hidden; background: transparent; min-height: 200px;">
+                <img id="lightboxImage" src="" alt="Aperçu" style="max-width: 100%; max-height: 70vh; object-fit: contain; border-radius: 8px;">
             </div>
         </div>
     </div>

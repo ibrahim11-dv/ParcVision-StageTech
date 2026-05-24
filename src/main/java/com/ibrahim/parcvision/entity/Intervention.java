@@ -34,6 +34,11 @@ public abstract class Intervention {
     @JsonIgnoreProperties({"interventions", "documents"})
     private Vehicule vehicule;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fournisseur_id")
+    @JsonIgnoreProperties({"entreprise"})
+    private Fournisseur fournisseur;
+
     // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -55,4 +60,7 @@ public abstract class Intervention {
 
     public Vehicule getVehicule() { return vehicule; }
     public void setVehicule(Vehicule vehicule) { this.vehicule = vehicule; }
+
+    public Fournisseur getFournisseur() { return fournisseur; }
+    public void setFournisseur(Fournisseur fournisseur) { this.fournisseur = fournisseur; }
 }
