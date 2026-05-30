@@ -27,16 +27,19 @@ public class AssuranceService {
     private final VehiculeRepository vehiculeRepository;
     private final FileStorageService fileStorageService;
     private final UtilisateurRepository utilisateurRepository;
+    private final com.ibrahim.parcvision.repository.DepenseRepository depenseRepository;
 
     @Autowired
     public AssuranceService(AssuranceRepository assuranceRepository,
                             VehiculeRepository vehiculeRepository,
                             FileStorageService fileStorageService,
-                            UtilisateurRepository utilisateurRepository) {
+                            UtilisateurRepository utilisateurRepository,
+                            com.ibrahim.parcvision.repository.DepenseRepository depenseRepository) {
         this.assuranceRepository = assuranceRepository;
         this.vehiculeRepository = vehiculeRepository;
         this.fileStorageService = fileStorageService;
         this.utilisateurRepository = utilisateurRepository;
+        this.depenseRepository = depenseRepository;
     }
 
     private Entreprise getCurrentEntreprise() {
@@ -108,7 +111,9 @@ public class AssuranceService {
             assurance.setAttestationUrl(attestationUrl);
         }
 
-        return assuranceRepository.save(assurance);
+        Assurance saved = assuranceRepository.save(assurance);
+        syncDepense(saved);
+        return saved;
     }
 
     @Transactional(readOnly = true)
@@ -133,8 +138,35 @@ public class AssuranceService {
             throw new RuntimeException("Accès refusé pour cette assurance");
         }
 
+        // Supprimer la dépense associée
+        String sourceCustom = "Assurance #" + id;
+        depenseRepository.findBySourceDepenseCustom(sourceCustom)
+                .ifPresent(d -> depenseRepository.delete(d));
+
         // On ne supprime pas le fichier physique pour l'historique
         assuranceRepository.delete(assurance);
+    }
+
+    private void syncDepense(Assurance ass) {
+        String sourceCustom = "Assurance #" + ass.getId();
+        com.ibrahim.parcvision.entity.Depense depense = depenseRepository.findBySourceDepenseCustom(sourceCustom)
+                .orElse(new com.ibrahim.parcvision.entity.Depense());
+
+        depense.setMontant(ass.getMontant() != null ? ass.getMontant() : 0.0);
+        depense.setDateDepense(ass.getDateDebut());
+        depense.setQui(ass.getNomPrestataire() != null ? ass.getNomPrestataire() : "Assureur Inconnu");
+        depense.setSourceDepense("Assurance");
+        depense.setSourceDepenseCustom(sourceCustom);
+        
+        // On mappe l'état de paiement
+        if (Boolean.TRUE.equals(ass.getEstPayee())) {
+            depense.setTypePaiement(com.ibrahim.parcvision.enums.TypePaiement.PAYE);
+        } else {
+            depense.setTypePaiement(com.ibrahim.parcvision.enums.TypePaiement.EN_ATTENTE);
+        }
+        
+        depense.setEntreprise(getCurrentEntreprise());
+        depenseRepository.save(depense);
     }
 
     /**

@@ -33,6 +33,7 @@ public class InfractionService {
     private final MissionRepository missionRepository;
     private final FileStorageService fileStorageService;
     private final UtilisateurRepository utilisateurRepository;
+    private final com.ibrahim.parcvision.repository.DepenseRepository depenseRepository;
 
     @Autowired
     public InfractionService(InfractionRepository infractionRepository,
@@ -40,13 +41,15 @@ public class InfractionService {
                              ConducteurRepository conducteurRepository,
                              MissionRepository missionRepository,
                              FileStorageService fileStorageService,
-                             UtilisateurRepository utilisateurRepository) {
+                             UtilisateurRepository utilisateurRepository,
+                             com.ibrahim.parcvision.repository.DepenseRepository depenseRepository) {
         this.infractionRepository = infractionRepository;
         this.vehiculeRepository = vehiculeRepository;
         this.conducteurRepository = conducteurRepository;
         this.missionRepository = missionRepository;
         this.fileStorageService = fileStorageService;
         this.utilisateurRepository = utilisateurRepository;
+        this.depenseRepository = depenseRepository;
     }
 
     private Entreprise getCurrentEntreprise() {
@@ -121,7 +124,9 @@ public class InfractionService {
         infraction.setDateLimitePaiement(dto.getDateLimitePaiement());
         infraction.setMontant(dto.getMontant());
 
-        return infractionRepository.save(infraction);
+        Infraction saved = infractionRepository.save(infraction);
+        syncDepense(saved);
+        return saved;
     }
 
     @Transactional(readOnly = true)
@@ -146,7 +151,33 @@ public class InfractionService {
             throw new RuntimeException("Accès refusé pour cette infraction");
         }
 
+        // Supprimer la dépense associée
+        String sourceCustom = "Infraction #" + id;
+        depenseRepository.findBySourceDepenseCustom(sourceCustom)
+                .ifPresent(d -> depenseRepository.delete(d));
+
         infractionRepository.delete(infraction);
+    }
+
+    private void syncDepense(Infraction inf) {
+        String sourceCustom = "Infraction #" + inf.getId();
+        com.ibrahim.parcvision.entity.Depense depense = depenseRepository.findBySourceDepenseCustom(sourceCustom)
+                .orElse(new com.ibrahim.parcvision.entity.Depense());
+
+        depense.setMontant(inf.getMontant() != null ? inf.getMontant() : 0.0);
+        depense.setDateDepense(inf.getDateCommis());
+        depense.setQui("Amende — " + (inf.getCategorie() != null ? inf.getCategorie() : "Inconnue"));
+        depense.setSourceDepense("Infraction");
+        depense.setSourceDepenseCustom(sourceCustom);
+        
+        if (Boolean.TRUE.equals(inf.getEstPayee())) {
+            depense.setTypePaiement(com.ibrahim.parcvision.enums.TypePaiement.PAYE);
+        } else {
+            depense.setTypePaiement(com.ibrahim.parcvision.enums.TypePaiement.EN_ATTENTE);
+        }
+        
+        depense.setEntreprise(inf.getEntreprise());
+        depenseRepository.save(depense);
     }
 
     private String extractDossier(String url) {

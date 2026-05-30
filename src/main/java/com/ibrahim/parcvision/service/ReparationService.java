@@ -29,6 +29,12 @@ public class ReparationService {
     @Autowired
     private com.ibrahim.parcvision.repository.FournisseurRepository fournisseurRepository;
 
+    @Autowired
+    private DepenseService depenseService;
+
+    @Autowired
+    private com.ibrahim.parcvision.repository.DepenseRepository depenseRepository;
+
     public ReparationService(ReparationRepository reparationRepository) {
         this.reparationRepository = reparationRepository;
     }
@@ -67,6 +73,11 @@ public class ReparationService {
 
     //button supp
     public void Delete(long id) {
+        // Supprimer la dépense associée si elle existe
+        String sourceCustom = "Reparation #" + id;
+        depenseRepository.findBySourceDepenseCustom(sourceCustom)
+                .ifPresent(d -> depenseRepository.delete(d));
+        
         reparationRepository.deleteById(id);
     }
 
@@ -118,12 +129,47 @@ public class ReparationService {
             }
         }
 
-        return reparationRepository.save(reparation);
+        Reparation updated = reparationRepository.save(reparation);
+        syncDepense(updated);
+        return updated;
     }
 
     //Ajouter une reparation :
     public Reparation saveReparation(Reparation reparation) {
-        return reparationRepository.save(reparation);
+        Reparation saved = reparationRepository.save(reparation);
+        syncDepense(saved);
+        return saved;
+    }
+
+    private void syncDepense(Reparation rep) {
+        String sourceCustom = "Reparation #" + rep.getId();
+        com.ibrahim.parcvision.entity.Depense depense = depenseRepository.findBySourceDepenseCustom(sourceCustom)
+                .orElse(new com.ibrahim.parcvision.entity.Depense());
+
+        depense.setMontant(rep.getCoutTotal());
+        depense.setDateDepense(rep.getDateIntervention());
+        
+        String providerName = "Garage Inconnu";
+        if (rep.getFournisseur() != null) {
+            // Re-fetch or use existing if name is present
+            if (rep.getFournisseur().getNomFournisseur() != null) {
+                providerName = rep.getFournisseur().getNomFournisseur();
+            } else {
+                providerName = fournisseurRepository.findById(rep.getFournisseur().getIdFournisseur())
+                        .map(f -> f.getNomFournisseur())
+                        .orElse("Fournisseur Inconnu");
+            }
+        } else if (rep.getGaragePrestataire() != null && !rep.getGaragePrestataire().isEmpty()) {
+            providerName = rep.getGaragePrestataire();
+        }
+        
+        depense.setQui(providerName);
+        depense.setSourceDepense("Réparation");
+        depense.setSourceDepenseCustom(sourceCustom);
+        depense.setTypePaiement(com.ibrahim.parcvision.enums.TypePaiement.EN_ATTENTE);
+        depense.setEntreprise(getCurrentEntreprise());
+
+        depenseRepository.save(depense);
     }
 
     private Entreprise getCurrentEntreprise() {

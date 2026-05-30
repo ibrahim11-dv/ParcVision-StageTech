@@ -128,7 +128,14 @@
                     </a>
                 </div>
 
+                
                 <div class="nav-item">
+                    <a href="/admin/depenses" class="nav-link" data-tip="Dépenses">
+                        <span class="ni"><i class="bi bi-wallet2"></i><span class="pulse p-red"></span></span>
+                        <span class="nt">Dépense<small class="nt-sub">Suivi financier</small></span>
+                    </a>
+                </div>
+<div class="nav-item">
                     <a href="/admin/fournisseurs" class="nav-link active" data-tip="Fournisseurs">
                         <span class="ni"><i class="bi bi-people-fill"></i><span class="pulse p-green"></span></span>
                         <span class="nt">Fournisseurs<small class="nt-sub">Gestion prestataires</small></span>
@@ -172,6 +179,12 @@
             </div>
 
         </aside>
+
+        <div class="overlay" id="overlay" onclick="closeMobile()"></div>
+
+        <button class="mob-toggle" onclick="openMobile()">
+            <i class="bi bi-list"></i>
+        </button>
 
         <div class="main" id="main">
             <div class="page">

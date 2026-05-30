@@ -195,6 +195,7 @@ function afficherPage() {
             const pct = Math.min(100, Math.round((elapsed / totalDays) * 100));
 
             tbody.innerHTML += `<tr>
+                <td><b style="color:var(--primary)">#${a.id}</b></td>
                 <td><b>${a.vehiculeLabel || '-'}</b></td>
                 <td>${a.nomPrestataire || '-'}</td>
                 <td>${formatType(a.typeAssurance)}</td>

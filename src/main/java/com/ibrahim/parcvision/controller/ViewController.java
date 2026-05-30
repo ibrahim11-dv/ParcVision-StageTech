@@ -74,6 +74,11 @@ public class ViewController {
         return "forward:/admin/html/vidange.html";
     }
 
+    @GetMapping("/admin/depenses")
+    public String adminDepenses() {
+        return "forward:/admin/html/depense.html";
+    }
+
     @GetMapping("/admin/archivage")
     public String adminArchivage() {
         return "forward:/admin/html/archivage.html";

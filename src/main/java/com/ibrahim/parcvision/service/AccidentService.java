@@ -40,6 +40,12 @@ public class AccidentService {
     @Autowired
     private FileStorageService fileStorageService;
 
+    @Autowired
+    private com.ibrahim.parcvision.repository.DepenseRepository depenseRepository;
+
+    @Autowired
+    private com.ibrahim.parcvision.repository.FournisseurRepository fournisseurRepository;
+
     public AccidentService(AccidentRepository accidentRepository) {
         this.accidentRepository = accidentRepository;
     }
@@ -115,7 +121,9 @@ public class AccidentService {
         }
 
         accident.setPhotosUrl(currentPhotos);
-        return accidentRepository.save(accident);
+        Accident saved = accidentRepository.save(accident);
+        syncDepense(saved);
+        return saved;
     }
 
     @Transactional
@@ -127,6 +135,9 @@ public class AccidentService {
                     fileStorageService.deleteFile(url);
                 }
             }
+            String sourceCustom = "Accident #" + id;
+            depenseRepository.findBySourceDepenseCustom(sourceCustom)
+                    .ifPresent(d -> depenseRepository.delete(d));
             accidentRepository.delete(accident);
         }
     }
@@ -170,7 +181,30 @@ public class AccidentService {
         }
         accident.setPhotosUrl(photoUrls);
 
-        return accidentRepository.save(accident);
+        Accident saved = accidentRepository.save(accident);
+        syncDepense(saved);
+        return saved;
+    }
+
+    private void syncDepense(Accident acc) {
+        String sourceCustom = "Accident #" + acc.getId();
+        com.ibrahim.parcvision.entity.Depense depense = depenseRepository.findBySourceDepenseCustom(sourceCustom)
+                .orElse(new com.ibrahim.parcvision.entity.Depense());
+
+        depense.setMontant(acc.getBudgetEstime());
+        depense.setDateDepense(acc.getDateIntervention());
+        
+        String providerName = "Conducteur: " + (acc.getConducteur() != null && acc.getConducteur().getUtilisateur() != null 
+                ? acc.getConducteur().getUtilisateur().getNom() + " " + acc.getConducteur().getUtilisateur().getPrenom() 
+                : "Inconnu");
+        
+        depense.setQui(providerName);
+        depense.setSourceDepense("Accident");
+        depense.setSourceDepenseCustom(sourceCustom);
+        depense.setTypePaiement(com.ibrahim.parcvision.enums.TypePaiement.EN_ATTENTE);
+        depense.setEntreprise(getCurrentEntreprise());
+
+        depenseRepository.save(depense);
     }
 
     private String extractDossier(String fileUrl) {

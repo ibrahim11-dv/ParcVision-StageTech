@@ -214,6 +214,7 @@ function afficherPage() {
         tbody.innerHTML = '';
         page.forEach(i => {
             tbody.innerHTML += `<tr>
+                <td><b style="color:var(--primary)">#${i.id}</b></td>
                 <td><b>${formatDate(i.dateCommis)}</b></td>
                 <td>${i.vehiculeLabel}</td>
                 <td>${i.conducteurLabel}</td>

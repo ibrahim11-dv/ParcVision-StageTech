@@ -133,7 +133,14 @@
                     </a>
                 </div>
 
+                
                 <div class="nav-item">
+                    <a href="/admin/depenses" class="nav-link" data-tip="D�penses">
+                        <span class="ni"><i class="bi bi-wallet2"></i><span class="pulse p-red"></span></span>
+                        <span class="nt">D�pense<small class="nt-sub">Suivi financier</small></span>
+                    </a>
+                </div>
+<div class="nav-item">
                     <a href="/admin/fournisseurs" class="nav-link" data-tip="Fournisseurs">
                         <span class="ni"><i class="bi bi-people-fill"></i><span class="pulse p-green"></span></span>
                         <span class="nt">Fournisseurs<small class="nt-sub">Gestion prestataires</small></span>
@@ -262,6 +269,7 @@
                             <table class="table align-middle">
                                 <thead>
                                     <tr>
+                                        <th>ID</th>
                                         <th>Véhicule</th>
                                         <th>Date Entrée</th>
                                         <th>Garage / Prestataire</th>
@@ -461,6 +469,9 @@
                         </form>
                     </div>
                     <div class="custom-modal-footer">
+                        <button class="btn btn-secondary me-auto" onclick="goToExpense()" id="btnGoToExpense">
+                            <i class="bi bi-wallet2 me-1"></i> Accéder à la dépense
+                        </button>
                         <button class="btn btn-secondary" onclick="closeModal('editRepairModal')">Annuler</button>
                         <button class="btn btn-primary" onclick="submitEditModal()">Mettre à jour</button>
                     </div>

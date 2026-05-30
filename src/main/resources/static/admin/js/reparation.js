@@ -183,6 +183,13 @@ function submitDeleteRepair() {
 }
 //button de modification :
 //methode openEditModel et subEditModel !
+function goToExpense() {
+    const id = document.getElementById('editRepairModal').dataset.reparationId;
+    if (!id) return;
+    const sourceCustom = "Reparation #" + id;
+    window.location.href = "/admin/depenses?source=" + encodeURIComponent(sourceCustom);
+}
+
 function openEditModal(a) {
     // Stocker l'id de la réparation
     document.getElementById('editRepairModal').dataset.reparationId = a.id;
@@ -342,6 +349,7 @@ function renderTableau(data) {
 
         id_tab.innerHTML += `
             <tr class="hist-row">
+                <td><b style="color:var(--primary)">#${a.id}</b></td>
                 <td>
                     <div style="display:flex;align-items:center;gap:10px">
                         <div class="profile-av bg-light text-primary" 

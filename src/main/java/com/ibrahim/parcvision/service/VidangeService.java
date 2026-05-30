@@ -21,13 +21,16 @@ public class VidangeService {
     private final VidangeRepository vidangeRepository;
     private final UtilisateurRepository utilisateurRepository;
     private final com.ibrahim.parcvision.repository.FournisseurRepository fournisseurRepository;
+    private final com.ibrahim.parcvision.repository.DepenseRepository depenseRepository;
 
     public VidangeService(VidangeRepository vidangeRepository, 
                          UtilisateurRepository utilisateurRepository,
-                         com.ibrahim.parcvision.repository.FournisseurRepository fournisseurRepository) {
+                         com.ibrahim.parcvision.repository.FournisseurRepository fournisseurRepository,
+                         com.ibrahim.parcvision.repository.DepenseRepository depenseRepository) {
         this.vidangeRepository = vidangeRepository;
         this.utilisateurRepository = utilisateurRepository;
         this.fournisseurRepository = fournisseurRepository;
+        this.depenseRepository = depenseRepository;
     }
 
     public Page<Vidange> findAll(int page, int size) {
@@ -41,7 +44,9 @@ public class VidangeService {
     }
 
     public Vidange save(Vidange vidange) {
-        return vidangeRepository.save(vidange);
+        Vidange saved = vidangeRepository.save(vidange);
+        syncDepense(saved);
+        return saved;
     }
 
     public Vidange update(Long id, Map<String, Object> updates) {
@@ -71,11 +76,46 @@ public class VidangeService {
         if (updates.containsKey("actionsMenees"))
             vidange.setActionsMenees((String) updates.get("actionsMenees"));
 
-        return vidangeRepository.save(vidange);
+        Vidange updated = vidangeRepository.save(vidange);
+        syncDepense(updated);
+        return updated;
     }
 
     public void delete(Long id) {
+        // Supprimer la dépense associée si elle existe
+        String sourceCustom = "Vidange #" + id;
+        depenseRepository.findBySourceDepenseCustom(sourceCustom)
+                .ifPresent(d -> depenseRepository.delete(d));
+
         vidangeRepository.deleteById(id);
+    }
+
+    private void syncDepense(Vidange vid) {
+        String sourceCustom = "Vidange #" + vid.getId();
+        com.ibrahim.parcvision.entity.Depense depense = depenseRepository.findBySourceDepenseCustom(sourceCustom)
+                .orElse(new com.ibrahim.parcvision.entity.Depense());
+
+        depense.setMontant(vid.getCoutTotal());
+        depense.setDateDepense(vid.getDateIntervention());
+
+        String providerName = "Garage Inconnu";
+        if (vid.getFournisseur() != null) {
+            if (vid.getFournisseur().getNomFournisseur() != null) {
+                providerName = vid.getFournisseur().getNomFournisseur();
+            } else {
+                providerName = fournisseurRepository.findById(vid.getFournisseur().getIdFournisseur())
+                        .map(f -> f.getNomFournisseur())
+                        .orElse("Fournisseur Inconnu");
+            }
+        }
+
+        depense.setQui(providerName);
+        depense.setSourceDepense("Vidange");
+        depense.setSourceDepenseCustom(sourceCustom);
+        depense.setTypePaiement(com.ibrahim.parcvision.enums.TypePaiement.EN_ATTENTE);
+        depense.setEntreprise(getCurrentEntreprise());
+
+        depenseRepository.save(depense);
     }
 
     private Entreprise getCurrentEntreprise() {

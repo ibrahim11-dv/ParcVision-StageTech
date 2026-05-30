@@ -19,10 +19,17 @@ public class DepannageService {
 
     private final DepannageRepository depannageRepository;
     private final UtilisateurRepository utilisateurRepository;
+    private final com.ibrahim.parcvision.repository.DepenseRepository depenseRepository;
+    private final com.ibrahim.parcvision.repository.FournisseurRepository fournisseurRepository;
 
-    public DepannageService(DepannageRepository depannageRepository, UtilisateurRepository utilisateurRepository) {
+    public DepannageService(DepannageRepository depannageRepository, 
+                            UtilisateurRepository utilisateurRepository,
+                            com.ibrahim.parcvision.repository.DepenseRepository depenseRepository,
+                            com.ibrahim.parcvision.repository.FournisseurRepository fournisseurRepository) {
         this.depannageRepository = depannageRepository;
         this.utilisateurRepository = utilisateurRepository;
+        this.depenseRepository = depenseRepository;
+        this.fournisseurRepository = fournisseurRepository;
     }
 
     public Page<Depannage> findAll(int page, int size) {
@@ -41,10 +48,15 @@ public class DepannageService {
     }
 
     public Depannage save(Depannage depannage) {
-        return depannageRepository.save(depannage);
+        Depannage saved = depannageRepository.save(depannage);
+        syncDepense(saved);
+        return saved;
     }
 
     public void delete(Long id) {
+        String sourceCustom = "Dépannage #" + id;
+        depenseRepository.findBySourceDepenseCustom(sourceCustom)
+                .ifPresent(d -> depenseRepository.delete(d));
         depannageRepository.deleteById(id);
     }
 
@@ -57,7 +69,39 @@ public class DepannageService {
         if (updates.containsKey("descriptionPanne")) depannage.setDescriptionPanne((String) updates.get("descriptionPanne"));
         if (updates.containsKey("coutTotal")) depannage.setCoutTotal(Double.parseDouble(updates.get("coutTotal").toString()));
 
-        return depannageRepository.save(depannage);
+        Depannage updated = depannageRepository.save(depannage);
+        syncDepense(updated);
+        return updated;
+    }
+
+    private void syncDepense(Depannage dep) {
+        String sourceCustom = "Dépannage #" + dep.getId();
+        com.ibrahim.parcvision.entity.Depense depense = depenseRepository.findBySourceDepenseCustom(sourceCustom)
+                .orElse(new com.ibrahim.parcvision.entity.Depense());
+
+        depense.setMontant(dep.getCoutTotal());
+        depense.setDateDepense(dep.getDateIntervention());
+        
+        String providerName = "Dépanneur Inconnu";
+        if (dep.getFournisseur() != null) {
+            if (dep.getFournisseur().getNomFournisseur() != null) {
+                providerName = dep.getFournisseur().getNomFournisseur();
+            } else {
+                providerName = fournisseurRepository.findById(dep.getFournisseur().getIdFournisseur())
+                        .map(f -> f.getNomFournisseur())
+                        .orElse("Fournisseur Inconnu");
+            }
+        } else if (dep.getNomDepanneurExterne() != null && !dep.getNomDepanneurExterne().isEmpty()) {
+            providerName = dep.getNomDepanneurExterne();
+        }
+        
+        depense.setQui(providerName);
+        depense.setSourceDepense("Dépannage");
+        depense.setSourceDepenseCustom(sourceCustom);
+        depense.setTypePaiement(com.ibrahim.parcvision.enums.TypePaiement.EN_ATTENTE);
+        depense.setEntreprise(getCurrentEntreprise());
+
+        depenseRepository.save(depense);
     }
 
     public long countTotal() { return depannageRepository.countTotal(getCurrentEntreprise()); }
