@@ -37,19 +37,34 @@ public class MissionController {
         this.utilisateurRepository = utilisateurRepository;
     }
 
+    @GetMapping("/{id}/points")
+    public ResponseEntity<List<com.ibrahim.parcvision.entity.PointGPS>> getPoints(@PathVariable Long id) {
+        return ResponseEntity.ok(missionService.getMissionPoints(id));
+    }
+
+    @PostMapping("/{id}/tracker/location")
+    public ResponseEntity<?> addTrackerLocation(@PathVariable Long id, @RequestBody com.ibrahim.parcvision.entity.PointGPS pointData) {
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED).body(missionService.addTrackerLocation(id, pointData));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @GetMapping
     public ResponseEntity<Page<MissionResponseDao>> getAllMissions(
             HttpServletRequest request,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
-            @RequestParam(required = false) String search
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) StatutMission status
     ) {
         String email = jwtService.extractEmailFromCookie(request);
         Utilisateur user = utilisateurRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
-        Page<MissionResponseDao> missions = missionService.getMissionsPaged(user.getEntreprise(), search, pageable);
+        Page<MissionResponseDao> missions = missionService.getMissionsPaged(user.getEntreprise(), search, status, pageable);
         return ResponseEntity.ok(missions);
     }
 

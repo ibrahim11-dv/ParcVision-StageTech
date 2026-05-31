@@ -3,6 +3,7 @@ package com.ibrahim.parcvision.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import java.time.LocalDate;
 
 @Entity
 @DiscriminatorValue("vidange")
@@ -22,6 +23,12 @@ public class Vidange extends Intervention {
     @Column(name = "filter_carburant_change")
     private boolean filterCarburantChange;
 
+    @Column(name = "est_paye")
+    private Boolean estPaye = false;
+
+    @Column(name = "date_payement")
+    private LocalDate datePayement;
+
     // Getters and Setters
     public String getTypeHuile() { return typeHuile; }
     public void setTypeHuile(String typeHuile) { this.typeHuile = typeHuile; }
@@ -37,4 +44,10 @@ public class Vidange extends Intervention {
 
     public boolean isFilterCarburantChange() { return filterCarburantChange; }
     public void setFilterCarburantChange(boolean filterCarburantChange) { this.filterCarburantChange = filterCarburantChange; }
+
+    public Boolean getEstPaye() { return estPaye; }
+    public void setEstPaye(Boolean estPaye) { this.estPaye = estPaye; }
+
+    public LocalDate getDatePayement() { return datePayement; }
+    public void setDatePayement(LocalDate datePayement) { this.datePayement = datePayement; }
 }

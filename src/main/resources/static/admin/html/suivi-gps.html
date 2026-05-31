@@ -137,12 +137,12 @@
 
                 
                 <div class="nav-item">
-                    <a href="/admin/depenses" class="nav-link" data-tip="D�penses">
+                    <a href="/admin/depenses" class="nav-link" data-tip="Dépenses">
                         <span class="ni"><i class="bi bi-wallet2"></i><span class="pulse p-red"></span></span>
-                        <span class="nt">D�pense<small class="nt-sub">Suivi financier</small></span>
+                        <span class="nt">Dépense<small class="nt-sub">Suivi financier</small></span>
                     </a>
                 </div>
-<div class="nav-item">
+                <div class="nav-item">
                     <a href="/admin/fournisseurs" class="nav-link" data-tip="Fournisseurs">
                         <span class="ni"><i class="bi bi-people-fill"></i><span class="pulse p-green"></span></span>
                         <span class="nt">Fournisseurs<small class="nt-sub">Gestion prestataires</small></span>
@@ -430,6 +430,32 @@
                                     placeholder="Ex: Contacter le client avant l'arrivée, attention fragile..."></textarea>
                             </div>
 
+                            <!-- GPS Tracker Section -->
+                            <div class="col-12 mt-3">
+                                <hr class="text-muted opacity-25">
+                                <h6 class="fw-bold mb-3"><i class="bi bi-broadcast me-2"></i>Informations Tracker GPS</h6>
+                                
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="add_is_gps_enabled">
+                                    <label class="form-check-label fw-semibold" for="add_is_gps_enabled">Activer le suivi GPS pour cette mission</label>
+                                </div>
+
+                                <div class="row g-3" id="add_tracker_fields">
+                                    <div class="col-md-4">
+                                        <label class="form-label small fw-semibold">ID / N° de Série</label>
+                                        <input type="text" class="form-control" id="add_tracker_id" placeholder="Ex: TRK-98765">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label small fw-semibold">IMEI (15 chiffres)</label>
+                                        <input type="text" class="form-control" id="add_tracker_imei" maxlength="15" placeholder="Ex: 358901234567890">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label small fw-semibold">N° Téléphone SIM</label>
+                                        <input type="text" class="form-control" id="add_tracker_sim" placeholder="Ex: +212 600 000000">
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </form>
                 </div>
@@ -584,7 +610,33 @@
                             <!-- Instructions -->
                             <div class="col-12">
                                 <label class="form-label text-muted">Instructions Spéciales / Remarques</label>
-                                <textarea class="form-control" id="edit_instructions" rows="3"></textarea>
+                                <textarea class="form-control" id="edit_instructions" rows="2"></textarea>
+                            </div>
+
+                            <!-- GPS Tracker Section -->
+                            <div class="col-12 mt-3">
+                                <hr class="text-muted opacity-25">
+                                <h6 class="fw-bold mb-3"><i class="bi bi-broadcast me-2"></i>Informations Tracker GPS</h6>
+
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" id="edit_is_gps_enabled">
+                                    <label class="form-check-label fw-semibold" for="edit_is_gps_enabled">Activer le suivi GPS pour cette mission</label>
+                                </div>
+
+                                <div class="row g-3" id="edit_tracker_fields">
+                                    <div class="col-md-4">
+                                        <label class="form-label small fw-semibold">ID / N° de Série</label>
+                                        <input type="text" class="form-control" id="edit_tracker_id">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label small fw-semibold">IMEI (15 chiffres)</label>
+                                        <input type="text" class="form-control" id="edit_tracker_imei" maxlength="15">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label small fw-semibold">N° Téléphone SIM</label>
+                                        <input type="text" class="form-control" id="edit_tracker_sim">
+                                    </div>
+                                </div>
                             </div>
 
                         </div>
@@ -678,4 +730,5 @@
     <script src="../js/addMission.js"></script>
 
 </body>
+
 </html>

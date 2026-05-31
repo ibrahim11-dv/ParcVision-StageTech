@@ -60,6 +60,11 @@ public class AddMissionDao {
 
     private String InstructionSpeciales;
 
+    private String trackerId;
+    private String trackerImei;
+    private String trackerSimNumber;
+    private Boolean isGpsEnabled;
+
     // Getters and Setters (keep as they are)
     public Long getConducteurId() {
         return conducteurId;
@@ -179,5 +184,37 @@ public class AddMissionDao {
 
     public void setInstructionSpeciales(String instructionSpeciales) {
         InstructionSpeciales = instructionSpeciales;
+    }
+
+    public String getTrackerId() {
+        return trackerId;
+    }
+
+    public void setTrackerId(String trackerId) {
+        this.trackerId = trackerId;
+    }
+
+    public String getTrackerImei() {
+        return trackerImei;
+    }
+
+    public void setTrackerImei(String trackerImei) {
+        this.trackerImei = trackerImei;
+    }
+
+    public String getTrackerSimNumber() {
+        return trackerSimNumber;
+    }
+
+    public void setTrackerSimNumber(String trackerSimNumber) {
+        this.trackerSimNumber = trackerSimNumber;
+    }
+
+    public Boolean getIsGpsEnabled() {
+        return isGpsEnabled;
+    }
+
+    public void setIsGpsEnabled(Boolean gpsEnabled) {
+        isGpsEnabled = gpsEnabled;
     }
 }

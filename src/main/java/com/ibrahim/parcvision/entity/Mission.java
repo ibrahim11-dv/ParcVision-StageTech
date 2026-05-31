@@ -89,6 +89,18 @@ public class Mission {
     @JsonIgnore
     private List<Colis> colis;
 
+    @Column(name = "tracker_id")
+    private String trackerId;
+
+    @Column(name = "tracker_imei")
+    private String trackerImei;
+
+    @Column(name = "tracker_sim_number")
+    private String trackerSimNumber;
+
+    @Column(name = "is_gps_enabled")
+    private boolean isGpsEnabled = false;
+
 
     public Long getId() {
         return id;
@@ -209,5 +221,37 @@ public class Mission {
 
     public void setColis(List<Colis> colis) {
         this.colis = colis;
+    }
+
+    public String getTrackerId() {
+        return trackerId;
+    }
+
+    public void setTrackerId(String trackerId) {
+        this.trackerId = trackerId;
+    }
+
+    public String getTrackerImei() {
+        return trackerImei;
+    }
+
+    public void setTrackerImei(String trackerImei) {
+        this.trackerImei = trackerImei;
+    }
+
+    public String getTrackerSimNumber() {
+        return trackerSimNumber;
+    }
+
+    public void setTrackerSimNumber(String trackerSimNumber) {
+        this.trackerSimNumber = trackerSimNumber;
+    }
+
+    public boolean isGpsEnabled() {
+        return isGpsEnabled;
+    }
+
+    public void setGpsEnabled(boolean gpsEnabled) {
+        isGpsEnabled = gpsEnabled;
     }
 }

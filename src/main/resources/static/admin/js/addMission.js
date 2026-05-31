@@ -20,6 +20,11 @@ document.getElementById("addMission").addEventListener("click", async (e) => {
     const volume = document.getElementById("volume").value;
     const instruction = document.getElementById("instruction").value;
 
+    const isGpsEnabled = document.getElementById("add_is_gps_enabled").checked;
+    const trackerId = document.getElementById("add_tracker_id").value;
+    const trackerImei = document.getElementById("add_tracker_imei").value;
+    const trackerSim = document.getElementById("add_tracker_sim").value;
+
     // Validation
     if (id_conducteur === "") {
         alert("choisir un conducteur");
@@ -81,7 +86,11 @@ document.getElementById("addMission").addEventListener("click", async (e) => {
                 typeColis: type_colis,
                 poids: poids ? parseFloat(poids) : null,
                 Volume: volume ? parseFloat(volume) : null,
-                InstructionSpeciales: instruction || null
+                InstructionSpeciales: instruction || null,
+                isGpsEnabled: isGpsEnabled,
+                trackerId: trackerId || null,
+                trackerImei: trackerImei || null,
+                trackerSimNumber: trackerSim || null
             })
         });
 

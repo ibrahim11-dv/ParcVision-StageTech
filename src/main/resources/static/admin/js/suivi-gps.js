@@ -115,29 +115,28 @@ initTheme();
 // Mission Management & Map Logic
 // ==========================================
 let map;
-let markers = [];
+let missionLayers = []; // Stores all map layers related to missions
 let allMissions = [];
 let missionIdToConfirm = null;
 let missionIdToDelete = null;
 
 let currentPage = 0;
-let pageSize = 5; // Standard pageSize for tables in this project
+let pageSize = 5; 
 let searchQuery = '';
-let currentStatusFilter = 'EN_COURS'; // Default to "En route" as requested
+let currentStatusFilter = 'EN_COURS';
 
 async function fetchMissions() {
     try {
-        const url = `/api/missions?page=${currentPage}&size=${pageSize}&search=${encodeURIComponent(searchQuery)}`;
+        let url = `/api/missions?page=${currentPage}&size=${pageSize}&search=${encodeURIComponent(searchQuery)}`;
+        if (currentStatusFilter !== 'ALL') {
+            url += `&status=${currentStatusFilter}`;
+        }
+        
         const response = await fetch(url);
         if (!response.ok) throw new Error('Failed to fetch missions');
         const data = await response.json();
         
-        // Filter content based on status
-        if (currentStatusFilter === 'ALL') {
-            allMissions = data.content;
-        } else {
-            allMissions = data.content.filter(m => m.statut === currentStatusFilter);
-        }
+        allMissions = data.content;
         
         renderMissions(allMissions);
         renderPagination(data);
@@ -146,7 +145,6 @@ async function fetchMissions() {
     }
 }
 
-// Add event listener for status filter
 document.getElementById('statusFilter').addEventListener('change', function(e) {
     currentStatusFilter = e.target.value;
     currentPage = 0;
@@ -157,8 +155,9 @@ function renderMissions(missions) {
     const tableBody = document.getElementById('missionsTableBody');
     tableBody.innerHTML = '';
 
-    markers.forEach(marker => map.removeLayer(marker));
-    markers = [];
+    // Clear previous layers
+    missionLayers.forEach(layer => map.removeLayer(layer));
+    missionLayers = [];
 
     if (missions.length === 0) {
         tableBody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-muted">Aucune mission trouvée</td></tr>';
@@ -168,7 +167,13 @@ function renderMissions(missions) {
     missions.forEach(mission => {
         const row = document.createElement('tr');
         row.style.cursor = 'pointer';
-        row.onclick = () => focusMap([mission.latitudeDepart, mission.longitudeDepart]);
+        row.onclick = () => {
+            if (mission.currentLatitude && mission.currentLongitude) {
+                focusMap([mission.currentLatitude, mission.currentLongitude]);
+            } else if (mission.latitudeDepart && mission.longitudeDepart) {
+                focusMap([mission.latitudeDepart, mission.longitudeDepart]);
+            }
+        };
 
         const isDelivered = mission.statut === 'TERMINEE';
 
@@ -210,37 +215,141 @@ function renderMissions(missions) {
         `;
         tableBody.appendChild(row);
 
-        if (mission.latitudeDepart && mission.longitudeDepart) {
-            let color = isDelivered ? "#10b981" : (mission.statut === "ANNULEE" ? "#ef4444" : "#f59e0b");
+        // Draw trajectory for each mission
+        drawMissionTrajectory(mission);
+    });
+}
 
-            let htmlIcon = `<div style="position:relative; width:20px; height:20px;">
-                                <div style="width:16px;height:16px;background:${color};border-radius:50%;border:2px solid white;box-shadow:0 2px 5px rgba(0,0,0,0.3);position:absolute;z-index:2;"></div>
-                                ${mission.statut === "EN_COURS" ? `<div style="width:16px;height:16px;background:${color};border-radius:50%;position:absolute;animation:pulse 1.5s infinite;z-index:1;"></div>` : ''}
-                            </div>`;
+async function drawMissionTrajectory(mission) {
+    try {
+        const response = await fetch(`/api/missions/${mission.id}/points`);
+        if (!response.ok) return;
+        const allPoints = await response.json();
+        
+        // 1. Sort points chronologically
+        allPoints.sort((a, b) => new Date(a.timeStamp) - new Date(b.timeStamp));
 
-            let divIcon = L.divIcon({
-                className: 'custom-div-icon',
-                html: htmlIcon,
-                iconSize: [20, 20],
-                iconAnchor: [10, 10]
-            });
+        // 2. Identify key points
+        // Start and Destination from mission fields or specific markers
+        const startPoint = allPoints.find(p => p.typePoint === 'DEPART');
+        const endPoint = allPoints.find(p => p.typePoint === 'ARRIVEE');
+        
+        // Find latest EN_COURS point
+        const enCoursPoints = allPoints.filter(p => p.typePoint === 'EN_COURS');
+        
+        // Determine the logical "Current Position"
+        let currentPos;
+        if (mission.statut === 'TERMINEE' && endPoint) {
+            currentPos = { lat: endPoint.laltitude, lng: endPoint.longitude, ts: endPoint.timeStamp, speed: 0 };
+        } else if (enCoursPoints.length > 0) {
+            const latest = enCoursPoints[enCoursPoints.length - 1];
+            currentPos = { lat: latest.laltitude, lng: latest.longitude, ts: latest.timeStamp, speed: latest.vitesse };
+        } else if (startPoint) {
+            currentPos = { lat: startPoint.laltitude, lng: startPoint.longitude, ts: startPoint.timeStamp, speed: 0 };
+        } else {
+            // Fallback to mission coordinates
+            currentPos = { lat: mission.latitudeDepart, lng: mission.longitudeDepart, ts: new Date().toISOString(), speed: 0 };
+        }
 
-            const marker = L.marker([mission.latitudeDepart, mission.longitudeDepart], { icon: divIcon }).addTo(map);
-            marker.bindPopup(`
+        // 3. Draw Traveled Path (Solid Line)
+        // Only include DEPART and EN_COURS points
+        const traveledPoints = allPoints.filter(p => p.typePoint === 'DEPART' || p.typePoint === 'EN_COURS');
+        if (mission.statut === 'TERMINEE' && endPoint) {
+            traveledPoints.push(endPoint);
+        }
+
+        if (traveledPoints.length > 1) {
+            const historyLatLngs = traveledPoints.map(p => [p.laltitude, p.longitude]);
+            const historyPolyline = L.polyline(historyLatLngs, {
+                color: '#3b82f6',
+                weight: 6,
+                opacity: 0.8,
+                lineJoin: 'round'
+            }).addTo(map);
+            missionLayers.push(historyPolyline);
+        }
+
+        // 4. Draw Remaining Path (Dashed Line)
+        if (mission.statut !== 'TERMINEE' && endPoint && currentPos) {
+            const remainingLatLngs = [
+                [currentPos.lat, currentPos.lng],
+                [endPoint.laltitude, endPoint.longitude]
+            ];
+            const remainingPolyline = L.polyline(remainingLatLngs, {
+                color: '#3b82f6',
+                weight: 4,
+                opacity: 0.4,
+                dashArray: '10, 10',
+                lineJoin: 'round'
+            }).addTo(map);
+            missionLayers.push(remainingPolyline);
+        }
+
+        // 5. POINT 1: Start Marker (A - Green)
+        if (startPoint || (mission.latitudeDepart && mission.longitudeDepart)) {
+            const lat = startPoint ? startPoint.laltitude : mission.latitudeDepart;
+            const lng = startPoint ? startPoint.longitude : mission.longitudeDepart;
+            const startMarker = L.marker([lat, lng], {
+                icon: L.divIcon({
+                    className: 'custom-div-icon',
+                    html: `<div style="width:24px;height:24px;background:#10b981;border-radius:50%;border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;color:white;font-size:12px;font-weight:800;font-family:'Outfit';">A</div>`,
+                    iconSize: [24, 24],
+                    iconAnchor: [12, 12]
+                })
+            }).addTo(map).bindPopup(`<b>Point de Départ</b><br>${mission.adresseDepart}`);
+            missionLayers.push(startMarker);
+        }
+
+        // 6. POINT 2: Destination Marker (B - Red)
+        if (endPoint || (mission.latitudeDestination && mission.longitudeDestination)) {
+            const lat = endPoint ? endPoint.laltitude : mission.latitudeDestination;
+            const lng = endPoint ? endPoint.longitude : mission.longitudeDestination;
+            const destinationMarker = L.marker([lat, lng], {
+                icon: L.divIcon({
+                    className: 'custom-div-icon',
+                    html: `<div style="width:24px;height:24px;background:#ef4444;border-radius:50%;border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;color:white;font-size:12px;font-weight:800;font-family:'Outfit';">B</div>`,
+                    iconSize: [24, 24],
+                    iconAnchor: [12, 12]
+                })
+            }).addTo(map).bindPopup(`<b>Point d'Arrivée (Prévu)</b><br>${mission.adresseArrivee}`);
+            missionLayers.push(destinationMarker);
+        }
+
+        // 7. POINT 3: Current Position (Car Icon)
+        if (currentPos && mission.statut !== 'ANNULEE') {
+            const carMarker = L.marker([currentPos.lat, currentPos.lng], {
+                icon: L.divIcon({
+                    className: 'custom-div-icon',
+                    html: `<div class="car-tracker-marker">
+                                <i class="bi bi-car-front-fill"></i>
+                                <div class="pulse-ring"></div>
+                           </div>`,
+                    iconSize: [36, 36],
+                    iconAnchor: [18, 18]
+                }),
+                zIndexOffset: 1000 
+            }).addTo(map).bindPopup(`
                 <div class="custom-popup-title">${mission.reference}</div>
                 <div class="custom-popup-body">
-                    <b>Conducteur:</b> ${mission.conducteurNomComplet}<br>
-                    <b>Véhicule:</b> ${mission.vehiculeMarqueModele}<br>
-                    <b>Statut:</b> ${mission.statut}
+                    <b>Statut:</b> ${mission.statut === 'TERMINEE' ? 'Livré' : 'En route'}<br>
+                    <b>Vitesse:</b> ${currentPos.speed || 0} km/h<br>
+                    <hr class="my-1">
+                    <small class="text-muted">Dernière position : ${new Date(currentPos.ts).toLocaleTimeString()}</small>
                 </div>
             `);
-            markers.push(marker);
+            missionLayers.push(carMarker);
         }
-    });
 
-    if (markers.length > 0) {
-        const group = new L.featureGroup(markers);
-        map.fitBounds(group.getBounds().pad(0.5));
+        // Auto-zoom
+        if (allMissions.length === 1) {
+            const group = new L.featureGroup(missionLayers.filter(l => l instanceof L.Marker || l instanceof L.Polyline));
+            if (group.getLayers().length > 0) {
+                map.fitBounds(group.getBounds().pad(0.2));
+            }
+        }
+
+    } catch (error) {
+        console.error('Error drawing trajectory:', error);
     }
 }
 
@@ -397,11 +506,6 @@ document.getElementById('confirmDeliveryAction')?.addEventListener('click', asyn
 window.focusMap = function (coords) {
     if (map && coords[0] && coords[1]) {
         map.setView(coords, 14, { animate: true, duration: 1 });
-        markers.forEach(marker => {
-            if (marker.getLatLng().lat === coords[0] && marker.getLatLng().lng === coords[1]) {
-                marker.openPopup();
-            }
-        });
     }
 };
 
@@ -438,11 +542,34 @@ function showSuccess(title, message) {
     modal.show();
 }
 
+function toggleTrackerFields(prefix) {
+    const isEnabled = document.getElementById(`${prefix}_is_gps_enabled`).checked;
+    const fieldsDiv = document.getElementById(`${prefix}_tracker_fields`);
+    if (fieldsDiv) {
+        fieldsDiv.style.opacity = isEnabled ? '1' : '0.5';
+        fieldsDiv.style.pointerEvents = isEnabled ? 'auto' : 'none';
+    }
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
     if (confirmDeleteBtn) {
         confirmDeleteBtn.addEventListener('click', submitDeleteMission);
     }
+
+    // GPS Toggle Listeners
+    const addGpsSwitch = document.getElementById('add_is_gps_enabled');
+    if (addGpsSwitch) {
+        addGpsSwitch.addEventListener('change', () => toggleTrackerFields('add'));
+        toggleTrackerFields('add'); // Init
+    }
+    
+    const editGpsSwitch = document.getElementById('edit_is_gps_enabled');
+    if (editGpsSwitch) {
+        editGpsSwitch.addEventListener('change', () => toggleTrackerFields('edit'));
+        toggleTrackerFields('edit'); // Init
+    }
+
     map = L.map('map').setView([33.5, -7.5], 6);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
 
@@ -512,6 +639,14 @@ window.prepareEdit = function (id) {
 
     // Instructions
     document.getElementById('edit_instructions').value = mission.instructionsSpeciales || '';
+
+    // GPS Tracker info
+    document.getElementById('edit_is_gps_enabled').checked = mission.gpsEnabled || false;
+    document.getElementById('edit_tracker_id').value = mission.trackerId || '';
+    document.getElementById('edit_tracker_imei').value = mission.trackerImei || '';
+    document.getElementById('edit_tracker_sim').value = mission.trackerSimNumber || '';
+
+    toggleTrackerFields('edit');
 };
 
 async function saveEditMission() {
@@ -533,10 +668,13 @@ async function saveEditMission() {
         poids: parseFloat(document.getElementById('edit_colis_poids').value),
         Volume: parseFloat(document.getElementById('edit_colis_volume').value),
         typeColis: document.getElementById('edit_colis_type').value,
-        InstructionSpeciales: document.getElementById('edit_instructions').value
+        InstructionSpeciales: document.getElementById('edit_instructions').value,
+        isGpsEnabled: document.getElementById('edit_is_gps_enabled').checked,
+        trackerId: document.getElementById('edit_tracker_id').value,
+        trackerImei: document.getElementById('edit_tracker_imei').value,
+        trackerSimNumber: document.getElementById('edit_tracker_sim').value
     };
 
-    // First update the mission details
     try {
         const updateRes = await fetch(`/api/missions/${currentEditingId}`, {
             method: 'PUT',
@@ -546,7 +684,6 @@ async function saveEditMission() {
 
         if (!updateRes.ok) throw new Error('Failed to update mission details');
 
-        // Then update the status if changed
         const newStatus = document.getElementById('editStatutSelect').value;
         const currentMission = allMissions.find(m => m.id === currentEditingId);
 
@@ -554,7 +691,6 @@ async function saveEditMission() {
             await fetch(`/api/missions/${currentEditingId}/status?status=${newStatus}`, { method: 'PATCH' });
         }
 
-        // Close modal and refresh
         const modalEl = document.getElementById('editMissionModal');
         const modalInstance = bootstrap.Modal.getInstance(modalEl);
         if (modalInstance) modalInstance.hide();

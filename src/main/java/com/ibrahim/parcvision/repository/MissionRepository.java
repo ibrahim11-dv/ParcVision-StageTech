@@ -2,6 +2,7 @@ package com.ibrahim.parcvision.repository;
 
 import com.ibrahim.parcvision.entity.Entreprise;
 import com.ibrahim.parcvision.entity.Mission;
+import com.ibrahim.parcvision.enums.StatutMission;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,7 +24,9 @@ public interface MissionRepository extends JpaRepository<Mission, Long> {
     @Query("SELECT COUNT(m) FROM Mission m WHERE m.entreprise = :entreprise AND m.statut = 'EN_COURS'")
     long countMissionsEnCoursByEntreprise(@Param("entreprise") Entreprise entreprise);
 
-    @Query("SELECT m FROM Mission m WHERE m.entreprise = :entreprise AND (" +
+    @Query("SELECT m FROM Mission m WHERE m.entreprise = :entreprise " +
+           "AND (:status IS NULL OR m.statut = :status) " +
+           "AND (:query IS NULL OR :query = '' OR " +
            "LOWER(m.reference) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
            "LOWER(m.conducteur.utilisateur.nom) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
            "LOWER(m.conducteur.utilisateur.prenom) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
@@ -32,7 +35,10 @@ public interface MissionRepository extends JpaRepository<Mission, Long> {
            "LOWER(m.vehicule.model) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
            "LOWER(m.adresseDepart) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
            "LOWER(m.adressArrivee) LIKE LOWER(CONCAT('%', :query, '%')))")
-    Page<Mission> searchMissions(@Param("entreprise") Entreprise entreprise, @Param("query") String query, Pageable pageable);
+    Page<Mission> searchMissions(@Param("entreprise") Entreprise entreprise, 
+                                 @Param("query") String query, 
+                                 @Param("status") StatutMission status, 
+                                 Pageable pageable);
 
     Page<Mission> findByEntreprise(Entreprise entreprise, Pageable pageable);
 }

@@ -54,6 +54,12 @@ public class MissionService {
         mission.setAdressArrivee(addMissionDao.getAdressDestination());
         mission.setInstructionsSpeciales(addMissionDao.getInstructionSpeciales());
         mission.setStatut(StatutMission.PLANIFIEE);
+
+        // Tracker info
+        mission.setTrackerId(addMissionDao.getTrackerId());
+        mission.setTrackerImei(addMissionDao.getTrackerImei());
+        mission.setTrackerSimNumber(addMissionDao.getTrackerSimNumber());
+        mission.setGpsEnabled(addMissionDao.getIsGpsEnabled() != null ? addMissionDao.getIsGpsEnabled() : false);
         
         // Link Conducteur
         Conducteur conducteur = conducteurRepository.findById(addMissionDao.getConducteurId())
@@ -75,7 +81,7 @@ public class MissionService {
         PointGPS startPoint = new PointGPS();
         startPoint.setLaltitude(addMissionDao.getLatitudeDepart());
         startPoint.setLongitude(addMissionDao.getLongitudeDepart());
-        startPoint.setTypePoint(TypePoint.DEBUT);
+        startPoint.setTypePoint(TypePoint.DEPART);
         startPoint.setTimeStamp(LocalDateTime.now());
         startPoint.setMission(savedMission);
         pointGpsRepository.save(startPoint);
@@ -84,7 +90,7 @@ public class MissionService {
         PointGPS endPoint = new PointGPS();
         endPoint.setLaltitude(addMissionDao.getLatitudeDestination());
         endPoint.setLongitude(addMissionDao.getLongitudeDestination());
-        endPoint.setTypePoint(TypePoint.FIN);
+        endPoint.setTypePoint(TypePoint.ARRIVEE);
         endPoint.setTimeStamp(LocalDateTime.now());
         endPoint.setMission(savedMission);
         pointGpsRepository.save(endPoint);
@@ -103,13 +109,8 @@ public class MissionService {
     }
 
     @Transactional(readOnly = true)
-    public Page<MissionResponseDao> getMissionsPaged(Entreprise entreprise, String query, Pageable pageable) {
-        Page<Mission> missionsPage;
-        if (query != null && !query.trim().isEmpty()) {
-            missionsPage = missionRepository.searchMissions(entreprise, query, pageable);
-        } else {
-            missionsPage = missionRepository.findByEntreprise(entreprise, pageable);
-        }
+    public Page<MissionResponseDao> getMissionsPaged(Entreprise entreprise, String query, StatutMission status, Pageable pageable) {
+        Page<Mission> missionsPage = missionRepository.searchMissions(entreprise, query, status, pageable);
 
         List<MissionResponseDao> dtos = missionsPage.getContent().stream()
                 .map(this::mapToResponseDao)
@@ -158,15 +159,45 @@ public class MissionService {
         }
         
         // Coordinates from PointGPS
-        if (mission.getPointGPS() != null) {
+        if (mission.getPointGPS() != null && !mission.getPointGPS().isEmpty()) {
+            PointGPS start = null;
+            PointGPS end = null;
+            PointGPS latestEnCours = null;
+
             for (PointGPS p : mission.getPointGPS()) {
-                if (p.getTypePoint() == TypePoint.DEBUT) {
-                    response.setLatitudeDepart(p.getLaltitude());
-                    response.setLongitudeDepart(p.getLongitude());
-                } else if (p.getTypePoint() == TypePoint.FIN) {
-                    response.setLatitudeDestination(p.getLaltitude());
-                    response.setLongitudeDestination(p.getLongitude());
+                if (p.getTypePoint() == TypePoint.DEPART) {
+                    start = p;
+                } else if (p.getTypePoint() == TypePoint.ARRIVEE) {
+                    end = p;
+                } else if (p.getTypePoint() == TypePoint.EN_COURS) {
+                    if (latestEnCours == null || p.getTimeStamp().isAfter(latestEnCours.getTimeStamp())) {
+                        latestEnCours = p;
+                    }
                 }
+            }
+
+            if (start != null) {
+                response.setLatitudeDepart(start.getLaltitude());
+                response.setLongitudeDepart(start.getLongitude());
+            }
+            if (end != null) {
+                response.setLatitudeDestination(end.getLaltitude());
+                response.setLongitudeDestination(end.getLongitude());
+            }
+
+            // Determine current logical position
+            PointGPS current = null;
+            if (mission.getStatut() == StatutMission.TERMINEE) {
+                current = end;
+            } else if (latestEnCours != null) {
+                current = latestEnCours;
+            } else {
+                current = start;
+            }
+
+            if (current != null) {
+                response.setCurrentLatitude(current.getLaltitude());
+                response.setCurrentLongitude(current.getLongitude());
             }
         }
         
@@ -178,6 +209,12 @@ public class MissionService {
         response.setDateFinReelle(mission.getDateFinReelle());
         response.setInstructionsSpeciales(mission.getInstructionsSpeciales());
         response.setPreuveLivraisonUrl(mission.getPreuveLivraisonUrl());
+
+        // Tracker info
+        response.setTrackerId(mission.getTrackerId());
+        response.setTrackerImei(mission.getTrackerImei());
+        response.setTrackerSimNumber(mission.getTrackerSimNumber());
+        response.setGpsEnabled(mission.isGpsEnabled());
         
         return response;
     }
@@ -233,6 +270,12 @@ public class MissionService {
         mission.setAdressArrivee(updateDao.getAdressDestination());
         mission.setInstructionsSpeciales(updateDao.getInstructionSpeciales());
 
+        // Update Tracker info
+        mission.setTrackerId(updateDao.getTrackerId());
+        mission.setTrackerImei(updateDao.getTrackerImei());
+        mission.setTrackerSimNumber(updateDao.getTrackerSimNumber());
+        mission.setGpsEnabled(updateDao.getIsGpsEnabled() != null ? updateDao.getIsGpsEnabled() : false);
+
         // Update Conducteur
         if (!mission.getConducteur().getId().equals(updateDao.getConducteurId())) {
             Conducteur conducteur = conducteurRepository.findById(updateDao.getConducteurId())
@@ -260,11 +303,11 @@ public class MissionService {
         // Update GPS Points
         if (mission.getPointGPS() != null) {
             for (PointGPS p : mission.getPointGPS()) {
-                if (p.getTypePoint() == TypePoint.DEBUT) {
+                if (p.getTypePoint() == TypePoint.DEPART) {
                     p.setLaltitude(updateDao.getLatitudeDepart());
                     p.setLongitude(updateDao.getLongitudeDepart());
                     pointGpsRepository.save(p);
-                } else if (p.getTypePoint() == TypePoint.FIN) {
+                } else if (p.getTypePoint() == TypePoint.ARRIVEE) {
                     p.setLaltitude(updateDao.getLatitudeDestination());
                     p.setLongitude(updateDao.getLongitudeDestination());
                     pointGpsRepository.save(p);
@@ -273,5 +316,29 @@ public class MissionService {
         }
 
         missionRepository.save(mission);
+    }
+
+    @Transactional(readOnly = true)
+    public List<PointGPS> getMissionPoints(Long missionId) {
+        Mission mission = missionRepository.findById(missionId)
+                .orElseThrow(() -> new RuntimeException("Mission non trouvée"));
+        return pointGpsRepository.findByMissionOrderByTimeStampAsc(mission);
+    }
+
+    @Transactional
+    public PointGPS addTrackerLocation(Long missionId, PointGPS pointData) {
+        Mission mission = missionRepository.findById(missionId)
+                .orElseThrow(() -> new RuntimeException("Mission non trouvée"));
+        
+        PointGPS point = new PointGPS();
+        point.setLaltitude(pointData.getLaltitude());
+        point.setLongitude(pointData.getLongitude());
+        point.setVitesse(pointData.getVitesse());
+        point.setPrecisionGps(pointData.getPrecisionGps());
+        point.setTimeStamp(LocalDateTime.now());
+        point.setTypePoint(pointData.getTypePoint() != null ? pointData.getTypePoint() : TypePoint.EN_COURS);
+        point.setMission(mission);
+        
+        return pointGpsRepository.save(point);
     }
 }

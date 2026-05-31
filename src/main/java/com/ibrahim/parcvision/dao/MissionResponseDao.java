@@ -66,6 +66,14 @@ public class MissionResponseDao {
     private String instructionsSpeciales;
     private String preuveLivraisonUrl;
 
+    private String trackerId;
+    private String trackerImei;
+    private String trackerSimNumber;
+    private boolean isGpsEnabled;
+
+    private Double currentLatitude;
+    private Double currentLongitude;
+
     public MissionResponseDao() {
     }
 
@@ -275,5 +283,53 @@ public class MissionResponseDao {
 
     public void setPreuveLivraisonUrl(String preuveLivraisonUrl) {
         this.preuveLivraisonUrl = preuveLivraisonUrl;
+    }
+
+    public String getTrackerId() {
+        return trackerId;
+    }
+
+    public void setTrackerId(String trackerId) {
+        this.trackerId = trackerId;
+    }
+
+    public String getTrackerImei() {
+        return trackerImei;
+    }
+
+    public void setTrackerImei(String trackerImei) {
+        this.trackerImei = trackerImei;
+    }
+
+    public String getTrackerSimNumber() {
+        return trackerSimNumber;
+    }
+
+    public void setTrackerSimNumber(String trackerSimNumber) {
+        this.trackerSimNumber = trackerSimNumber;
+    }
+
+    public boolean isGpsEnabled() {
+        return isGpsEnabled;
+    }
+
+    public void setGpsEnabled(boolean gpsEnabled) {
+        isGpsEnabled = gpsEnabled;
+    }
+
+    public Double getCurrentLatitude() {
+        return currentLatitude;
+    }
+
+    public void setCurrentLatitude(Double currentLatitude) {
+        this.currentLatitude = currentLatitude;
+    }
+
+    public Double getCurrentLongitude() {
+        return currentLongitude;
+    }
+
+    public void setCurrentLongitude(Double currentLongitude) {
+        this.currentLongitude = currentLongitude;
     }
 }

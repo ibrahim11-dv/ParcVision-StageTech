@@ -32,6 +32,9 @@ public class DatabaseSeeder implements CommandLineRunner {
     private final InterventionRepository interventionRepository;
     private final AccidentRepository accidentRepository;
     private final FournisseurRepository fournisseurRepository;
+    private final AssuranceRepository assuranceRepository;
+    private final InfractionRepository infractionRepository;
+    private final DepenseRepository depenseRepository;
 
     private final Faker faker = new Faker(new Locale("fr"));
     private final Random random = new Random();
@@ -47,7 +50,10 @@ public class DatabaseSeeder implements CommandLineRunner {
             PointGpsRepository pointGpsRepository,
             InterventionRepository interventionRepository,
             AccidentRepository accidentRepository,
-            FournisseurRepository fournisseurRepository) {
+            FournisseurRepository fournisseurRepository,
+            AssuranceRepository assuranceRepository,
+            InfractionRepository infractionRepository,
+            DepenseRepository depenseRepository) {
         this.passwordEncoder = passwordEncoder;
         this.entrepriseRepository = entrepriseRepository;
         this.utilisateurRepository = utilisateurRepository;
@@ -60,6 +66,9 @@ public class DatabaseSeeder implements CommandLineRunner {
         this.interventionRepository = interventionRepository;
         this.accidentRepository = accidentRepository;
         this.fournisseurRepository = fournisseurRepository;
+        this.assuranceRepository = assuranceRepository;
+        this.infractionRepository = infractionRepository;
+        this.depenseRepository = depenseRepository;
     }
 
     @Override
@@ -85,7 +94,7 @@ public class DatabaseSeeder implements CommandLineRunner {
         List<Fournisseur> fournisseurs = fournisseurRepository.findAll();
         if (vehicles.isEmpty()) return;
 
-        for (int i = 0; i < 200; i++) {
+        for (int i = 0; i < 10; i++) {
             int type = random.nextInt(4); // 0: Reparation, 1: Depannage, 2: Vidange, 3: Accident
             Intervention intervention;
             
@@ -94,14 +103,18 @@ public class DatabaseSeeder implements CommandLineRunner {
                 selectedFournisseur = fournisseurs.get(random.nextInt(fournisseurs.size()));
             }
 
+            Vehicule selectedVehicule = vehicles.get(random.nextInt(vehicles.size()));
+
             if (type == 0) {
                 Reparation r = new Reparation();
                 r.setPiecesRemplacees("Plaquettes de frein, Filtres, Courroie, Bougies");
                 r.setGaragePrestataire(selectedFournisseur != null ? selectedFournisseur.getNomFournisseur() : faker.company().name() + " Auto Service");
                 r.setStatut("TERMINEE");
                 r.setEstPaye(random.nextBoolean());
+                r.setVehicule(selectedVehicule);
                 if (r.getEstPaye()) {
                     r.setDatePayement(LocalDate.now().minusDays(random.nextInt(30)));
+                    createDepense("Reparation", r.getCoutTotal(), r.getDatePayement(), r.getVehicule().getEntreprise());
                 }
                 intervention = r;
             } else if (type == 1) {
@@ -110,6 +123,7 @@ public class DatabaseSeeder implements CommandLineRunner {
                 d.setNecessiteRemorquage(random.nextBoolean());
                 d.setNomDepanneurExterne(selectedFournisseur != null ? selectedFournisseur.getNomFournisseur() : faker.company().name() + " SOS Depannage");
                 d.setStatut("TERMINEE");
+                d.setVehicule(selectedVehicule);
                 intervention = d;
             } else if (type == 2) {
                 Vidange v = new Vidange();
@@ -118,6 +132,12 @@ public class DatabaseSeeder implements CommandLineRunner {
                 v.setFilterHuileChange(true);
                 v.setFilterAirChange(random.nextBoolean());
                 v.setFilterCarburantChange(random.nextBoolean());
+                v.setEstPaye(random.nextBoolean());
+                v.setVehicule(selectedVehicule);
+                if (v.getEstPaye()) {
+                    v.setDatePayement(LocalDate.now().minusDays(random.nextInt(30)));
+                    createDepense("Vidange", v.getCoutTotal(), v.getDatePayement(), v.getVehicule().getEntreprise());
+                }
                 intervention = v;
             } else {
                 Accident accident = new Accident();
@@ -127,11 +147,11 @@ public class DatabaseSeeder implements CommandLineRunner {
                 accident.setBudgetEstime(random.nextDouble() * 5000 + 1000);
                 accident.setEtat(random.nextBoolean() ? "EN_COURS" : "TERMINEE");
                 accident.setNotes(faker.lorem().paragraph());
+                accident.setVehicule(selectedVehicule);
                 
                 if (!conducteurs.isEmpty()) {
-                    Vehicule v = vehicles.get(random.nextInt(vehicles.size()));
                     List<Conducteur> candidateConducteurs = conducteurs.stream()
-                            .filter(c -> c.getUtilisateur().getEntreprise().equals(v.getEntreprise()))
+                            .filter(c -> c.getUtilisateur().getEntreprise().equals(selectedVehicule.getEntreprise()))
                             .toList();
                     if (!candidateConducteurs.isEmpty()) {
                         accident.setConducteur(candidateConducteurs.get(random.nextInt(candidateConducteurs.size())));
@@ -147,12 +167,23 @@ public class DatabaseSeeder implements CommandLineRunner {
             intervention.setActionsMenees(faker.lorem().sentence());
             intervention.setCoutTotal(random.nextDouble() * 200 + 300);
             intervention.setKilometrageAuMoment((long) random.nextInt(200000) + 5000);
-            intervention.setVehicule(vehicles.get(random.nextInt(vehicles.size())));
+            // intervention.setVehicule(vehicles.get(random.nextInt(vehicles.size()))); // Removed redundant assignment
             intervention.setFournisseur(selectedFournisseur);
 
             interventionRepository.save(intervention);
         }
         System.out.println("Missing Interventions (including Accidents) seeded successfully!");
+    }
+
+    private void createDepense(String type, double montant, LocalDate date, Entreprise entreprise) {
+        Depense d = new Depense();
+        d.setMontant(montant);
+        d.setDateDepense(date);
+        d.setSourceDepense(type);
+        d.setQui("System Seeder");
+        d.setTypePaiement(TypePaiement.ESPECES);
+        d.setEntreprise(entreprise);
+        depenseRepository.save(d);
     }
 
     private void seedData() {
@@ -270,38 +301,111 @@ public class DatabaseSeeder implements CommandLineRunner {
                     colisRepository.save(colis);
                 }
 
-                // Points GPS (Start, End, and some intermediate)
-                PointGPS start = new PointGPS();
-                start.setLaltitude(30.0 + random.nextDouble() * 5);
-                start.setLongitude(-9.0 + random.nextDouble() * 5);
-                start.setTypePoint(TypePoint.DEBUT);
-                start.setTimeStamp(m.getDataDebut());
-                start.setMission(m);
-                pointGpsRepository.save(start);
+                // GPS Points (Realistic trajectory)
+                // We'll create more waypoints to make it look like a real path
+                double startLat = 33.5 + random.nextDouble() * 1.0;
+                double startLng = -7.6 + random.nextDouble() * 1.0;
+                double endLat = 34.0 + random.nextDouble() * 1.0;
+                double endLng = -6.8 + random.nextDouble() * 1.0;
 
-                // Add 1-2 intermediate points
-                int numIntermediate = random.nextInt(2) + 1;
-                for (int k = 0; k < numIntermediate; k++) {
-                    PointGPS mid = new PointGPS();
-                    mid.setLaltitude(30.0 + random.nextDouble() * 5);
-                    mid.setLongitude(-9.0 + random.nextDouble() * 5);
-                    mid.setTypePoint(TypePoint.AVANCEMENT);
-                    mid.setTimeStamp(m.getDataDebut().plusHours(random.nextInt(12) + 1));
-                    mid.setMission(m);
-                    pointGpsRepository.save(mid);
+                int numWaypoints = 6; // More waypoints for complexity
+                double[][] waypoints = new double[numWaypoints + 2][2];
+                waypoints[0] = new double[]{startLat, startLng};
+                waypoints[numWaypoints + 1] = new double[]{endLat, endLng};
+                for(int w=1; w<=numWaypoints; w++) {
+                    double f = (double)w / (numWaypoints + 1);
+                    // Add significant but constrained deviation for a "road" feel
+                    waypoints[w][0] = startLat + (endLat - startLat) * f + (random.nextDouble() - 0.5) * 0.2;
+                    waypoints[w][1] = startLng + (endLng - startLng) * f + (random.nextDouble() - 0.5) * 0.2;
                 }
 
+                LocalDateTime currentTS = m.getDataDebut();
+
+                for (int w = 0; w < waypoints.length - 1; w++) {
+                    double x1 = waypoints[w][0];
+                    double y1 = waypoints[w][1];
+                    double x2 = waypoints[w+1][0];
+                    double y2 = waypoints[w+1][1];
+
+                    int steps = 8 + random.nextInt(7); // More points between waypoints
+                    for (int s = 0; s < steps; s++) {
+                        double f = (double) s / steps;
+                        PointGPS p = new PointGPS();
+                        // Smooth interpolation
+                        p.setLaltitude(x1 + (x2 - x1) * f + (random.nextDouble() - 0.5) * 0.01);
+                        p.setLongitude(y1 + (y2 - y1) * f + (random.nextDouble() - 0.5) * 0.01);
+                        
+                        if (w == 0 && s == 0) {
+                            p.setTypePoint(TypePoint.DEPART);
+                            p.setVitesse(0);
+                        } else {
+                            p.setTypePoint(TypePoint.EN_COURS);
+                            p.setVitesse(40 + random.nextInt(51)); // 40-90 km/h
+                        }
+                        
+                        p.setPrecisionGps(5.0 + random.nextDouble() * 3.0);
+                        p.setTimeStamp(currentTS);
+                        p.setMission(m);
+                        pointGpsRepository.save(p);
+                        
+                        currentTS = currentTS.plusMinutes(random.nextInt(4) + 2); // Varying intervals
+                    }
+                }
+
+                // Final point
                 PointGPS end = new PointGPS();
-                end.setLaltitude(30.0 + random.nextDouble() * 5);
-                end.setLongitude(-9.0 + random.nextDouble() * 5);
-                end.setTypePoint(TypePoint.FIN);
-                end.setTimeStamp(m.getStatut() == StatutMission.TERMINEE ? m.getDateFinReelle() : m.getDateFinEstimee());
+                end.setLaltitude(endLat);
+                end.setLongitude(endLng);
+                end.setTypePoint(TypePoint.ARRIVEE);
+                end.setVitesse(0);
+                end.setPrecisionGps(5.0);
+                end.setTimeStamp(currentTS);
                 end.setMission(m);
                 pointGpsRepository.save(end);
+
+                // Update mission dates based on points if needed
+                if (m.getStatut() == StatutMission.TERMINEE) {
+                    m.setDateFinReelle(currentTS);
+                    missionRepository.save(m);
+                }
             }
 
             // Seed Interventions for this enterprise
             seedMissingInterventions();
+
+            // Seed Assurances and Infractions
+            for (Vehicule v : vehicles) {
+                // Seed Assurance
+                if (random.nextBoolean()) {
+                    Assurance a = new Assurance();
+                    a.setVehicule(v);
+                    a.setTypeAssurance("Tous risques");
+                    a.setDateDebut(LocalDate.now().minusMonths(6));
+                    a.setDateExpiration(LocalDate.now().plusMonths(6));
+                    a.setMontant(random.nextDouble() * 1000 + 500);
+                    a.setEstPayee(random.nextBoolean());
+                    if (a.getEstPayee()) {
+                        a.setDatePaiement(a.getDateDebut());
+                        createDepense("Assurance", a.getMontant(), a.getDatePaiement(), ent);
+                    }
+                    assuranceRepository.save(a);
+                }
+
+                // Seed Infraction
+                if (random.nextBoolean()) {
+                    Infraction inf = new Infraction();
+                    inf.setVehicule(v);
+                    inf.setEntreprise(ent);
+                    inf.setCategorie("Excès de vitesse");
+                    inf.setMontant(random.nextDouble() * 500 + 100);
+                    inf.setEstPayee(random.nextBoolean());
+                    if (inf.getEstPayee()) {
+                        inf.setDatePaiement(LocalDate.now().minusDays(random.nextInt(30)));
+                        createDepense("Infraction", inf.getMontant(), inf.getDatePaiement(), ent);
+                    }
+                    infractionRepository.save(inf);
+                }
+            }
         
         System.out.println("Seeding completed successfully!");
     }
