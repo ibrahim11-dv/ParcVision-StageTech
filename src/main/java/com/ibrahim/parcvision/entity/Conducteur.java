@@ -54,4 +54,29 @@ public class Conducteur {
     @JsonManagedReference
     private Document document;
 
+    // ── Getters & Setters ──────────────────────────────────────────────
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getNumeroPermis() { return numeroPermis; }
+    public void setNumeroPermis(String numeroPermis) { this.numeroPermis = numeroPermis; }
+
+    public LocalDate getDateValiditePermis() { return dateValiditePermis; }
+    public void setDateValiditePermis(LocalDate dateValiditePermis) { this.dateValiditePermis = dateValiditePermis; }
+
+    public String getPhotoProfileUrl() { return photoProfileUrl; }
+    public void setPhotoProfileUrl(String photoProfileUrl) { this.photoProfileUrl = photoProfileUrl; }
+
+    public Statut getStatut() { return statut; }
+    public void setStatut(Statut statut) { this.statut = statut; }
+
+    public Utilisateur getUtilisateur() { return utilisateur; }
+    public void setUtilisateur(Utilisateur utilisateur) { this.utilisateur = utilisateur; }
+
+    public List<Mission> getMission() { return mission; }
+    public void setMission(List<Mission> mission) { this.mission = mission; }
+
+    public Document getDocument() { return document; }
+    public void setDocument(Document document) { this.document = document; }
 }
+

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Parc Auto — Dashboard</title>
+    <meta name="description" content="Centre de commandement de la flotte — tableaux de bord analytiques en temps réel">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -72,6 +73,7 @@
 
         .shell { display: flex; min-height: 100vh; }
 
+        /* ─── Sidebar ─────────────────────────────────────── */
         .sidebar {
             width: var(--sw);
             position: fixed; inset: 0 auto 0 0;
@@ -87,41 +89,30 @@
 
         .sb-brand {
             display: flex; align-items: center; gap: 10px;
-            padding: 0 18px;
-            height: 70px;
+            padding: 0 18px; height: 70px;
             border-bottom: 1px solid var(--border-color);
-            flex-shrink: 0;
-            text-decoration: none;
+            flex-shrink: 0; text-decoration: none;
         }
 
         .brand-icon {
             width: 42px; height: 42px; flex-shrink: 0;
-            background: var(--primary);
-            border-radius: 12px;
+            background: var(--primary); border-radius: 12px;
             display: flex; align-items: center; justify-content: center;
             font-size: 20px; color: white;
             box-shadow: 0 4px 14px rgba(26,42,108,0.3);
             position: relative; overflow: hidden;
         }
-
         .brand-icon::after {
-            content: '';
-            position: absolute; top: 0; left: -40px; width: 30px; height: 100%;
+            content: ''; position: absolute; top: 0; left: -40px; width: 30px; height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transform: skewX(-15deg);
-            animation: shine 4s ease-in-out infinite;
+            transform: skewX(-15deg); animation: shine 4s ease-in-out infinite;
         }
-        @keyframes shine {
-            0%, 65%, 100% { left: -40px; opacity: 0; }
-            40% { left: 120%; opacity: 1; }
-        }
+        @keyframes shine { 0%, 65%, 100% { left: -40px; opacity: 0; } 40% { left: 120%; opacity: 1; } }
 
         .brand-text { overflow: hidden; white-space: nowrap; transition: opacity .2s; }
         .brand-text strong {
-            display: block;
-            font-family: 'Outfit', sans-serif;
-            font-size: 1.15rem; font-weight: 700;
-            color: var(--primary); line-height: 1.15;
+            display: block; font-family: 'Outfit', sans-serif;
+            font-size: 1.15rem; font-weight: 700; color: var(--primary); line-height: 1.15;
         }
         .brand-text small {
             font-size: 0.62rem; font-weight: 500;
@@ -129,86 +120,44 @@
         }
         .sidebar.mini .brand-text { opacity: 0; pointer-events: none; }
 
-        .sb-body {
-            flex: 1; overflow-y: auto; overflow-x: hidden;
-            padding: 14px 10px;
-        }
+        .sb-body { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 14px 10px; }
         .sb-body::-webkit-scrollbar { width: 3px; }
         .sb-body::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 3px; }
 
         .sb-section {
             font-family: 'Outfit', sans-serif;
-            font-size: 0.6rem; font-weight: 700;
-            letter-spacing: 1.8px; text-transform: uppercase;
-            color: var(--gray-400);
-            padding: 16px 10px 6px;
-            white-space: nowrap;
-            display: flex; align-items: center; gap: 8px;
-            transition: opacity .2s;
+            font-size: 0.6rem; font-weight: 700; letter-spacing: 1.8px; text-transform: uppercase;
+            color: var(--gray-400); padding: 16px 10px 6px; white-space: nowrap;
+            display: flex; align-items: center; gap: 8px; transition: opacity .2s;
         }
-        .sb-section::after {
-            content: ''; flex: 1; height: 1px; background: var(--border-color);
-        }
+        .sb-section::after { content: ''; flex: 1; height: 1px; background: var(--border-color); }
         .sidebar.mini .sb-section { opacity: 0; pointer-events: none; }
 
         .nav-item { margin-bottom: 2px; }
-
         .nav-link {
-            display: flex; align-items: center; gap: 11px;
-            padding: 9px 10px;
-            border-radius: 12px;
-            color: var(--gray-600);
-            text-decoration: none;
-            font-size: 0.875rem; font-weight: 500;
-            transition: all .18s ease;
-            cursor: pointer;
+            display: flex; align-items: center; gap: 11px; padding: 9px 10px;
+            border-radius: 12px; color: var(--gray-600);
+            text-decoration: none; font-size: 0.875rem; font-weight: 500;
+            transition: all .18s ease; cursor: pointer;
             border: none; background: none; width: 100%; text-align: left;
-            position: relative; overflow: hidden;
-            white-space: nowrap;
+            position: relative; overflow: hidden; white-space: nowrap;
         }
-
-        .nav-link:hover {
-            background: var(--accent-soft);
-            color: var(--accent);
-        }
-
-        .nav-link.active {
-            background: var(--accent-soft);
-            color: var(--accent);
-            font-weight: 600;
-        }
-
+        .nav-link:hover { background: var(--accent-soft); color: var(--accent); }
+        .nav-link.active { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
         .nav-link.active::before {
-            content: '';
-            position: absolute; left: 0; top: 50%; transform: translateY(-50%);
-            width: 3px; height: 22px;
-            background: var(--accent);
-            border-radius: 0 3px 3px 0;
+            content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+            width: 3px; height: 22px; background: var(--accent); border-radius: 0 3px 3px 0;
         }
 
         .ni {
-            width: 34px; height: 34px; flex-shrink: 0;
-            border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 16px;
-            background: var(--gray-100);
-            border: 1px solid var(--border-color);
-            transition: all .18s;
-            position: relative;
-            color: var(--gray-600);
+            width: 34px; height: 34px; flex-shrink: 0; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center; font-size: 16px;
+            background: var(--gray-100); border: 1px solid var(--border-color);
+            position: relative; overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-
-        .nav-link:hover .ni {
-            background: var(--accent-soft);
-            border-color: rgba(34,34,177,0.15);
-            color: var(--accent);
-        }
-
-        .nav-link.active .ni {
-            background: var(--accent-mid);
-            border-color: rgba(34,34,177,0.2);
-            color: var(--accent);
-        }
+        .nav-link:hover .ni { background: var(--accent-soft); border-color: rgba(34,34,177,0.15); color: var(--accent); }
+        .nav-link.active .ni { background: var(--accent-mid); border-color: rgba(34,34,177,0.2); color: var(--accent); }
 
         .ni .pulse {
             position: absolute; top: -3px; right: -3px;
@@ -218,49 +167,42 @@
         .p-green { background: #10b981; box-shadow: 0 0 5px rgba(16,185,129,0.5); }
         .p-amber { background: #f59e0b; box-shadow: 0 0 5px rgba(245,158,11,0.5); }
         .p-red   { background: #ef4444; box-shadow: 0 0 5px rgba(239,68,68,0.5); animation: blink 1.2s ease-in-out infinite; }
-
         @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
 
         .nt { flex: 1; overflow: hidden; transition: opacity .2s; line-height: 1.2; }
         .sidebar.mini .nt { opacity: 0; pointer-events: none; }
-        .nt-sub {
-            display: block; font-size: 0.65rem;
-            color: var(--gray-400); margin-top: 1px;
-            font-weight: 400;
-        }
+        .nt-sub { display: block; font-size: 0.65rem; color: var(--gray-400); margin-top: 1px; font-weight: 400; }
         .nav-link.active .nt-sub { color: rgba(34,34,177,0.55); }
 
         .nb {
-            font-size: 0.62rem; font-weight: 700;
-            padding: 2px 7px; border-radius: 20px;
-            flex-shrink: 0; line-height: 1.5;
-            transition: opacity .2s;
+            font-size: 0.62rem; font-weight: 700; padding: 2px 7px; border-radius: 20px;
+            flex-shrink: 0; line-height: 1.5; transition: opacity .2s;
             font-family: 'Outfit', sans-serif;
         }
-        .nb-blue   { background: rgba(34,34,177,0.1);  color: var(--accent); border: 1px solid rgba(34,34,177,0.18); }
-        .nb-amber  { background: rgba(245,158,11,0.1); color: #b45309;       border: 1px solid rgba(245,158,11,0.2); }
-        .nb-red    { background: rgba(239,68,68,0.1);  color: #b91c1c;       border: 1px solid rgba(239,68,68,0.2); }
-        .nb-green  { background: rgba(16,185,129,0.1); color: #065f46;       border: 1px solid rgba(16,185,129,0.2); }
+        .nb-blue  { background: rgba(34,34,177,0.1);  color: var(--accent); border: 1px solid rgba(34,34,177,0.18); }
+        .nb-amber { background: rgba(245,158,11,0.1); color: #b45309;       border: 1px solid rgba(245,158,11,0.2); }
+        .nb-red   { background: rgba(239,68,68,0.1);  color: #b91c1c;       border: 1px solid rgba(239,68,68,0.2); }
+        .nb-green { background: rgba(16,185,129,0.1); color: #065f46;       border: 1px solid rgba(16,185,129,0.2); }
         .sidebar.mini .nb { opacity: 0; }
 
         .sb-hr { height: 1px; background: var(--border-color); margin: 8px 4px; }
 
-        .sb-foot {
-            border-top: 1px solid var(--border-color);
-            flex-shrink: 0;
-        }
+        .sb-foot { border-top: 1px solid var(--border-color); flex-shrink: 0; }
 
-        .collapse-row {
-            display: flex; justify-content: flex-end;
-            padding: 10px 12px 0;
+        .c-card {
+            border-radius: 16px; padding: 24px;
+            display: flex; flex-direction: column;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
         }
+        .c-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,0.08); border-color: rgba(66,133,244,0.3); z-index: 5; }
+
+        .collapse-row { display: flex; justify-content: flex-end; padding: 10px 12px 0; }
         .sidebar.mini .collapse-row { justify-content: center; }
-
         .collapse-btn {
-            width: 28px; height: 28px;
-            border-radius: 8px;
-            background: var(--gray-100);
-            border: 1px solid var(--border-color);
+            width: 28px; height: 28px; border-radius: 8px;
+            background: var(--gray-100); border: 1px solid var(--border-color);
             color: var(--gray-400); font-size: 12px;
             display: flex; align-items: center; justify-content: center;
             cursor: pointer; transition: all .18s;
@@ -269,84 +211,49 @@
 
         .profile-row {
             display: flex; align-items: center; gap: 10px;
-            padding: 12px 14px 14px;
-            cursor: pointer; position: relative;
-            transition: background .15s;
+            padding: 12px 14px 14px; cursor: pointer; position: relative; transition: background .15s;
         }
         .profile-row:hover { background: var(--gray-100); }
 
         .profile-av {
-            width: 38px; height: 38px; flex-shrink: 0;
-            border-radius: 11px;
+            width: 38px; height: 38px; flex-shrink: 0; border-radius: 11px;
             background: linear-gradient(135deg, var(--primary), var(--primary-light));
             display: flex; align-items: center; justify-content: center;
-            font-family: 'Outfit', sans-serif;
-            font-size: 0.82rem; font-weight: 700; color: white;
-            position: relative;
-            box-shadow: 0 4px 10px rgba(26,42,108,0.25);
+            font-family: 'Outfit', sans-serif; font-size: 0.82rem; font-weight: 700; color: white;
+            position: relative; box-shadow: 0 4px 10px rgba(26,42,108,0.25);
         }
         .profile-av::after {
-            content: '';
-            position: absolute; bottom: -1px; right: -1px;
+            content: ''; position: absolute; bottom: -1px; right: -1px;
             width: 10px; height: 10px; border-radius: 50%;
-            background: #10b981;
-            border: 2px solid var(--bg-sidebar);
+            background: #10b981; border: 2px solid var(--bg-sidebar);
             box-shadow: 0 0 4px rgba(16,185,129,0.4);
         }
 
         .profile-info { flex: 1; overflow: hidden; transition: opacity .2s; }
         .sidebar.mini .profile-info { opacity: 0; }
-        .profile-info b {
-            display: block; font-size: 0.83rem; font-weight: 600;
-            color: var(--text-main); white-space: nowrap;
-        }
+        .profile-info b { display: block; font-size: 0.83rem; font-weight: 600; color: var(--text-main); white-space: nowrap; }
         .profile-info small { font-size: 0.68rem; color: var(--gray-400); white-space: nowrap; }
 
-        .profile-more {
-            font-size: 14px; color: var(--gray-400);
-            transition: opacity .2s, color .15s; flex-shrink: 0;
-        }
+        .profile-more { font-size: 14px; color: var(--gray-400); transition: opacity .2s, color .15s; flex-shrink: 0; }
         .sidebar.mini .profile-more { opacity: 0; }
         .profile-row:hover .profile-more { color: var(--accent); }
 
         .profile-popup {
             position: absolute; bottom: calc(100% + 6px); left: 10px; right: 10px;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 6px;
-            box-shadow: var(--shadow-lg);
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 16px; padding: 6px; box-shadow: var(--shadow-lg);
             display: none; z-index: 500;
             animation: popUp .2s cubic-bezier(.34,1.56,.64,1);
         }
-        @keyframes popUp {
-            from { opacity:0; transform: translateY(6px) scale(.97); }
-            to   { opacity:1; transform: translateY(0) scale(1); }
-        }
+        @keyframes popUp { from { opacity:0; transform: translateY(6px) scale(.97); } to { opacity:1; transform: translateY(0) scale(1); } }
         .profile-popup.show { display: block; }
 
-        .pp-head {
-            padding: 10px 12px;
-            border-bottom: 1px solid var(--border-color);
-            margin-bottom: 4px;
-            display: flex; align-items: center; gap: 10px;
-        }
-        .pp-av {
-            width: 32px; height: 32px; border-radius: 9px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            display: flex; align-items: center; justify-content: center;
-            font-family: 'Outfit', sans-serif; font-size: 0.75rem; font-weight: 700; color: white;
-        }
+        .pp-head { padding: 10px 12px; border-bottom: 1px solid var(--border-color); margin-bottom: 4px; display: flex; align-items: center; gap: 10px; }
+        .pp-av { width: 32px; height: 32px; border-radius: 9px; background: linear-gradient(135deg, var(--primary), var(--primary-light)); display: flex; align-items: center; justify-content: center; font-family: 'Outfit', sans-serif; font-size: 0.75rem; font-weight: 700; color: white; }
         .pp-head b { font-size: 0.83rem; color: var(--text-main); display: block; }
         .pp-head small { font-size: 0.68rem; color: var(--gray-400); }
 
-        .pp-link {
-            display: flex; align-items: center; gap: 9px;
-            padding: 8px 12px; border-radius: 9px;
-            font-size: 0.83rem; font-weight: 500; color: var(--gray-600);
-            text-decoration: none; transition: all .14s;
-            cursor: pointer;
-        }
+        .pp-link { display: flex; align-items: center; gap: 9px; padding: 8px 12px; border-radius: 9px; font-size: 0.83rem; font-weight: 500; color: var(--gray-600); text-decoration: none; transition: all .14s; cursor: pointer; }
         .pp-link:hover { background: var(--accent-soft); color: var(--accent); }
         .pp-link i { font-size: 14px; width: 16px; text-align: center; color: var(--gray-400); }
         .pp-link:hover i { color: var(--accent); }
@@ -357,65 +264,32 @@
 
         .sidebar.mini .nav-link { justify-content: center; }
         .sidebar.mini .nav-link[data-tip]:hover::after {
-            content: attr(data-tip);
-            position: absolute; left: calc(100% + 12px); top: 50%; transform: translateY(-50%);
-            background: var(--primary);
-            color: white;
-            font-size: 0.78rem; font-weight: 500; font-family: 'Inter', sans-serif;
-            padding: 5px 11px; border-radius: 8px;
-            white-space: nowrap; pointer-events: none; z-index: 999;
-            box-shadow: var(--shadow-md);
+            content: attr(data-tip); position: absolute; left: calc(100% + 12px); top: 50%; transform: translateY(-50%);
+            background: var(--primary); color: white; font-size: 0.78rem; font-weight: 500; font-family: 'Inter', sans-serif;
+            padding: 5px 11px; border-radius: 8px; white-space: nowrap; pointer-events: none; z-index: 999; box-shadow: var(--shadow-md);
         }
         .sidebar.mini .nav-link[data-tip]:hover::before {
-            content: '';
-            position: absolute; left: calc(100% + 6px); top: 50%; transform: translateY(-50%);
-            width: 0; height: 0;
-            border-top: 5px solid transparent;
-            border-bottom: 5px solid transparent;
-            border-right: 6px solid var(--primary);
-            z-index: 999;
+            content: ''; position: absolute; left: calc(100% + 6px); top: 50%; transform: translateY(-50%);
+            width: 0; height: 0; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-right: 6px solid var(--primary); z-index: 999;
         }
 
-        .main {
-            margin-left: var(--sw);
-            flex: 1; display: flex; flex-direction: column;
-            min-width: 0;
-            transition: margin-left .28s cubic-bezier(.4,0,.2,1);
-        }
+        .main { margin-left: var(--sw); flex: 1; display: flex; flex-direction: column; min-width: 0; transition: margin-left .28s cubic-bezier(.4,0,.2,1); }
         .main.mini { margin-left: var(--sw-mini); }
 
-        .page {
-            flex: 1; padding: 40px;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .page-hint {
-            text-align: center; color: var(--gray-400);
-            display: flex; flex-direction: column; gap: 10px; align-items: center;
-        }
-        .page-hint i { font-size: 2.2rem; color: var(--gray-200); }
-        .page-hint span { font-size: 0.9rem; }
+        .page { flex: 1; display: flex; align-items: flex-start; justify-content: stretch; }
 
-        .overlay {
-            display: none; position: fixed; inset: 0;
-            background: rgba(0,0,0,0.4); z-index: 150;
-        }
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 150; }
 
         .mob-toggle {
-            display: none;
-            position: fixed; top: 16px; left: 16px; z-index: 100;
+            display: none; position: fixed; top: 16px; left: 16px; z-index: 100;
             width: 40px; height: 40px; border-radius: 10px;
             background: var(--bg-sidebar); border: 1px solid var(--border-color);
-            box-shadow: var(--shadow-sm);
-            align-items: center; justify-content: center;
-            font-size: 18px; color: var(--gray-600); cursor: pointer;
-            transition: all .15s;
+            box-shadow: var(--shadow-sm); align-items: center; justify-content: center;
+            font-size: 18px; color: var(--gray-600); cursor: pointer; transition: all .15s;
         }
         .mob-toggle:hover { background: var(--accent-soft); color: var(--accent); border-color: rgba(34,34,177,0.2); }
 
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(6px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
         .nav-item { animation: fadeUp .3s ease both; }
         .nav-item:nth-child(1)  { animation-delay: .03s; }
         .nav-item:nth-child(2)  { animation-delay: .06s; }
@@ -442,6 +316,7 @@
 
 <div class="shell">
 
+    <!-- ── Sidebar ─────────────────────────────────────────────── -->
     <aside class="sidebar" id="sidebar">
 
         <a href="/admin/dashboard" class="sb-brand">
@@ -467,10 +342,10 @@
 
             <div class="nav-item">
                 <a href="/admin/conducteurs" class="nav-link" data-tip="Conducteurs">
-                        <span class="ni">
-                            <i class="bi bi-person-badge"></i>
-                            <span class="pulse p-green"></span>
-                        </span>
+                    <span class="ni">
+                        <i class="bi bi-person-badge"></i>
+                        <span class="pulse p-green"></span>
+                    </span>
                     <span class="nt">Conducteurs<small class="nt-sub">18 actifs</small></span>
                     <span class="nb nb-blue">18</span>
                 </a>
@@ -478,10 +353,10 @@
 
             <div class="nav-item">
                 <a href="/admin/vehicules" class="nav-link" data-tip="Véhicules">
-                        <span class="ni">
-                            <i class="bi bi-truck"></i>
-                            <span class="pulse p-amber"></span>
-                        </span>
+                    <span class="ni">
+                        <i class="bi bi-truck"></i>
+                        <span class="pulse p-amber"></span>
+                    </span>
                     <span class="nt">Véhicules<small class="nt-sub">24 en flotte</small></span>
                     <span class="nb nb-blue">24</span>
                 </a>
@@ -489,13 +364,12 @@
 
             <div class="nav-item">
                 <a href="/admin/gps" class="nav-link" data-tip="Suivi GPS">
-                        <span class="ni">
-                            <i class="bi bi-geo-alt"></i>
-                            <span class="pulse p-green"></span>
-                        </span>
+                    <span class="ni">
+                        <i class="bi bi-geo-alt"></i>
+                        <span class="pulse p-green"></span>
+                    </span>
                     <span class="nt">Suivi GPS<small class="nt-sub">3 en déplacement</small></span>
-                    <span class="nb nb-green"
-                          style="background:rgba(34,197,94,0.1); color:#15803d; border-color:rgba(34,197,94,0.2);">LIVE</span>
+                    <span class="nb nb-green" style="background:rgba(34,197,94,0.1); color:#15803d; border-color:rgba(34,197,94,0.2);">LIVE</span>
                 </a>
             </div>
 
@@ -504,10 +378,10 @@
 
             <div class="nav-item">
                 <a href="/admin/reparations" class="nav-link" data-tip="Réparation">
-                        <span class="ni">
-                            <i class="bi bi-wrench-adjustable"></i>
-                            <span class="pulse p-amber"></span>
-                        </span>
+                    <span class="ni">
+                        <i class="bi bi-wrench-adjustable"></i>
+                        <span class="pulse p-amber"></span>
+                    </span>
                     <span class="nt">Réparation<small class="nt-sub">5 en cours</small></span>
                     <span class="nb nb-amber">5</span>
                 </a>
@@ -515,10 +389,10 @@
 
             <div class="nav-item">
                 <a href="/admin/accidents" class="nav-link" data-tip="Accident">
-                        <span class="ni">
-                            <i class="bi bi-exclamation-triangle"></i>
-                            <span class="pulse p-red"></span>
-                        </span>
+                    <span class="ni">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        <span class="pulse p-red"></span>
+                    </span>
                     <span class="nt">Accident<small class="nt-sub">3 ce mois</small></span>
                     <span class="nb nb-red">3</span>
                 </a>
@@ -534,7 +408,7 @@
 
             <div class="nav-item">
                 <a href="/admin/vidanges" class="nav-link" data-tip="Vidange">
-                    <span class="ni"><i class="bi bi-droplet-half"></i><span class="pulse p-blue"></span></span>
+                    <span class="ni"><i class="bi bi-droplet-half"></i></span>
                     <span class="nt">Vidange<small class="nt-sub">7 planifiées</small></span>
                     <span class="nb nb-blue">7</span>
                 </a>
@@ -578,21 +452,359 @@
     </aside>
 
     <div class="overlay" id="overlay" style="display:none;" onclick="closeMobile()"></div>
+    <button class="mob-toggle" onclick="openMobile()"><i class="bi bi-list"></i></button>
 
-    <button class="mob-toggle" onclick="openMobile()">
-        <i class="bi bi-list"></i>
-    </button>
-
+    <!-- ── Main Content ─────────────────────────────────────────── -->
     <div class="main" id="main">
         <div class="page">
-            <div class="page-hint">
-                <i class="bi bi-layout-sidebar-inset"></i>
-                <span>Sélectionne une section</span>
+        <div class="dash-page">
+
+            <!-- ── Header ─────────────────────────────────────────── -->
+            <div class="dash-header fade-up d1">
+                <div>
+                    <h1><i class="bi bi-speedometer2"></i><span id="entName">Dashboard</span></h1>
+                    <p class="dash-subtitle">Centre de commandement des opérations de la flotte</p>
+                </div>
+                <div class="dash-actions">
+                    <div class="live-pill">
+                        <span class="live-dot"></span>
+                        Données en temps réel
+                    </div>
+                    <div class="dash-date-badge">
+                        <i class="bi bi-calendar-event"></i>
+                        <span id="dashDate"></span>
+                    </div>
+                </div>
             </div>
+
+            <!-- Demo Banner -->
+            <div id="demoBanner">
+                <i class="bi bi-info-circle-fill"></i>
+                <span>Données de démonstration — Les graphiques affichent des exemples virtuels. Ajoutez de vraies données dans le système.</span>
+            </div>
+
+            <!-- ══════════════════════════════════════════════════════
+                 SECTION 1 — KPI EXÉCUTIFS (6 cartes, 2 lignes × 3)
+                 ══════════════════════════════════════════════════════ -->
+            <div class="dash-section">
+                <div class="section-label">
+                    <span class="section-label-icon"><i class="bi bi-graph-up-arrow"></i></span>
+                    <span class="section-label-text">Indicateurs Clés de Performance</span>
+                    <span class="section-label-line"></span>
+                </div>
+
+                <div class="kpi-grid">
+
+                    <!-- KPI 1: Taux utilisation + Disponibilité -->
+                    <div class="kpi-card fade-up d1">
+                        <div class="kpi-body">
+                            <div class="kpi-dual-row">
+                                <div class="kpi-primary">
+                                    <div class="kpi-label">Taux d'utilisation</div>
+                                    <div class="kpi-value"><span id="kpiUtilization">0</span><small>%</small></div>
+                                </div>
+                                <div class="kpi-secondary">
+                                    <div class="kpi-label">Disponibilité</div>
+                                    <div class="kpi-value-sm"><span id="kpiAvailability">0</span><small>%</small></div>
+                                </div>
+                            </div>
+                            <span class="kpi-trend up" id="trendU"><i class="bi bi-activity"></i>Performance flotte</span>
+                        </div>
+                        <div class="kpi-icon-wrap v2"><i class="bi bi-pie-chart-fill"></i></div>
+                    </div>
+
+                    <!-- KPI 2: Missions actives + Total mois -->
+                    <div class="kpi-card fade-up d2">
+                        <div class="kpi-body">
+                            <div class="kpi-dual-row">
+                                <div class="kpi-primary">
+                                    <div class="kpi-label">Missions actives</div>
+                                    <div class="kpi-value" id="kpiActiveMissions">0</div>
+                                </div>
+                                <div class="kpi-secondary">
+                                    <div class="kpi-label">Total du mois</div>
+                                    <div class="kpi-value-sm" id="kpiTotalMissions">0</div>
+                                </div>
+                            </div>
+                            <span class="kpi-trend up"><i class="bi bi-geo-alt"></i>En temps réel</span>
+                        </div>
+                        <div class="kpi-icon-wrap v1"><i class="bi bi-truck"></i></div>
+                    </div>
+
+                    <!-- KPI 3: Coût mensuel + Moy./véh. -->
+                    <div class="kpi-card fade-up d3">
+                        <div class="kpi-body">
+                            <div class="kpi-dual-row">
+                                <div class="kpi-primary">
+                                    <div class="kpi-label">Coût mensuel</div>
+                                    <div class="kpi-value"><span id="kpiMonthCost">0</span> <small>MAD</small></div>
+                                </div>
+                                <div class="kpi-secondary">
+                                    <div class="kpi-label">Moy./véh.</div>
+                                    <div class="kpi-value-sm"><span id="kpiAvgCost">0</span> <small>MAD</small></div>
+                                </div>
+                            </div>
+                            <span class="kpi-trend down"><i class="bi bi-wallet2"></i>Dépenses maintenance</span>
+                        </div>
+                        <div class="kpi-icon-wrap v4"><i class="bi bi-cash-stack"></i></div>
+                    </div>
+
+                    <!-- KPI 4: Total véhicules + En maintenance -->
+                    <div class="kpi-card fade-up d4">
+                        <div class="kpi-body">
+                            <div class="kpi-dual-row">
+                                <div class="kpi-primary">
+                                    <div class="kpi-label">Total véhicules</div>
+                                    <div class="kpi-value" id="kpiVehicules">0</div>
+                                </div>
+                                <div class="kpi-secondary">
+                                    <div class="kpi-label">En maintenance</div>
+                                    <div class="kpi-value-sm" id="kpiEnMaintenance">0</div>
+                                </div>
+                            </div>
+                            <span class="kpi-trend neutral" id="trendV"><i class="bi bi-truck-front"></i>Parc total</span>
+                        </div>
+                        <div class="kpi-icon-wrap v5"><i class="bi bi-truck-front"></i></div>
+                    </div>
+
+                    <!-- KPI 5: Total conducteurs + En mission -->
+                    <div class="kpi-card fade-up d5">
+                        <div class="kpi-body">
+                            <div class="kpi-dual-row">
+                                <div class="kpi-primary">
+                                    <div class="kpi-label">Conducteurs</div>
+                                    <div class="kpi-value" id="kpiConducteurs">0</div>
+                                </div>
+                                <div class="kpi-secondary">
+                                    <div class="kpi-label">En mission</div>
+                                    <div class="kpi-value-sm" id="kpiEnMissionCond">0</div>
+                                </div>
+                            </div>
+                            <span class="kpi-trend up"><i class="bi bi-person-badge"></i>Effectif actif</span>
+                        </div>
+                        <div class="kpi-icon-wrap v6"><i class="bi bi-people"></i></div>
+                    </div>
+
+                    <!-- KPI 6: Interventions totales + Alertes -->
+                    <div class="kpi-card fade-up d6">
+                        <div class="kpi-body">
+                            <div class="kpi-dual-row">
+                                <div class="kpi-primary">
+                                    <div class="kpi-label">Interventions</div>
+                                    <div class="kpi-value" id="kpiTotalInterventions">0</div>
+                                </div>
+                                <div class="kpi-secondary">
+                                    <div class="kpi-label">Alertes maint.</div>
+                                    <div class="kpi-value-sm" id="kpiAlerts">0</div>
+                                </div>
+                            </div>
+                            <span class="kpi-trend warn" id="trendA"><i class="bi bi-bell"></i>Attention requise</span>
+                        </div>
+                        <div class="kpi-icon-wrap v3"><i class="bi bi-wrench-adjustable-circle"></i></div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════════════════
+                 SECTION 2 — MONITORING OPÉRATIONNEL (2fr + 1fr)
+                 ══════════════════════════════════════════════════════ -->
+            <div class="dash-section">
+                <div class="section-label">
+                    <span class="section-label-icon"><i class="bi bi-radar"></i></span>
+                    <span class="section-label-text">Monitoring Opérationnel</span>
+                    <span class="section-label-line"></span>
+                </div>
+
+                <div class="g-row c2-thirds">
+
+                    <!-- Disponibilité & Missions — 2 donuts -->
+                    <div class="c-card fade-up d7">
+                        <div class="c-top">
+                            <div class="c-hd">
+                                <div class="c-title">Disponibilité &amp; Missions</div>
+                                <div class="c-sub">Répartition de l'état du parc en temps réel</div>
+                            </div>
+                            <div class="c-badge"><i class="bi bi-circle-fill" style="color:#10b981;font-size:8px;"></i>Temps réel</div>
+                        </div>
+                        <div class="donut-split-box">
+                            <div class="donut-compact">
+                                <div class="donut-cv">
+                                    <canvas id="vehDonut"></canvas>
+                                    <div class="donut-ctr">
+                                        <div class="d-big" id="vehDonutTot">0</div>
+                                        <div class="d-sm">Véhicules</div>
+                                    </div>
+                                </div>
+                                <div class="d-legend" id="vehDonutLeg"></div>
+                            </div>
+                            <div class="donut-divider"></div>
+                            <div class="donut-compact">
+                                <div class="donut-cv">
+                                    <canvas id="misDonut"></canvas>
+                                    <div class="donut-ctr">
+                                        <div class="d-big" id="misDonutTot">0</div>
+                                        <div class="d-sm">Missions</div>
+                                    </div>
+                                </div>
+                                <div class="d-legend" id="misDonutLeg"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Statut des Conducteurs -->
+                    <div class="c-card fade-up d8">
+                        <div class="c-top">
+                            <div class="c-hd">
+                                <div class="c-title">Statut des Conducteurs</div>
+                                <div class="c-sub">Disponibilité de l'effectif</div>
+                            </div>
+                        </div>
+                        <div class="c-canvas h240" style="padding-top:10px;"><canvas id="condBarChart"></canvas></div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════════════════
+                 SECTION 3 — ANALYTIQUE FINANCIÈRE & PERFORMANCE (3-col)
+                 ══════════════════════════════════════════════════════ -->
+            <div class="dash-section">
+                <div class="section-label">
+                    <span class="section-label-icon"><i class="bi bi-bar-chart-line"></i></span>
+                    <span class="section-label-text">Analytique Financière &amp; Performance</span>
+                    <span class="section-label-line"></span>
+                </div>
+
+                <div class="g-row c3">
+
+                    <!-- Évolution des Dépenses (area) -->
+                    <div class="c-card fade-up d9">
+                        <div class="c-top">
+                            <div class="c-hd">
+                                <div class="c-title">Évolution des Dépenses</div>
+                                <div class="c-sub">Coûts de maintenance (6 derniers mois)</div>
+                            </div>
+                        </div>
+                        <div class="c-canvas h280"><canvas id="areaChart"></canvas></div>
+                    </div>
+
+                    <!-- Missions & Interventions par mois (mixed bar+line) -->
+                    <div class="c-card fade-up d10">
+                        <div class="c-top">
+                            <div class="c-hd">
+                                <div class="c-title">Activité Mensuelle</div>
+                                <div class="c-sub">Missions et interventions sur 6 mois</div>
+                            </div>
+                        </div>
+                        <div class="c-canvas h280"><canvas id="mixedChart"></canvas></div>
+                    </div>
+
+                    <!-- Santé de la Flotte (gauge) -->
+                    <div class="c-card fade-up d11">
+                        <div class="c-top">
+                            <div class="c-hd">
+                                <div class="c-title">Santé de la Flotte</div>
+                                <div class="c-sub">Score global de performance</div>
+                            </div>
+                        </div>
+                        <div class="fleet-health-body">
+                            <div class="fh-gauge-wrap">
+                                <canvas id="gaugeChart" width="180" height="110"></canvas>
+                                <div class="fh-score-badge">
+                                    <span class="fh-score-val" id="fleetScoreVal">0</span>
+                                    <span class="fh-score-lbl">/100</span>
+                                </div>
+                            </div>
+                            <div class="fh-metrics" id="fleetMetrics"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════════════════
+                 SECTION 4 — DISTRIBUTION & COMPOSITION (2-col)
+                 ══════════════════════════════════════════════════════ -->
+            <div class="dash-section">
+                <div class="section-label">
+                    <span class="section-label-icon"><i class="bi bi-pie-chart"></i></span>
+                    <span class="section-label-text">Distribution &amp; Composition de la Flotte</span>
+                    <span class="section-label-line"></span>
+                </div>
+
+                <div class="g-row c2-half">
+
+                    <!-- Coûts par Type d'Intervention (stacked bar) -->
+                    <div class="c-card fade-up d9">
+                        <div class="c-top">
+                            <div class="c-hd">
+                                <div class="c-title">Coûts par Type d'Intervention</div>
+                                <div class="c-sub">Ventilation mensuelle par catégorie</div>
+                            </div>
+                        </div>
+                        <div class="c-canvas h160"><canvas id="stackedBar"></canvas></div>
+                    </div>
+
+                    <!-- Composition de la Flotte (polar area) -->
+                    <div class="c-card fade-up d10">
+                        <div class="c-top">
+                            <div class="c-hd">
+                                <div class="c-title">Composition de la Flotte</div>
+                                <div class="c-sub">Répartition par type de véhicule</div>
+                            </div>
+                        </div>
+                        <div class="c-canvas h160"><canvas id="polarChart"></canvas></div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════════════════
+                 SECTION 5 — ACTIVITÉ RÉCENTE (full width)
+                 ══════════════════════════════════════════════════════ -->
+            <div class="dash-section">
+                <div class="section-label">
+                    <span class="section-label-icon"><i class="bi bi-clock-history"></i></span>
+                    <span class="section-label-text">Activité Récente</span>
+                    <span class="section-label-line"></span>
+                </div>
+
+                <div class="t-card fade-up d10">
+                    <div class="c-top">
+                        <div class="c-hd">
+                            <div class="c-title">Historique des Interventions</div>
+                            <div class="c-sub">Dernières opérations de maintenance enregistrées dans le système</div>
+                        </div>
+                        <div class="c-badge"><i class="bi bi-clock-history"></i>10 récentes</div>
+                    </div>
+                    <div class="t-wrap">
+                        <table class="d-table">
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Véhicule</th>
+                                    <th>Date</th>
+                                    <th>Coût Total</th>
+                                    <th>Description Technique</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentTbody">
+                                <tr><td colspan="5"><div class="empty-r"><i class="bi bi-hourglass-split"></i><span>Chargement des données en cours...</span></div></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
         </div>
     </div>
 
 </div>
+
+<link rel="stylesheet" href="../css/dashboard-content.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <script src="../js/logout.js"></script>
 
 <script>
@@ -605,52 +817,30 @@
         document.getElementById('profilePopup').classList.remove('show');
     });
 
-    // Theme toggle functionality
+    // Theme toggle
     function initTheme() {
         const savedTheme = localStorage.getItem('theme');
-
-        if (savedTheme === 'dark') {
-            document.body.classList.add('dark');
-            updateThemeUI(true);
-        } else {
-            document.body.classList.remove('dark');
-            updateThemeUI(false);
-        }
+        if (savedTheme === 'dark') { document.body.classList.add('dark'); updateThemeUI(true); }
+        else { document.body.classList.remove('dark'); updateThemeUI(false); }
     }
-
     function updateThemeUI(isDark) {
         const themeIcon = document.getElementById('themeIcon');
         const themeText = document.getElementById('themeText');
-        if (isDark) {
-            themeIcon.className = 'bi bi-sun';
-            themeText.textContent = 'Mode clair';
-        } else {
-            themeIcon.className = 'bi bi-moon-stars';
-            themeText.textContent = 'Mode sombre';
-        }
+        if (isDark) { themeIcon.className = 'bi bi-sun'; themeText.textContent = 'Mode clair'; }
+        else { themeIcon.className = 'bi bi-moon-stars'; themeText.textContent = 'Mode sombre'; }
     }
-
     function toggleTheme() {
         const isDark = document.body.classList.toggle('dark');
         localStorage.setItem('theme', isDark ? 'dark' : 'light');
         updateThemeUI(isDark);
-        
-        // Notify iframe if present
-        const iframe = document.querySelector('.page iframe');
-        if (iframe && iframe.contentWindow) {
-            iframe.contentWindow.postMessage(isDark ? 'theme-dark' : 'theme-light', '*');
-        }
     }
-
     document.getElementById('themeToggleBtn').addEventListener('click', (e) => {
-        e.preventDefault();
-        toggleTheme();
+        e.preventDefault(); toggleTheme();
         document.getElementById('profilePopup').classList.remove('show');
     });
-
     initTheme();
 
-    // Mobile sidebar functions (keeping original behavior)
+    // Mobile sidebar
     window.openMobile = function() {
         document.getElementById('sidebar').classList.add('open');
         document.getElementById('overlay').style.display = 'block';
@@ -660,47 +850,20 @@
         document.getElementById('overlay').style.display = 'none';
     };
 
-    // Page navigation logic
+    // Nav links
     document.querySelectorAll('.nav-link').forEach(link => {
         link.addEventListener('click', function(e) {
             const page = this.getAttribute('data-page');
-            if (!page) return; // Ignore if no data-page
-            
+            if (!page) return;
             e.preventDefault();
-            
-            // Handle active state
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
             this.classList.add('active');
-            
-            const pageContainer = document.querySelector('.page');
-            
-            if (page === 'Accident' || page === 'Réparation' || page === 'Dépannage' || page === 'Vidange') {
-                const map = { 'Accident': 'accident.html', 'Réparation': 'reparation.html', 'Dépannage': 'depanage.html', 'Vidange': 'vidange.html' };
-                const src = map[page];
-                pageContainer.innerHTML = `<iframe src="${src}?embedded=true" style="width: 100%; height: 100%; border: none; flex: 1;"></iframe>`;
-                pageContainer.style.padding = '0';
-                pageContainer.style.alignItems = 'stretch';
-                pageContainer.style.justifyContent = 'stretch';
-            } else {
-                pageContainer.innerHTML = `
-                    <div class="page-hint">
-                        <i class="bi bi-layout-sidebar-inset"></i>
-                        <span>Sélectionne une section</span>
-                    </div>
-                `;
-                pageContainer.style.padding = '40px';
-                pageContainer.style.alignItems = 'center';
-                pageContainer.style.justifyContent = 'center';
-            }
-            
-            // Close mobile sidebar if open
-            if (window.innerWidth <= 900) {
-                closeMobile();
-            }
+            if (window.innerWidth <= 900) closeMobile();
         });
     });
 </script>
 <script src="../js/navbarInfo.js"></script>
+<script src="../js/dashboard-content.js"></script>
 
 </body>
 </html>
