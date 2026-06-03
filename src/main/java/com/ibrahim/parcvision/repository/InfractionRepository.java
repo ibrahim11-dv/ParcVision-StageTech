@@ -11,6 +11,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface InfractionRepository extends JpaRepository<Infraction, Long> {
     Page<Infraction> findByEntreprise(Entreprise entreprise, Pageable pageable);
+    
+    long countByEntreprise(Entreprise entreprise);
 
     @Query("SELECT i FROM Infraction i WHERE i.entreprise = :entreprise " +
            "AND (LOWER(i.categorie) LIKE LOWER(CONCAT('%', :search, '%')) " +

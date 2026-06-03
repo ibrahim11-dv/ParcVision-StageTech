@@ -8,6 +8,9 @@ import com.ibrahim.parcvision.enums.StatutVehicule;
 import com.ibrahim.parcvision.repository.ConducteurRepository;
 import com.ibrahim.parcvision.repository.InterventionRepository;
 import com.ibrahim.parcvision.repository.MissionRepository;
+import com.ibrahim.parcvision.repository.AssuranceRepository;
+import com.ibrahim.parcvision.repository.InfractionRepository;
+import com.ibrahim.parcvision.repository.DepenseRepository;
 import com.ibrahim.parcvision.repository.FournisseurRepository;
 import com.ibrahim.parcvision.repository.UtilisateurRepository;
 import com.ibrahim.parcvision.repository.VehiculeRepository;
@@ -45,6 +48,15 @@ public class DashboardService {
     @Autowired
     private FournisseurRepository fournisseurRepository;
 
+    @Autowired
+    private AssuranceRepository assuranceRepository;
+
+    @Autowired
+    private InfractionRepository infractionRepository;
+
+    @Autowired
+    private DepenseRepository depenseRepository;
+
     public DashboardStatsDao getDashboardStats() {
         String emailAdmin = SecurityContextHolder.getContext().getAuthentication().getName();
         Utilisateur admin = utilisateurRepository.findByEmail(emailAdmin)
@@ -78,6 +90,12 @@ public class DashboardService {
 
         stats.setMissionsEnCours(missionRepository.countMissionsEnCoursByEntreprise(entreprise));
         stats.setNbFournisseurs(fournisseurRepository.countByEntreprise(entreprise));
+        stats.setTotalAssurances(assuranceRepository.countByEntreprise(entreprise));
+        stats.setTotalInfractions(infractionRepository.countByEntreprise(entreprise));
+        stats.setTotalDepenses(depenseRepository.countByEntreprise(entreprise));
+        
+        Double coutDepenses = depenseRepository.sumMontantByEntreprise(entreprise);
+        stats.setCoutTotalDepenses(coutDepenses != null ? coutDepenses : 0.0);
 
         List<Object[]> interventionsByType = interventionRepository.countInterventionsByType(entreprise);
         for (Object[] row : interventionsByType) {

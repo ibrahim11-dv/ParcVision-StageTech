@@ -25,6 +25,11 @@ public class DashboardStatsDao {
     private long nbVidanges;
     private long nbFournisseurs;
 
+    private long totalAssurances;
+    private long totalInfractions;
+    private long totalDepenses;
+    private double coutTotalDepenses;
+
     private Map<String, Map<String, Long>> missionsParJour;
 
     // Default constructor
@@ -81,6 +86,18 @@ public class DashboardStatsDao {
 
     public long getNbFournisseurs() { return nbFournisseurs; }
     public void setNbFournisseurs(long nbFournisseurs) { this.nbFournisseurs = nbFournisseurs; }
+
+    public long getTotalAssurances() { return totalAssurances; }
+    public void setTotalAssurances(long totalAssurances) { this.totalAssurances = totalAssurances; }
+
+    public long getTotalInfractions() { return totalInfractions; }
+    public void setTotalInfractions(long totalInfractions) { this.totalInfractions = totalInfractions; }
+
+    public long getTotalDepenses() { return totalDepenses; }
+    public void setTotalDepenses(long totalDepenses) { this.totalDepenses = totalDepenses; }
+
+    public double getCoutTotalDepenses() { return coutTotalDepenses; }
+    public void setCoutTotalDepenses(double coutTotalDepenses) { this.coutTotalDepenses = coutTotalDepenses; }
 
     public Map<String, Map<String, Long>> getMissionsParJour() { return missionsParJour; }
     public void setMissionsParJour(Map<String, Map<String, Long>> missionsParJour) { this.missionsParJour = missionsParJour; }
