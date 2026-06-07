@@ -19,54 +19,6 @@ function closeModal(id) {
     }
 }
 
-/* ───── GESTION DU THÈME SOMBRE ───── */
-function initTheme() {
-    const saved = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    if (saved === 'dark' || (!saved && prefersDark)) {
-        document.body.classList.add('dark');
-        document.documentElement.setAttribute('data-bs-theme', 'dark');
-        updateThemeUI(true);
-    } else {
-        document.body.classList.remove('dark');
-        document.documentElement.setAttribute('data-bs-theme', 'light');
-        updateThemeUI(false);
-    }
-}
-function updateThemeUI(isDark) {
-    const icon = document.getElementById('themeIcon');
-    const text = document.getElementById('themeText');
-    if (icon) icon.className = isDark ? 'bi bi-sun' : 'bi bi-moon-stars';
-    if (text) text.textContent = isDark ? 'Mode clair' : 'Mode sombre';
-}
-function toggleTheme() {
-    const isDark = document.body.classList.toggle('dark');
-    document.documentElement.setAttribute('data-bs-theme', isDark ? 'dark' : 'light');
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    updateThemeUI(isDark);
-}
-document.addEventListener('DOMContentLoaded', function () {
-    const btn = document.getElementById('themeToggleBtn');
-    if (btn) {
-        btn.addEventListener('click', function (e) {
-            e.preventDefault();
-            toggleTheme();
-        });
-    }
-});
-
-/* ───── PROFILE POPUP ───── */
-document.addEventListener('click', function (e) {
-    const row = document.getElementById('profileRow');
-    const popup = document.getElementById('profilePopup');
-    if (!row || !popup) return;
-    if (row.contains(e.target)) {
-        popup.classList.toggle('show');
-    } else {
-        popup.classList.remove('show');
-    }
-});
-
 /* ───── UPLOAD DRAG & DROP ───── */
 function setupUploadArea(uploadArea, fileInput, previewImg) {
     if (!uploadArea || !fileInput || !previewImg) return;
@@ -128,7 +80,6 @@ let currentStatut = '';
 
 /* ───── INITIALISATION AU CHARGEMENT ───── */
 document.addEventListener('DOMContentLoaded', () => {
-    initTheme();
 
     // Fermeture des modals en cliquant sur l'overlay
     document.querySelectorAll('.custom-modal-overlay').forEach(overlay => {
@@ -544,11 +495,3 @@ function debounce(func, wait) {
 }
 
 /* ───── MOBILE SIDEBAR ───── */
-window.openMobile = function () {
-    document.getElementById('sidebar').classList.add('open');
-    document.getElementById('overlay').style.display = 'block';
-};
-window.closeMobile = function () {
-    document.getElementById('sidebar').classList.remove('open');
-    document.getElementById('overlay').style.display = 'none';
-};

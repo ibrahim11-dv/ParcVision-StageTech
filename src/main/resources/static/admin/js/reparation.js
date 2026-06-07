@@ -9,54 +9,6 @@ function closeModal(id) {
     document.body.style.overflow = 'auto';
 }
 
-
-// ── Profile popup ──
-const profileRow = document.getElementById('profileRow');
-const profilePopup = document.getElementById('profilePopup');
-if (profileRow) {
-    profileRow.addEventListener('click', e => {
-        e.stopPropagation();
-        if (profilePopup) profilePopup.classList.toggle('show');
-    });
-}
-document.addEventListener('click', () => {
-    if (profilePopup) profilePopup.classList.remove('show');
-});
-
-// ── Theme toggle ──
-function updateThemeUI(isDark) {
-    const themeIcon = document.getElementById('themeIcon');
-    const themeText = document.getElementById('themeText');
-    if (!themeIcon || !themeText) return;
-    if (isDark) {
-        themeIcon.className = 'bi bi-sun';
-        themeText.textContent = 'Mode clair';
-    } else {
-        themeIcon.className = 'bi bi-moon-stars';
-        themeText.textContent = 'Mode sombre';
-    }
-}
-
-function initTheme() {
-    const saved = localStorage.getItem('theme');
-    const isDark = saved === 'dark';
-    document.body.classList.toggle('dark', isDark);
-    updateThemeUI(isDark);
-}
-
-const themeToggleBtn = document.getElementById('themeToggleBtn');
-if (themeToggleBtn) {
-    themeToggleBtn.addEventListener('click', e => {
-        e.preventDefault();
-        const isDark = document.body.classList.toggle('dark');
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        updateThemeUI(isDark);
-        if (profilePopup) profilePopup.classList.remove('show');
-    });
-}
-
-initTheme();
-
 // Close modal on overlay click
 document.querySelectorAll('.custom-modal-overlay').forEach(overlay => {
     overlay.addEventListener('click', (e) => {

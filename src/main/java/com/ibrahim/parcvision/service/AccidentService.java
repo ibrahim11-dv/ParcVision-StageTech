@@ -201,7 +201,7 @@ public class AccidentService {
         depense.setQui(providerName);
         depense.setSourceDepense("Accident");
         depense.setSourceDepenseCustom(sourceCustom);
-        depense.setTypePaiement(com.ibrahim.parcvision.enums.TypePaiement.EN_ATTENTE);
+        depense.setEstPayee(false);
         depense.setEntreprise(getCurrentEntreprise());
 
         depenseRepository.save(depense);

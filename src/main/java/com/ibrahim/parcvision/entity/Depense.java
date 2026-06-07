@@ -37,7 +37,13 @@ public class Depense {
     @JsonIgnoreProperties({"utilisateur", "vehicule", "mission"})
     private Entreprise entreprise;
 
+    @Column(name = "est_payee")
+    private Boolean estPayee = false;
+
     // Getters and Setters
+    public boolean isEstPayee() { return estPayee != null && estPayee; }
+    public void setEstPayee(Boolean estPayee) { this.estPayee = estPayee; }
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

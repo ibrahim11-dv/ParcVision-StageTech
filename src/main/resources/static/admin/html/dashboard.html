@@ -864,6 +864,210 @@
             .kpi-row { grid-template-columns: 1fr 1fr; }
             .fleet-strip { grid-template-columns: 1fr 1fr; }
         }
+        .sb-foot {
+            border-top: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+
+        .profile-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 14px 14px;
+            cursor: pointer;
+            position: relative;
+            transition: background .15s;
+        }
+
+        .profile-row:hover {
+            background: var(--gray-100);
+        }
+
+        .profile-av {
+            width: 38px;
+            height: 38px;
+            flex-shrink: 0;
+            border-radius: 11px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: white;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(26, 42, 108, 0.25);
+        }
+
+        .profile-av::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            right: -1px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #10b981;
+            border: 2px solid var(--bg-sidebar);
+            box-shadow: 0 0 4px rgba(16, 185, 129, 0.4);
+        }
+
+        .profile-info {
+            flex: 1;
+            overflow: hidden;
+            transition: opacity .2s;
+        }
+
+        .profile-info b {
+            display: block;
+            font-size: 0.83rem;
+            font-weight: 600;
+            color: var(--text-main);
+            white-space: nowrap;
+        }
+
+        .profile-info small {
+            font-size: 0.68rem;
+            color: var(--gray-400);
+            white-space: nowrap;
+        }
+
+        .profile-more {
+            font-size: 14px;
+            color: var(--gray-400);
+            transition: opacity .2s, color .15s;
+            flex-shrink: 0;
+        }
+
+        .profile-row:hover .profile-more {
+            color: var(--accent);
+        }
+
+        .profile-popup {
+            position: absolute;
+            bottom: calc(100% + 6px);
+            left: 10px;
+            right: 10px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 6px;
+            box-shadow: var(--shadow-lg);
+            display: none;
+            z-index: 500;
+            animation: popUp .2s cubic-bezier(.34, 1.56, .64, 1);
+        }
+
+        @keyframes popUp {
+            from {
+                opacity: 0;
+                transform: translateY(6px) scale(.97);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .profile-popup.show {
+            display: block;
+        }
+
+        .pp-head {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pp-av {
+            width: 32px;
+            height: 32px;
+            border-radius: 9px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .pp-head b {
+            font-size: 0.83rem;
+            color: var(--text-main);
+            display: block;
+        }
+
+        .pp-head small {
+            font-size: 0.68rem;
+            color: var(--gray-400);
+        }
+
+        .pp-link {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 8px 12px;
+            border-radius: 9px;
+            font-size: 0.83rem;
+            font-weight: 500;
+            color: var(--gray-600);
+            text-decoration: none;
+            transition: all .14s;
+            cursor: pointer;
+        }
+
+        .pp-link:hover {
+            background: var(--accent-soft);
+            color: var(--accent);
+        }
+
+        .pp-link i {
+            font-size: 14px;
+            width: 16px;
+            text-align: center;
+            color: var(--gray-400);
+        }
+
+        .pp-link:hover i {
+            color: var(--accent);
+        }
+
+        .pp-hr {
+            height: 1px;
+            background: var(--border-color);
+            margin: 4px 0;
+        }
+
+        .pp-logout {
+            color: #ef4444 !important;
+        }
+
+        .pp-logout i {
+            color: #ef4444 !important;
+        }
+
+        .pp-logout:hover {
+            background: rgba(239, 68, 68, 0.1) !important;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 <body>
@@ -875,8 +1079,8 @@
         <a href="/admin/dashboard" class="sb-brand">
             <div class="brand-icon"><i class="bi bi-car-front-fill"></i></div>
             <div class="brand-text">
-                <strong>ParcVision</strong>
-                <small>Fleet Intelligence</small>
+                <strong>Parc Auto</strong>
+                <small>Gestion de flotte</small>
             </div>
         </a>
 
@@ -887,7 +1091,7 @@
             <div class="nav-item">
                 <a href="/admin/dashboard" class="nav-link active" data-tip="Dashboard">
                     <span class="ni"><i class="bi bi-speedometer2"></i></span>
-                    <span class="nt">Dashboard<small class="nt-sub">Vue generale</small></span>
+                    <span class="nt">Dashboard<small class="nt-sub">Vue générale</small></span>
                 </a>
             </div>
 
@@ -895,31 +1099,24 @@
 
             <div class="nav-item">
                 <a href="/admin/conducteurs" class="nav-link" data-tip="Conducteurs">
-                    <span class="ni">
-                        <i class="bi bi-person-badge"></i>
-                        <span class="pulse p-green"></span>
-                    </span>
-                    <span class="nt">Conducteurs<small class="nt-sub" id="sb-cond-sub">--</small></span>
-                    <span class="nb nb-blue" id="sb-cond-total">--</span>
+                    <span class="ni"><i class="bi bi-person-badge"></i><span class="pulse p-green"></span></span>
+                    <span class="nt">Conducteurs<small class="nt-sub" id="active-drivers-count">0 actifs</small></span>
+                    <span class="nb nb-blue" id="nb-total-drivers">0</span>
                 </a>
             </div>
 
             <div class="nav-item">
-                <a href="/admin/vehicules" class="nav-link" data-tip="Vehicules">
-                    <span class="ni">
-                        <i class="bi bi-truck"></i>
-                        <span class="pulse p-amber"></span>
-                    </span>
-                    <span class="nt">Vehicules<small class="nt-sub" id="sb-veh-sub">--</small></span>
-                    <span class="nb nb-blue" id="sb-veh-total">--</span>
+                <a href="/admin/vehicules" class="nav-link" data-tip="Véhicules">
+                    <span class="ni"><i class="bi bi-truck"></i><span class="pulse p-amber"></span></span>
+                    <span class="nt">Véhicules<small class="nt-sub" id="active-vehicles-count">0 en flotte</small></span>
+                    <span class="nb nb-blue" id="nb-total-vehicles">0</span>
                 </a>
             </div>
 
             <div class="nav-item">
                 <a href="/admin/assurances" class="nav-link" data-tip="Assurances">
                     <span class="ni"><i class="bi bi-shield-check"></i><span class="pulse p-blue"></span></span>
-                    <span class="nt">Assurances<small class="nt-sub">Couverture</small></span>
-                    <span class="nb nb-blue" id="sb-ass-total">--</span>
+                    <span class="nt">Assurances<small class="nt-sub">Gestion</small></span>
                 </a>
             </div>
 
@@ -927,97 +1124,98 @@
                 <a href="/admin/infractions" class="nav-link" data-tip="Infractions">
                     <span class="ni"><i class="bi bi-exclamation-triangle"></i><span class="pulse p-red"></span></span>
                     <span class="nt">Infractions<small class="nt-sub">Suivi</small></span>
-                    <span class="nb nb-red" id="sb-inf-total">--</span>
-                </a>
-            </div>
-
-            <div class="sb-section">Operations</div>
-
-            <div class="nav-item">
-                <a href="/admin/reparations" class="nav-link" data-tip="Reparations">
-                    <span class="ni"><i class="bi bi-tools"></i></span>
-                    <span class="nt">Reparations<small class="nt-sub">Maintenance</small></span>
-                </a>
-            </div>
-
-            <div class="nav-item">
-                <a href="/admin/accidents" class="nav-link" data-tip="Accidents">
-                    <span class="ni"><i class="bi bi-car-front"></i></span>
-                    <span class="nt">Accidents<small class="nt-sub">Incidents</small></span>
-                </a>
-            </div>
-
-            <div class="nav-item">
-                <a href="/admin/depannage" class="nav-link" data-tip="Depannage">
-                    <span class="ni"><i class="bi bi-wrench-adjustable"></i></span>
-                    <span class="nt">Depannage<small class="nt-sub">Interventions</small></span>
-                </a>
-            </div>
-
-            <div class="nav-item">
-                <a href="/admin/vidanges" class="nav-link" data-tip="Vidanges">
-                    <span class="ni"><i class="bi bi-droplet"></i></span>
-                    <span class="nt">Vidanges<small class="nt-sub">Entretien</small></span>
-                </a>
-            </div>
-
-            <div class="sb-section">Finances & GPS</div>
-
-            <div class="nav-item">
-                <a href="/admin/depenses" class="nav-link" data-tip="Depenses">
-                    <span class="ni"><i class="bi bi-cash-stack"></i></span>
-                    <span class="nt">Depenses<small class="nt-sub">Charges</small></span>
                 </a>
             </div>
 
             <div class="nav-item">
                 <a href="/admin/gps" class="nav-link" data-tip="Suivi GPS">
                     <span class="ni"><i class="bi bi-geo-alt"></i><span class="pulse p-green"></span></span>
-                    <span class="nt">Suivi GPS<small class="nt-sub">Temps reel</small></span>
+                    <span class="nt">Suivi GPS<small class="nt-sub">0 en déplacement</small></span>
+                    <span class="nb nb-green" style="background:rgba(34,197,94,0.1); color:#15803d; border-color:rgba(34,197,94,0.2);">LIVE</span>
                 </a>
             </div>
 
-            <div class="sb-section">Archives</div>
+            <div class="sb-hr"></div>
+            <div class="sb-section">Interventions</div>
+
+            <div class="nav-item">
+                <a href="/admin/reparations" class="nav-link" data-tip="Réparation">
+                    <span class="ni"><i class="bi bi-wrench-adjustable"></i><span class="pulse p-amber"></span></span>
+                    <span class="nt">Réparation<small class="nt-sub">0 en cours</small></span>
+                    <span class="nb nb-amber">0</span>
+                </a>
+            </div>
+
+            <div class="nav-item">
+                <a href="/admin/accidents" class="nav-link" data-tip="Accident">
+                    <span class="ni"><i class="bi bi-exclamation-triangle"></i><span class="pulse p-red"></span></span>
+                    <span class="nt">Accident<small class="nt-sub">0 ce mois</small></span>
+                    <span class="nb nb-red">0</span>
+                </a>
+            </div>
+
+            <div class="nav-item">
+                <a href="/admin/depannage" class="nav-link" data-tip="Dépannage">
+                    <span class="ni"><i class="bi bi-cone-striped"></i><span class="pulse p-amber"></span></span>
+                    <span class="nt">Dépannage<small class="nt-sub">0 interventions</small></span>
+                    <span class="nb nb-amber">0</span>
+                </a>
+            </div>
+
+            <div class="nav-item">
+                <a href="/admin/vidanges" class="nav-link" data-tip="Vidange">
+                    <span class="ni"><i class="bi bi-droplet-half"></i><span class="pulse p-blue"></span></span>
+                    <span class="nt">Vidange<small class="nt-sub">0 planifiées</small></span>
+                    <span class="nb nb-blue">0</span>
+                </a>
+            </div>
+
+            <div class="nav-item">
+                <a href="/admin/depenses" class="nav-link" data-tip="Dépenses">
+                    <span class="ni"><i class="bi bi-wallet2"></i><span class="pulse p-red"></span></span>
+                    <span class="nt">Dépense<small class="nt-sub">Suivi financier</small></span>
+                </a>
+            </div>
+
+            <div class="nav-item">
+                <a href="/admin/fournisseurs" class="nav-link" data-tip="Fournisseurs">
+                    <span class="ni"><i class="bi bi-people-fill"></i><span class="pulse p-green"></span></span>
+                    <span class="nt">Fournisseurs<small class="nt-sub">Gestion prestataires</small></span>
+                    <span class="nb nb-blue">0</span>
+                </a>
+            </div>
+
+            <div class="sb-hr"></div>
+            <div class="sb-section">Données</div>
 
             <div class="nav-item">
                 <a href="/admin/archivage" class="nav-link" data-tip="Archivage">
                     <span class="ni"><i class="bi bi-archive"></i></span>
-                    <span class="nt">Archivage<small class="nt-sub">Documents</small></span>
+                    <span class="nt">Archivage<small class="nt-sub">Documents &amp; historique</small></span>
                 </a>
             </div>
 
         </div>
 
         <div class="sb-foot">
-            <div class="collapse-row">
-                <button class="collapse-btn" id="collapseBtn" onclick="toggleSidebar()" title="Reduire le menu">
-                    <i class="bi bi-chevron-left" id="collapseIcon"></i>
-                </button>
-            </div>
             <div class="profile-row" id="profileRow">
-                <div class="profile-av" id="profileAv">--</div>
+                <div class="profile-av">AD</div>
                 <div class="profile-info">
-                    <b id="profileName">Chargement...</b>
-                    <small id="profileEmail">--</small>
+                    <b id="user-name"></b>
+                    <small id="user-email"></small>
                 </div>
                 <i class="bi bi-three-dots-vertical profile-more"></i>
-                <div class="profile-popup" id="profilePopup">
-                    <div class="pp-head">
-                        <div class="pp-av" id="ppAv">--</div>
-                        <div>
-                            <b id="ppName">--</b>
-                            <small id="ppEmail">--</small>
-                        </div>
-                    </div>
-                    <a href="/admin/profil" class="pp-link"><i class="bi bi-person"></i>Mon profil</a>
-                    <a href="/admin/profil-entreprise" class="pp-link"><i class="bi bi-building"></i>Mon entreprise</a>
+
+                <div class="profile-popup" id="profilePopup" onclick="event.stopPropagation()">
+                    <a href="/admin/profil" class="pp-link"><i class="bi bi-person-gear"></i> Mon profil</a>
+                    <a href="/admin/profil-entreprise" class="pp-link"><i class="bi bi-building"></i> Entreprise</a>
                     <div class="pp-hr"></div>
-                    <a href="#" class="pp-link" id="themeToggleBtn">
+                    <div class="pp-link" id="themeToggleBtn">
                         <i class="bi bi-moon-stars" id="themeIcon"></i>
                         <span id="themeText">Mode sombre</span>
-                    </a>
+                    </div>
                     <div class="pp-hr"></div>
-                    <a href="#" class="pp-link pp-logout" id="logoutBtn"><i class="bi bi-box-arrow-right"></i>Deconnexion</a>
+                    <a href="#" id="logout-btn" class="pp-link pp-logout"><i class="bi bi-box-arrow-right"></i> Deconnexion</a>
                 </div>
             </div>
         </div>
@@ -1195,7 +1393,7 @@
             <div class="dashboard-row2">
 
                 <!-- Vehicle Status Donut -->
-                <div class="widget-card">
+                <div class="widget-card" style="height: 360px;">
                     <div class="widget-header">
                         <h5 class="widget-title">
                             <span class="widget-title-icon"><i class="bi bi-donut"></i></span>
@@ -1215,7 +1413,7 @@
                 </div>
 
                 <!-- Mission Performance Gauge -->
-                <div class="widget-card">
+                <div class="widget-card" style="height: 360px;">
                     <div class="widget-header">
                         <h5 class="widget-title">
                             <span class="widget-title-icon" style="background:rgba(139,92,246,0.1);color:#8b5cf6;"><i class="bi bi-bullseye"></i></span>
@@ -1284,10 +1482,11 @@
                 <div class="widget-card">
                     <div class="widget-header">
                         <h5 class="widget-title">
-                            <span class="widget-title-icon" style="background:rgba(245,158,11,0.1);color:#f59e0b;"><i class="bi bi-shield-exclamation"></i></span>
-                            Assurances a Renouveler
+                            <span class="widget-title-icon" style="background:rgba(239,68,68,0.1);color:#ef4444;"><i class="bi bi-shield-x"></i></span>
+                            Assurances Expirées
                         </h5>
-                        <a href="/admin/assurances" class="widget-link">Gerer <i class="bi bi-arrow-right"></i></a>
+                        <span class="widget-badge" style="background:rgba(239,68,68,0.1);color:#dc2626;" id="assurance-expire-badge">Chargement...</span>
+                        <a href="/admin/assurances" class="widget-link">Gérer <i class="bi bi-arrow-right"></i></a>
                     </div>
                     <div class="ops-list" id="assuranceExpireList">
                         <div style="text-align:center;padding:20px;color:var(--gray-400);font-size:0.82rem;">Chargement...</div>
@@ -1298,9 +1497,10 @@
                 <div class="widget-card">
                     <div class="widget-header">
                         <h5 class="widget-title">
-                            <span class="widget-title-icon" style="background:rgba(59,130,246,0.1);color:#3b82f6;"><i class="bi bi-clipboard2-check"></i></span>
-                            Controles Techniques
+                            <span class="widget-title-icon" style="background:rgba(245,158,11,0.1);color:#f59e0b;"><i class="bi bi-tools"></i></span>
+                            Véhicules en Maintenance
                         </h5>
+                        <span class="widget-badge" style="background:rgba(245,158,11,0.1);color:#d97706;">Chargement...</span>
                         <a href="/admin/vehicules" class="widget-link">Voir <i class="bi bi-arrow-right"></i></a>
                     </div>
                     <div class="ops-list" id="controleTechniqueList">
@@ -1309,7 +1509,7 @@
                 </div>
 
                 <!-- Conductors Status Summary -->
-                <div class="widget-card">
+                <div class="widget-card" >
                     <div class="widget-header">
                         <h5 class="widget-title">
                             <span class="widget-title-icon" style="background:rgba(16,185,129,0.1);color:#10b981;"><i class="bi bi-people"></i></span>
@@ -1326,12 +1526,12 @@
             </div>
 
             <!-- == SECTION 6: QUICK-ACCESS FLEET STRIP == -->
-            <div class="ops-section-header" style="margin-top:4px;">
+            <div class="ops-section-header" style="margin-top:4px;display: none">
                 <div class="ops-section-title">Acces Rapide</div>
                 <div class="ops-section-line"></div>
             </div>
 
-            <div class="fleet-strip">
+            <div class="fleet-strip" style="display: none">
                 <a href="/admin/vehicules" class="strip-card">
                     <div class="strip-icon" style="background:rgba(34,34,177,0.1);color:#2222b1;">
                         <i class="bi bi-truck"></i>
@@ -1376,6 +1576,7 @@
 </div>
 
 <script src="../js/logout.js"></script>
+<script src="../js/navbarInfo.js"></script>
 <script>
 
 // ==============================================================
@@ -1442,16 +1643,6 @@ function startClock() {
 //  SIDEBAR LOGIC
 // ==============================================================
 
-function toggleSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    const main = document.getElementById('main');
-    const icon = document.getElementById('collapseIcon');
-    const isMini = sidebar.classList.toggle('mini');
-    main.classList.toggle('mini', isMini);
-    icon.className = isMini ? 'bi bi-chevron-right' : 'bi bi-chevron-left';
-    localStorage.setItem('sidebarMini', isMini ? '1' : '0');
-}
-
 function openMobile() {
     document.getElementById('sidebar').classList.add('open');
     document.getElementById('overlay').style.display = 'block';
@@ -1465,7 +1656,6 @@ function initSidebar() {
     if (localStorage.getItem('sidebarMini') === '1') {
         document.getElementById('sidebar').classList.add('mini');
         document.getElementById('main').classList.add('mini');
-        document.getElementById('collapseIcon').className = 'bi bi-chevron-right';
     }
 }
 
@@ -1473,29 +1663,8 @@ function initSidebar() {
 //  THEME
 // ==============================================================
 
-function initTheme() {
-    const saved = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const isDark = saved === 'dark' || (!saved && prefersDark);
-    if (isDark) document.body.classList.add('dark');
-    updateThemeUI(isDark);
-}
-
-function updateThemeUI(isDark) {
-    const icon = document.getElementById('themeIcon');
-    const text = document.getElementById('themeText');
-    if (icon) icon.className = isDark ? 'bi bi-sun' : 'bi bi-moon-stars';
-    if (text) text.textContent = isDark ? 'Mode clair' : 'Mode sombre';
-}
-
-function toggleTheme() {
-    const isDark = document.body.classList.toggle('dark');
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    updateThemeUI(isDark);
-    updateChartsTheme(isDark);
-}
-
-function updateChartsTheme(isDark) {
+window.addEventListener('themeChanged', () => {
+    const isDark = document.body.classList.contains('dark');
     const textColor = isDark ? '#e5e7eb' : '#1f2937';
     const gridColor = isDark ? '#374151' : '#e5e7eb';
     if (typeof Chart === 'undefined') return;
@@ -1507,22 +1676,10 @@ function updateChartsTheme(isDark) {
         if (chart.options.scales?.y?.grid) chart.options.scales.y.grid.color = gridColor;
         chart.update();
     });
+});
+
+function initSidebar() {
 }
-
-// ==============================================================
-//  PROFILE POPUP
-// ==============================================================
-
-document.getElementById('profileRow').addEventListener('click', e => {
-    e.stopPropagation();
-    document.getElementById('profilePopup').classList.toggle('show');
-});
-document.addEventListener('click', () => document.getElementById('profilePopup').classList.remove('show'));
-document.getElementById('themeToggleBtn').addEventListener('click', e => {
-    e.preventDefault();
-    toggleTheme();
-    document.getElementById('profilePopup').classList.remove('show');
-});
 
 // ==============================================================
 //  CHART INSTANCES
@@ -1559,7 +1716,6 @@ async function loadFleetAlerts() {
 
         const vehicules = vehiculesData || [];
         const assurances = assurancesData?.content || assurancesData || [];
-        const today = new Date();
         const alerts = [];
 
         // Check vehicles for HORS_SERVICE
@@ -1648,13 +1804,15 @@ async function loadFleetAlerts() {
 
         // Update badge
         const count = alerts.length;
-        badge.textContent = count + (count === 0 ? ' alerte' : ' alertes');
-        if (count > 0) {
-            badge.style.background = 'rgba(239,68,68,0.12)';
-            badge.style.color = '#dc2626';
-        } else {
-            badge.style.background = 'rgba(16,185,129,0.1)';
-            badge.style.color = '#059669';
+        if (badge) {
+            badge.textContent = count + (count === 0 ? ' alerte' : ' alertes');
+            if (count > 0) {
+                badge.style.background = 'rgba(239,68,68,0.12)';
+                badge.style.color = '#dc2626';
+            } else {
+                badge.style.background = 'rgba(16,185,129,0.1)';
+                badge.style.color = '#059669';
+            }
         }
 
         if (alerts.length === 0) {
@@ -1703,37 +1861,59 @@ async function loadFleetAlerts() {
 async function loadAssuranceList() {
     const container = document.getElementById('assuranceExpireList');
     try {
-        const data = await apiFetch('/api/assurances?size=100');
+        const data = await apiFetch('/api/assurances?size=9999');
         const assurances = data?.content || data || [];
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
 
-        const upcoming = assurances
-            .filter(a => a.dateExpiration)
+        // Only expired assurances: today > dateExpiration
+        const expired = assurances
+            .filter(a => {
+                if (!a.dateExpiration) return false;
+                const exp = new Date(a.dateExpiration);
+                exp.setHours(0, 0, 0, 0);
+                return exp < today;
+            })
             .map(a => ({ ...a, days: daysFromNow(a.dateExpiration) }))
-            .filter(a => a.days !== null && a.days <= 60)
-            .sort((a, b) => a.days - b.days)
-            .slice(0, 5);
+            .sort((a, b) => a.days - b.days)  // most expired first
+            .slice(0, 6);
 
-        if (upcoming.length === 0) {
-            container.innerHTML = `<div style="text-align:center;padding:20px;color:var(--gray-400);font-size:0.82rem;"><i class="bi bi-shield-check" style="font-size:1.5rem;display:block;margin-bottom:8px;"></i>Aucune assurance a renouveler prochainement</div>`;
+        // Update widget badge with count
+        const badge = container.closest('.widget-card')?.querySelector('.widget-badge');
+        if (badge) {
+            if (expired.length > 0) {
+                badge.textContent = expired.length + ' expirée' + (expired.length > 1 ? 's' : '');
+                badge.style.background = 'rgba(239,68,68,0.12)';
+                badge.style.color = '#dc2626';
+            } else {
+                badge.textContent = 'Aucune expirée';
+                badge.style.background = 'rgba(16,185,129,0.1)';
+                badge.style.color = '#059669';
+            }
+        }
+
+        if (expired.length === 0) {
+            container.innerHTML = `<div style="text-align:center;padding:24px;color:var(--gray-400);font-size:0.82rem;">
+                <i class="bi bi-shield-check" style="font-size:2rem;display:block;margin-bottom:8px;color:#10b981;"></i>
+                Toutes les assurances sont valides
+            </div>`;
             return;
         }
 
-        container.innerHTML = upcoming.map(a => {
-            const isExpired = a.days < 0;
-            const isUrgent = a.days >= 0 && a.days <= 14;
-            const iconBg = isExpired ? 'rgba(239,68,68,0.1)' : isUrgent ? 'rgba(245,158,11,0.1)' : 'rgba(59,130,246,0.1)';
-            const iconColor = isExpired ? '#ef4444' : isUrgent ? '#f59e0b' : '#3b82f6';
-            const dayText = isExpired ? 'Expiree ' + Math.abs(a.days) + 'j' : 'Dans ' + a.days + 'j';
+        container.innerHTML = expired.map(a => {
+            const daysAgo = Math.abs(a.days);
+            const urgency = daysAgo > 30 ? 'rgba(239,68,68,0.1)' : 'rgba(245,158,11,0.1)';
+            const urgencyColor = daysAgo > 30 ? '#ef4444' : '#f59e0b';
 
-            return `<div class="ops-item">
-                <div class="ops-item-icon" style="background:${iconBg};color:${iconColor};">
-                    <i class="bi bi-shield-exclamation"></i>
+            return `<div class="ops-item" style="cursor:pointer;" onclick="window.location='/admin/assurances'" title="Accéder aux assurances">
+                <div class="ops-item-icon" style="background:${urgency};color:${urgencyColor};">
+                    <i class="bi bi-shield-x"></i>
                 </div>
                 <div class="ops-item-body">
-                    <div class="ops-item-title">${a.vehicule?.immatriculation || '--'} * ${a.typeAssurance || 'Assurance'}</div>
-                    <div class="ops-item-sub">${a.nomPrestataire || '--'} * ${formatDate(a.dateExpiration)}</div>
+                    <div class="ops-item-title">${a.vehicule?.immatriculation || '--'} &mdash; ${a.typeAssurance || 'Assurance'}</div>
+                    <div class="ops-item-sub">${a.nomPrestataire || '--'} &bull; ${formatDate(a.dateExpiration)}</div>
                 </div>
-                <div class="ops-item-right" style="color:${iconColor};">${dayText}</div>
+                <div class="ops-item-right" style="color:${urgencyColor};font-weight:700;">-${daysAgo}j</div>
             </div>`;
         }).join('');
     } catch (err) {
@@ -1751,36 +1931,54 @@ async function loadControleTechniqueList() {
         const data = await apiFetch('/api/vehicules/all');
         const vehicules = data || [];
 
-        const upcoming = vehicules
-            .filter(v => v.dateProchainControleTechnique)
-            .map(v => ({ ...v, days: daysFromNow(v.dateProchainControleTechnique) }))
-            .filter(v => v.days !== null && v.days <= 60)
-            .sort((a, b) => a.days - b.days)
-            .slice(0, 5);
+        // Vehicles currently in maintenance status
+        const enMaintenance = vehicules.filter(v =>
+            v.statutVehicule === 'EN_MAINTENANCE' ||
+            (v.statutVehicule || '').toLowerCase().includes('maintenance')
+        );
 
-        if (upcoming.length === 0) {
-            container.innerHTML = `<div style="text-align:center;padding:20px;color:var(--gray-400);font-size:0.82rem;"><i class="bi bi-clipboard2-check" style="font-size:1.5rem;display:block;margin-bottom:8px;"></i>Aucun controle technique imminent</div>`;
+        // Update widget badge with count
+        const badge = container.closest('.widget-card')?.querySelector('.widget-badge');
+        if (badge) {
+            if (enMaintenance.length > 0) {
+                badge.textContent = enMaintenance.length + ' en maintenance';
+                badge.style.background = 'rgba(245,158,11,0.12)';
+                badge.style.color = '#d97706';
+            } else {
+                badge.textContent = 'Aucune';
+                badge.style.background = 'rgba(16,185,129,0.1)';
+                badge.style.color = '#059669';
+            }
+        }
+
+        if (enMaintenance.length === 0) {
+            container.innerHTML = `<div style="text-align:center;padding:24px;color:var(--gray-400);font-size:0.82rem;">
+                <i class="bi bi-tools" style="font-size:2rem;display:block;margin-bottom:8px;color:#10b981;"></i>
+                Aucun véhicule en maintenance
+            </div>`;
             return;
         }
 
-        container.innerHTML = upcoming.map(v => {
-            const isExpired = v.days < 0;
-            const isUrgent = v.days >= 0 && v.days <= 14;
-            const iconBg = isExpired ? 'rgba(239,68,68,0.1)' : isUrgent ? 'rgba(245,158,11,0.1)' : 'rgba(59,130,246,0.1)';
-            const iconColor = isExpired ? '#ef4444' : isUrgent ? '#f59e0b' : '#3b82f6';
-            const dayText = isExpired ? 'Expire ' + Math.abs(v.days) + 'j' : 'Dans ' + v.days + 'j';
+        const list = enMaintenance.slice(0, 6);
+        container.innerHTML = list.map(v => {
+            const label = v.marque + ' ' + v.model;
+            const sub = v.typeVehicule || 'Véhicule';
 
-            return `<div class="ops-item">
-                <div class="ops-item-icon" style="background:${iconBg};color:${iconColor};">
-                    <i class="bi bi-clipboard2-check"></i>
+            return `<div class="ops-item" style="cursor:pointer;" onclick="window.location='/admin/vehicules'" title="Accéder aux véhicules">
+                <div class="ops-item-icon" style="background:rgba(245,158,11,0.12);color:#f59e0b;">
+                    <i class="bi bi-tools"></i>
                 </div>
                 <div class="ops-item-body">
-                    <div class="ops-item-title">${v.immatriculation} * ${v.marque} ${v.model}</div>
-                    <div class="ops-item-sub">${v.typeVehicule || '--'} * ${formatDate(v.dateProchainControleTechnique)}</div>
+                    <div class="ops-item-title">${v.immatriculation} &mdash; ${label}</div>
+                    <div class="ops-item-sub">${sub}</div>
                 </div>
-                <div class="ops-item-right" style="color:${iconColor};">${dayText}</div>
+                <div class="ops-item-right" style="background:rgba(245,158,11,0.1);color:#f59e0b;border-radius:6px;padding:2px 8px;font-size:0.65rem;font-weight:700;">MAINT.</div>
             </div>`;
         }).join('');
+
+        if (enMaintenance.length > 6) {
+            container.innerHTML += `<div style="text-align:center;padding:8px;font-size:0.75rem;color:var(--accent);font-weight:600;">+${enMaintenance.length - 6} autres</div>`;
+        }
     } catch (err) {
         container.innerHTML = `<div style="text-align:center;padding:20px;color:var(--gray-400);font-size:0.82rem;">Erreur de chargement</div>`;
     }
@@ -1844,18 +2042,6 @@ async function loadDashboardStats() {
         document.getElementById('fin-nb-interventions').textContent = fmt(stats.totalInterventions) + ' interventions';
         document.getElementById('fin-fournisseurs').textContent = fmt(stats.nbFournisseurs);
 
-        // -- SIDEBAR BADGES --
-        document.getElementById('sb-veh-total').textContent = total;
-        document.getElementById('sb-veh-sub').textContent = disponibles + ' disponibles';
-        document.getElementById('sb-cond-total').textContent = fmt(stats.totalConducteurs);
-        document.getElementById('sb-cond-sub').textContent = fmt(stats.conducteursEnMission) + ' en mission';
-        
-        const sbAssTotal = document.getElementById('sb-ass-total');
-        if(sbAssTotal) sbAssTotal.textContent = fmt(stats.totalAssurances);
-        
-        const sbInfTotal = document.getElementById('sb-inf-total');
-        if(sbInfTotal) sbInfTotal.textContent = fmt(stats.totalInfractions);
-
         // -- STRIP CARDS --
         document.getElementById('strip-veh').textContent = fmt(total) + ' vehicules';
         document.getElementById('strip-cond').textContent = fmt(stats.totalConducteurs) + ' conducteurs';
@@ -1910,7 +2096,6 @@ function buildCondRow(label, value, total, color, icon) {
 function buildVehiculeChart(dispo, mission, maint, horsService) {
     destroyChart('vehiculeChart');
     const ctx = document.getElementById('vehiculeChart').getContext('2d');
-    const c = getChartColors();
     chartInstances['vehiculeChart'] = new Chart(ctx, {
         type: 'doughnut',
         data: {
@@ -2079,9 +2264,7 @@ function buildMissionLineChart(missionsParJour) {
             responsive: true, maintainAspectRatio: false,
             interaction: { mode: 'index', intersect: false },
             plugins: {
-                legend: {
-                    display: false
-                },
+                legend: { display: false },
                 tooltip: {
                     backgroundColor: isDark ? '#1a1d24' : 'white',
                     titleColor: isDark ? '#e5e7eb' : '#1f2937',
@@ -2108,35 +2291,12 @@ function buildMissionLineChart(missionsParJour) {
 }
 
 // ==============================================================
-//  PROFILE INFO LOADER
-// ==============================================================
-
-async function loadProfileInfo() {
-    try {
-        const data = await apiFetch('/api/profile/minimal-info');
-        const nom = data.nom || '';
-        const prenom = data.prenom || '';
-        const email = data.email || '';
-        const initials = ((nom[0] || '') + (prenom[0] || '')).toUpperCase() || '?';
-
-        document.getElementById('profileName').textContent = nom + ' ' + prenom;
-        document.getElementById('profileEmail').textContent = email;
-        document.getElementById('profileAv').textContent = initials;
-        document.getElementById('ppName').textContent = nom + ' ' + prenom;
-        document.getElementById('ppEmail').textContent = email;
-        document.getElementById('ppAv').textContent = initials;
-    } catch (err) {
-        // Keep defaults
-    }
-}
-
-// ==============================================================
-//  REFRESH
+//  INITIALIZATION
 // ==============================================================
 
 async function refreshDashboard() {
     const btn = document.getElementById('refreshBtn');
-    btn.classList.add('refreshing');
+    if (btn) btn.classList.add('refreshing');
     try {
         await Promise.all([
             loadDashboardStats(),
@@ -2145,23 +2305,16 @@ async function refreshDashboard() {
             loadControleTechniqueList()
         ]);
     } finally {
-        setTimeout(() => btn.classList.remove('refreshing'), 600);
+        if (btn) setTimeout(() => btn.classList.remove('refreshing'), 600);
     }
 }
 
-// ==============================================================
-//  INITIALIZATION
-// ==============================================================
-
 document.addEventListener('DOMContentLoaded', () => {
-    initTheme();
-    initSidebar();
+    initCommonUI();
     startClock();
-    loadProfileInfo();
     refreshDashboard();
 });
 
 </script>
-<script src="../js/navbarInfo.js"></script>
 </body>
 </html>

@@ -9,53 +9,6 @@ function closeModal(id) {
     document.body.style.overflow = 'auto';
 }
 
-// ── Profile popup ──
-const profileRow = document.getElementById('profileRow');
-const profilePopup = document.getElementById('profilePopup');
-if (profileRow) {
-    profileRow.addEventListener('click', e => {
-        e.stopPropagation();
-        if (profilePopup) profilePopup.classList.toggle('show');
-    });
-}
-document.addEventListener('click', () => {
-    if (profilePopup) profilePopup.classList.remove('show');
-});
-
-// ── Theme toggle ──
-function updateThemeUI(isDark) {
-    const themeIcon = document.getElementById('themeIcon');
-    const themeText = document.getElementById('themeText');
-    if (!themeIcon || !themeText) return;
-    if (isDark) {
-        themeIcon.className = 'bi bi-sun';
-        themeText.textContent = 'Mode clair';
-    } else {
-        themeIcon.className = 'bi bi-moon-stars';
-        themeText.textContent = 'Mode sombre';
-    }
-}
-
-function initTheme() {
-    const saved = localStorage.getItem('theme');
-    const isDark = saved === 'dark';
-    document.body.classList.toggle('dark', isDark);
-    updateThemeUI(isDark);
-}
-
-const themeToggleBtn = document.getElementById('themeToggleBtn');
-if (themeToggleBtn) {
-    themeToggleBtn.addEventListener('click', e => {
-        e.preventDefault();
-        const isDark = document.body.classList.toggle('dark');
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        updateThemeUI(isDark);
-        if (profilePopup) profilePopup.classList.remove('show');
-    });
-}
-
-initTheme();
-
 // ── Backend Integration ──
 
 const API_BASE = "/admin/depannage-api";
@@ -152,7 +105,8 @@ function submitDeleteDepannage() {
 }
 
 function renderTableau(data) {
-    const tbody = document.querySelector('table tbody');
+    const tbody = document.getElementById('depanageTableBody');
+    if (!tbody) return;
     tbody.innerHTML = '';
 
     const content = data.content || [];
@@ -255,7 +209,10 @@ function getStatutClass(statut) {
     }
 }
 
+let currentDepannage = null;
+
 function openViewModal(d) {
+    currentDepannage = d;
     document.getElementById('v_veh').textContent = d.vehicule?.immatriculation || 'N/A';
     document.getElementById('v_drv').textContent = 'Conducteur N/A';
     document.getElementById('v_date').textContent = d.dateIntervention || 'N/A';
@@ -272,6 +229,18 @@ function openEditModal(d) {
     document.getElementById('e_loc').value = d.lieuPanne || '';
     document.getElementById('e_mot').value = d.descriptionPanne || '';
     document.getElementById('e_sta').value = d.statut || 'encours';
+
+    // Show "Voir Dépenses" button and set redirect
+    const goToExpensesBtn = document.getElementById('goToExpensesBtn');
+    if (goToExpensesBtn) {
+        goToExpensesBtn.style.display = 'block';
+        goToExpensesBtn.onclick = (e) => {
+            e.preventDefault();
+            const ref = `Dépannage #${d.id}`;
+            window.location.href = `/admin/depenses?source=${encodeURIComponent(ref)}`;
+        };
+    }
+    
     openModal('editDepanageModal');
 }
 

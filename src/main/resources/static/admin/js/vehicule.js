@@ -17,52 +17,6 @@ function closeModal(id) {
     }
 }
 
-/* ───── GESTION DU THÈME SOMBRE (identique conducteur) ───── */
-function initTheme() {
-    const saved = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    console.log('Theme saved:', saved, 'Prefers dark:', prefersDark);
-    if (saved === 'dark' || (!saved && prefersDark)) {
-        document.body.classList.add('dark');
-        document.documentElement.setAttribute('data-bs-theme', 'dark');
-        updateThemeUI(true);
-    } else {
-        document.body.classList.remove('dark');
-        document.documentElement.setAttribute('data-bs-theme', 'light');
-        updateThemeUI(false);
-    }
-}
-function updateThemeUI(isDark) {
-    const icon = document.getElementById('themeIcon');
-    const text = document.getElementById('themeText');
-    if (icon) icon.className = isDark ? 'bi bi-sun' : 'bi bi-moon-stars';
-    if (text) text.textContent = isDark ? 'Mode clair' : 'Mode sombre';
-}
-function toggleTheme() {
-    const isDark = document.body.classList.toggle('dark');
-    document.documentElement.setAttribute('data-bs-theme', isDark ? 'dark' : 'light');
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    updateThemeUI(isDark);
-}
-document.addEventListener('DOMContentLoaded', function () {
-    const btn = document.getElementById('themeToggleBtn');
-    if (btn) {
-        btn.addEventListener('click', function (e) {
-            e.preventDefault();
-            toggleTheme();
-        });
-    }
-});
-
-/* ───── PROFILE POPUP ───── */
-document.addEventListener('click', e => {
-    const row = document.getElementById('profileRow');
-    const popup = document.getElementById('profilePopup');
-    if (!row || !popup) return;
-    if (row.contains(e.target)) popup.classList.toggle('show');
-    else popup.classList.remove('show');
-});
-
 /* ───── AUTHENTIFICATION ───── */
 function getToken() { return localStorage.getItem('token'); }
 function authHeaders() {
@@ -75,8 +29,6 @@ let idToDelete = null;
 
 /* ───── INITIALISATION ───── */
 document.addEventListener('DOMContentLoaded', () => {
-    initTheme();
-
     // Fermeture des modals en cliquant sur l'overlay
     document.querySelectorAll('.custom-modal-overlay').forEach(overlay => {
         overlay.addEventListener('click', function (e) {
@@ -427,12 +379,3 @@ function debounce(func, wait) {
         timeout = setTimeout(() => func.apply(this, args), wait);
     };
 }
-
-window.openMobile = () => {
-    document.getElementById('sidebar').classList.add('open');
-    document.getElementById('overlay').style.display = 'block';
-};
-window.closeMobile = () => {
-    document.getElementById('sidebar').classList.remove('open');
-    document.getElementById('overlay').style.display = 'none';
-};

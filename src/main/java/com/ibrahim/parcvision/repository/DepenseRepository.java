@@ -27,4 +27,9 @@ public interface DepenseRepository extends JpaRepository<Depense, Long> {
     Double sumMontantByEntreprise(@Param("entreprise") Entreprise entreprise);
 
     java.util.Optional<Depense> findBySourceDepenseCustom(String sourceDepenseCustom);
+    @Query("SELECT COUNT(d) FROM Depense d WHERE d.entreprise = :entreprise AND d.typePaiement = 'CARTE_CREDIT'")
+    long countByEntrepriseAndTypePaiementCarte(@Param("entreprise") Entreprise entreprise);
+
+    @Query("SELECT COUNT(d) FROM Depense d WHERE d.entreprise = :entreprise AND d.typePaiement = 'ESPECES'")
+    long countByEntrepriseAndTypePaiementEspeces(@Param("entreprise") Entreprise entreprise);
 }

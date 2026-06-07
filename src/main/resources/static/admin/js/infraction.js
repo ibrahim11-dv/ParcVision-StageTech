@@ -17,23 +17,8 @@ let idToDelete = null;
 
 // ── INIT ──
 document.addEventListener('DOMContentLoaded', () => {
-    initTheme();
     chargerSelects();         // charger véhicules, conducteurs, missions
     chargerInfractions();
-
-    // Profile popup
-    document.getElementById('profileRow').addEventListener('click', e => {
-        e.stopPropagation();
-        document.getElementById('profilePopup').classList.toggle('show');
-    });
-    document.addEventListener('click', () => document.getElementById('profilePopup').classList.remove('show'));
-
-    // Toggle thème
-    document.getElementById('themeToggleBtn').addEventListener('click', e => {
-        e.preventDefault();
-        toggleTheme();
-        document.getElementById('profilePopup').classList.remove('show');
-    });
 
     // Bouton suppression dans le modal de confirmation
     document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
@@ -59,33 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 300));
 });
 
-// ── THEME (identique à vehicule.js) ──
-function initTheme() {
-    const saved = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    if (saved === 'dark' || (!saved && prefersDark)) {
-        document.body.classList.add('dark');
-        document.documentElement.setAttribute('data-bs-theme', 'dark');
-        updateThemeUI(true);
-    } else {
-        document.body.classList.remove('dark');
-        document.documentElement.setAttribute('data-bs-theme', 'light');
-        updateThemeUI(false);
-    }
-}
-function updateThemeUI(isDark) {
-    const icon = document.getElementById('themeIcon');
-    const text = document.getElementById('themeText');
-    if (icon) icon.className = isDark ? 'bi bi-sun' : 'bi bi-moon-stars';
-    if (text) text.textContent = isDark ? 'Mode clair' : 'Mode sombre';
-}
-function toggleTheme() {
-    const isDark = document.body.classList.toggle('dark');
-    document.documentElement.setAttribute('data-bs-theme', isDark ? 'dark' : 'light');
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    updateThemeUI(isDark);
-}
-
 // ── SIDEBAR ──
 let sidebarMini = false;
 function toggleSidebar() {
@@ -94,14 +52,6 @@ function toggleSidebar() {
     document.getElementById('main').classList.toggle('mini', sidebarMini);
     document.getElementById('collapseIcon').className = sidebarMini ? 'bi bi-chevron-right' : 'bi bi-chevron-left';
 }
-window.openMobile = () => {
-    document.getElementById('sidebar').classList.add('open');
-    document.getElementById('overlay').style.display = 'block';
-};
-window.closeMobile = () => {
-    document.getElementById('sidebar').classList.remove('open');
-    document.getElementById('overlay').style.display = 'none';
-};
 
 // ── CHARGER LES DONNÉES DES SELECTS ──
 async function chargerSelects() {
@@ -297,6 +247,8 @@ function ouvrirAjout() {
     infractionIdToEdit = null;
     document.getElementById('infractionForm').reset();
     document.getElementById('infractionModalTitle').textContent = 'Nouvelle Infraction';
+    const btnExpense = document.getElementById('btnGoToExpense');
+    if (btnExpense) btnExpense.style.display = 'none';
     new bootstrap.Modal(document.getElementById('infractionModal')).show();
 }
 
@@ -319,7 +271,19 @@ function modifierInfraction(id) {
     document.getElementById('missionId').value = i.mission ? i.mission.id : '';
     document.getElementById('fichier').value = '';
 
+    const btnExpense = document.getElementById('btnGoToExpense');
+    if (btnExpense) btnExpense.style.display = '';
+
     new bootstrap.Modal(document.getElementById('infractionModal')).show();
+}
+
+function goToExpense() {
+    if (!infractionIdToEdit) {
+        alert('Veuillez d\'abord enregistrer cette infraction avant d\'accéder à sa dépense.');
+        return;
+    }
+    const sourceCustom = 'Infraction #' + infractionIdToEdit;
+    window.location.href = '/admin/depenses?source=' + encodeURIComponent(sourceCustom);
 }
 
 // ── SAUVEGARDER (AJOUT/MODIFICATION) ──

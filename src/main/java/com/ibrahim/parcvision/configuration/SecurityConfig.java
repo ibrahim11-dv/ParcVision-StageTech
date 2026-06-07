@@ -33,7 +33,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http
-                .csrf(c -> c.disable())
+                .csrf(csrf -> csrf.disable())
                 .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
                 // no session ( statless)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -45,15 +45,11 @@ public class SecurityConfig {
                                           "/error",
                                           "/api/auth/login",
                                           "/api/registration/register-Enterprise",
+                                          "/api/registration",
                                           "/api/files"
                                   ).permitAll()
                                   .anyRequest().authenticated()
                 ).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-
-        // for adding awt filter
-        // http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-        // default filter ( basic auth )
-        //.httpBasic(Customizer.withDefaults());
         return http.build();
     }
 

@@ -26,44 +26,46 @@ document.getElementById("addMission").addEventListener("click", async (e) => {
     const trackerSim = document.getElementById("add_tracker_sim").value;
 
     // Validation
+    clearValidationErrors();
+
     if (id_conducteur === "") {
-        alert("choisir un conducteur");
+        showFieldInvalid("add_conducteur", "Veuillez choisir un conducteur");
         return;
     }
     if (id_vehicule === "") {
-        alert("choisir un vehicule");
+        showFieldInvalid("add_vehicule", "Veuillez choisir un véhicule");
         return;
     }
     if (adress_depart === "") {
-        alert("Adresse de départ obligatoire");
+        showFieldInvalid("adress_depart", "L'adresse de départ est obligatoire");
         return;
     }
     if (adress_fin === "") {
-        alert("Adresse de destination obligatoire");
+        showFieldInvalid("adress_fin", "L'adresse de destination est obligatoire");
         return;
     }
     if (date_heure_depart === "") {
-        alert("Date de départ obligatoire");
+        showFieldInvalid("date_heure_depart", "La date de départ est obligatoire");
         return;
     }
     if (description === "") {
-        alert("Description du colis obligatoire");
+        showFieldInvalid("description", "La description du colis est obligatoire");
         return;
     }
     if (type_colis === "") {
-        alert("Type de colis obligatoire");
+        showFieldInvalid("type_colis", "Le type de colis est obligatoire");
         return;
     }
     if (poids !== "" && parseFloat(poids) <= 0) {
-        alert("Le poids doit être supérieur à 0");
+        showFieldInvalid("poids", "Le poids doit être supérieur à 0");
         return;
     }
     if (volume !== "" && parseFloat(volume) <= 0) {
-        alert("Le volume doit être supérieur à 0");
+        showFieldInvalid("volume", "Le volume doit être supérieur à 0");
         return;
     }
     if (date_heure_fin !== "" && date_heure_fin <= date_heure_depart) {
-        alert("La date de fin doit être après la date de départ");
+        showFieldInvalid("date_heure_fin", "La date de fin doit être après la date de départ");
         return;
     }
 
@@ -95,8 +97,6 @@ document.getElementById("addMission").addEventListener("click", async (e) => {
         });
 
         if (response.ok) {
-            alert("Mission ajoutée avec succès!");
-            
             // Reset form
             document.querySelector('#addMissionModal form').reset();
             
@@ -109,12 +109,73 @@ document.getElementById("addMission").addEventListener("click", async (e) => {
             if (typeof fetchMissions === 'function') {
                 fetchMissions();
             }
+
+            // Show success popup
+            if (typeof showSuccess === 'function') {
+                showSuccess("Mission ajoutée", "La mission a été créée avec succès !");
+            } else {
+                alert("Mission ajoutée avec succès!");
+            }
         } else {
             const error = await response.text();
-            alert("Erreur: " + response.status + " - " + error);
+            if (typeof showNotification === 'function') {
+                showNotification("Erreur", "Erreur: " + response.status + " - " + error, "error");
+            } else {
+                alert("Erreur: " + response.status + " - " + error);
+            }
         }
     } catch (e) {
         console.error(e);
-        alert("Erreur réseau: " + e.message);
+        if (typeof showNotification === 'function') {
+            showNotification("Erreur réseau", "Erreur réseau: " + e.message, "error");
+        } else {
+            alert("Erreur réseau: " + e.message);
+        }
     }
+});
+
+// Validation helpers
+function clearValidationErrors() {
+    document.querySelectorAll('#addMissionModal .is-invalid').forEach(el => {
+        el.classList.remove('is-invalid');
+    });
+    document.querySelectorAll('#addMissionModal .invalid-feedback-custom').forEach(el => {
+        el.remove();
+    });
+}
+
+function showFieldInvalid(elementId, message) {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+    el.classList.add('is-invalid');
+    el.focus();
+    
+    // Add custom feedback message if not present
+    let feedback = el.parentNode.querySelector('.invalid-feedback-custom');
+    if (!feedback) {
+        feedback = document.createElement('div');
+        feedback.className = 'invalid-feedback-custom text-danger mt-1';
+        feedback.style.fontSize = '0.78rem';
+        feedback.style.fontWeight = '500';
+        feedback.textContent = message;
+        el.parentNode.appendChild(feedback);
+    } else {
+        feedback.textContent = message;
+    }
+}
+
+// Clear validation error on change or input
+document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll('#addMissionModal input, #addMissionModal select, #addMissionModal textarea').forEach(el => {
+        el.addEventListener('input', () => {
+            el.classList.remove('is-invalid');
+            const feedback = el.parentNode.querySelector('.invalid-feedback-custom');
+            if (feedback) feedback.remove();
+        });
+        el.addEventListener('change', () => {
+            el.classList.remove('is-invalid');
+            const feedback = el.parentNode.querySelector('.invalid-feedback-custom');
+            if (feedback) feedback.remove();
+        });
+    });
 });

@@ -75,8 +75,13 @@ async function loadStats() {
             const stats = await response.json();
             const kpiTotal = document.getElementById('kpiTotal');
             const kpiMontant = document.getElementById('kpiMontant');
+            const kpiCarte = document.getElementById('kpiCarte');
+            const kpiEspeces = document.getElementById('kpiEspeces');
+            
             if (kpiTotal) kpiTotal.textContent = stats.total || 0;
             if (kpiMontant) kpiMontant.textContent = formatMontant(stats.totalMontant || 0);
+            if (kpiCarte) kpiCarte.textContent = stats.carteCount || 0;
+            if (kpiEspeces) kpiEspeces.textContent = stats.especesCount || 0;
         }
     } catch (err) {
         console.error('Error loading stats:', err);
@@ -157,6 +162,10 @@ function getSourceBadgeClass(source) {
     if (!source) return 'prio-faible';
     if (source.includes('Reparation') || source.includes('Réparation')) return 'prio-haute';
     if (source.includes('Accident')) return 'prio-haute';
+    if (source.includes('Infraction')) return 'prio-haute';
+    if (source.includes('Assurance')) return 'prio-faible';
+    if (source.includes('Dépannage') || source.includes('Depannage')) return 'prio-normale';
+    if (source.includes('Vidange')) return 'prio-faible';
     switch (source) {
         case 'Dépannage': return 'prio-normale';
         case 'Vidange': return 'prio-faible';
@@ -184,7 +193,7 @@ function renderDepensesTable(data) {
     tbody.innerHTML = '';
 
     if (data.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--text-muted);">
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text-muted);">
             <i class="bi bi-wallet2" style="font-size:2rem;display:block;margin-bottom:10px;"></i>
             Aucune dépense enregistrée
         </td></tr>`;
@@ -196,6 +205,9 @@ function renderDepensesTable(data) {
         const sourceClass = getSourceBadgeClass(sourceDisplay);
         const paiementIcon = getPaiementIcon(d.typePaiement);
         const paiementLabel = typePaiementLabels[d.typePaiement] || d.typePaiement || '-';
+        const statutBadge = d.estPayee 
+            ? `<span class="prio-badge prio-faible">Payé</span>`
+            : `<span class="prio-badge prio-haute">En attente</span>`;
 
         const row = document.createElement('tr');
         row.className = 'hist-row';
@@ -216,6 +228,7 @@ function renderDepensesTable(data) {
                     <span style="font-weight:500;">${paiementLabel}</span>
                 </div>
             </td>
+            <td>${statutBadge}</td>
             <td><b style="color:var(--text-main);">${formatMontant(d.montant)}</b></td>
             <td>
                 <div style="display:flex;gap:5px">
@@ -249,6 +262,14 @@ function viewDepenseById(id) {
     document.getElementById('viewQui').textContent = d.qui || '-';
     document.getElementById('viewDate').textContent = formatDate(d.dateDepense);
     document.getElementById('viewTypePaiement').textContent = typePaiementLabels[d.typePaiement] || d.typePaiement || '-';
+    
+    const viewEstPayee = document.getElementById('viewEstPayee');
+    if (viewEstPayee) {
+        viewEstPayee.textContent = d.estPayee ? 'Payé' : 'En attente';
+        viewEstPayee.style.color = d.estPayee ? '#10b981' : '#ef4444';
+        viewEstPayee.style.fontWeight = '600';
+    }
+
     document.getElementById('viewMontant').textContent = formatMontant(d.montant);
     document.getElementById('viewSource').textContent = getSourceDisplay(d);
 
@@ -273,6 +294,7 @@ function openEditModal(d) {
     document.getElementById('editQui').value = d.qui || '';
     document.getElementById('editDate').value = d.dateDepense || '';
     document.getElementById('editTypePaiement').value = d.typePaiement || '';
+    document.getElementById('editEstPayee').value = String(d.estPayee);
     document.getElementById('editMontant').value = d.montant || 0;
     
     const select = document.getElementById('editSourceDepense');
@@ -285,7 +307,7 @@ function openEditModal(d) {
     customInput.value = d.sourceDepenseCustom || '';
     
     // Check if it's an automatic intervention reference
-    const isAuto = /^(Reparation|Réparation|Vidange|Assurance|Infraction|Accident|Dépannage) #\d+$/.test(customInput.value);
+    const isAuto = /^(Reparation|Réparation|Vidange|Assurance|Infraction|Accident|Dépannage|Depannage) #\d+$/.test(customInput.value);
 
     if (isAuto) {
         // Dropdown shows category, custom field shows fixed reference
@@ -319,6 +341,7 @@ async function submitEditDepense() {
     const qui = document.getElementById('editQui').value;
     const dateInput = document.getElementById('editDate').value;
     const typePaiement = document.getElementById('editTypePaiement').value;
+    const estPayee = document.getElementById('editEstPayee').value === 'true';
     const montant = document.getElementById('editMontant').value;
     const select = document.getElementById('editSourceDepense');
     const customInput = document.getElementById('editSourceDepenseCustom');
@@ -332,6 +355,7 @@ async function submitEditDepense() {
         qui: qui,
         dateDepense: dateInput || null,
         typePaiement: typePaiement || null,
+        estPayee: estPayee,
         montant: parseFloat(montant),
         sourceDepense: select.value,
         sourceDepenseCustom: (select.value === 'plus' || select.disabled) ? customInput.value : null
@@ -361,6 +385,7 @@ async function saveDepense() {
     const qui = document.getElementById('addQui').value;
     const dateInput = document.getElementById('addDate').value;
     const typePaiement = document.getElementById('addTypePaiement').value;
+    const estPayee = document.getElementById('addEstPayee').value === 'true';
     const montant = document.getElementById('addMontant').value;
     const sourceDepense = document.getElementById('addSourceDepense').value;
     const sourceDepenseCustom = document.getElementById('addSourceDepenseCustom')?.value || '';
@@ -378,6 +403,7 @@ async function saveDepense() {
         qui: qui,
         dateDepense: dateInput || null,
         typePaiement: typePaiement || null,
+        estPayee: estPayee,
         montant: montant ? parseFloat(montant) : 0,
         sourceDepense: sourceDepense || null,
         sourceDepenseCustom: sourceDepense === 'plus' ? sourceDepenseCustom : null
@@ -439,53 +465,6 @@ function setupSearch() {
     }
 }
 
-// ── Profile popup ──
-const profileRow = document.getElementById('profileRow');
-const profilePopup = document.getElementById('profilePopup');
-if (profileRow) {
-    profileRow.addEventListener('click', e => {
-        e.stopPropagation();
-        if (profilePopup) profilePopup.classList.toggle('show');
-    });
-}
-document.addEventListener('click', () => {
-    if (profilePopup) profilePopup.classList.remove('show');
-});
-
-// ── Theme toggle ──
-function updateThemeUI(isDark) {
-    const themeIcon = document.getElementById('themeIcon');
-    const themeText = document.getElementById('themeText');
-    if (!themeIcon || !themeText) return;
-    if (isDark) {
-        themeIcon.className = 'bi bi-sun';
-        themeText.textContent = 'Mode clair';
-    } else {
-        themeIcon.className = 'bi bi-moon-stars';
-        themeText.textContent = 'Mode sombre';
-    }
-}
-
-function initTheme() {
-    const saved = localStorage.getItem('theme');
-    const isDark = saved === 'dark';
-    document.body.classList.toggle('dark', isDark);
-    updateThemeUI(isDark);
-}
-
-const themeToggleBtn = document.getElementById('themeToggleBtn');
-if (themeToggleBtn) {
-    themeToggleBtn.addEventListener('click', e => {
-        e.preventDefault();
-        const isDark = document.body.classList.toggle('dark');
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        updateThemeUI(isDark);
-        if (profilePopup) profilePopup.classList.remove('show');
-    });
-}
-
-initTheme();
-
 // Close modal on overlay click
 document.querySelectorAll('.custom-modal-overlay').forEach(overlay => {
     overlay.addEventListener('click', (e) => {
@@ -523,32 +502,59 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadStats();
     setupSearch();
 
-    // Check for source in URL
     const urlParams = new URLSearchParams(window.location.search);
     const sourceParam = urlParams.get('source');
-    if (sourceParam) {
-        const searchInput = document.getElementById('searchInput');
-        if (searchInput) {
-            searchInput.value = sourceParam;
-            // Filter and wait for results
-            currentPage = 0;
-            const url = `/api/depenses/search?query=${encodeURIComponent(sourceParam)}&page=0&size=${pageSize}`;
-            try {
-                const response = await fetch(url);
-                if (response.ok) {
-                    const data = await response.json();
-                    depensesData = data.content;
-                    renderDepensesTable(depensesData);
-                    renderPagination(data);
-                    
-                    // If we found the specific expense, open it
-                    if (depensesData.length > 0) {
-                        viewDepenseById(depensesData[0].id);
-                    }
-                }
-            } catch (err) {
-                console.error('Error auto-searching source:', err);
+    if (!sourceParam) return;
+
+    // Always show the full source param in the search input
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) searchInput.value = sourceParam;
+    currentPage = 0;
+
+    // ── Step 1: exact ref search ──
+    // Works when depenses are stored with sourceDepenseCustom = "Reparation #5" etc.
+    let found = false;
+    try {
+        const res = await fetch(`/api/depenses/search?query=${encodeURIComponent(sourceParam)}&page=0&size=${pageSize}`);
+        if (res.ok) {
+            const data = await res.json();
+            depensesData = data.content;
+            renderDepensesTable(depensesData);
+            renderPagination(data);
+            if (depensesData.length > 0) {
+                viewDepenseById(depensesData[0].id);
+                found = true;
             }
         }
+    } catch (err) {
+        console.error('Error searching by full ref:', err);
+    }
+
+    if (found) return;
+
+    // ── Step 2: category fallback ──
+    // Works when depenses are stored with sourceDepense = "Vidange" / "Accident" etc.
+    // Extract category from "Vidange #3" → "Vidange"
+    const catMatch = sourceParam.match(/^([^#]+?)(?:\s*#\d+)?$/);
+    const category = catMatch ? catMatch[1].trim() : sourceParam.trim();
+
+    // Only try if there was actually a #id to strip
+    if (category === sourceParam) return;
+
+    try {
+        const res = await fetch(`/api/depenses/search?query=${encodeURIComponent(category)}&page=0&size=${pageSize}`);
+        if (res.ok) {
+            const data = await res.json();
+            depensesData = data.content;
+            renderDepensesTable(depensesData);
+            renderPagination(data);
+            if (depensesData.length > 0) {
+                viewDepenseById(depensesData[0].id);
+            }
+        }
+    } catch (err) {
+        console.error('Error searching by category:', err);
     }
 });
+
+

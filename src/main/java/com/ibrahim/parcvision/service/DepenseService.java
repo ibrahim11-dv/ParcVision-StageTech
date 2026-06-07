@@ -34,6 +34,7 @@ public class DepenseService {
 
     public Page<Depense> search(String query, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+        System.out.println("Executing Search: query='" + query + "', enterprise=" + getCurrentEntreprise().getNom());
         return depenseRepository.search(query, getCurrentEntreprise(), pageable);
     }
 
@@ -46,8 +47,15 @@ public class DepenseService {
         Depense depense = depenseRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Dépense non trouvée"));
 
-        if (updates.containsKey("typePaiement") && updates.get("typePaiement") != null) {
-            depense.setTypePaiement(com.ibrahim.parcvision.enums.TypePaiement.valueOf(updates.get("typePaiement").toString()));
+        if (updates.containsKey("typePaiement")) {
+            if (updates.get("typePaiement") != null) {
+                depense.setTypePaiement(com.ibrahim.parcvision.enums.TypePaiement.valueOf(updates.get("typePaiement").toString()));
+            } else {
+                depense.setTypePaiement(null);
+            }
+        }
+        if (updates.containsKey("estPayee") && updates.get("estPayee") != null) {
+            depense.setEstPayee(Boolean.parseBoolean(updates.get("estPayee").toString()));
         }
         if (updates.containsKey("qui"))
             depense.setQui((String) updates.get("qui"));
@@ -73,6 +81,14 @@ public class DepenseService {
 
     public Double totalMontant() {
         return depenseRepository.sumMontantByEntreprise(getCurrentEntreprise());
+    }
+
+    public long countCarte() {
+        return depenseRepository.countByEntrepriseAndTypePaiementCarte(getCurrentEntreprise());
+    }
+
+    public long countEspeces() {
+        return depenseRepository.countByEntrepriseAndTypePaiementEspeces(getCurrentEntreprise());
     }
 
     private Entreprise getCurrentEntreprise() {

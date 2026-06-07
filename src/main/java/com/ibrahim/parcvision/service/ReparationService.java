@@ -166,7 +166,7 @@ public class ReparationService {
         depense.setQui(providerName);
         depense.setSourceDepense("Réparation");
         depense.setSourceDepenseCustom(sourceCustom);
-        depense.setTypePaiement(com.ibrahim.parcvision.enums.TypePaiement.EN_ATTENTE);
+        depense.setEstPayee(Boolean.TRUE.equals(rep.getEstPaye()));
         depense.setEntreprise(getCurrentEntreprise());
 
         depenseRepository.save(depense);

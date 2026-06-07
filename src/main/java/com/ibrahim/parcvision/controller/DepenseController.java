@@ -38,6 +38,8 @@ public class DepenseController {
         Map<String, Object> stats = new HashMap<>();
         stats.put("total", depenseService.count());
         stats.put("totalMontant", depenseService.totalMontant());
+        stats.put("carteCount", depenseService.countCarte());
+        stats.put("especesCount", depenseService.countEspeces());
         return stats;
     }
 

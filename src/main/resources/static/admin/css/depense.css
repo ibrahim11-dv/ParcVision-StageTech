@@ -77,8 +77,30 @@ body {
     flex: 1; display: flex; flex-direction: column;
     min-width: 0;
     transition: margin-left .28s cubic-bezier(.4,0,.2,1);
-    padding: 30px;
 }
+.main.mini { margin-left: var(--sw-mini); }
+
+.page {
+    flex: 1; padding: 40px;
+    display: flex; align-items: flex-start; justify-content: center;
+}
+
+.overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.4); z-index: 150;
+}
+
+.mob-toggle {
+    display: none;
+    position: fixed; top: 16px; left: 16px; z-index: 100;
+    width: 40px; height: 40px; border-radius: 10px;
+    background: var(--bg-sidebar); border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    align-items: center; justify-content: center;
+    font-size: 18px; color: var(--gray-600); cursor: pointer;
+    transition: all .15s;
+}
+.mob-toggle:hover { background: var(--accent-soft); color: var(--accent); border-color: rgba(34,34,177,0.2); }
 
 .sidebar.mini { width: var(--sw-mini); }
 

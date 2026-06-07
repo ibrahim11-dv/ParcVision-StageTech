@@ -170,9 +170,47 @@ public class DatabaseSeeder implements CommandLineRunner {
             // intervention.setVehicule(vehicles.get(random.nextInt(vehicles.size()))); // Removed redundant assignment
             intervention.setFournisseur(selectedFournisseur);
 
-            interventionRepository.save(intervention);
+            Intervention savedIntervention = interventionRepository.save(intervention);
+
+            // Create associated Depense for seeded interventions if they are "paid" or "terminé"
+            if (savedIntervention.getCoutTotal() > 0) {
+                String sourceCustom = "";
+                String sourceType = "";
+                if (savedIntervention instanceof Reparation) {
+                    sourceCustom = "Reparation #" + savedIntervention.getId();
+                    sourceType = "Réparation";
+                } else if (savedIntervention instanceof Vidange) {
+                    sourceCustom = "Vidange #" + savedIntervention.getId();
+                    sourceType = "Vidange";
+                } else if (savedIntervention instanceof Accident) {
+                    sourceCustom = "Accident #" + savedIntervention.getId();
+                    sourceType = "Accident";
+                } else if (savedIntervention instanceof Depannage) {
+                    sourceCustom = "Depannage #" + savedIntervention.getId();
+                    sourceType = "Dépannage";
+                }
+
+                if (!sourceCustom.isEmpty()) {
+                    createLinkedDepense(sourceType, sourceCustom, savedIntervention.getCoutTotal(), 
+                                        savedIntervention.getDateIntervention(), savedIntervention.getVehicule().getEntreprise(),
+                                        selectedFournisseur != null ? selectedFournisseur.getNomFournisseur() : "System Seeder");
+                }
+            }
         }
         System.out.println("Missing Interventions (including Accidents) seeded successfully!");
+    }
+
+    private void createLinkedDepense(String type, String customSource, double montant, LocalDate date, Entreprise entreprise, String qui) {
+        Depense d = new Depense();
+        d.setMontant(montant);
+        d.setDateDepense(date);
+        d.setSourceDepense(type);
+        d.setSourceDepenseCustom(customSource);
+        d.setQui(qui);
+        d.setTypePaiement(TypePaiement.ESPECES);
+        d.setEstPayee(true);
+        d.setEntreprise(entreprise);
+        depenseRepository.save(d);
     }
 
     private void createDepense(String type, double montant, LocalDate date, Entreprise entreprise) {
@@ -182,6 +220,7 @@ public class DatabaseSeeder implements CommandLineRunner {
         d.setSourceDepense(type);
         d.setQui("System Seeder");
         d.setTypePaiement(TypePaiement.ESPECES);
+        d.setEstPayee(true);
         d.setEntreprise(entreprise);
         depenseRepository.save(d);
     }
@@ -231,7 +270,7 @@ public class DatabaseSeeder implements CommandLineRunner {
 
         // Seed Vehicles
             List<Vehicule> vehicles = new ArrayList<>();
-            for (int i = 0; i < 30; i++) {
+            for (int i = 0; i < 10; i++) {
                 Vehicule v = new Vehicule();
                 v.setMarque(faker.company().name());
                 v.setModel(faker.commerce().productName());
@@ -246,7 +285,7 @@ public class DatabaseSeeder implements CommandLineRunner {
 
             // Seed Conducteurs
             List<Conducteur> conducteurs = new ArrayList<>();
-            for (int i = 0; i < 20; i++) {
+            for (int i = 0; i < 8; i++) {
                 Utilisateur u = new Utilisateur();
                 u.setEmail(faker.internet().emailAddress());
                 u.setNom(faker.name().lastName());
@@ -267,7 +306,7 @@ public class DatabaseSeeder implements CommandLineRunner {
             }
 
             // Seed Missions
-            for (int i = 0; i < 30; i++) {
+            for (int i = 0; i < 4; i++) {
                 Mission m = new Mission();
                 m.setReference("MSN-" + faker.number().digits(6));
                 m.setEntreprise(ent);
@@ -301,12 +340,11 @@ public class DatabaseSeeder implements CommandLineRunner {
                     colisRepository.save(colis);
                 }
 
-                // GPS Points (Realistic trajectory)
-                // We'll create more waypoints to make it look like a real path
-                double startLat = 33.5 + random.nextDouble() * 1.0;
-                double startLng = -7.6 + random.nextDouble() * 1.0;
-                double endLat = 34.0 + random.nextDouble() * 1.0;
-                double endLng = -6.8 + random.nextDouble() * 1.0;
+                // GPS Points (Realistic trajectory in Morocco - inland focus to avoid ocean)
+                double startLat = 33.4 + random.nextDouble() * 0.5; // Shifted slightly and range reduced
+                double startLng = -6.4 + random.nextDouble() * 0.5; // Shifted inland (away from -7.6 which is coastal)
+                double endLat = 33.8 + random.nextDouble() * 0.5;
+                double endLng = -6.8 + random.nextDouble() * 0.5;
 
                 int numWaypoints = 6; // More waypoints for complexity
                 double[][] waypoints = new double[numWaypoints + 2][2];
@@ -315,8 +353,8 @@ public class DatabaseSeeder implements CommandLineRunner {
                 for(int w=1; w<=numWaypoints; w++) {
                     double f = (double)w / (numWaypoints + 1);
                     // Add significant but constrained deviation for a "road" feel
-                    waypoints[w][0] = startLat + (endLat - startLat) * f + (random.nextDouble() - 0.5) * 0.2;
-                    waypoints[w][1] = startLng + (endLng - startLng) * f + (random.nextDouble() - 0.5) * 0.2;
+                    waypoints[w][0] = startLat + (endLat - startLat) * f + (random.nextDouble() - 0.5) * 0.05;
+                    waypoints[w][1] = startLng + (endLng - startLng) * f + (random.nextDouble() - 0.5) * 0.05;
                 }
 
                 LocalDateTime currentTS = m.getDataDebut();

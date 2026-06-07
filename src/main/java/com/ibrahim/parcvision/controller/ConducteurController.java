@@ -21,7 +21,6 @@ public class ConducteurController {
     @Autowired
     private ConducteurService conducteurService;
 
-    // 1. Création (vous l'avez déjà)
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> creerConducteur(@ModelAttribute ConducteurRequestDao dto) {
         try {
@@ -32,7 +31,6 @@ public class ConducteurController {
         }
     }
 
-    // 2. Liste paginée avec recherche et filtrage
     @GetMapping
     public ResponseEntity<Page<Conducteur>> listerConducteurs(
             @RequestParam(defaultValue = "0") int page,

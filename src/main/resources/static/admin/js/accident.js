@@ -120,53 +120,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// ── Profile popup ──
-const profileRow = document.getElementById('profileRow');
-const profilePopup = document.getElementById('profilePopup');
-if (profileRow) {
-    profileRow.addEventListener('click', e => {
-        e.stopPropagation();
-        if (profilePopup) profilePopup.classList.toggle('show');
-    });
-}
-document.addEventListener('click', () => {
-    if (profilePopup) profilePopup.classList.remove('show');
-});
-
-// ── Theme toggle ──
-function updateThemeUI(isDark) {
-    const themeIcon = document.getElementById('themeIcon');
-    const themeText = document.getElementById('themeText');
-    if (!themeIcon || !themeText) return;
-    if (isDark) {
-        themeIcon.className = 'bi bi-sun';
-        themeText.textContent = 'Mode clair';
-    } else {
-        themeIcon.className = 'bi bi-moon-stars';
-        themeText.textContent = 'Mode sombre';
-    }
-}
-
-function initTheme() {
-    const saved = localStorage.getItem('theme');
-    const isDark = saved === 'dark';
-    document.body.classList.toggle('dark', isDark);
-    updateThemeUI(isDark);
-}
-
-const themeToggleBtn = document.getElementById('themeToggleBtn');
-if (themeToggleBtn) {
-    themeToggleBtn.addEventListener('click', e => {
-        e.preventDefault();
-        const isDark = document.body.classList.toggle('dark');
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        updateThemeUI(isDark);
-        if (profilePopup) profilePopup.classList.remove('show');
-    });
-}
-
-initTheme();
-
 // ── Embedded / iframe mode ──
 if (window.self !== window.top || new URLSearchParams(window.location.search).get('embedded') === 'true') {
     const sidebar = document.querySelector('.sidebar');
@@ -616,7 +569,10 @@ document.addEventListener('DOMContentLoaded', () => {
     setupMultiUploadArea('editPhotosUploadArea', 'editPhotosInput', 'editPhotosPreview', editSelectedFiles);
 });
 
+let currentAccident = null;
+
 function openViewModal(a) {
+    currentAccident = a;
     const values = document.querySelectorAll('#viewModal .view-detail-value');
     values[0].textContent = (a.vehicule?.immatriculation || '') + ' ' + (a.vehicule?.model || '');
     values[1].textContent = (a.conducteur?.utilisateur?.nom || '') + ' ' + (a.conducteur?.utilisateur?.prenom || '');
@@ -673,6 +629,17 @@ function openEditModal(a) {
     
     // Render existing photos
     renderExistingPhotosForEdit(a.photosUrl);
+
+    // Show "Voir Dépenses" button and set redirect
+    const goToExpensesBtn = document.getElementById('goToExpensesBtn');
+    if (goToExpensesBtn) {
+        goToExpensesBtn.style.display = 'block';
+        goToExpensesBtn.onclick = (e) => {
+            e.preventDefault();
+            const ref = `Accident #${a.id}`;
+            window.location.href = `/admin/depenses?source=${encodeURIComponent(ref)}`;
+        };
+    }
     
     openModal('editModal');
 }

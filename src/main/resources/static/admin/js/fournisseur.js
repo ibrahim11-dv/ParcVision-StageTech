@@ -15,65 +15,8 @@ function closeModal(id) {
     }
 }
 
-/* ───── GESTION DU THÈME SOMBRE ───── */
-function initTheme() {
-    const saved = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    if (saved === 'dark' || (!saved && prefersDark)) {
-        document.body.classList.add('dark');
-        updateThemeUI(true);
-    } else {
-        document.body.classList.remove('dark');
-        updateThemeUI(false);
-    }
-}
-
-function updateThemeUI(isDark) {
-    const icon = document.getElementById('themeIcon');
-    const text = document.getElementById('themeText');
-    if (icon) icon.className = isDark ? 'bi bi-sun' : 'bi bi-moon-stars';
-    if (text) text.textContent = isDark ? 'Mode clair' : 'Mode sombre';
-}
-
-function toggleTheme() {
-    const isDark = document.body.classList.toggle('dark');
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    updateThemeUI(isDark);
-}
-
-// ── Profile popup ──
-document.addEventListener('click', e => {
-    const row = document.getElementById('profileRow');
-    const popup = document.getElementById('profilePopup');
-    if (!row || !popup) return;
-    if (row.contains(e.target)) popup.classList.toggle('show');
-    else popup.classList.remove('show');
-});
-
-// ── Mobile sidebar ──
-window.openMobile = () => {
-    document.getElementById('sidebar').classList.add('open');
-    document.getElementById('overlay').style.display = 'block';
-};
-window.closeMobile = () => {
-    document.getElementById('sidebar').classList.remove('open');
-    document.getElementById('overlay').style.display = 'none';
-};
-
 // ── INITIALISATION ──
 document.addEventListener("DOMContentLoaded", () => {
-    initTheme();
-
-    const themeBtn = document.getElementById('themeToggleBtn');
-    if (themeBtn) {
-        themeBtn.addEventListener('click', e => {
-            e.preventDefault();
-            toggleTheme();
-            const popup = document.getElementById('profilePopup');
-            if (popup) popup.classList.remove('show');
-        });
-    }
-
     // Close modal on overlay click
     document.querySelectorAll('.custom-modal-overlay').forEach(overlay => {
         overlay.addEventListener('click', (e) => {
@@ -389,10 +332,8 @@ if (window.self !== window.top || new URLSearchParams(window.location.search).ge
     window.addEventListener('message', function (event) {
         if (event.data === 'theme-dark') {
             document.body.classList.add('dark');
-            updateThemeUI(true);
         } else if (event.data === 'theme-light') {
             document.body.classList.remove('dark');
-            updateThemeUI(false);
         }
     });
 }

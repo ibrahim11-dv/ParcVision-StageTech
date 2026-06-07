@@ -159,11 +159,7 @@ public class AssuranceService {
         depense.setSourceDepenseCustom(sourceCustom);
         
         // On mappe l'état de paiement
-        if (Boolean.TRUE.equals(ass.getEstPayee())) {
-            depense.setTypePaiement(com.ibrahim.parcvision.enums.TypePaiement.PAYE);
-        } else {
-            depense.setTypePaiement(com.ibrahim.parcvision.enums.TypePaiement.EN_ATTENTE);
-        }
+        depense.setEstPayee(Boolean.TRUE.equals(ass.getEstPayee()));
         
         depense.setEntreprise(getCurrentEntreprise());
         depenseRepository.save(depense);

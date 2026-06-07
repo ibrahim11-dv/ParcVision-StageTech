@@ -40,11 +40,11 @@ async function submitDeleteMission() {
             showSuccess('Mission supprimée', 'La mission a été supprimée avec succès.');
         } else {
             const error = await response.text();
-            alert("Erreur lors de la suppression: " + error);
+            showNotification("Erreur de suppression", "Erreur lors de la suppression: " + error, "error");
         }
     } catch (error) {
         console.error('Error deleting mission:', error);
-        alert("Une erreur est survenue lors de la suppression.");
+        showNotification("Erreur", "Une erreur est survenue lors de la suppression.", "error");
     } finally {
         missionIdToDelete = null;
     }
@@ -60,56 +60,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
-
-// ==========================================
-// Profile popup
-document.getElementById('profileRow').addEventListener('click', e => {
-    e.stopPropagation();
-    document.getElementById('profilePopup').classList.toggle('show');
-});
-document.addEventListener('click', () => {
-    document.getElementById('profilePopup').classList.remove('show');
-});
-
-// Theme toggle functionality
-function initTheme() {
-    const savedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
-        document.body.classList.add('dark');
-        updateThemeUI(true);
-    } else {
-        document.body.classList.remove('dark');
-        updateThemeUI(false);
-    }
-}
-
-function updateThemeUI(isDark) {
-    const themeIcon = document.getElementById('themeIcon');
-    const themeText = document.getElementById('themeText');
-    if (isDark) {
-        themeIcon.className = 'bi bi-sun';
-        themeText.textContent = 'Mode clair';
-    } else {
-        themeIcon.className = 'bi bi-moon-stars';
-        themeText.textContent = 'Mode sombre';
-    }
-}
-
-function toggleTheme() {
-    const isDark = document.body.classList.toggle('dark');
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    updateThemeUI(isDark);
-}
-
-document.getElementById('themeToggleBtn').addEventListener('click', (e) => {
-    e.preventDefault();
-    toggleTheme();
-    document.getElementById('profilePopup').classList.remove('show');
-});
-
-initTheme();
 
 // ==========================================
 // Mission Management & Map Logic
@@ -495,11 +445,13 @@ document.getElementById('confirmDeliveryAction')?.addEventListener('click', asyn
             
             fetchMissions();
             missionIdToConfirm = null;
+            showSuccess('Mission Livrée', 'La mission a été marquée comme livrée avec succès.');
         } else {
-            alert('Erreur lors de la mise à jour');
+            showNotification('Erreur', 'Erreur lors de la mise à jour du statut.', 'error');
         }
     } catch (error) {
         console.error(error);
+        showNotification('Erreur', 'Une erreur est survenue lors de la mise à jour.', 'error');
     }
 });
 
@@ -533,13 +485,32 @@ window.cancelMapSelection = function () {
     if (currentModalInstance) currentModalInstance.show();
 };
 
-function showSuccess(title, message) {
+function showNotification(title, message, type = 'success') {
     const titleEl = document.getElementById('successTitle');
     const msgEl = document.getElementById('successMessage');
+    const iconEl = document.getElementById('successIcon');
+    
     if (titleEl) titleEl.textContent = title;
     if (msgEl) msgEl.textContent = message;
+    
+    if (iconEl) {
+        if (type === 'success') {
+            iconEl.className = 'bi bi-check-circle-fill text-success';
+        } else if (type === 'error') {
+            iconEl.className = 'bi bi-exclamation-circle-fill text-danger';
+        } else if (type === 'warning') {
+            iconEl.className = 'bi bi-exclamation-triangle-fill text-warning';
+        } else if (type === 'info') {
+            iconEl.className = 'bi bi-info-circle-fill text-info';
+        }
+    }
+    
     const modal = new bootstrap.Modal(document.getElementById('successModal'));
     modal.show();
+}
+
+function showSuccess(title, message) {
+    showNotification(title, message, 'success');
 }
 
 function toggleTrackerFields(prefix) {
@@ -696,10 +667,10 @@ async function saveEditMission() {
         if (modalInstance) modalInstance.hide();
 
         fetchMissions();
-        alert('Mission mise à jour avec succès !');
+        showSuccess('Mission mise à jour', 'La mission a été mise à jour avec succès !');
 
     } catch (error) {
         console.error('Error:', error);
-        alert('Une erreur est survenue lors de la modification.');
+        showNotification('Erreur', 'Une erreur est survenue lors de la modification.', 'error');
     }
 }

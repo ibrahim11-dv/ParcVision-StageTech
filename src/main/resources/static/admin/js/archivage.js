@@ -27,8 +27,6 @@ async function apiFetch(url, options = {}) {
 
 // ── Init ──────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
-    initTheme();
-    setupProfilePopup();
     setupModals();
     setupGlobalSearch();
     setupSorting();
@@ -631,41 +629,12 @@ function closeModal(id) { document.getElementById(id).classList.remove('active')
 
 function setupModals() {
     document.querySelectorAll('.custom-modal-overlay').forEach(overlay => {
-        overlay.addEventListener('click', function() { closeModal(this.id); });
+        overlay.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal(this.id);
+            }
+        });
     });
-}
-
-// ── Profile popup ─────────────────────────────────────────
-function setupProfilePopup() {
-    document.getElementById('profileRow').addEventListener('click', e => {
-        e.stopPropagation();
-        document.getElementById('profilePopup').classList.toggle('show');
-    });
-    document.addEventListener('click', () =>
-        document.getElementById('profilePopup').classList.remove('show')
-    );
-}
-
-// ── Theme ─────────────────────────────────────────────────
-function initTheme() {
-    const saved = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const isDark = saved === 'dark' || (!saved && prefersDark);
-    document.body.classList.toggle('dark', isDark);
-    updateThemeUI(isDark);
-
-    document.getElementById('themeToggleBtn').addEventListener('click', e => {
-        e.preventDefault();
-        const d = document.body.classList.toggle('dark');
-        localStorage.setItem('theme', d ? 'dark' : 'light');
-        updateThemeUI(d);
-        document.getElementById('profilePopup').classList.remove('show');
-    });
-}
-
-function updateThemeUI(isDark) {
-    document.getElementById('themeIcon').className = isDark ? 'bi bi-sun' : 'bi bi-moon-stars';
-    document.getElementById('themeText').textContent  = isDark ? 'Mode clair' : 'Mode sombre';
 }
 
 // ── Global Search with Suggestions ────────────────────────

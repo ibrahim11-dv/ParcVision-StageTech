@@ -13,6 +13,7 @@
     <!-- Leaflet CSS for Map -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
     <link rel="stylesheet" href="../css/suivi-gps.css">
 </head>
 
@@ -180,8 +181,7 @@
                             <span id="themeText">Mode sombre</span>
                         </div>
                         <div class="pp-hr"></div>
-                        <a href="#" id="logout-btn" class="pp-link pp-logout"><i class="bi bi-box-arrow-right"></i>
-                            Déconnexion</a>
+                        <a href="#" id="logout-btn" class="pp-link pp-logout"><i class="bi bi-box-arrow-right"></i> Deconnexion</a>
                     </div>
                 </div>
             </div>
@@ -714,7 +714,7 @@
             <div class="modal-content border-0 shadow-lg">
                 <div class="modal-body text-center p-4">
                     <div class="mb-3">
-                        <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
+                        <i id="successIcon" class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
                     </div>
                     <h5 class="fw-bold mb-2" id="successTitle">Succès !</h5>
                     <p class="text-muted mb-4" id="successMessage">L'opération a été réalisée avec succès.</p>
@@ -725,7 +725,6 @@
     </div>
 
     <script src="../js/suivi-gps.js"></script>
-    <script src="../js/logout.js"></script>
     <script src="../js/navbarInfo.js"></script>
     <script src="../js/addMission.js"></script>
 

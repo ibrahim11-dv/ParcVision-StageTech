@@ -237,10 +237,13 @@ function updateKPIs(data) {
     }
 }
 
+let currentVidange = null;
+
 // ── View Vidange ──
 function viewVidangeById(id) {
     const v = vidangesData.find(x => x.id === id);
     if (!v) return;
+    currentVidange = v;
     const vehicule = v.vehicule || {};
     const model = (vehicule.marque || '') + ' ' + (vehicule.model || '');
     const immat = vehicule.immatriculation || '-';
@@ -302,6 +305,17 @@ function editVidangeById(id) {
         document.getElementById('editTypeFournisseur').value = '';
         populateFournisseurSelects('editTypeFournisseur', 'editFournisseurSelect');
         document.getElementById('editFournisseurSelect').value = '';
+    }
+
+    // Show "Voir Dépenses" button and set redirect
+    const goToExpensesBtn = document.getElementById('goToExpensesBtn');
+    if (goToExpensesBtn) {
+        goToExpensesBtn.style.display = 'block';
+        goToExpensesBtn.onclick = (e) => {
+            e.preventDefault();
+            const ref = `Vidange #${v.id}`;
+            window.location.href = `/admin/depenses?source=${encodeURIComponent(ref)}`;
+        };
     }
 
     openModal('editOilChangeModal');
@@ -427,53 +441,6 @@ function setupSearchAndFilter() {
         });
     }
 }
-
-// ── Profile popup ──
-const profileRow = document.getElementById('profileRow');
-const profilePopup = document.getElementById('profilePopup');
-if (profileRow) {
-    profileRow.addEventListener('click', e => {
-        e.stopPropagation();
-        if (profilePopup) profilePopup.classList.toggle('show');
-    });
-}
-document.addEventListener('click', () => {
-    if (profilePopup) profilePopup.classList.remove('show');
-});
-
-// ── Theme toggle ──
-function updateThemeUI(isDark) {
-    const themeIcon = document.getElementById('themeIcon');
-    const themeText = document.getElementById('themeText');
-    if (!themeIcon || !themeText) return;
-    if (isDark) {
-        themeIcon.className = 'bi bi-sun';
-        themeText.textContent = 'Mode clair';
-    } else {
-        themeIcon.className = 'bi bi-moon-stars';
-        themeText.textContent = 'Mode sombre';
-    }
-}
-
-function initTheme() {
-    const saved = localStorage.getItem('theme');
-    const isDark = saved === 'dark';
-    document.body.classList.toggle('dark', isDark);
-    updateThemeUI(isDark);
-}
-
-const themeToggleBtn = document.getElementById('themeToggleBtn');
-if (themeToggleBtn) {
-    themeToggleBtn.addEventListener('click', e => {
-        e.preventDefault();
-        const isDark = document.body.classList.toggle('dark');
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        updateThemeUI(isDark);
-        if (profilePopup) profilePopup.classList.remove('show');
-    });
-}
-
-initTheme();
 
 // Close modal on overlay click
 document.querySelectorAll('.custom-modal-overlay').forEach(overlay => {

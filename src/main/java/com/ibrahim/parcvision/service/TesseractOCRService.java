@@ -54,7 +54,6 @@ public class TesseractOCRService implements OCRService {
             LOGGER.log(Level.SEVERE, "Error during OCR processing", e);
             return "Error extracting text: " + e.getMessage();
         } catch (Error e) {
-            // Tess4J might throw UnsatisfiedLinkError if native Tesseract is missing
             LOGGER.log(Level.SEVERE, "Native Tesseract library error. Is Tesseract installed?", e);
             return "OCR error: Tesseract binaries not found on system.";
         }

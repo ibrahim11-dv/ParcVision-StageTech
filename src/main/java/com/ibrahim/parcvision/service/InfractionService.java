@@ -170,11 +170,7 @@ public class InfractionService {
         depense.setSourceDepense("Infraction");
         depense.setSourceDepenseCustom(sourceCustom);
         
-        if (Boolean.TRUE.equals(inf.getEstPayee())) {
-            depense.setTypePaiement(com.ibrahim.parcvision.enums.TypePaiement.PAYE);
-        } else {
-            depense.setTypePaiement(com.ibrahim.parcvision.enums.TypePaiement.EN_ATTENTE);
-        }
+        depense.setEstPayee(Boolean.TRUE.equals(inf.getEstPayee()));
         
         depense.setEntreprise(inf.getEntreprise());
         depenseRepository.save(depense);

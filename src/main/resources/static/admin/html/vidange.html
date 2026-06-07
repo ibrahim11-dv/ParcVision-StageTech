@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 
 <head>
@@ -41,27 +41,27 @@
 
                 <div class="sb-section">Gestion</div>
 
-                <div class="nav-item">
-                    <a href="/admin/conducteurs" class="nav-link" data-tip="Conducteurs">
+            <div class="nav-item">
+                <a href="/admin/conducteurs" class="nav-link" data-tip="Conducteurs">
                         <span class="ni">
                             <i class="bi bi-person-badge"></i>
                             <span class="pulse p-green"></span>
                         </span>
-                        <span class="nt">Conducteurs<small class="nt-sub">18 actifs</small></span>
-                        <span class="nb nb-blue">18</span>
-                    </a>
-                </div>
+                    <span class="nt">Conducteurs<small class="nt-sub">Chargement...</small></span>
+                    <span class="nb nb-blue">--</span>
+                </a>
+            </div>
 
-                <div class="nav-item">
-                    <a href="/admin/vehicules" class="nav-link" data-tip="Véhicules">
+            <div class="nav-item">
+                <a href="/admin/vehicules" class="nav-link" data-tip="Véhicules">
                         <span class="ni">
                             <i class="bi bi-truck"></i>
                             <span class="pulse p-amber"></span>
                         </span>
-                        <span class="nt">Véhicules<small class="nt-sub">24 en flotte</small></span>
-                        <span class="nb nb-blue">24</span>
-                    </a>
-                </div>
+                    <span class="nt">Véhicules<small class="nt-sub">Chargement...</small></span>
+                    <span class="nb nb-blue">--</span>
+                </a>
+            </div>
 
                 <div class="nav-item">
                     <a href="/admin/assurances" class="nav-link" data-tip="Assurances">
@@ -80,17 +80,17 @@
                 <div class="nav-item">
                 </div>
 
-                <div class="nav-item">
-                    <a href="/admin/gps" class="nav-link" data-tip="Suivi GPS">
-                        <span class="ni">
-                            <i class="bi bi-geo-alt"></i>
-                            <span class="pulse p-green"></span>
-                        </span>
-                        <span class="nt">Suivi GPS<small class="nt-sub">3 en déplacement</small></span>
-                        <span class="nb nb-green"
-                            style="background:rgba(34,197,94,0.1); color:#15803d; border-color:rgba(34,197,94,0.2);">LIVE</span>
-                    </a>
-                </div>
+            <div class="nav-item">
+                <a href="/admin/gps" class="nav-link" data-tip="Suivi GPS">
+                    <span class="ni">
+                        <i class="bi bi-geo-alt"></i>
+                        <span class="pulse p-green"></span>
+                    </span>
+                    <span class="nt">Suivi GPS<small class="nt-sub">Chargement...</small></span>
+                    <span class="nb nb-green"
+                        style="background:rgba(34,197,94,0.1); color:#15803d; border-color:rgba(34,197,94,0.2);">LIVE</span>
+                </a>
+            </div>
 
                 <div class="sb-hr"></div>
                 <div class="sb-section">Interventions</div>
@@ -135,9 +135,9 @@
 
                 
                 <div class="nav-item">
-                    <a href="/admin/depenses" class="nav-link" data-tip="D�penses">
+                    <a href="/admin/depenses" class="nav-link" data-tip="Depenses">
                         <span class="ni"><i class="bi bi-wallet2"></i><span class="pulse p-red"></span></span>
-                        <span class="nt">D�pense<small class="nt-sub">Suivi financier</small></span>
+                        <span class="nt">Depense<small class="nt-sub">Suivi financier</small></span>
                     </a>
                 </div>
 <div class="nav-item">
@@ -186,9 +186,9 @@
 
         </aside>
 
-        <div class="main" id="main">
-            <div class="page">
-                <div class="w-100 d-flex flex-column align-items-center">
+    <div class="main" id="main">
+        <div class="page">
+            <div class="w-100 d-flex flex-column align-items-center">
 
                     <!-- En-tête de page -->
                     <div class="page-header w-100 mb-4">
@@ -424,7 +424,7 @@
             <div class="custom-modal-footer">
                 <button class="btn btn-secondary" onclick="closeModal('viewOilChangeModal')">Fermer</button>
                 <button class="btn btn-primary"
-                    onclick="closeModal('viewOilChangeModal'); openModal('editOilChangeModal')">Modifier</button>
+                    onclick="closeModal('viewOilChangeModal'); editVidangeById(currentVidange.id)">Modifier</button>
             </div>
         </div>
     </div>
@@ -503,6 +503,9 @@
                 </form>
             </div>
             <div class="custom-modal-footer">
+                <button class="btn btn-outline-primary me-auto" id="goToExpensesBtn" style="display: none;">
+                    <i class="bi bi-wallet2 me-1"></i> Voir Dépenses
+                </button>
                 <button class="btn btn-secondary" onclick="closeModal('editOilChangeModal')">Annuler</button>
                 <button class="btn btn-primary" onclick="updateOilChange()">Mettre à jour</button>
             </div>
@@ -525,10 +528,11 @@
         </div>
     </div>
 
+    </div>
+
     <script src="../js/vidange.js"></script>
-    <script src="../js/logout.js"></script>
     <script src="../js/navbarInfo.js"></script>
 
-
 </body>
+
 </html>

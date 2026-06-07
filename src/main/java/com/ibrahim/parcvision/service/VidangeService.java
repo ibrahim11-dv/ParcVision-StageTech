@@ -112,7 +112,7 @@ public class VidangeService {
         depense.setQui(providerName);
         depense.setSourceDepense("Vidange");
         depense.setSourceDepenseCustom(sourceCustom);
-        depense.setTypePaiement(com.ibrahim.parcvision.enums.TypePaiement.EN_ATTENTE);
+        depense.setEstPayee(Boolean.TRUE.equals(vid.getEstPaye()));
         depense.setEntreprise(getCurrentEntreprise());
 
         depenseRepository.save(depense);
