@@ -1,0 +1,2024 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParcVision — Studio Vidéo & Présentation Automatisée</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0e1a;
+            --surface-card: #121829;
+            --surface-card-hover: #18223d;
+            --primary: #2563eb;
+            --primary-glow: rgba(37, 99, 235, 0.4);
+            --accent-cyan: #06b6d4;
+            --accent-emerald: #10b981;
+            --accent-amber: #f59e0b;
+            --accent-rose: #f43f5e;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #1e293b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 24px;
+            background: rgba(18, 24, 41, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        .brand-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #1a2a6c, #2563eb, #06b6d4);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 20px;
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+
+        .brand-titles h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(to right, #ffffff, #93c5fd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand-titles p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .studio-status-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--accent-emerald);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--accent-emerald);
+            box-shadow: 0 0 10px var(--accent-emerald);
+            animation: pulse 1.8s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0.7; }
+            50% { transform: scale(1.3); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.7; }
+        }
+
+        /* Player Container */
+        .stage-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            aspect-ratio: 16 / 9;
+            background: #000;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid #334155;
+            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8), 0 0 30px rgba(37, 99, 235, 0.15);
+        }
+
+        canvas#videoCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* Video Overlay Overlay Over Canvas */
+        .stage-overlay {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 24px;
+        }
+
+        .rec-indicator {
+            align-self: flex-start;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            background: rgba(244, 63, 94, 0.9);
+            color: white;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 6px;
+            box-shadow: 0 0 15px rgba(244, 63, 94, 0.6);
+            letter-spacing: 1px;
+        }
+
+        .rec-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: white;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Subtitles Bar */
+        .captions-bar {
+            align-self: center;
+            max-width: 85%;
+            background: rgba(10, 14, 26, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            font-size: 1.05rem;
+            font-weight: 500;
+            text-align: center;
+            padding: 10px 24px;
+            border-radius: 30px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+            transition: all 0.3s ease;
+            opacity: 0.95;
+        }
+
+        /* Control Deck */
+        .controls-deck {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--surface-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 16px 24px;
+            margin-top: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Progress Scrubber */
+        .timeline-container {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .timeline-track {
+            position: relative;
+            flex: 1;
+            height: 8px;
+            background: #1e293b;
+            border-radius: 4px;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .timeline-fill {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #2563eb, #06b6d4);
+            border-radius: 4px;
+            transition: width 0.05s linear;
+        }
+
+        .time-display {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            min-width: 105px;
+            text-align: right;
+        }
+
+        /* Control Buttons Row */
+        .buttons-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .btn-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        button.btn {
+            background: #1e293b;
+            color: var(--text-main);
+            border: 1px solid #334155;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        button.btn:hover {
+            background: #27354f;
+            border-color: #475569;
+            transform: translateY(-1px);
+        }
+
+        button.btn-primary {
+            background: linear-gradient(135deg, #1d4ed8, #2563eb);
+            border-color: #3b82f6;
+            color: white;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+        }
+
+        button.btn-primary:hover {
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5);
+        }
+
+        button.btn-record {
+            background: linear-gradient(135deg, #dc2626, #ef4444);
+            border-color: #f87171;
+            color: white;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+            font-weight: 700;
+        }
+
+        button.btn-record:hover {
+            background: linear-gradient(135deg, #ef4444, #f87171);
+            box-shadow: 0 6px 25px rgba(239, 68, 68, 0.6);
+        }
+
+        .btn-scene-pill {
+            background: #131d33;
+            border: 1px solid #1e2d4d;
+            font-size: 0.78rem;
+            padding: 6px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.2s ease;
+        }
+
+        .btn-scene-pill.active {
+            background: #1e3a8a;
+            border-color: #3b82f6;
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .scene-selector-bar {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+
+        /* Options Drawer */
+        .options-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .toggle-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .toggle-label input {
+            cursor: pointer;
+            accent-color: var(--primary);
+        }
+
+        /* Help Cards */
+        .info-cards {
+            width: 100%;
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .card {
+            background: var(--surface-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 18px 20px;
+        }
+
+        .card h3 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card p, .card li {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .card ul {
+            padding-left: 18px;
+            margin-top: 6px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOP HEADER -->
+    <header class="top-bar">
+        <div class="brand-box">
+            <div class="brand-logo-icon">PV</div>
+            <div class="brand-titles">
+                <h1>ParcVision • Video Showcase Generator</h1>
+                <p>Gestion de Flotte Automobile & Archivage Intelligent GED OCR</p>
+            </div>
+        </div>
+        <div class="studio-status-badge">
+            <div class="pulse-dot"></div>
+            <span>Studio Prêt (60 FPS • Full HD)</span>
+        </div>
+    </header>
+
+    <!-- VIDEO STAGE (CANVAS) -->
+    <div class="stage-wrapper" id="stageWrapper">
+        <canvas id="videoCanvas" width="1920" height="1080"></canvas>
+        <div class="stage-overlay">
+            <div class="rec-indicator" id="recBadge">
+                <div class="rec-dot"></div>
+                <span>ENREGISTREMENT EN COURS • REC</span>
+            </div>
+            <div class="captions-bar" id="captionsBar">
+                Bienvenue sur la présentation interactive de ParcVision.
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTROLS DECK -->
+    <section class="controls-deck">
+        <!-- Progress Bar -->
+        <div class="timeline-container">
+            <div class="timeline-track" id="timelineTrack">
+                <div class="timeline-fill" id="timelineFill"></div>
+            </div>
+            <div class="time-display" id="timeDisplay">00:00 / 01:15</div>
+        </div>
+
+        <!-- Buttons Row -->
+        <div class="buttons-row">
+            <div class="btn-group">
+                <button class="btn btn-primary" id="playBtn">
+                    <span id="playIcon">▶</span> <span id="playText">Lire la vidéo</span>
+                </button>
+                <button class="btn" id="restartBtn">↺ Recommencer</button>
+                <button class="btn btn-record" id="recordBtn">
+                    ⏺ Exporter la Vidéo (.WebM)
+                </button>
+            </div>
+
+            <!-- Scene Selector Pills -->
+            <div class="scene-selector-bar" id="scenePills">
+                <!-- Dynamically populated or manual -->
+            </div>
+
+            <div class="options-row">
+                <label class="toggle-label">
+                    <input type="checkbox" id="audioToggle" checked>
+                    <span>Musique Tech Synth</span>
+                </label>
+                <label class="toggle-label">
+                    <input type="checkbox" id="voiceToggle" checked>
+                    <span>Voix-off (TTS)</span>
+                </label>
+                <select id="voiceLangSelect" style="background:#1e293b; color:#fff; border:1px solid #334155; padding:4px 8px; border-radius:6px; font-size:0.8rem;">
+                    <option value="fr-FR" selected>Français</option>
+                    <option value="en-US">English</option>
+                </select>
+                <button class="btn" id="fullscreenBtn" style="padding:6px 12px; font-size:0.8rem;">⛶ Plein écran</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- INFO CARDS -->
+    <div class="info-cards">
+        <div class="card">
+            <h3>🎥 1. Export Vidéo Direct</h3>
+            <p>Cliquez sur <strong>Exporter la Vidéo</strong> pour lancer la lecture avec enregistrement en temps réel. À la fin (ou en cliquant à nouveau), le fichier vidéo <code>.webm</code> est automatiquement téléchargé dans votre dossier Téléchargements.</p>
+        </div>
+        <div class="card">
+            <h3>⚡ 2. Raccourci Windows Natif</h3>
+            <p>Vous pouvez également passer en plein écran (<code>F11</code> ou bouton ⛶) et utiliser le raccourci Windows natif <code>Win + Alt + R</code> pour capturer l'animation en MP4 haute fidélité via Xbox Game Bar.</p>
+        </div>
+        <div class="card">
+            <h3>💡 3. Modules Présentés</h3>
+            <ul>
+                <li>Tableau de bord & KPIs consolidés</li>
+                <li>Inventaire des véhicules & conducteurs</li>
+                <li>Simulation GPS temps réel & colis</li>
+                <li>Maintenance, Vidanges & Alertes SOS</li>
+                <li>GED & OCR Tesseract (recherche plein texte)</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- MAIN ENGINE SCRIPT -->
+    <script>
+        // ==========================================
+        // SCENES DEFINITION & TIMELINE (Total: 75s)
+        // ==========================================
+        const SCENES = [
+            {
+                id: 0,
+                name: "1. Intro",
+                duration: 9,
+                title: "PARCVISION",
+                subtitle: "Gestion de Flotte Automobile & Archivage GED OCR",
+                tagline: "Plateforme Unifiée Intelligente pour Entreprises",
+                captionFr: "Bienvenue sur ParcVision : la solution moderne qui unifie gestion de flotte automobile et archivage intelligent avec OCR.",
+                captionEn: "Welcome to ParcVision: the modern unified platform combining corporate fleet management and intelligent OCR archiving."
+            },
+            {
+                id: 1,
+                name: "2. Dashboard",
+                duration: 11,
+                title: "Command Center & KPIs",
+                subtitle: "Supervision opérationnelle et financière en temps réel",
+                tagline: "Statistiques véhicules, missions actives et synthèse des dépenses",
+                captionFr: "Un tableau de bord centralisé pour piloter vos actifs en temps réel : dépenses de carburant, réparations et conformité.",
+                captionEn: "A centralized command center to monitor assets in real time: fuel expenses, maintenance costs, and safety compliance."
+            },
+            {
+                id: 2,
+                name: "3. Flotte & RH",
+                duration: 10,
+                title: "Gestion Flotte & Conducteurs",
+                subtitle: "Immatriculations, états de service & suivi des permis",
+                tagline: "Inventaire complet et suivi rigoureux de la conformité",
+                captionFr: "Centralisation de tous vos véhicules et profils conducteurs : validité des permis, charge utile et statuts opérationnels.",
+                captionEn: "Centralized inventory for all vehicles and driver profiles: license validity, payload capacities, and operational statuses."
+            },
+            {
+                id: 3,
+                name: "4. GPS & Trajets",
+                duration: 13,
+                title: "Ordres de Mission & Suivi GPS",
+                subtitle: "Cartographie interactive Leaflet & suivi de cargaisons",
+                tagline: "Points de passage réels, détection de vitesse et géolocalisation",
+                captionFr: "Suivi cartographique interactif avec Leaflet et OpenStreetMap : vitesse en direct, étapes routières et suivi des colis.",
+                captionEn: "Interactive map tracking powered by Leaflet and OpenStreetMap: live speed monitoring, route waypoints, and parcel status."
+            },
+            {
+                id: 4,
+                name: "5. Maintenance",
+                duration: 11,
+                title: "Maintenance & Sinistres",
+                subtitle: "Vidanges périodiques, réparations et dépannages d'urgence SOS",
+                tagline: "Gestion proactive pour réduire les immobilisations",
+                captionFr: "Prévention et réactivité : suivi des vidanges, réparations en garage externe, interventions SOS et déclarations d'accidents.",
+                captionEn: "Proactive maintenance: oil change schedules, external garage repairs, emergency SOS towing, and accident management."
+            },
+            {
+                id: 5,
+                name: "6. GED & OCR",
+                duration: 12,
+                title: "Archivage Intelligent (GED + OCR)",
+                subtitle: "Extraction automatique de texte et recherche plein texte",
+                tagline: "Propulsé par Tesseract OCR (Tess4J) & stockage d'entreprise",
+                captionFr: "L'atout majeur : téléversez factures et cartes grises. L'OCR extrait le texte pour une recherche globale instantanée !",
+                captionEn: "Key innovation: upload invoices and vehicle documents. Tesseract OCR indexes content for instant full-text search!"
+            },
+            {
+                id: 6,
+                name: "7. Architecture",
+                duration: 9,
+                title: "Architecture Robuste & Moderne",
+                subtitle: "Spring Boot 4 • PostgreSQL • JWT Sécurisé • Leaflet.js",
+                tagline: "Sécurité d'entreprise, haute performance et déploiement simplifié",
+                captionFr: "Bâtie sur Spring Boot et PostgreSQL avec authentification sécurisée par JWT en cookies HttpOnly.",
+                captionEn: "Engineered on Spring Boot and PostgreSQL with rock-solid security using JWT HttpOnly cookies."
+            }
+        ];
+
+        // Total duration calculation
+        let totalDuration = SCENES.reduce((acc, s) => acc + s.duration, 0);
+
+        // Precompute scene start times
+        let accumulated = 0;
+        SCENES.forEach(scene => {
+            scene.startTime = accumulated;
+            scene.endTime = accumulated + scene.duration;
+            accumulated += scene.duration;
+        });
+
+        // ==========================================
+        // CANVAS & RENDERING STATE
+        // ==========================================
+        const canvas = document.getElementById('videoCanvas');
+        const ctx = canvas.getContext('2d');
+        const WIDTH = 1920;
+        const HEIGHT = 1080;
+
+        let currentTime = 0;
+        let isPlaying = false;
+        let isRecording = false;
+        let lastFrameTime = performance.now();
+        let mediaRecorder = null;
+        let recordedChunks = [];
+        let audioCtx = null;
+        let audioDestNode = null;
+        let synthInterval = null;
+
+        // UI Elements
+        const playBtn = document.getElementById('playBtn');
+        const playIcon = document.getElementById('playIcon');
+        const playText = document.getElementById('playText');
+        const restartBtn = document.getElementById('restartBtn');
+        const recordBtn = document.getElementById('recordBtn');
+        const recBadge = document.getElementById('recBadge');
+        const timelineTrack = document.getElementById('timelineTrack');
+        const timelineFill = document.getElementById('timelineFill');
+        const timeDisplay = document.getElementById('timeDisplay');
+        const captionsBar = document.getElementById('captionsBar');
+        const scenePillsContainer = document.getElementById('scenePills');
+        const audioToggle = document.getElementById('audioToggle');
+        const voiceToggle = document.getElementById('voiceToggle');
+        const voiceLangSelect = document.getElementById('voiceLangSelect');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+        // Populate Scene Selector Pills
+        SCENES.forEach(scene => {
+            const pill = document.createElement('button');
+            pill.className = 'btn-scene-pill' + (scene.id === 0 ? ' active' : '');
+            pill.innerText = scene.name;
+            pill.addEventListener('click', () => {
+                seekTo(scene.startTime);
+            });
+            scenePillsContainer.appendChild(pill);
+            scene.pillEl = pill;
+        });
+
+        // ==========================================
+        // WEB AUDIO SYNTHESIZER (Tech Ambient Soundtrack)
+        // ==========================================
+        function initAudio() {
+            if (audioCtx) return;
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            audioCtx = new AudioContext();
+            audioDestNode = audioCtx.createMediaStreamDestination();
+        }
+
+        // Chords: Em - C - G - D
+        const chords = [
+            [164.81, 196.00, 246.94, 329.63], // E3, G3, B3, E4
+            [130.81, 164.81, 196.00, 261.63], // C3, E3, G3, C4
+            [196.00, 246.94, 293.66, 392.00], // G3, B3, D4, G4
+            [146.83, 220.00, 293.66, 369.99]  // D3, A3, D4, F#4
+        ];
+
+        function playSynthChord(chordIndex) {
+            if (!audioCtx || !audioToggle.checked) return;
+            const chord = chords[chordIndex % chords.length];
+            const now = audioCtx.currentTime;
+
+            chord.forEach((freq, idx) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                const filter = audioCtx.createBiquadFilter();
+
+                osc.type = idx === 0 ? 'sawtooth' : 'triangle';
+                osc.frequency.setValueAtTime(freq, now);
+
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(800 + idx * 250, now);
+
+                gain.gain.setValueAtTime(0.001, now);
+                gain.gain.linearRampToValueAtTime(0.04 / (idx + 1), now + 0.3);
+                gain.gain.exponentialRampToValueAtTime(0.0001, now + 3.2);
+
+                osc.connect(filter);
+                filter.connect(gain);
+                gain.connect(audioCtx.destination);
+                if (audioDestNode) gain.connect(audioDestNode);
+
+                osc.start(now);
+                osc.stop(now + 3.3);
+            });
+        }
+
+        function playBlipSound(freq = 660) {
+            if (!audioCtx || !audioToggle.checked) return;
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now);
+            gain.gain.setValueAtTime(0.03, now);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.15);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            if (audioDestNode) gain.connect(audioDestNode);
+
+            osc.start(now);
+            osc.stop(now + 0.16);
+        }
+
+        // ==========================================
+        // TEXT-TO-SPEECH (Browser Native Narration)
+        // ==========================================
+        let lastSpokenScene = -1;
+
+        function speakSceneCaption(scene) {
+            if (!voiceToggle.checked || !('speechSynthesis' in window)) return;
+            window.speechSynthesis.cancel(); // Cancel any lingering utterance
+
+            const lang = voiceLangSelect.value;
+            const text = lang.startsWith('en') ? scene.captionEn : scene.captionFr;
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = lang;
+            utterance.rate = 1.05;
+            utterance.pitch = 1.0;
+
+            // Pick a matching voice if available
+            const voices = window.speechSynthesis.getVoices();
+            const matchingVoice = voices.find(v => v.lang.startsWith(lang.slice(0, 2)));
+            if (matchingVoice) utterance.voice = matchingVoice;
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // ==========================================
+        // PARTICLES & BACKGROUND ENGINE
+        // ==========================================
+        const particles = [];
+        for (let i = 0; i < 90; i++) {
+            particles.push({
+                x: Math.random() * WIDTH,
+                y: Math.random() * HEIGHT,
+                vx: (Math.random() - 0.5) * 0.8,
+                vy: (Math.random() - 0.5) * 0.8,
+                size: Math.random() * 2.5 + 1,
+                alpha: Math.random() * 0.5 + 0.2
+            });
+        }
+
+        function drawGlobalBackground(t) {
+            // Dark gradient base
+            const grad = ctx.createRadialGradient(WIDTH / 2, HEIGHT / 2, 100, WIDTH / 2, HEIGHT / 2, WIDTH);
+            grad.addColorStop(0, '#0f172a');
+            grad.addColorStop(0.6, '#090d16');
+            grad.addColorStop(1, '#030509');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+            // Subtle neon grid in perspective
+            ctx.strokeStyle = 'rgba(37, 99, 235, 0.08)';
+            ctx.lineWidth = 1;
+            const gridSize = 80;
+            const offset = (t * 20) % gridSize;
+
+            for (let x = 0; x <= WIDTH; x += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, HEIGHT);
+                ctx.stroke();
+            }
+            for (let y = offset; y <= HEIGHT; y += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(WIDTH, y);
+                ctx.stroke();
+            }
+
+            // Floating particles
+            particles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+                if (p.x < 0) p.x = WIDTH;
+                if (p.x > WIDTH) p.x = 0;
+                if (p.y < 0) p.y = HEIGHT;
+                if (p.y > HEIGHT) p.y = 0;
+
+                ctx.fillStyle = `rgba(56, 189, 248, ${p.alpha})`;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // Ambient corner glows
+            drawGlowSpot(150, 150, 350, 'rgba(37, 99, 235, 0.15)');
+            drawGlowSpot(WIDTH - 150, HEIGHT - 150, 450, 'rgba(6, 182, 212, 0.12)');
+        }
+
+        function drawGlowSpot(x, y, radius, color) {
+            const glow = ctx.createRadialGradient(x, y, 10, x, y, radius);
+            glow.addColorStop(0, color);
+            glow.addColorStop(1, 'rgba(0,0,0,0)');
+            ctx.fillStyle = glow;
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // ==========================================
+        // DRAW COMMON HEADER & FOOTER OVERLAY
+        // ==========================================
+        function drawOverlayFrame(scene, localTime) {
+            // Top Bar on Canvas
+            ctx.fillStyle = 'rgba(15, 23, 42, 0.75)';
+            ctx.fillRect(80, 50, WIDTH - 160, 70);
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+            ctx.lineWidth = 1.5;
+            ctx.strokeRect(80, 50, WIDTH - 160, 70);
+
+            // Brand Logo & Title
+            ctx.font = '800 28px "Outfit", sans-serif';
+            ctx.fillStyle = '#ffffff';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('PARCVISION', 110, 85);
+
+            ctx.font = '500 16px "Inter", sans-serif';
+            ctx.fillStyle = '#38bdf8';
+            ctx.fillText('• FLEET INTELLIGENCE & GED OCR', 290, 85);
+
+            // Current Scene Badge on top right
+            ctx.fillStyle = 'rgba(37, 99, 235, 0.3)';
+            ctx.fillRect(WIDTH - 380, 62, 270, 46);
+            ctx.strokeStyle = '#3b82f6';
+            ctx.strokeRect(WIDTH - 380, 62, 270, 46);
+
+            ctx.font = '700 15px "JetBrains Mono", monospace';
+            ctx.fillStyle = '#93c5fd';
+            ctx.textAlign = 'center';
+            ctx.fillText(`SCENE ${scene.id + 1}/${SCENES.length} : ${scene.name.toUpperCase()}`, WIDTH - 245, 85);
+
+            // Lower thirds: Section Header
+            const headerAlpha = Math.min(1, localTime * 2);
+            ctx.save();
+            ctx.globalAlpha = headerAlpha;
+
+            ctx.font = '800 44px "Outfit", sans-serif';
+            ctx.fillStyle = '#ffffff';
+            ctx.textAlign = 'left';
+            ctx.fillText(scene.title, 80, 185);
+
+            ctx.font = '500 22px "Inter", sans-serif';
+            ctx.fillStyle = '#94a3b8';
+            ctx.fillText(scene.subtitle, 80, 225);
+
+            ctx.restore();
+        }
+
+        // ==========================================
+        // SCENE 1 : INTRO (Cinematic Branding)
+        // ==========================================
+        function drawScene0(scene, t) {
+            const progress = t / scene.duration;
+
+            // Center Holographic Emblem
+            const centerX = WIDTH / 2;
+            const centerY = HEIGHT / 2 + 30;
+            const scale = Math.min(1, t * 1.5);
+
+            ctx.save();
+            ctx.translate(centerX, centerY);
+            ctx.scale(scale, scale);
+
+            // Pulsing Rings
+            const ringRadius = 140 + Math.sin(t * 3) * 12;
+            ctx.strokeStyle = 'rgba(6, 182, 212, 0.4)';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.arc(0, 0, ringRadius, 0, Math.PI * 2);
+            ctx.stroke();
+
+            ctx.strokeStyle = 'rgba(37, 99, 235, 0.5)';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([12, 10]);
+            ctx.beginPath();
+            ctx.arc(0, 0, ringRadius + 25, t * 0.5, t * 0.5 + Math.PI * 2);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Center Logo Shield
+            const gradShield = ctx.createLinearGradient(-80, -80, 80, 80);
+            gradShield.addColorStop(0, '#1e3a8a');
+            gradShield.addColorStop(0.5, '#2563eb');
+            gradShield.addColorStop(1, '#06b6d4');
+            ctx.fillStyle = gradShield;
+            ctx.beginPath();
+            ctx.roundRect(-80, -80, 160, 160, 32);
+            ctx.fill();
+            ctx.strokeStyle = '#93c5fd';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            // Car / Fleet Icon Silhouette
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '800 68px "Outfit", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('PV', 0, 5);
+
+            ctx.restore();
+
+            // Big Bold Title
+            ctx.font = '900 76px "Outfit", sans-serif';
+            ctx.textAlign = 'center';
+            const titleGrad = ctx.createLinearGradient(centerX - 300, 0, centerX + 300, 0);
+            titleGrad.addColorStop(0, '#ffffff');
+            titleGrad.addColorStop(0.5, '#60a5fa');
+            titleGrad.addColorStop(1, '#38bdf8');
+            ctx.fillStyle = titleGrad;
+            ctx.fillText('PARCVISION', centerX, centerY - 200);
+
+            ctx.font = '600 28px "Inter", sans-serif';
+            ctx.fillStyle = '#cbd5e1';
+            ctx.fillText('Gestion de Flotte Automobile & Archivage Intelligent GED OCR', centerX, centerY - 140);
+
+            // Tech Stack Badges at bottom
+            const badges = ['Spring Boot 4', 'PostgreSQL', 'Leaflet GPS', 'Tess4J OCR', 'JWT Security'];
+            const badgeY = HEIGHT - 180;
+            const startX = centerX - 420;
+
+            badges.forEach((b, i) => {
+                const bx = startX + i * 175;
+                ctx.fillStyle = 'rgba(30, 41, 59, 0.85)';
+                ctx.fillRect(bx, badgeY, 155, 48);
+                ctx.strokeStyle = '#334155';
+                ctx.strokeRect(bx, badgeY, 155, 48);
+
+                ctx.fillStyle = '#38bdf8';
+                ctx.font = '700 16px "JetBrains Mono", monospace';
+                ctx.textAlign = 'center';
+                ctx.fillText(b, bx + 77, badgeY + 28);
+            });
+        }
+
+        // ==========================================
+        // SCENE 2 : DASHBOARD & KPIS
+        // ==========================================
+        function drawScene1(scene, t) {
+            drawOverlayFrame(scene, t);
+
+            // 4 KPI Stat Cards
+            const kpis = [
+                { title: 'VÉHICULES ACTIFS', val: Math.min(48, Math.floor(t * 12)), max: '48 Véhicules', color: '#10b981', icon: '🚗' },
+                { title: 'CONDUCTEURS DISPOS', val: Math.min(35, Math.floor(t * 9)), max: '35 / 40 Actifs', color: '#3b82f6', icon: '👤' },
+                { title: 'MISSIONS EN COURS', val: Math.min(14, Math.floor(t * 4)), max: '14 Trajets GPS', color: '#06b6d4', icon: '📍' },
+                { title: 'ALERTES MAINTENANCE', val: Math.min(3, Math.floor(t * 1)), max: '2 Vidanges • 1 SOS', color: '#f59e0b', icon: '⚠️' }
+            ];
+
+            const cardW = 390;
+            const cardH = 150;
+            const startX = 80;
+            const startY = 270;
+
+            kpis.forEach((kpi, idx) => {
+                const x = startX + idx * 440;
+                // Card Background
+                ctx.fillStyle = 'rgba(18, 24, 41, 0.9)';
+                ctx.fillRect(x, startY, cardW, cardH);
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+                ctx.lineWidth = 1.5;
+                ctx.strokeRect(x, startY, cardW, cardH);
+
+                // Top Accent Strip
+                ctx.fillStyle = kpi.color;
+                ctx.fillRect(x, startY, cardW, 5);
+
+                // Icon & Title
+                ctx.font = '700 15px "JetBrains Mono", monospace';
+                ctx.fillStyle = '#94a3b8';
+                ctx.textAlign = 'left';
+                ctx.fillText(kpi.title, x + 24, startY + 45);
+
+                // Big Animated Number
+                ctx.font = '800 48px "Outfit", sans-serif';
+                ctx.fillStyle = '#ffffff';
+                ctx.fillText(kpi.val, x + 24, startY + 105);
+
+                // Subtitle
+                ctx.font = '500 15px "Inter", sans-serif';
+                ctx.fillStyle = kpi.color;
+                ctx.fillText(kpi.max, x + 120, startY + 102);
+            });
+
+            // Financial Breakdown Chart (Expenses by Category)
+            const chartX = 80;
+            const chartY = 470;
+            const chartW = 1050;
+            const chartH = 430;
+
+            ctx.fillStyle = 'rgba(18, 24, 41, 0.9)';
+            ctx.fillRect(chartX, chartY, chartW, chartH);
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+            ctx.strokeRect(chartX, chartY, chartW, chartH);
+
+            ctx.font = '700 22px "Outfit", sans-serif';
+            ctx.fillStyle = '#ffffff';
+            ctx.textAlign = 'left';
+            ctx.fillText('Synthèse Financière des Dépenses (MAD / Dirhams)', chartX + 30, chartY + 45);
+
+            // Simulated Bar Chart
+            const bars = [
+                { name: 'Carburant', amount: 142000, color: '#3b82f6' },
+                { name: 'Réparations', amount: 68500, color: '#f59e0b' },
+                { name: 'Vidanges', amount: 24300, color: '#10b981' },
+                { name: 'Assurances', amount: 89000, color: '#8b5cf6' },
+                { name: 'Infractions', amount: 12400, color: '#ef4444' }
+            ];
+
+            const barMax = 150000;
+            const animProgress = Math.min(1, (t - 1.5) / 3);
+
+            bars.forEach((bar, bIdx) => {
+                const by = chartY + 95 + bIdx * 62;
+                ctx.font = '600 17px "Inter", sans-serif';
+                ctx.fillStyle = '#cbd5e1';
+                ctx.fillText(bar.name, chartX + 30, by + 22);
+
+                const trackX = chartX + 170;
+                const trackW = 680;
+                ctx.fillStyle = '#1e293b';
+                ctx.fillRect(trackX, by + 6, trackW, 24);
+
+                const fillW = (bar.amount / barMax) * trackW * Math.max(0, animProgress);
+                ctx.fillStyle = bar.color;
+                ctx.fillRect(trackX, by + 6, fillW, 24);
+
+                ctx.font = '700 16px "JetBrains Mono", monospace';
+                ctx.fillStyle = '#ffffff';
+                ctx.fillText(`${(bar.amount * Math.max(0, animProgress)).toLocaleString('fr-FR', {maximumFractionDigits: 0})} DH`, trackX + trackW + 20, by + 22);
+            });
+
+            // Right Panel: Operational Status Donut
+            const donX = chartX + chartW + 30;
+            const donW = 680;
+            ctx.fillStyle = 'rgba(18, 24, 41, 0.9)';
+            ctx.fillRect(donX, chartY, donW, chartH);
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+            ctx.strokeRect(donX, chartY, donW, chartH);
+
+            ctx.font = '700 22px "Outfit", sans-serif';
+            ctx.fillStyle = '#ffffff';
+            ctx.fillText('État Général de la Flotte', donX + 30, chartY + 45);
+
+            // Donut graphic
+            const donutCx = donX + 180;
+            const donutCy = chartY + 230;
+            const radius = 100;
+
+            ctx.lineWidth = 26;
+            // Arc 1: Dispo (Green)
+            ctx.strokeStyle = '#10b981';
+            ctx.beginPath();
+            ctx.arc(donutCx, donutCy, radius, 0, Math.PI * 1.3);
+            ctx.stroke();
+
+            // Arc 2: En Mission (Blue)
+            ctx.strokeStyle = '#3b82f6';
+            ctx.beginPath();
+            ctx.arc(donutCx, donutCy, radius, Math.PI * 1.3, Math.PI * 1.8);
+            ctx.stroke();
+
+            // Arc 3: Maintenance (Amber)
+            ctx.strokeStyle = '#f59e0b';
+            ctx.beginPath();
+            ctx.arc(donutCx, donutCy, radius, Math.PI * 1.8, Math.PI * 2);
+            ctx.stroke();
+
+            ctx.font = '800 36px "Outfit", sans-serif';
+            ctx.fillStyle = '#ffffff';
+            ctx.textAlign = 'center';
+            ctx.fillText('94%', donutCx, donutCy + 10);
+            ctx.font = '500 14px "Inter", sans-serif';
+            ctx.fillStyle = '#94a3b8';
+            ctx.fillText('Disponibilité', donutCx, donutCy + 32);
+
+            // Donut Legend
+            const legendX = donX + 340;
+            const legendItems = [
+                { label: 'Disponible (65%)', color: '#10b981' },
+                { label: 'En Mission (25%)', color: '#3b82f6' },
+                { label: 'Maintenance (10%)', color: '#f59e0b' }
+            ];
+            legendItems.forEach((item, i) => {
+                const ly = chartY + 160 + i * 50;
+                ctx.fillStyle = item.color;
+                ctx.beginPath();
+                ctx.arc(legendX, ly, 8, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.font = '600 17px "Inter", sans-serif';
+                ctx.fillStyle = '#f1f5f9';
+                ctx.textAlign = 'left';
+                ctx.fillText(item.label, legendX + 24, ly + 6);
+            });
+        }
+
+        // ==========================================
+        // SCENE 3 : FLOTTE & CONDUCTEURS
+        // ==========================================
+        function drawScene2(scene, t) {
+            drawOverlayFrame(scene, t);
+
+            // Left: Vehicle Card
+            const cardW = 850;
+            const cardH = 620;
+            const leftX = 80;
+            const topY = 270;
+
+            ctx.fillStyle = 'rgba(18, 24, 41, 0.9)';
+            ctx.fillRect(leftX, topY, cardW, cardH);
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+            ctx.strokeRect(leftX, topY, cardW, cardH);
+
+            ctx.fillStyle = '#3b82f6';
+            ctx.fillRect(leftX, topY, cardW, 6);
+
+            ctx.font = '800 28px "Outfit", sans-serif';
+            ctx.fillStyle = '#ffffff';
+            ctx.textAlign = 'left';
+            ctx.fillText('Fiche Véhicule : Renault Master DCI', leftX + 40, topY + 55);
+
+            // Moroccan License Plate Style
+            const plateX = leftX + 40;
+            const plateY = topY + 85;
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(plateX, plateY, 260, 60);
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(plateX, plateY, 260, 60);
+
+            ctx.font = '800 28px "JetBrains Mono", monospace';
+            ctx.fillStyle = '#000000';
+            ctx.textAlign = 'center';
+            ctx.fillText('12458 | أ | 26', plateX + 130, plateY + 40);
+
+            // Status Badge
+            ctx.fillStyle = 'rgba(16, 185, 129, 0.2)';
+            ctx.fillRect(plateX + 290, plateY + 10, 180, 42);
+            ctx.strokeStyle = '#10b981';
+            ctx.strokeRect(plateX + 290, plateY + 10, 180, 42);
+            ctx.font = '700 16px "Inter", sans-serif';
+            ctx.fillStyle = '#10b981';
+            ctx.fillText('● EN SERVICE', plateX + 380, plateY + 36);
+
+            // Specs grid
+            const specs = [
+                { label: 'Kilométrage actuel', val: '84,320 km' },
+                { label: 'Charge Utile', val: '3,500 kg (Fourgon)' },
+                { label: 'Assurance', val: 'AXA Maroc (Valide)' },
+                { label: 'Prochaine Vidange', val: 'Dans 2,400 km' },
+                { label: 'Consommation Moy.', val: '8.4 L / 100km' },
+                { label: 'Dernière Révision', val: '12 Octobre 2026' }
+            ];
+
+            specs.forEach((spec, i) => {
+                const sx = leftX + 40 + (i % 2) * 400;
+                const sy = topY + 190 + Math.floor(i / 2) * 110;
+
+                ctx.fillStyle = 'rgba(30, 41, 59, 0.6)';
+                ctx.fillRect(sx, sy, 360, 85);
+                ctx.strokeStyle = '#334155';
+                ctx.strokeRect(sx, sy, 360, 85);
+
+                ctx.font = '500 15px "Inter", sans-serif';
+                ctx.fillStyle = '#94a3b8';
+                ctx.textAlign = 'left';
+                ctx.fillText(spec.label, sx + 20, sy + 32);
+
+                ctx.font = '700 22px "JetBrains Mono", monospace';
+                ctx.fillStyle = '#ffffff';
+                ctx.fillText(spec.val, sx + 20, sy + 65);
+            });
+
+            // Right: Driver Profile Card
+            const rightX = leftX + cardW + 40;
+            const rightW = 870;
+
+            ctx.fillStyle = 'rgba(18, 24, 41, 0.9)';
+            ctx.fillRect(rightX, topY, rightW, cardH);
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+            ctx.strokeRect(rightX, topY, rightW, cardH);
+
+            ctx.fillStyle = '#10b981';
+            ctx.fillRect(rightX, topY, rightW, 6);
+
+            ctx.font = '800 28px "Outfit", sans-serif';
+            ctx.fillStyle = '#ffffff';
+            ctx.textAlign = 'left';
+            ctx.fillText('Profil Conducteur : Amine Bennani', rightX + 40, topY + 55);
+
+            // Driver Avatar circle
+            const avX = rightX + 90;
+            const avY = topY + 150;
+            ctx.fillStyle = '#2563eb';
+            ctx.beginPath();
+            ctx.arc(avX, avY, 50, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#60a5fa';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            ctx.font = '800 36px "Outfit", sans-serif';
+            ctx.fillStyle = '#ffffff';
+            ctx.textAlign = 'center';
+            ctx.fillText('AB', avX, avY + 12);
+
+            // Driver Details
+            ctx.font = '700 24px "Outfit", sans-serif';
+            ctx.fillStyle = '#ffffff';
+            ctx.textAlign = 'left';
+            ctx.fillText('Amine Bennani', avX + 80, avY - 10);
+
+            ctx.font = '500 16px "Inter", sans-serif';
+            ctx.fillStyle = '#94a3b8';
+            ctx.fillText('Conducteur Poids Lourd • Chauffeur Référent', avX + 80, avY + 18);
+
+            // Badges
+            const dSpecs = [
+                { label: 'Permis de Conduire', val: 'Catégorie B, C, D (Valide)' },
+                { label: 'Score Éco-Conduite', val: '98 / 100 ★★★★★' },
+                { label: 'Missions Réalisées', val: '142 Missions Terminées' },
+                { label: 'Disponibilité', val: 'Assigné Mission #MS-402' }
+            ];
+
+            dSpecs.forEach((ds, i) => {
+                const dy = topY + 240 + i * 85;
+                ctx.fillStyle = 'rgba(30, 41, 59, 0.6)';
+                ctx.fillRect(rightX + 40, dy, rightW - 80, 68);
+                ctx.strokeStyle = '#334155';
+                ctx.strokeRect(rightX + 40, dy, rightW - 80, 68);
+
+                ctx.font = '500 15px "Inter", sans-serif';
+                ctx.fillStyle = '#94a3b8';
+                ctx.fillText(ds.label, rightX + 65, dy + 28);
+
+                ctx.font = '700 20px "JetBrains Mono", monospace';
+                ctx.fillStyle = '#38bdf8';
+                ctx.fillText(ds.val, rightX + 65, dy + 54);
+            });
+        }
+
+        // ==========================================
+        // SCENE 4 : GPS TRACKING & MISSIONS (Leaflet Style)
+        // ==========================================
+        function drawScene3(scene, t) {
+            drawOverlayFrame(scene, t);
+
+            const mapX = 80;
+            const mapY = 270;
+            const mapW = 1150;
+            const mapH = 620;
+
+            // Map Container Box (Dark Map style)
+            ctx.fillStyle = '#0b1120';
+            ctx.fillRect(mapX, mapY, mapW, mapH);
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+            ctx.strokeRect(mapX, mapY, mapW, mapH);
+
+            // Grid lines on map
+            ctx.strokeStyle = 'rgba(56, 189, 248, 0.08)';
+            ctx.lineWidth = 1;
+            for (let x = mapX; x <= mapX + mapW; x += 50) {
+                ctx.beginPath();
+                ctx.moveTo(x, mapY);
+                ctx.lineTo(x, mapY + mapH);
+                ctx.stroke();
+            }
+            for (let y = mapY; y <= mapY + mapH; y += 50) {
+                ctx.beginPath();
+                ctx.moveTo(mapX, y);
+                ctx.lineTo(mapX + mapW, y);
+                ctx.stroke();
+            }
+
+            // Road Highway Route: Casablanca -> Rabat -> Tanger
+            const waypoints = [
+                { x: mapX + 150, y: mapY + 480, name: 'Casablanca (Port)' },
+                { x: mapX + 380, y: mapY + 360, name: 'Mohammedia' },
+                { x: mapX + 540, y: mapY + 280, name: 'Rabat (Hub)' },
+                { x: mapX + 720, y: mapY + 200, name: 'Kénitra' },
+                { x: mapX + 960, y: mapY + 120, name: 'Tanger Med (Arrivée)' }
+            ];
+
+            // Draw Highway Line
+            ctx.strokeStyle = '#1e3a8a';
+            ctx.lineWidth = 10;
+            ctx.beginPath();
+            waypoints.forEach((wp, i) => {
+                if (i === 0) ctx.moveTo(wp.x, wp.y);
+                else ctx.lineTo(wp.x, wp.y);
+            });
+            ctx.stroke();
+
+            // Active GPS Trail (Cyan glow)
+            const routeProgress = Math.min(1, (t / scene.duration) * 1.15);
+            ctx.strokeStyle = '#06b6d4';
+            ctx.lineWidth = 5;
+            ctx.beginPath();
+            waypoints.forEach((wp, i) => {
+                if (i === 0) ctx.moveTo(wp.x, wp.y);
+                else ctx.lineTo(wp.x, wp.y);
+            });
+            ctx.stroke();
+
+            // Draw Waypoint Pins
+            waypoints.forEach(wp => {
+                ctx.fillStyle = '#0f172a';
+                ctx.beginPath();
+                ctx.arc(wp.x, wp.y, 8, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#38bdf8';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+
+                ctx.font = '600 14px "Inter", sans-serif';
+                ctx.fillStyle = '#e2e8f0';
+                ctx.textAlign = 'center';
+                ctx.fillText(wp.name, wp.x, wp.y + 26);
+            });
+
+            // Moving Vehicle Position
+            const totalWp = waypoints.length - 1;
+            const currentSegFloat = routeProgress * totalWp;
+            const segIdx = Math.min(totalWp - 1, Math.floor(currentSegFloat));
+            const segFraction = currentSegFloat - segIdx;
+
+            const p1 = waypoints[segIdx];
+            const p2 = waypoints[segIdx + 1];
+            const vehX = p1.x + (p2.x - p1.x) * segFraction;
+            const vehY = p1.y + (p2.y - p1.y) * segFraction;
+
+            // Vehicle Marker Glow
+            const vGlow = ctx.createRadialGradient(vehX, vehY, 5, vehX, vehY, 35);
+            vGlow.addColorStop(0, 'rgba(16, 185, 129, 0.8)');
+            vGlow.addColorStop(1, 'rgba(16, 185, 129, 0)');
+            ctx.fillStyle = vGlow;
+            ctx.beginPath();
+            ctx.arc(vehX, vehY, 35, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Vehicle Dot
+            ctx.fillStyle = '#10b981';
+            ctx.beginPath();
+            ctx.arc(vehX, vehY, 14, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            // Vehicle Floating Tag
+            ctx.fillStyle = 'rgba(15, 23, 42, 0.9)';
+            ctx.fillRect(vehX - 90, vehY - 55, 180, 36);
+            ctx.strokeStyle = '#10b981';
+            ctx.strokeRect(vehX - 90, vehY - 55, 180, 36);
+
+            ctx.font = '700 13px "JetBrains Mono", monospace';
+            ctx.fillStyle = '#ffffff';
+            ctx.textAlign = 'center';
+            ctx.fillText('12458-A-26 • 88 km/h', vehX, vehY - 32);
+
+            // Right Panel: Mission Telemetry & Parcel Tracker
+            const rightX = mapX + mapW + 30;
+            const rightW = 580;
+
+            ctx.fillStyle = 'rgba(18, 24, 41, 0.9)';
+            ctx.fillRect(rightX, mapY, rightW, mapH);
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+            ctx.strokeRect(rightX, mapY, rightW, mapH);
+
+            ctx.font = '800 24px "Outfit", sans-serif';
+            ctx.fillStyle = '#ffffff';
+            ctx.textAlign = 'left';
+            ctx.fillText('Télémétrie de la Mission #MS-402', rightX + 30, mapY + 50);
+
+            // Telemetry Gauges
+            const telem = [
+                { label: 'Vitesse Actuelle', val: '88 km/h (Régulateur)', color: '#10b981' },
+                { label: 'Distance Restante', val: '142 km / 330 km', color: '#38bdf8' },
+                { label: 'Heure d\'Arrivée Estimée', val: '18:45 (À l\'heure)', color: '#a78bfa' },
+                { label: 'Statut du Trajet', val: '● En Transit Autoroute A1', color: '#34d399' }
+            ];
+
+            telem.forEach((item, idx) => {
+                const ty = mapY + 90 + idx * 80;
+                ctx.fillStyle = 'rgba(30, 41, 59, 0.6)';
+                ctx.fillRect(rightX + 30, ty, rightW - 60, 65);
+                ctx.strokeStyle = '#334155';
+                ctx.strokeRect(rightX + 30, ty, rightW - 60, 65);
+
+                ctx.font = '500 14px "Inter", sans-serif';
+                ctx.fillStyle = '#94a3b8';
+                ctx.fillText(item.label, rightX + 45, ty + 26);
+
+                ctx.font = '700 18px "JetBrains Mono", monospace';
+                ctx.fillStyle = item.color;
+                ctx.fillText(item.val, rightX + 45, ty + 50);
+            });
+
+            // Cargo Tracking Box
+            const cargoY = mapY + 430;
+            ctx.fillStyle = 'rgba(2, 6, 23, 0.8)';
+            ctx.fillRect(rightX + 30, cargoY, rightW - 60, 150);
+            ctx.strokeStyle = 'rgba(56, 189, 248, 0.3)';
+            ctx.strokeRect(rightX + 30, cargoY, rightW - 60, 150);
+
+            ctx.font = '700 18px "Outfit", sans-serif';
+            ctx.fillStyle = '#38bdf8';
+            ctx.fillText('Colis & Fret Embarqué', rightX + 50, cargoY + 36);
+
+            ctx.font = '500 15px "Inter", sans-serif';
+            ctx.fillStyle = '#cbd5e1';
+            ctx.fillText('Code Suivi : PV-TRK-8942-MA', rightX + 50, cargoY + 70);
+            ctx.fillText('Poids : 1,240 kg  •  Volume : 12 m³', rightX + 50, cargoY + 98);
+            ctx.fillText('Destinataire : Hub Logistique Tanger Zone Franche', rightX + 50, cargoY + 126);
+        }
+
+        // ==========================================
+        // SCENE 5 : MAINTENANCE & SOS ALERTS
+        // ==========================================
+        function drawScene4(scene, t) {
+            drawOverlayFrame(scene, t);
+
+            const startX = 80;
+            const startY = 270;
+            const cardW = 550;
+            const cardH = 620;
+
+            // Card 1: Vidanges & Huile
+            ctx.fillStyle = 'rgba(18, 24, 41, 0.9)';
+            ctx.fillRect(startX, startY, cardW, cardH);
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+            ctx.strokeRect(startX, startY, cardW, cardH);
+            ctx.fillStyle = '#3b82f6';
+            ctx.fillRect(startX, startY, cardW, 6);
+
+            ctx.font = '800 24px "Outfit", sans-serif';
+            ctx.fillStyle = '#ffffff';
+            ctx.textAlign = 'left';
+            ctx.fillText('Programme des Vidanges', startX + 30, startY + 50);
+
+            const vidanges = [
+                { plate: '12458-A-26', type: 'Total 5W30', due: 'Dans 1,200 km', status: 'À Planifier', stColor: '#f59e0b' },
+                { plate: '98412-B-01', type: 'Castrol 10W40', due: 'Effectuée hier', status: 'À Jour', stColor: '#10b981' },
+                { plate: '45102-D-15', type: 'Total 5W40', due: 'Dans 4,500 km', status: 'À Jour', stColor: '#10b981' },
+                { plate: '77219-A-06', type: 'Shell Helix 5W30', due: 'DÉPASSÉE (+300 km)', status: 'URGENT', stColor: '#ef4444' }
+            ];
+
+            vidanges.forEach((v, i) => {
+                const vy = startY + 80 + i * 125;
+                ctx.fillStyle = 'rgba(30, 41, 59, 0.6)';
+                ctx.fillRect(startX + 25, vy, cardW - 50, 105);
+                ctx.strokeStyle = '#334155';
+                ctx.strokeRect(startX + 25, vy, cardW - 50, 105);
+
+                ctx.font = '700 18px "JetBrains Mono", monospace';
+                ctx.fillStyle = '#ffffff';
+                ctx.fillText(v.plate, startX + 45, vy + 32);
+
+                ctx.font = '500 15px "Inter", sans-serif';
+                ctx.fillStyle = '#94a3b8';
+                ctx.fillText(`Huile : ${v.type}`, startX + 45, vy + 60);
+                ctx.fillText(v.due, startX + 45, vy + 86);
+
+                ctx.fillStyle = v.stColor;
+                ctx.font = '700 15px "Inter", sans-serif';
+                ctx.textAlign = 'right';
+                ctx.fillText(v.status, startX + cardW - 45, vy + 35);
+                ctx.textAlign = 'left';
+            });
+
+            // Card 2: Réparations & Pièces
+            const midX = startX + cardW + 30;
+            ctx.fillStyle = 'rgba(18, 24, 41, 0.9)';
+            ctx.fillRect(midX, startY, cardW, cardH);
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+            ctx.strokeRect(midX, startY, cardW, cardH);
+            ctx.fillStyle = '#10b981';
+            ctx.fillRect(midX, startY, cardW, 6);
+
+            ctx.font = '800 24px "Outfit", sans-serif';
+            ctx.fillStyle = '#ffffff';
+            ctx.fillText('Réparations & Garages', midX + 30, startY + 50);
+
+            const reps = [
+                { piece: 'Plaquettes & Disques de Frein', garage: 'Garage Central Auto Casa', cost: '3,800 DH', date: 'Payé le 28/10' },
+                { piece: 'Remplacement Embrayage', garage: 'Prestataire SOS Mécanique', cost: '8,400 DH', date: 'En cours' },
+                { piece: 'Alternateur & Batterie 12V', garage: 'Atelier Électro Auto', cost: '2,900 DH', date: 'Payé le 21/10' },
+                { piece: 'Rotules de Direction', garage: 'Garage Al Amal', cost: '1,650 DH', date: 'Payé le 15/10' }
+            ];
+
+            reps.forEach((r, i) => {
+                const ry = startY + 80 + i * 125;
+                ctx.fillStyle = 'rgba(30, 41, 59, 0.6)';
+                ctx.fillRect(midX + 25, ry, cardW - 50, 105);
+                ctx.strokeStyle = '#334155';
+                ctx.strokeRect(midX + 25, ry, cardW - 50, 105);
+
+                ctx.font = '700 18px "Outfit", sans-serif';
+                ctx.fillStyle = '#ffffff';
+                ctx.fillText(r.piece, midX + 45, ry + 32);
+
+                ctx.font = '500 14px "Inter", sans-serif';
+                ctx.fillStyle = '#94a3b8';
+                ctx.fillText(r.garage, midX + 45, ry + 60);
+
+                ctx.font = '700 18px "JetBrains Mono", monospace';
+                ctx.fillStyle = '#34d399';
+                ctx.fillText(r.cost, midX + 45, ry + 88);
+
+                ctx.font = '500 14px "Inter", sans-serif';
+                ctx.fillStyle = '#cbd5e1';
+                ctx.textAlign = 'right';
+                ctx.fillText(r.date, midX + cardW - 45, ry + 88);
+                ctx.textAlign = 'left';
+            });
+
+            // Card 3: Dépannage SOS & Accidents
+            const rightX = midX + cardW + 30;
+            ctx.fillStyle = 'rgba(18, 24, 41, 0.9)';
+            ctx.fillRect(rightX, startY, cardW, cardH);
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+            ctx.strokeRect(rightX, startY, cardW, cardH);
+            ctx.fillStyle = '#ef4444';
+            ctx.fillRect(rightX, startY, cardW, 6);
+
+            ctx.font = '800 24px "Outfit", sans-serif';
+            ctx.fillStyle = '#ffffff';
+            ctx.fillText('Incidents & Remorquage SOS', rightX + 30, startY + 50);
+
+            // SOS Alert Banner
+            ctx.fillStyle = 'rgba(239, 68, 68, 0.15)';
+            ctx.fillRect(rightX + 25, startY + 80, cardW - 50, 140);
+            ctx.strokeStyle = '#ef4444';
+            ctx.strokeRect(rightX + 25, startY + 80, cardW - 50, 140);
+
+            ctx.font = '800 20px "Outfit", sans-serif';
+            ctx.fillStyle = '#ef4444';
+            ctx.fillText('⚠️ DÉPANNAGE EN COURS (SOS)', rightX + 45, startY + 115);
+
+            ctx.font = '500 15px "Inter", sans-serif';
+            ctx.fillStyle = '#ffffff';
+            ctx.fillText('Véhicule : Peugeot Boxer 67123-B-08', rightX + 45, startY + 145);
+            ctx.fillText('Cause : Crevaison & Défaillance Suspension', rightX + 45, startY + 172);
+            ctx.fillText('Dépanneur assigné : Assistance Autoroute Maroc', rightX + 45, startY + 198);
+
+            // Accident report section
+            ctx.fillStyle = 'rgba(30, 41, 59, 0.6)';
+            ctx.fillRect(rightX + 25, startY + 245, cardW - 50, 320);
+            ctx.strokeStyle = '#334155';
+            ctx.strokeRect(rightX + 25, startY + 245, cardW - 50, 320);
+
+            ctx.font = '700 18px "Outfit", sans-serif';
+            ctx.fillStyle = '#ffffff';
+            ctx.fillText('Dossiers Sinistres & Assurances', rightX + 45, startY + 280);
+
+            const accidents = [
+                { desc: 'Accroc pare-chocs parking', grav: 'Légère', budget: '1,500 DH', stat: 'Clôturé' },
+                { desc: 'Choc latéral rond-point', grav: 'Moyenne', budget: '7,200 DH', stat: 'Expertise AXA' }
+            ];
+
+            accidents.forEach((acc, i) => {
+                const ay = startY + 310 + i * 110;
+                ctx.fillStyle = 'rgba(15, 23, 42, 0.8)';
+                ctx.fillRect(rightX + 45, ay, cardW - 90, 90);
+                ctx.font = '600 16px "Inter", sans-serif';
+                ctx.fillStyle = '#f8fafc';
+                ctx.fillText(acc.desc, rightX + 60, ay + 30);
+
+                ctx.font = '500 14px "Inter", sans-serif';
+                ctx.fillStyle = '#94a3b8';
+                ctx.fillText(`Gravité : ${acc.grav} • Estimation : ${acc.budget}`, rightX + 60, ay + 60);
+            });
+        }
+
+        // ==========================================
+        // SCENE 6 : GED & TESSERACT OCR
+        // ==========================================
+        function drawScene5(scene, t) {
+            drawOverlayFrame(scene, t);
+
+            const docX = 80;
+            const docY = 270;
+            const docW = 820;
+            const docH = 620;
+
+            // Document Scanner Container
+            ctx.fillStyle = 'rgba(18, 24, 41, 0.9)';
+            ctx.fillRect(docX, docY, docW, docH);
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+            ctx.strokeRect(docX, docY, docW, docH);
+
+            ctx.font = '800 24px "Outfit", sans-serif';
+            ctx.fillStyle = '#ffffff';
+            ctx.textAlign = 'left';
+            ctx.fillText('Numérisation & OCR Automatique (Tess4J)', docX + 30, docY + 50);
+
+            // Simulated Paper Invoice / Carte Grise
+            const paperX = docX + 60;
+            const paperY = docY + 80;
+            const paperW = 700;
+            const paperH = 490;
+
+            ctx.fillStyle = '#f8fafc';
+            ctx.fillRect(paperX, paperY, paperW, paperH);
+            ctx.strokeStyle = '#cbd5e1';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(paperX, paperY, paperW, paperH);
+
+            // Document header & fake lines
+            ctx.fillStyle = '#0f172a';
+            ctx.font = '800 20px "Outfit", sans-serif';
+            ctx.fillText('FACTURE D\'ENTRETIEN & CARBURANT', paperX + 40, paperY + 45);
+
+            ctx.font = '600 14px "JetBrains Mono", monospace';
+            ctx.fillStyle = '#475569';
+            ctx.fillText('Fournisseur : TotalEnergies Marketing Maroc SA', paperX + 40, paperY + 80);
+            ctx.fillText('Réf Facture : FA-2026-9042  •  Date : 29/10/2026', paperX + 40, paperY + 105);
+            ctx.fillText('Véhicule : Immatriculation 12458-A-26', paperX + 40, paperY + 130);
+
+            // Invoice Table Lines
+            ctx.strokeStyle = '#e2e8f0';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(paperX + 40, paperY + 155);
+            ctx.lineTo(paperX + paperW - 40, paperY + 155);
+            ctx.stroke();
+
+            ctx.font = '500 13px "Inter", sans-serif';
+            ctx.fillStyle = '#334155';
+            ctx.fillText('Désignation : Gazole Excellium 500 Litres', paperX + 40, paperY + 190);
+            ctx.fillText('Montant HT : 6,250.00 MAD  |  TVA 14% : 875.00 MAD', paperX + 40, paperY + 220);
+
+            ctx.font = '800 18px "JetBrains Mono", monospace';
+            ctx.fillStyle = '#0f172a';
+            ctx.fillText('TOTAL TTC RÉGLÉ : 7,125.00 MAD', paperX + 40, paperY + 280);
+
+            // Animated Laser Scanner Beam (Glowing Cyan Line)
+            const scanPos = (Math.sin(t * 2.5) * 0.5 + 0.5) * (paperH - 40);
+            const beamY = paperY + 20 + scanPos;
+
+            const beamGrad = ctx.createLinearGradient(paperX, beamY - 15, paperX, beamY + 15);
+            beamGrad.addColorStop(0, 'rgba(6, 182, 212, 0)');
+            beamGrad.addColorStop(0.5, 'rgba(6, 182, 212, 0.4)');
+            beamGrad.addColorStop(1, 'rgba(6, 182, 212, 0)');
+            ctx.fillStyle = beamGrad;
+            ctx.fillRect(paperX, beamY - 15, paperW, 30);
+
+            ctx.strokeStyle = '#06b6d4';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(paperX, beamY);
+            ctx.lineTo(paperX + paperW, beamY);
+            ctx.stroke();
+
+            // Right Panel: Extracted OCR Text & Global Search
+            const rightX = docX + docW + 40;
+            const rightW = 900;
+
+            ctx.fillStyle = 'rgba(18, 24, 41, 0.9)';
+            ctx.fillRect(rightX, docY, rightW, docH);
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+            ctx.strokeRect(rightX, docY, rightW, docH);
+
+            ctx.font = '800 24px "Outfit", sans-serif';
+            ctx.fillStyle = '#ffffff';
+            ctx.fillText('Recherche Plein Texte & Indexation OCR', rightX + 30, docY + 50);
+
+            // Search Bar Input Mockup
+            const searchY = docY + 80;
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(rightX + 30, searchY, rightW - 60, 56);
+            ctx.strokeStyle = '#3b82f6';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(rightX + 30, searchY, rightW - 60, 56);
+
+            // Auto typing simulation in search box
+            const queryText = "TotalEnergies 7125";
+            const charsToShow = Math.min(queryText.length, Math.floor((t - 1) * 6));
+            const typed = queryText.substring(0, Math.max(0, charsToShow));
+
+            ctx.font = '600 18px "Inter", sans-serif';
+            ctx.fillStyle = '#38bdf8';
+            ctx.fillText(`🔍  ${typed}|`, rightX + 50, searchY + 35);
+
+            // Search Results with Highlighted Snippet
+            ctx.font = '700 17px "Outfit", sans-serif';
+            ctx.fillStyle = '#10b981';
+            ctx.fillText('✔ 1 Document trouvé instantanément dans le contenu extrait :', rightX + 30, searchY + 95);
+
+            const resultBoxY = searchY + 120;
+            ctx.fillStyle = 'rgba(30, 41, 59, 0.7)';
+            ctx.fillRect(rightX + 30, resultBoxY, rightW - 60, 310);
+            ctx.strokeStyle = '#334155';
+            ctx.strokeRect(rightX + 30, resultBoxY, rightW - 60, 310);
+
+            ctx.font = '800 18px "Outfit", sans-serif';
+            ctx.fillStyle = '#ffffff';
+            ctx.fillText('📄 Facture_Carburant_Total_Octobre.pdf', rightX + 50, resultBoxY + 40);
+
+            ctx.font = '500 14px "Inter", sans-serif';
+            ctx.fillStyle = '#94a3b8';
+            ctx.fillText('Dossier : /Archives/Comptabilité/Carburant/2026', rightX + 50, resultBoxY + 70);
+
+            // Extracted OCR text box
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(rightX + 50, resultBoxY + 95, rightW - 100, 180);
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+            ctx.strokeRect(rightX + 50, resultBoxY + 95, rightW - 100, 180);
+
+            ctx.font = '500 14px "JetBrains Mono", monospace';
+            ctx.fillStyle = '#cbd5e1';
+            ctx.fillText('... Fournisseur : TotalEnergies Marketing Maroc SA', rightX + 70, resultBoxY + 135);
+
+            // Highlighted search term in text
+            ctx.fillStyle = 'rgba(245, 158, 11, 0.3)';
+            ctx.fillRect(rightX + 70, resultBoxY + 155, 290, 24);
+            ctx.fillStyle = '#fbbf24';
+            ctx.fillText('TOTAL TTC RÉGLÉ : 7,125.00 MAD', rightX + 70, resultBoxY + 172);
+
+            ctx.fillStyle = '#cbd5e1';
+            ctx.fillText('Réf Facture : FA-2026-9042  •  Immat : 12458-A-26 ...', rightX + 70, resultBoxY + 210);
+        }
+
+        // ==========================================
+        // SCENE 7 : ARCHITECTURE & OUTRO
+        // ==========================================
+        function drawScene6(scene, t) {
+            drawOverlayFrame(scene, t);
+
+            const startX = 80;
+            const startY = 270;
+            const cardW = 850;
+            const cardH = 620;
+
+            // Left: Architecture Stack
+            ctx.fillStyle = 'rgba(18, 24, 41, 0.9)';
+            ctx.fillRect(startX, startY, cardW, cardH);
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+            ctx.strokeRect(startX, startY, cardW, cardH);
+            ctx.fillStyle = '#2563eb';
+            ctx.fillRect(startX, startY, cardW, 6);
+
+            ctx.font = '800 28px "Outfit", sans-serif';
+            ctx.fillStyle = '#ffffff';
+            ctx.textAlign = 'left';
+            ctx.fillText('Stack Technologique de Production', startX + 40, startY + 55);
+
+            const stack = [
+                { layer: 'Backend Framework', tech: 'Java 25 • Spring Boot 4', desc: 'Contrôleurs REST, Services métier transactionnels & Spring Data JPA' },
+                { layer: 'Base de Données', tech: 'PostgreSQL Relational DB', desc: 'Schéma normalisé, intégrité référentielle, indexation avancée' },
+                { layer: 'Sécurité & Auth', tech: 'Spring Security & JWT', desc: 'Gestion sécurisée par cookies HttpOnly, rôles ADMIN & CONDUCTEUR' },
+                { layer: 'Moteur OCR', tech: 'Tesseract OCR (Tess4J)', desc: 'Extraction asynchrone multithreadée du texte des images & PDFs' },
+                { layer: 'Cartographie', tech: 'Leaflet.js & OpenStreetMap', desc: 'Calcul d\'itinéraires, simulation GPS et marqueurs en temps réel' }
+            ];
+
+            stack.forEach((st, i) => {
+                const sy = startY + 85 + i * 100;
+                ctx.fillStyle = 'rgba(30, 41, 59, 0.6)';
+                ctx.fillRect(startX + 30, sy, cardW - 60, 85);
+                ctx.strokeStyle = '#334155';
+                ctx.strokeRect(startX + 30, sy, cardW - 60, 85);
+
+                ctx.font = '700 14px "JetBrains Mono", monospace';
+                ctx.fillStyle = '#38bdf8';
+                ctx.fillText(st.layer, startX + 50, sy + 28);
+
+                ctx.font = '800 18px "Outfit", sans-serif';
+                ctx.fillStyle = '#ffffff';
+                ctx.fillText(st.tech, startX + 50, sy + 54);
+
+                ctx.font = '500 13px "Inter", sans-serif';
+                ctx.fillStyle = '#94a3b8';
+                ctx.fillText(st.desc, startX + 50, sy + 74);
+            });
+
+            // Right: Final Project Credits & Call to Action
+            const rightX = startX + cardW + 40;
+            const rightW = 870;
+
+            ctx.fillStyle = 'rgba(18, 24, 41, 0.9)';
+            ctx.fillRect(rightX, startY, rightW, cardH);
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+            ctx.strokeRect(rightX, startY, rightW, cardH);
+            ctx.fillStyle = '#06b6d4';
+            ctx.fillRect(rightX, startY, rightW, 6);
+
+            const cx = rightX + rightW / 2;
+            const cy = startY + cardH / 2;
+
+            ctx.font = '900 60px "Outfit", sans-serif';
+            ctx.fillStyle = '#ffffff';
+            ctx.textAlign = 'center';
+            ctx.fillText('PARCVISION', cx, cy - 80);
+
+            ctx.font = '600 24px "Inter", sans-serif';
+            ctx.fillStyle = '#38bdf8';
+            ctx.fillText('Prêt pour le Déploiement Opérationnel', cx, cy - 25);
+
+            ctx.font = '400 18px "Inter", sans-serif';
+            ctx.fillStyle = '#94a3b8';
+            ctx.fillText('Gestionnaire de flotte nouvelle génération & Archivage numérique', cx, cy + 20);
+
+            // Call to Action button mockup
+            ctx.fillStyle = 'linear-gradient(135deg, #2563eb, #06b6d4)';
+            ctx.fillRect(cx - 160, cy + 80, 320, 60);
+            ctx.strokeStyle = '#93c5fd';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(cx - 160, cy + 80, 320, 60);
+
+            ctx.font = '700 18px "Outfit", sans-serif';
+            ctx.fillStyle = '#ffffff';
+            ctx.fillText('🚀 DÉMARRER LA DÉMO', cx, cy + 116);
+        }
+
+        // ==========================================
+        // MAIN DISPATCHER & RENDER LOOP
+        // ==========================================
+        function renderFrame(timeInSec) {
+            drawGlobalBackground(timeInSec);
+
+            // Locate current scene
+            let currentScene = SCENES[0];
+            for (let i = 0; i < SCENES.length; i++) {
+                if (timeInSec >= SCENES[i].startTime && timeInSec < SCENES[i].endTime) {
+                    currentScene = SCENES[i];
+                    break;
+                }
+            }
+            if (timeInSec >= totalDuration) {
+                currentScene = SCENES[SCENES.length - 1];
+            }
+
+            const localTime = Math.max(0, timeInSec - currentScene.startTime);
+
+            // Dispatch scene drawing
+            switch (currentScene.id) {
+                case 0: drawScene0(currentScene, localTime); break;
+                case 1: drawScene1(currentScene, localTime); break;
+                case 2: drawScene2(currentScene, localTime); break;
+                case 3: drawScene3(currentScene, localTime); break;
+                case 4: drawScene4(currentScene, localTime); break;
+                case 5: drawScene5(currentScene, localTime); break;
+                case 6: drawScene6(currentScene, localTime); break;
+            }
+
+            // Update UI & Captions if scene changed
+            if (lastSpokenScene !== currentScene.id) {
+                lastSpokenScene = currentScene.id;
+                playSynthChord(currentScene.id);
+                speakSceneCaption(currentScene);
+
+                // Update Captions UI
+                const lang = voiceLangSelect.value;
+                captionsBar.innerText = lang.startsWith('en') ? currentScene.captionEn : currentScene.captionFr;
+
+                // Update active pill
+                SCENES.forEach(s => {
+                    if (s.pillEl) {
+                        s.pillEl.classList.toggle('active', s.id === currentScene.id);
+                    }
+                });
+            }
+
+            // Update Timeline scrubber UI
+            const percent = (timeInSec / totalDuration) * 100;
+            timelineFill.style.width = `${Math.min(100, percent)}%`;
+
+            const curMin = Math.floor(timeInSec / 60).toString().padStart(2, '0');
+            const curSec = Math.floor(timeInSec % 60).toString().padStart(2, '0');
+            const totMin = Math.floor(totalDuration / 60).toString().padStart(2, '0');
+            const totSec = Math.floor(totalDuration % 60).toString().padStart(2, '0');
+            timeDisplay.innerText = `${curMin}:${curSec} / ${totMin}:${totSec}`;
+        }
+
+        function animationLoop(timestamp) {
+            const dt = (timestamp - lastFrameTime) / 1000;
+            lastFrameTime = timestamp;
+
+            if (isPlaying) {
+                currentTime += dt;
+                if (currentTime >= totalDuration) {
+                    currentTime = totalDuration;
+                    pauseVideo();
+                    if (isRecording) stopRecording();
+                }
+            }
+
+            renderFrame(currentTime);
+            requestAnimationFrame(animationLoop);
+        }
+
+        // ==========================================
+        // PLAYBACK CONTROLS
+        // ==========================================
+        function playVideo() {
+            initAudio();
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            if (currentTime >= totalDuration) {
+                currentTime = 0;
+                lastSpokenScene = -1;
+            }
+            isPlaying = true;
+            playIcon.innerText = '⏸';
+            playText.innerText = 'Pause';
+            lastFrameTime = performance.now();
+        }
+
+        function pauseVideo() {
+            isPlaying = false;
+            playIcon.innerText = '▶';
+            playText.innerText = 'Lire la vidéo';
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.pause();
+            }
+        }
+
+        function seekTo(targetTime) {
+            currentTime = Math.max(0, Math.min(totalDuration, targetTime));
+            lastSpokenScene = -1; // Force voiceover & chord replay
+            renderFrame(currentTime);
+        }
+
+        playBtn.addEventListener('click', () => {
+            if (isPlaying) pauseVideo();
+            else playVideo();
+        });
+
+        restartBtn.addEventListener('click', () => {
+            seekTo(0);
+            playVideo();
+        });
+
+        timelineTrack.addEventListener('click', (e) => {
+            const rect = timelineTrack.getBoundingClientRect();
+            const clickPos = (e.clientX - rect.left) / rect.width;
+            seekTo(clickPos * totalDuration);
+        });
+
+        // ==========================================
+        // MEDIA RECORDER (Video Export Engine)
+        // ==========================================
+        function startRecording() {
+            initAudio();
+            recordedChunks = [];
+
+            // Capture 60 FPS stream from canvas
+            const canvasStream = canvas.captureStream(60);
+
+            // Add audio stream if available
+            let combinedStream = canvasStream;
+            if (audioDestNode && audioDestNode.stream) {
+                const audioTrack = audioDestNode.stream.getAudioTracks()[0];
+                if (audioTrack) {
+                    canvasStream.addTrack(audioTrack);
+                }
+            }
+
+            const options = { mimeType: 'video/webm; codecs=vp9' };
+            try {
+                mediaRecorder = new MediaRecorder(canvasStream, options);
+            } catch (e) {
+                mediaRecorder = new MediaRecorder(canvasStream);
+            }
+
+            mediaRecorder.ondataavailable = (event) => {
+                if (event.data && event.data.size > 0) {
+                    recordedChunks.push(event.data);
+                }
+            };
+
+            mediaRecorder.onstop = () => {
+                const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = `ParcVision_Showcase_Video.webm`;
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(() => {
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                }, 100);
+
+                recBadge.style.display = 'none';
+                recordBtn.innerText = '⏺ Exporter la Vidéo (.WebM)';
+                recordBtn.classList.remove('recording');
+                isRecording = false;
+            };
+
+            mediaRecorder.start(100);
+            isRecording = true;
+            recBadge.style.display = 'flex';
+            recordBtn.innerText = '⏹ Arrêter & Télécharger';
+
+            // Auto seek to start and play
+            seekTo(0);
+            playVideo();
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+            }
+        }
+
+        recordBtn.addEventListener('click', () => {
+            if (!isRecording) startRecording();
+            else stopRecording();
+        });
+
+        // Fullscreen Toggle
+        fullscreenBtn.addEventListener('click', () => {
+            const elem = document.getElementById('stageWrapper');
+            if (!document.fullscreenElement) {
+                elem.requestFullscreen().catch(err => alert(err.message));
+            } else {
+                document.exitFullscreen();
+            }
+        });
+
+        // Initial setup
+        renderFrame(0);
+        requestAnimationFrame(animationLoop);
+    </script>
+</body>
+</html>
