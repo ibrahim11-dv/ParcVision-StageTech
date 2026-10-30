@@ -37,6 +37,7 @@ async function submitDeleteMission() {
         if (response.ok) {
             closeModal('confirmDeleteModal');
             fetchMissions();
+            if (window.loadSidebarStats) window.loadSidebarStats();
             showSuccess('Mission supprimée', 'La mission a été supprimée avec succès.');
         } else {
             const error = await response.text();
@@ -444,6 +445,7 @@ document.getElementById('confirmDeliveryAction')?.addEventListener('click', asyn
             if (modalInstance) modalInstance.hide();
             
             fetchMissions();
+            if (window.loadSidebarStats) window.loadSidebarStats();
             missionIdToConfirm = null;
             showSuccess('Mission Livrée', 'La mission a été marquée comme livrée avec succès.');
         } else {
@@ -667,6 +669,7 @@ async function saveEditMission() {
         if (modalInstance) modalInstance.hide();
 
         fetchMissions();
+        if (window.loadSidebarStats) window.loadSidebarStats();
         showSuccess('Mission mise à jour', 'La mission a été mise à jour avec succès !');
 
     } catch (error) {

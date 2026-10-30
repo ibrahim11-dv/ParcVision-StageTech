@@ -42,19 +42,48 @@ document.addEventListener("DOMContentLoaded", function () {
     const line1 = document.getElementById("line1");
     const dot2 = document.getElementById("dot2");
 
-    if (step1 && step2 && btnNext && btnBack) {
-        btnNext.addEventListener("click", function () {
-            // validate step 1
-            const step1Inputs = step1.querySelectorAll("input[required]");
-            let isValid = true;
-            for (const input of step1Inputs) {
+    function validateStep1() {
+        if (!step1) return false;
+        const requiredIds = ["nom", "email", "telephone", "secteurActivite", "dateCreation", "adresse"];
+        for (const id of requiredIds) {
+            const input = document.getElementById(id);
+            if (input) {
+                input.setCustomValidity("");
+                if (!input.value || !input.value.trim()) {
+                    input.setCustomValidity("Veuillez renseigner ce champ obligatoire.");
+                    input.reportValidity();
+                    input.focus();
+                    return false;
+                }
                 if (!input.checkValidity()) {
                     input.reportValidity();
-                    isValid = false;
-                    break;
+                    input.focus();
+                    return false;
                 }
             }
-            if (!isValid) return;
+        }
+        const step1Inputs = step1.querySelectorAll("input[required]");
+        for (const input of step1Inputs) {
+            if (!input.checkValidity()) {
+                input.reportValidity();
+                input.focus();
+                return false;
+            }
+        }
+        return true;
+    }
+
+    window.validateStep1 = validateStep1;
+
+    if (step1) {
+        step1.querySelectorAll("input").forEach(inp => {
+            inp.addEventListener("input", () => inp.setCustomValidity(""));
+        });
+    }
+
+    if (step1 && step2 && btnNext && btnBack) {
+        btnNext.addEventListener("click", function () {
+            if (!validateStep1()) return;
 
             // Transition to next step
             step1.classList.add("step-exit-left");

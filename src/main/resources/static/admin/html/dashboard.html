@@ -1075,7 +1075,6 @@
 <div class="shell">
 
     <aside class="sidebar" id="sidebar">
-
         <a href="/admin/dashboard" class="sb-brand">
             <div class="brand-icon"><i class="bi bi-car-front-fill"></i></div>
             <div class="brand-text">
@@ -1085,9 +1084,7 @@
         </a>
 
         <div class="sb-body">
-
             <div class="sb-section">Principal</div>
-
             <div class="nav-item">
                 <a href="/admin/dashboard" class="nav-link active" data-tip="Dashboard">
                     <span class="ni"><i class="bi bi-speedometer2"></i></span>
@@ -1096,108 +1093,103 @@
             </div>
 
             <div class="sb-section">Gestion</div>
-
             <div class="nav-item">
                 <a href="/admin/conducteurs" class="nav-link" data-tip="Conducteurs">
                     <span class="ni"><i class="bi bi-person-badge"></i><span class="pulse p-green"></span></span>
-                    <span class="nt">Conducteurs<small class="nt-sub" id="active-drivers-count">0 actifs</small></span>
-                    <span class="nb nb-blue" id="nb-total-drivers">0</span>
+                    <span class="nt">Conducteurs<small class="nt-sub">Chargement...</small></span>
+                    <span class="nb nb-blue">--</span>
                 </a>
             </div>
-
             <div class="nav-item">
                 <a href="/admin/vehicules" class="nav-link" data-tip="Véhicules">
                     <span class="ni"><i class="bi bi-truck"></i><span class="pulse p-amber"></span></span>
-                    <span class="nt">Véhicules<small class="nt-sub" id="active-vehicles-count">0 en flotte</small></span>
-                    <span class="nb nb-blue" id="nb-total-vehicles">0</span>
+                    <span class="nt">Véhicules<small class="nt-sub">Chargement...</small></span>
+                    <span class="nb nb-blue">--</span>
                 </a>
             </div>
-
             <div class="nav-item">
                 <a href="/admin/assurances" class="nav-link" data-tip="Assurances">
                     <span class="ni"><i class="bi bi-shield-check"></i><span class="pulse p-blue"></span></span>
-                    <span class="nt">Assurances<small class="nt-sub">Gestion</small></span>
+                    <span class="nt">Assurances<small class="nt-sub">Couverture</small></span>
+                    <span class="nb nb-blue" id="nb-total-assurances">--</span>
                 </a>
             </div>
-
             <div class="nav-item">
                 <a href="/admin/infractions" class="nav-link" data-tip="Infractions">
-                    <span class="ni"><i class="bi bi-exclamation-triangle"></i><span class="pulse p-red"></span></span>
-                    <span class="nt">Infractions<small class="nt-sub">Suivi</small></span>
+                    <span class="ni"><i class="bi bi-shield-exclamation"></i><span class="pulse p-red"></span></span>
+                    <span class="nt">Infractions<small class="nt-sub">Amendes &amp; suivi</small></span>
+                    <span class="nb nb-red" id="nb-total-infractions">--</span>
                 </a>
             </div>
-
             <div class="nav-item">
                 <a href="/admin/gps" class="nav-link" data-tip="Suivi GPS">
                     <span class="ni"><i class="bi bi-geo-alt"></i><span class="pulse p-green"></span></span>
-                    <span class="nt">Missions<small class="nt-sub">0 en déplacement</small></span>
+                    <span class="nt">Missions<small class="nt-sub">Chargement...</small></span>
                     <span class="nb nb-green" style="background:rgba(34,197,94,0.1); color:#15803d; border-color:rgba(34,197,94,0.2);">LIVE</span>
                 </a>
             </div>
 
             <div class="sb-hr"></div>
             <div class="sb-section">Interventions</div>
-
             <div class="nav-item">
                 <a href="/admin/reparations" class="nav-link" data-tip="Réparation">
                     <span class="ni"><i class="bi bi-wrench-adjustable"></i><span class="pulse p-amber"></span></span>
-                    <span class="nt">Réparation<small class="nt-sub">0 en cours</small></span>
-                    <span class="nb nb-amber">0</span>
+                    <span class="nt">Réparation<small class="nt-sub">Chargement...</small></span>
+                    <span class="nb nb-amber">--</span>
                 </a>
             </div>
-
             <div class="nav-item">
                 <a href="/admin/accidents" class="nav-link" data-tip="Accident">
                     <span class="ni"><i class="bi bi-exclamation-triangle"></i><span class="pulse p-red"></span></span>
-                    <span class="nt">Accident<small class="nt-sub">0 ce mois</small></span>
-                    <span class="nb nb-red">0</span>
+                    <span class="nt">Accident<small class="nt-sub">Chargement...</small></span>
+                    <span class="nb nb-red">--</span>
                 </a>
             </div>
-
             <div class="nav-item">
                 <a href="/admin/depannage" class="nav-link" data-tip="Dépannage">
                     <span class="ni"><i class="bi bi-cone-striped"></i><span class="pulse p-amber"></span></span>
-                    <span class="nt">Dépannage<small class="nt-sub">0 interventions</small></span>
-                    <span class="nb nb-amber">0</span>
+                    <span class="nt">Dépannage<small class="nt-sub">Chargement...</small></span>
+                    <span class="nb nb-amber">--</span>
                 </a>
             </div>
-
             <div class="nav-item">
                 <a href="/admin/vidanges" class="nav-link" data-tip="Vidange">
                     <span class="ni"><i class="bi bi-droplet-half"></i><span class="pulse p-blue"></span></span>
-                    <span class="nt">Vidange<small class="nt-sub">0 planifiées</small></span>
-                    <span class="nb nb-blue">0</span>
+                    <span class="nt">Vidange<small class="nt-sub">Chargement...</small></span>
+                    <span class="nb nb-blue">--</span>
                 </a>
             </div>
-
             <div class="nav-item">
                 <a href="/admin/depenses" class="nav-link" data-tip="Dépenses">
                     <span class="ni"><i class="bi bi-wallet2"></i><span class="pulse p-red"></span></span>
-                    <span class="nt">Dépense<small class="nt-sub">Suivi financier</small></span>
+                    <span class="nt">Dépenses<small class="nt-sub">Suivi financier</small></span>
+                    <span class="nb nb-red">--</span>
                 </a>
             </div>
-
             <div class="nav-item">
                 <a href="/admin/fournisseurs" class="nav-link" data-tip="Fournisseurs">
                     <span class="ni"><i class="bi bi-people-fill"></i><span class="pulse p-green"></span></span>
-                    <span class="nt">Fournisseurs<small class="nt-sub">Gestion prestataires</small></span>
-                    <span class="nb nb-blue">0</span>
+                    <span class="nt">Fournisseurs<small class="nt-sub">Chargement...</small></span>
+                    <span class="nb nb-blue">--</span>
                 </a>
             </div>
 
             <div class="sb-hr"></div>
             <div class="sb-section">Données</div>
-
             <div class="nav-item">
                 <a href="/admin/archivage" class="nav-link" data-tip="Archivage">
                     <span class="ni"><i class="bi bi-archive"></i></span>
-                    <span class="nt">Archivage<small class="nt-sub">Documents &amp; historique</small></span>
+                    <span class="nt">Archivage<small class="nt-sub">Documents &amp; OCR</small></span>
                 </a>
             </div>
-
         </div>
 
         <div class="sb-foot">
+            <div class="collapse-row">
+                <button class="collapse-btn" id="collapse-btn" title="Réduire">
+                    <i class="bi bi-chevron-left" id="cIcon"></i>
+                </button>
+            </div>
             <div class="profile-row" id="profileRow">
                 <div class="profile-av">AD</div>
                 <div class="profile-info">
@@ -1215,7 +1207,7 @@
                         <span id="themeText">Mode sombre</span>
                     </div>
                     <div class="pp-hr"></div>
-                    <a href="#" id="logout-btn" class="pp-link pp-logout"><i class="bi bi-box-arrow-right"></i> Deconnexion</a>
+                    <a href="#" id="logout-btn" class="pp-link pp-logout"><i class="bi bi-box-arrow-right"></i> Déconnexion</a>
                 </div>
             </div>
         </div>
@@ -1234,8 +1226,8 @@
                         <span class="live-dot"></span>
                         Fleet Intelligence Command Center
                     </div>
-                    <h1>Tableau de Bord Operationnel</h1>
-                    <p class="cmd-subtitle">Vue executive de votre parc vehicules -- Donnees en temps reel</p>
+                    <h1>Tableau de Bord Opérationnel</h1>
+                    <p class="cmd-subtitle">Vue exécutive de votre parc véhicules — Données en temps réel</p>
                 </div>
                 <div class="cmd-meta">
                     <div class="cmd-time-badge">
@@ -1256,7 +1248,7 @@
                     <div class="kpi-body">
                         <div class="kpi-label">Flotte Totale</div>
                         <div class="kpi-value" id="kpi-total">--</div>
-                        <span class="kpi-badge neutral" id="kpi-total-badge">Vehicules</span>
+                        <span class="kpi-badge neutral" id="kpi-total-badge">Véhicules</span>
                     </div>
                 </div>
                 <div class="kpi-card kpi-green">
@@ -1294,9 +1286,9 @@
                 <div class="kpi-card kpi-green">
                     <div class="kpi-icon-wrap"><i class="bi bi-graph-up"></i></div>
                     <div class="kpi-body">
-                        <div class="kpi-label">Disponibilite Flotte</div>
+                        <div class="kpi-label">Disponibilité Flotte</div>
                         <div class="kpi-value kpi-small" id="kpi-disponibilite">-- %</div>
-                        <span class="kpi-badge up">Operationnel</span>
+                        <span class="kpi-badge up">Opérationnel</span>
                     </div>
                 </div>
                 <div class="kpi-card kpi-teal">
@@ -1310,7 +1302,7 @@
                 <div class="kpi-card kpi-rose">
                     <div class="kpi-icon-wrap"><i class="bi bi-cash-stack"></i></div>
                     <div class="kpi-body">
-                        <div class="kpi-label">Cout Interventions</div>
+                        <div class="kpi-label">Coût Interventions</div>
                         <div class="kpi-value kpi-small" id="kpi-cout">-- MAD</div>
                         <span class="kpi-badge down" id="kpi-cout-badge">Total</span>
                     </div>
@@ -1334,8 +1326,8 @@
                     </div>
                     <div class="legend-row" id="missionLineLegend">
                         <span class="legend-item"><span class="legend-dot" style="background:#3b82f6"></span>En Cours</span>
-                        <span class="legend-item"><span class="legend-dot" style="background:#10b981"></span>Terminees</span>
-                        <span class="legend-item"><span class="legend-dot" style="background:#ef4444"></span>Annulees</span>
+                        <span class="legend-item"><span class="legend-dot" style="background:#10b981"></span>Terminées</span>
+                        <span class="legend-item"><span class="legend-dot" style="background:#ef4444"></span>Annulées</span>
                     </div>
                 </div>
 
@@ -1354,7 +1346,7 @@
                     <div class="mini-stat-row">
                         <div class="mini-stat">
                             <div class="mini-stat-val" id="ms-reparations">--</div>
-                            <div class="mini-stat-lbl">Reparations</div>
+                            <div class="mini-stat-lbl">Réparations</div>
                         </div>
                         <div class="mini-stat">
                             <div class="mini-stat-val" id="ms-vidanges">--</div>
@@ -1362,7 +1354,7 @@
                         </div>
                         <div class="mini-stat">
                             <div class="mini-stat-val" id="ms-depannages">--</div>
-                            <div class="mini-stat-lbl">Depannages</div>
+                            <div class="mini-stat-lbl">Dépannages</div>
                         </div>
                         <div class="mini-stat">
                             <div class="mini-stat-val" id="ms-accidents">--</div>
@@ -1397,9 +1389,9 @@
                     <div class="widget-header">
                         <h5 class="widget-title">
                             <span class="widget-title-icon"><i class="bi bi-donut"></i></span>
-                            Statut des Vehicules
+                            Statut des Véhicules
                         </h5>
-                        <a href="/admin/vehicules" class="widget-link">Gerer <i class="bi bi-arrow-right"></i></a>
+                        <a href="/admin/vehicules" class="widget-link">Gérer <i class="bi bi-arrow-right"></i></a>
                     </div>
                     <div class="chart-wrap" style="height: 200px;">
                         <canvas id="vehiculeChart"></canvas>
@@ -1419,7 +1411,7 @@
                             <span class="widget-title-icon" style="background:rgba(139,92,246,0.1);color:#8b5cf6;"><i class="bi bi-bullseye"></i></span>
                             Performance Missions
                         </h5>
-                        <a href="/admin/vehicules" class="widget-link">Details <i class="bi bi-arrow-right"></i></a>
+                        <a href="/admin/gps" class="widget-link">Détails <i class="bi bi-arrow-right"></i></a>
                     </div>
                     <div class="chart-wrap" style="height: 180px;">
                         <canvas id="missionPerformanceChart"></canvas>
@@ -1445,25 +1437,25 @@
                     <div class="widget-header">
                         <h5 class="widget-title">
                             <span class="widget-title-icon" style="background:rgba(244,63,94,0.1);color:#f43f5e;"><i class="bi bi-receipt"></i></span>
-                            Analyse Financiere
+                            Analyse Financière
                         </h5>
                         <a href="/admin/depenses" class="widget-link">Voir tout <i class="bi bi-arrow-right"></i></a>
                     </div>
                     <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 4px;">
                         <div style="background: linear-gradient(135deg, rgba(244,63,94,0.08), rgba(244,63,94,0.02)); border: 1px solid rgba(244,63,94,0.15); border-radius: 12px; padding: 16px 18px;">
-                            <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gray-400);margin-bottom:6px;">Total des Depenses</div>
+                            <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gray-400);margin-bottom:6px;">Total des Dépenses</div>
                             <div style="font-family:'Outfit',sans-serif;font-size:1.6rem;font-weight:800;color:var(--text-main);" id="fin-total-depenses">-- MAD</div>
                             <div style="font-size:0.72rem;color:var(--gray-400);margin-top:4px;" id="fin-nb-depenses">-- enregistrements</div>
                         </div>
                         <div style="background: linear-gradient(135deg, rgba(244,63,94,0.08), rgba(244,63,94,0.02)); border: 1px solid rgba(244,63,94,0.15); border-radius: 12px; padding: 16px 18px;">
-                            <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gray-400);margin-bottom:6px;">Cout Interventions</div>
+                            <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gray-400);margin-bottom:6px;">Coût Interventions</div>
                             <div style="font-family:'Outfit',sans-serif;font-size:1.6rem;font-weight:800;color:var(--text-main);" id="fin-cout-interventions">-- MAD</div>
                             <div style="font-size:0.72rem;color:var(--gray-400);margin-top:4px;" id="fin-nb-interventions">-- interventions</div>
                         </div>
                         <div style="background: linear-gradient(135deg, rgba(34,34,177,0.06), rgba(34,34,177,0.01)); border: 1px solid rgba(34,34,177,0.1); border-radius: 12px; padding: 16px 18px;">
                             <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gray-400);margin-bottom:6px;">Fournisseurs Actifs</div>
                             <div style="font-family:'Outfit',sans-serif;font-size:1.6rem;font-weight:800;color:var(--text-main);" id="fin-fournisseurs">--</div>
-                            <div style="font-size:0.72rem;color:var(--gray-400);margin-top:4px;">Prestataires enregistres</div>
+                            <div style="font-size:0.72rem;color:var(--gray-400);margin-top:4px;">Prestataires enregistrés</div>
                         </div>
                     </div>
                 </div>
@@ -1472,7 +1464,7 @@
 
             <!-- == SECTION 5: OPERATIONS MONITORING == -->
             <div class="ops-section-header">
-                <div class="ops-section-title">Centre Operationnel de Surveillance</div>
+                <div class="ops-section-title">Centre Opérationnel de Surveillance</div>
                 <div class="ops-section-line"></div>
             </div>
 
@@ -1526,19 +1518,19 @@
             </div>
 
             <!-- == SECTION 6: QUICK-ACCESS FLEET STRIP == -->
-            <div class="ops-section-header" style="margin-top:4px;display: none">
-                <div class="ops-section-title">Acces Rapide</div>
+            <div class="ops-section-header" style="margin-top:4px;">
+                <div class="ops-section-title">Accès Rapide</div>
                 <div class="ops-section-line"></div>
             </div>
 
-            <div class="fleet-strip" style="display: none">
+            <div class="fleet-strip">
                 <a href="/admin/vehicules" class="strip-card">
                     <div class="strip-icon" style="background:rgba(34,34,177,0.1);color:#2222b1;">
                         <i class="bi bi-truck"></i>
                     </div>
                     <div class="strip-body">
-                        <div class="strip-label">Vehicules</div>
-                        <div class="strip-value" id="strip-veh">Gerer la flotte</div>
+                        <div class="strip-label">Véhicules</div>
+                        <div class="strip-value" id="strip-veh">Gérer la flotte</div>
                     </div>
                 </a>
                 <a href="/admin/conducteurs" class="strip-card">
@@ -1547,7 +1539,7 @@
                     </div>
                     <div class="strip-body">
                         <div class="strip-label">Conducteurs</div>
-                        <div class="strip-value" id="strip-cond">Gerer les equipes</div>
+                        <div class="strip-value" id="strip-cond">Gérer les équipes</div>
                     </div>
                 </a>
                 <a href="/admin/assurances" class="strip-card">
@@ -1564,7 +1556,7 @@
                         <i class="bi bi-cash-stack"></i>
                     </div>
                     <div class="strip-body">
-                        <div class="strip-label">Depenses</div>
+                        <div class="strip-label">Dépenses</div>
                         <div class="strip-value" id="strip-depenses">Suivi financier</div>
                     </div>
                 </a>
@@ -1575,7 +1567,6 @@
 
 </div>
 
-<script src="../js/logout.js"></script>
 <script src="../js/navbarInfo.js"></script>
 <script>
 
@@ -1727,7 +1718,7 @@ async function loadFleetAlerts() {
                     iconBg: 'rgba(239,68,68,0.12)',
                     iconColor: '#ef4444',
                     vehicle: v.immatriculation + ' -- ' + v.marque + ' ' + v.model,
-                    detail: 'Vehicule hors service -- action requise',
+                    detail: 'Véhicule hors service — action requise',
                     tag: 'CRITIQUE',
                     tagClass: 'tag-critical',
                     sortScore: 0
@@ -1745,8 +1736,8 @@ async function loadFleetAlerts() {
                             iconBg: 'rgba(239,68,68,0.12)',
                             iconColor: '#ef4444',
                             vehicle: v.immatriculation + ' -- ' + v.marque + ' ' + v.model,
-                            detail: 'Assurance expiree depuis ' + Math.abs(days) + ' jours',
-                            tag: 'EXPIRE',
+                            detail: 'Assurance expirée depuis ' + Math.abs(days) + ' jours',
+                            tag: 'EXPIRÉ',
                             tagClass: 'tag-critical',
                             sortScore: 1
                         });
@@ -1778,7 +1769,7 @@ async function loadFleetAlerts() {
                             iconColor: '#ef4444',
                             vehicle: v.immatriculation + ' -- ' + v.marque + ' ' + v.model,
                             detail: 'Controle technique expire depuis ' + Math.abs(days) + ' jours',
-                            tag: 'EXPIRE',
+                            tag: 'EXPIRÉ',
                             tagClass: 'tag-critical',
                             sortScore: 1
                         });
@@ -2023,7 +2014,7 @@ async function loadDashboardStats() {
         document.getElementById('kpi-mission-pct').textContent = missionPct + '%';
         const maintPct = total > 0 ? Math.round(maintenance / total * 100) : 0;
         document.getElementById('kpi-maint-pct').textContent = maintPct + '%';
-        document.getElementById('kpi-total-badge').textContent = total + ' vehicules';
+        document.getElementById('kpi-total-badge').textContent = total + ' véhicules';
 
         // -- MINI STATS --
         document.getElementById('ms-reparations').textContent = fmt(stats.nbReparations);
@@ -2043,7 +2034,7 @@ async function loadDashboardStats() {
         document.getElementById('fin-fournisseurs').textContent = fmt(stats.nbFournisseurs);
 
         // -- STRIP CARDS --
-        document.getElementById('strip-veh').textContent = fmt(total) + ' vehicules';
+        document.getElementById('strip-veh').textContent = fmt(total) + ' véhicules';
         document.getElementById('strip-cond').textContent = fmt(stats.totalConducteurs) + ' conducteurs';
 
         // -- CONDUCTEUR STATS WIDGET --
@@ -2052,7 +2043,7 @@ async function loadDashboardStats() {
             <div style="display:flex;flex-direction:column;gap:10px;">
                 ${buildCondRow('Disponibles', stats.conducteursDisponibles, stats.totalConducteurs, '#10b981', 'bi-person-check')}
                 ${buildCondRow('En Mission', stats.conducteursEnMission, stats.totalConducteurs, '#3b82f6', 'bi-person-badge')}
-                ${buildCondRow('En Conge', stats.conducteursEnConge, stats.totalConducteurs, '#f59e0b', 'bi-person-dash')}
+                ${buildCondRow('En Congé', stats.conducteursEnConge, stats.totalConducteurs, '#f59e0b', 'bi-person-dash')}
             </div>
             <div style="margin-top:14px;padding:14px;background:var(--gray-100);border-radius:12px;text-align:center;">
                 <div style="font-family:'Outfit',sans-serif;font-size:1.8rem;font-weight:800;color:var(--text-main);">${fmt(stats.totalConducteurs)}</div>
@@ -2115,7 +2106,7 @@ function buildVehiculeChart(dispo, mission, maint, horsService) {
                 legend: { display: false },
                 tooltip: {
                     callbacks: {
-                        label: ctx => ' ' + ctx.label + ': ' + ctx.raw + ' vehicule(s)'
+                        label: ctx => ' ' + ctx.label + ': ' + ctx.raw + ' véhicule(s)'
                     }
                 }
             }
@@ -2129,7 +2120,7 @@ function buildInterventionChart(rep, dep, vid, acc) {
     chartInstances['interventionChart'] = new Chart(ctx, {
         type: 'doughnut',
         data: {
-            labels: ['Reparations', 'Depannages', 'Vidanges', 'Accidents'],
+            labels: ['Réparations', 'Dépannages', 'Vidanges', 'Accidents'],
             datasets: [{
                 data: [rep || 0, dep || 0, vid || 0, acc || 0],
                 backgroundColor: ['#3b82f6', '#f59e0b', '#10b981', '#ef4444'],
@@ -2160,7 +2151,7 @@ function buildMissionPerformanceChart(enCours, total) {
     chartInstances['missionPerformanceChart'] = new Chart(ctx, {
         type: 'doughnut',
         data: {
-            labels: ['En Cours', 'Terminees / Autres'],
+            labels: ['En Cours', 'Terminées / Autres'],
             datasets: [{
                 data: [enCours, autres],
                 backgroundColor: ['#2222b1', '#e5e7eb'],
@@ -2229,7 +2220,7 @@ function buildMissionLineChart(missionsParJour) {
                     pointHoverRadius: 6
                 },
                 {
-                    label: 'Terminees',
+                    label: 'Terminées',
                     data: termineeData,
                     borderColor: '#10b981',
                     backgroundColor: (ctx) => {
@@ -2246,7 +2237,7 @@ function buildMissionLineChart(missionsParJour) {
                     pointHoverRadius: 6
                 },
                 {
-                    label: 'Annulees',
+                    label: 'Annulées',
                     data: annuleeData,
                     borderColor: '#ef4444',
                     backgroundColor: 'rgba(239,68,68,0)',
@@ -2310,7 +2301,6 @@ async function refreshDashboard() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    initCommonUI();
     startClock();
     refreshDashboard();
 });

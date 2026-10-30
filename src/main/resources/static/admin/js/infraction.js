@@ -12,12 +12,12 @@ let allInfractions = [];
 let infractionIdToEdit = null;
 let filtered = [];
 let currentPage = 0;
-const pageSize = 6;          // cohérent avec assurance.js
+const pageSize = 6;
 let idToDelete = null;
 
 // ── INIT ──
 document.addEventListener('DOMContentLoaded', () => {
-    chargerSelects();         // charger véhicules, conducteurs, missions
+    chargerSelects();
     chargerInfractions();
 
     // Bouton suppression dans le modal de confirmation
@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
             idToDelete = null;
             bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
             await chargerInfractions();
+            if (window.loadSidebarStats) window.loadSidebarStats();
             showSuccess('Supprimé', 'L\'infraction a été supprimée.');
         } catch (e) {
             alert('Erreur: ' + e.message);
@@ -133,7 +134,8 @@ function mettreAJourKPI() {
     document.getElementById('kpi-non-payees').textContent = total - payees;
     document.getElementById('kpi-montant').textContent =
         montantTotal.toLocaleString('fr-MA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' MAD';
-    document.getElementById('nb-total-infractions').textContent = total;
+    const nbEl = document.getElementById('nb-total-infractions');
+    if (nbEl) nbEl.textContent = total;
 }
 
 // ── FILTRE ──
@@ -159,7 +161,7 @@ function afficherPage() {
 
     if (filtered.length === 0) {
         tbody.innerHTML =
-            '<tr><td colspan="8" class="text-center text-muted py-4">Aucune infraction trouvée</td></tr>';
+            '<tr><td colspan="9" class="text-center text-muted py-4">Aucune infraction trouvée</td></tr>';
     } else {
         tbody.innerHTML = '';
         page.forEach(i => {
@@ -319,7 +321,7 @@ async function sauvegarderInfraction() {
 
     try {
         const headers = authHeaders();
-        delete headers['Content-Type']; // laisse le navigateur gérer le boundary multipart
+        delete headers['Content-Type'];
 
         const url = infractionIdToEdit
             ? `/api/infractions/${infractionIdToEdit}`
@@ -335,6 +337,7 @@ async function sauvegarderInfraction() {
 
         bootstrap.Modal.getInstance(document.getElementById('infractionModal')).hide();
         await chargerInfractions();
+        if (window.loadSidebarStats) window.loadSidebarStats();
         showSuccess('Enregistré !', 'L\'infraction a été enregistrée avec succès.');
     } catch (e) {
         alert('Erreur: ' + e.message);

@@ -8,16 +8,25 @@ document.addEventListener("DOMContentLoaded", async () => {
  * Standardize UI logic for Sidebar, Profile Popup, and Dark Mode
  */
 function openModal(id) {
-    document.getElementById(id).classList.add('active');
-    document.body.style.overflow = 'hidden';
+    const el = document.getElementById(id);
+    if (el) {
+        el.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
 }
 
 function closeModal(id) {
-    document.getElementById(id).classList.remove('active');
-    document.body.style.overflow = 'auto';
+    const el = document.getElementById(id);
+    if (el) {
+        el.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
 }
 
 function initCommonUI() {
+    if (window.__pvCommonUIInitialized) return;
+    window.__pvCommonUIInitialized = true;
+
     // 1. Profile Popup Logic
     const profileRow = document.getElementById('profileRow');
     const profilePopup = document.getElementById('profilePopup');
@@ -83,6 +92,8 @@ function initCommonUI() {
         if (sidebar) sidebar.classList.remove('open');
         if (overlay) overlay.style.display = 'none';
     };
+    window.openMob = window.openMobile;
+    window.closeMob = window.closeMobile;
 
     // 4. Logout Logic
     const logoutLinks = document.querySelectorAll('.pp-logout');
@@ -90,7 +101,7 @@ function initCommonUI() {
         link.addEventListener('click', async (e) => {
             e.preventDefault();
             try {
-                const response = await fetch("/api/auth/logout", {
+                await fetch("/api/auth/logout", {
                     method: 'POST',
                     headers: { "Content-Type": "application/json" }
                 });
@@ -134,6 +145,7 @@ function toggleTheme() {
  */
 function setTheme(isDark) {
     document.body.classList.toggle('dark', isDark);
+    document.body.classList.toggle('light', !isDark);
     document.documentElement.setAttribute('data-bs-theme', isDark ? 'dark' : 'light');
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
     updateThemeUI(isDark);
@@ -224,6 +236,14 @@ function updateSidebarUI(stats) {
                 if (subEl) subEl.textContent = (stats.vehiculesDisponibles + stats.vehiculesEnMission) + " en flotte";
                 if (totalEl) totalEl.textContent = stats.totalVehicules;
                 break;
+            case 'Assurances':
+                if (subEl && stats.totalAssurances !== undefined) subEl.textContent = stats.totalAssurances + " contrats";
+                if (totalEl && stats.totalAssurances !== undefined) totalEl.textContent = stats.totalAssurances;
+                break;
+            case 'Infractions':
+                if (subEl && stats.totalInfractions !== undefined) subEl.textContent = stats.totalInfractions + " enregistrées";
+                if (totalEl && stats.totalInfractions !== undefined) totalEl.textContent = stats.totalInfractions;
+                break;
             case 'Suivi GPS':
                 if (subEl) subEl.textContent = stats.missionsEnCours + " en déplacement";
                 break;
@@ -243,6 +263,11 @@ function updateSidebarUI(stats) {
                 if (subEl) subEl.textContent = stats.nbVidanges + " planifiées";
                 if (totalEl) totalEl.textContent = stats.nbVidanges;
                 break;
+            case 'Dépenses':
+            case 'Depenses':
+                if (subEl) subEl.textContent = "Suivi financier";
+                if (totalEl && stats.totalDepenses !== undefined) totalEl.textContent = stats.totalDepenses;
+                break;
             case 'Fournisseurs':
                 if (subEl) subEl.textContent = stats.nbFournisseurs + " prestataires";
                 if (totalEl) totalEl.textContent = stats.nbFournisseurs;
@@ -250,3 +275,57 @@ function updateSidebarUI(stats) {
         }
     });
 }
+
+window.loadMinimalProfile = loadMinimalProfile;
+window.loadSidebarStats = loadSidebarStats;
+
+/**
+ * Global sleek Toast Notification helper
+ */
+window.showToast = function(message, type = 'success') {
+    let container = document.getElementById('pv-toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'pv-toast-container';
+        container.style.cssText = 'position:fixed;top:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:10px;pointer-events:none;';
+        document.body.appendChild(container);
+    }
+
+    const colors = {
+        success: { bg: '#10b981', icon: 'bi-check-circle-fill' },
+        error:   { bg: '#ef4444', icon: 'bi-exclamation-octagon-fill' },
+        warning: { bg: '#f59e0b', icon: 'bi-exclamation-triangle-fill' },
+        info:    { bg: '#3b82f6', icon: 'bi-info-circle-fill' }
+    };
+    const cfg = colors[type] || colors.success;
+    const isDark = document.body.classList.contains('dark');
+
+    const toast = document.createElement('div');
+    toast.style.cssText = `
+        display:flex;align-items:center;gap:12px;
+        background:${isDark ? '#1a1d24' : '#ffffff'};
+        color:${isDark ? '#f3f4f6' : '#1f2937'};
+        border:1px solid ${isDark ? '#2a2e38' : '#e5e7eb'};
+        border-left:4px solid ${cfg.bg};
+        border-radius:12px;padding:12px 18px;
+        box-shadow:0 10px 25px -5px rgba(0,0,0,0.18);
+        font-family:'Inter',sans-serif;font-size:0.86rem;font-weight:500;
+        pointer-events:auto;min-width:260px;max-width:380px;
+        transform:translateX(120%);transition:transform 0.28s cubic-bezier(.34,1.56,.64,1),opacity 0.25s ease;
+    `;
+    toast.innerHTML = `
+        <i class="bi ${cfg.icon}" style="color:${cfg.bg};font-size:1.15rem;flex-shrink:0;"></i>
+        <span style="flex:1;line-height:1.35;">${message}</span>
+    `;
+    container.appendChild(toast);
+
+    requestAnimationFrame(() => {
+        toast.style.transform = 'translateX(0)';
+    });
+
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(40px)';
+        setTimeout(() => toast.remove(), 280);
+    }, 3500);
+};

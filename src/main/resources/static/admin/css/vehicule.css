@@ -207,6 +207,7 @@ body {
 .p-green { background: #10b981; box-shadow: 0 0 5px rgba(16,185,129,0.5); }
 .p-amber { background: #f59e0b; box-shadow: 0 0 5px rgba(245,158,11,0.5); }
 .p-red   { background: #ef4444; box-shadow: 0 0 5px rgba(239,68,68,0.5); animation: blink 1.2s ease-in-out infinite; }
+.p-blue { background: #3b82f6; box-shadow: 0 0 5px rgba(59,130,246,0.5); }
 
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
 
@@ -805,24 +806,6 @@ body.dark .stat-val {
 body.dark .stat-label {
     color: var(--gray-400);
 }
-body.dark .card {
-    background: var(--card-bg);
-    border-color: var(--border-color);
-}
-body.dark .form-select-custom {
-    background-color: var(--gray-100);
-    border-color: var(--border-color);
-    color: var(--text-main);
-}
-
-body.dark .table {
-    --bs-table-bg: transparent;
-    --bs-table-color: var(--text-main);
-    --bs-table-border-color: var(--border-color);
-    --bs-table-hover-color: var(--text-main);
-    --bs-table-hover-bg: rgba(255, 255, 255, 0.03);
-}
-
 
 /* ══════════════════════════════════════════════════════════
    BUTTON STYLES

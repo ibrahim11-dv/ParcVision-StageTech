@@ -12,7 +12,7 @@ let allAssurances = [];
 let assuranceIdToEdit = null;
 let filtered = [];
 let currentPage = 0;
-const pageSize = 6;          // comme vehicule.js
+const pageSize = 6;
 let idToDelete = null;
 
 // ── INIT ──
@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
             idToDelete = null;
             bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
             await chargerAssurances();
+            if (window.loadSidebarStats) window.loadSidebarStats();
             showSuccess('Supprimé', 'L\'assurance a été supprimée.');
         } catch (e) { alert(e.message); }
     });
@@ -89,7 +90,8 @@ function mettreAJourKPI() {
     document.getElementById('kpi-actif').textContent = actif;
     document.getElementById('kpi-bientot').textContent = bientot;
     document.getElementById('kpi-expire').textContent = expire;
-    document.getElementById('nb-total-assurances').textContent = allAssurances.length;
+    const nbEl = document.getElementById('nb-total-assurances');
+    if (nbEl) nbEl.textContent = allAssurances.length;
 }
 
 // ── FILTRE ──
@@ -126,7 +128,7 @@ function afficherPage() {
     const soon = new Date(); soon.setDate(soon.getDate() + 30);
 
     if (filtered.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="11" class="text-center text-muted py-4">Aucune assurance trouvée</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="9" class="text-center text-muted py-4">Aucune assurance trouvée</td></tr>';
     } else {
         tbody.innerHTML = '';
         page.forEach(a => {
@@ -150,7 +152,6 @@ function afficherPage() {
                 <td><b>${formatDate(a.dateExpiration)}</b></td>
                 <td>${a.montant ? a.montant + ' MAD' : '-'}</td>
                 <td>${a.datePaiement ? formatDate(a.datePaiement) : '-'}</td>
-               
                 <td>
                     <div style="display:flex;gap:5px">
                         <button class="btn-icon" title="Voir détails" onclick="voirDetail(${a.id})"><i class="bi bi-eye text-primary"></i></button>
@@ -291,6 +292,7 @@ async function sauvegarderAssurance() {
         if (!res.ok) { const err = await res.text(); throw new Error(err); }
         bootstrap.Modal.getInstance(document.getElementById('assuranceModal')).hide();
         await chargerAssurances();
+        if (window.loadSidebarStats) window.loadSidebarStats();
         showSuccess('Enregistré', 'L\'assurance a été enregistrée.');
     } catch(e) { alert(e.message); }
 }
@@ -321,7 +323,7 @@ function voirDetail(id) {
 }
 function confirmerSuppression(id, prestataire) {
     idToDelete = id;
-    document.getElementById('deleteText').textContent = `Supprimer l'assurance ${prestataire} —`;
+    document.getElementById('deleteText').textContent = `Supprimer l'assurance ${prestataire} ?`;
     new bootstrap.Modal(document.getElementById('deleteModal')).show();
 }
 

@@ -144,6 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     modal.hide();
                     chargerConducteurs();
                     chargerStats();
+                    if (window.loadSidebarStats) window.loadSidebarStats();
                     addForm.reset();
                     showSuccess('Conducteur ajouté', 'Le nouveau conducteur a été enregistré avec succès.');
                 } else {
@@ -178,6 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     bootstrap.Modal.getInstance(document.getElementById('editDriverModal')).hide();
                     chargerConducteurs();
                     chargerStats();
+                    if (window.loadSidebarStats) window.loadSidebarStats();
                     showSuccess('Modification réussie', 'Les informations du conducteur ont été mises à jour.');
                 } else {
                     const err = await res.json();
@@ -197,7 +199,6 @@ async function chargerStats() {
     const res = await fetch('/api/conducteurs/stats', { headers: authHeaders() });
     if (!res.ok) return;
     const stats = await res.json();
-    console.log('Conducteur Stats:', stats);
     setText('kpi-total', stats.total || 0);
     setText('kpi-dispo', stats.disponible || 0);
     setText('kpi-mission', stats.mission || 0);
@@ -244,8 +245,6 @@ function afficherConducteurs(liste) {
     const tbody = document.getElementById('conducteurs-tbody');
     if (!tbody) return;
     tbody.innerHTML = '';
-    
-    console.log('Affichage de la liste:', liste);
 
     if (!liste || liste.length === 0) {
         tbody.innerHTML = '<tr><td colspan="6" class="text-center">Aucun conducteur trouvé</td></tr>';
@@ -267,7 +266,6 @@ function afficherConducteurs(liste) {
                 ? `background-image: url('${photoUrl}'); background-size: cover; background-position: center;`
                 : `background: #e2e8f0; color: #94a3b8; display: flex; align-items: center; justify-content: center;`;
             
-            // Silhouette style "FB/Insta"
             const placeholderSvg = `
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
@@ -286,7 +284,7 @@ function afficherConducteurs(liste) {
                 <td><span class="prio-badge ${statutClass(c.statut)}">${statutLabel(c.statut || 'DISPONIBLE')}</span></td>
                 <td>
                     <div style="display:flex;gap:5px">
-                        <button class="btn-icon" title="Voir dÃ©tails" onclick="ouvrirDetailConducteur(${c.id})">
+                        <button class="btn-icon" title="Voir détails" onclick="ouvrirDetailConducteur(${c.id})">
                             <i class="bi bi-eye text-primary"></i>
                         </button>
                         <button class="btn-icon" title="Modifier" onclick="ouvrirModification(${c.id})">
@@ -403,6 +401,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     closeModal('confirmDeleteModal');
                     chargerConducteurs();
                     chargerStats();
+                    if (window.loadSidebarStats) window.loadSidebarStats();
                     showSuccess('Supprimé', 'Le conducteur a été supprimé.');
                 } else {
                     const err = await res.json();
@@ -443,7 +442,7 @@ async function ouvrirDetailConducteur(id) {
     docs.innerHTML = '';
     if (c.scanCinUrl) docs.innerHTML += `<a href="/api/files?path=${c.scanCinUrl}" target="_blank" class="btn btn-sm btn-outline-secondary me-2"><i class="bi bi-file-earmark-pdf"></i> CIN</a>`;
     if (c.scanPermisUrl) docs.innerHTML += `<a href="/api/files?path=${c.scanPermisUrl}" target="_blank" class="btn btn-sm btn-outline-secondary"><i class="bi bi-file-earmark-pdf"></i> Permis</a>`;
-    if (!c.scanCinUrl && !c.scanPermisUrl) docs.innerHTML = '<span class="text-muted">Aucun document</span>';
+    if (!c.scanCinUrl && !c.scanPermisUrl) docs.innerHTML = '<span class="text-muted">Aucun document attaché</span>';
 
     new bootstrap.Modal(document.getElementById('detailDriverModal')).show();
 }
@@ -493,5 +492,3 @@ function debounce(func, wait) {
         timeout = setTimeout(() => func.apply(this, args), wait);
     };
 }
-
-/* ───── MOBILE SIDEBAR ───── */

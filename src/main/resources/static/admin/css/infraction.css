@@ -188,6 +188,7 @@ body {
 .p-green { background: #10b981; box-shadow: 0 0 5px rgba(16,185,129,0.5); }
 .p-amber { background: #f59e0b; box-shadow: 0 0 5px rgba(245,158,11,0.5); }
 .p-red   { background: #ef4444; box-shadow: 0 0 5px rgba(239,68,68,0.5); animation: blink 1.2s ease-in-out infinite; }
+.p-blue { background: #3b82f6; box-shadow: 0 0 5px rgba(59,130,246,0.5); }
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
 
 .nt { flex: 1; overflow: hidden; transition: opacity .2s; line-height: 1.2; }

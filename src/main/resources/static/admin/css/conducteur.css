@@ -207,6 +207,7 @@ body {
 .p-green { background: #10b981; box-shadow: 0 0 5px rgba(16,185,129,0.5); }
 .p-amber { background: #f59e0b; box-shadow: 0 0 5px rgba(245,158,11,0.5); }
 .p-red   { background: #ef4444; box-shadow: 0 0 5px rgba(239,68,68,0.5); animation: blink 1.2s ease-in-out infinite; }
+.p-blue { background: #3b82f6; box-shadow: 0 0 5px rgba(59,130,246,0.5); }
 
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
 
@@ -495,12 +496,11 @@ body {
 .form-control, .form-select {
     background: var(--bg-body);
     border: 1px solid var(--border-color);
-    color: white;
+    color: var(--text-main);
     border-radius: 10px;
     padding: 12px 15px;
     font-size: 0.9rem;
     transition: all 0.2s;
-
 }
 
 .form-control:focus, .form-select:focus {

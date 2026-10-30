@@ -109,6 +109,9 @@ document.getElementById("addMission").addEventListener("click", async (e) => {
             if (typeof fetchMissions === 'function') {
                 fetchMissions();
             }
+            if (window.loadSidebarStats) {
+                window.loadSidebarStats();
+            }
 
             // Show success popup
             if (typeof showSuccess === 'function') {
