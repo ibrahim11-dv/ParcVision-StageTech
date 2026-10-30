@@ -1,15 +1,15 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Parc Auto - Gestion des Depannages</title>
+    <title>Parc Auto — Gestion des Dépannages</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/depanage.css">
 </head>
-<body class="light">
+<body>
 
 <div class="shell">
 
@@ -31,7 +31,7 @@
             <div class="nav-item">
                 <a href="/admin/dashboard" class="nav-link" data-tip="Dashboard">
                     <span class="ni"><i class="bi bi-speedometer2"></i></span>
-                    <span class="nt">Dashboard<small class="nt-sub">Vue generale</small></span>
+                    <span class="nt">Dashboard<small class="nt-sub">Vue générale</small></span>
                 </a>
             </div>
 
@@ -39,10 +39,10 @@
 
             <div class="nav-item">
                 <a href="/admin/conducteurs" class="nav-link" data-tip="Conducteurs">
-                        <span class="ni">
-                            <i class="bi bi-person-badge"></i>
-                            <span class="pulse p-green"></span>
-                        </span>
+                    <span class="ni">
+                        <i class="bi bi-person-badge"></i>
+                        <span class="pulse p-green"></span>
+                    </span>
                     <span class="nt">Conducteurs<small class="nt-sub">Chargement...</small></span>
                     <span class="nb nb-blue">--</span>
                 </a>
@@ -50,10 +50,10 @@
 
             <div class="nav-item">
                 <a href="/admin/vehicules" class="nav-link" data-tip="Véhicules">
-                        <span class="ni">
-                            <i class="bi bi-truck"></i>
-                            <span class="pulse p-amber"></span>
-                        </span>
+                    <span class="ni">
+                        <i class="bi bi-truck"></i>
+                        <span class="pulse p-amber"></span>
+                    </span>
                     <span class="nt">Véhicules<small class="nt-sub">Chargement...</small></span>
                     <span class="nb nb-blue">--</span>
                 </a>
@@ -62,14 +62,16 @@
             <div class="nav-item">
                 <a href="/admin/assurances" class="nav-link" data-tip="Assurances">
                     <span class="ni"><i class="bi bi-shield-check"></i><span class="pulse p-blue"></span></span>
-                    <span class="nt">Assurances<small class="nt-sub">Gestion</small></span>
+                    <span class="nt">Assurances<small class="nt-sub">Couverture</small></span>
+                    <span class="nb nb-blue" id="nb-total-assurances">--</span>
                 </a>
             </div>
 
             <div class="nav-item">
                 <a href="/admin/infractions" class="nav-link" data-tip="Infractions">
-                    <span class="ni"><i class="bi bi-exclamation-triangle"></i><span class="pulse p-red"></span></span>
-                    <span class="nt">Infractions<small class="nt-sub">Suivi</small></span>
+                    <span class="ni"><i class="bi bi-shield-exclamation"></i><span class="pulse p-red"></span></span>
+                    <span class="nt">Infractions<small class="nt-sub">Amendes &amp; suivi</small></span>
+                    <span class="nb nb-red" id="nb-total-infractions">--</span>
                 </a>
             </div>
 
@@ -80,13 +82,12 @@
                         <span class="pulse p-green"></span>
                     </span>
                     <span class="nt">Missions<small class="nt-sub">Chargement...</small></span>
-                    <span class="nb nb-green"
-                        style="background:rgba(34,197,94,0.1); color:#15803d; border-color:rgba(34,197,94,0.2);">LIVE</span>
+                    <span class="nb nb-green" style="background:rgba(34,197,94,0.1); color:#15803d; border-color:rgba(34,197,94,0.2);">LIVE</span>
                 </a>
             </div>
 
-                <div class="sb-hr"></div>
-                <div class="sb-section">Interventions</div>
+            <div class="sb-hr"></div>
+            <div class="sb-section">Interventions</div>
 
             <div class="nav-item">
                 <a href="/admin/reparations" class="nav-link" data-tip="Réparation">
@@ -126,28 +127,29 @@
                 </a>
             </div>
 
-            
-                <div class="nav-item">
-                    <a href="/admin/depenses" class="nav-link" data-tip="Depenses">
-                        <span class="ni"><i class="bi bi-wallet2"></i><span class="pulse p-red"></span></span>
-                        <span class="nt">Depense<small class="nt-sub">Suivi financier</small></span>
-                    </a>
-                </div>
-<div class="nav-item">
+            <div class="nav-item">
+                <a href="/admin/depenses" class="nav-link" data-tip="Dépenses">
+                    <span class="ni"><i class="bi bi-wallet2"></i><span class="pulse p-red"></span></span>
+                    <span class="nt">Dépenses<small class="nt-sub">Suivi financier</small></span>
+                    <span class="nb nb-red">--</span>
+                </a>
+            </div>
+
+            <div class="nav-item">
                 <a href="/admin/fournisseurs" class="nav-link" data-tip="Fournisseurs">
                     <span class="ni"><i class="bi bi-people-fill"></i><span class="pulse p-green"></span></span>
-                    <span class="nt">Fournisseurs<small class="nt-sub">Gestion prestataires</small></span>
-                    <span class="nb nb-blue">0</span>
+                    <span class="nt">Fournisseurs<small class="nt-sub">Chargement...</small></span>
+                    <span class="nb nb-blue">--</span>
                 </a>
             </div>
 
             <div class="sb-hr"></div>
-            <div class="sb-section">Donnees</div>
+            <div class="sb-section">Données</div>
 
             <div class="nav-item">
                 <a href="/admin/archivage" class="nav-link" data-tip="Archivage">
                     <span class="ni"><i class="bi bi-archive"></i></span>
-                    <span class="nt">Archivage<small class="nt-sub">Documents &amp; historique</small></span>
+                    <span class="nt">Archivage<small class="nt-sub">Documents &amp; OCR</small></span>
                 </a>
             </div>
 
@@ -162,32 +164,35 @@
                 </div>
                 <i class="bi bi-three-dots-vertical profile-more"></i>
 
-                    <div class="profile-popup" id="profilePopup" onclick="event.stopPropagation()">
-                        <a href="/admin/profil" class="pp-link"><i class="bi bi-person-gear"></i> Mon profil</a>
-                        <a href="/admin/profil-entreprise" class="pp-link"><i class="bi bi-building"></i> Entreprise</a>
-                        <div class="pp-hr"></div>
-                        <div class="pp-link" id="themeToggleBtn">
-                            <i class="bi bi-moon-stars" id="themeIcon"></i>
-                            <span id="themeText">Mode sombre</span>
-                        </div>
-                        <div class="pp-hr"></div>
-                        <a href="#" id="logout-btn" class="pp-link pp-logout"><i class="bi bi-box-arrow-right"></i> Deconnexion</a>
+                <div class="profile-popup" id="profilePopup" onclick="event.stopPropagation()">
+                    <a href="/admin/profil" class="pp-link"><i class="bi bi-person-gear"></i> Mon profil</a>
+                    <a href="/admin/profil-entreprise" class="pp-link"><i class="bi bi-building"></i> Entreprise</a>
+                    <div class="pp-hr"></div>
+                    <div class="pp-link" id="themeToggleBtn">
+                        <i class="bi bi-moon-stars" id="themeIcon"></i>
+                        <span id="themeText">Mode sombre</span>
                     </div>
+                    <div class="pp-hr"></div>
+                    <a href="#" id="logout-btn" class="pp-link pp-logout"><i class="bi bi-box-arrow-right"></i> Déconnexion</a>
                 </div>
             </div>
+        </div>
 
     </aside>
+
+    <div class="overlay" id="overlay" onclick="closeMobile()"></div>
+    <button class="mob-toggle" onclick="openMobile()"><i class="bi bi-list"></i></button>
 
     <div class="main" id="main">
         <div class="page">
             <div class="w-100 d-flex flex-column align-items-center">
 
-                <!-- En-tÃªte de page -->
+                <!-- En-tête de page -->
                 <div class="page-header w-100 mb-4">
                     <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
                         <div>
-                            <h2 class="page-title"><i class="bi bi-cone-striped text-warning me-2"></i>Gestion des Depannages</h2>
-                            <p class="page-subtitle">Suivi des interventions de remorquage et assistance routiÃ¨re.</p>
+                            <h2 class="page-title"><i class="bi bi-cone-striped text-warning me-2"></i>Gestion des Dépannages</h2>
+                            <p class="page-subtitle">Suivi des interventions de remorquage et assistance routière.</p>
                         </div>
                         <div class="d-flex gap-2">
                             <button class="btn btn-primary" onclick="openModal('addDepanageModal')"><i class="bi bi-plus-lg me-1"></i> Nouvelle Intervention</button>
@@ -201,8 +206,8 @@
                         <div class="stat-card">
                             <div class="stat-icon blue"><i class="bi bi-cone-striped"></i></div>
                             <div class="stat-body">
-                                <div class="stat-val">28</div>
-                                <div class="stat-label">Total Depannages</div>
+                                <div class="stat-val">0</div>
+                                <div class="stat-label">Total Dépannages</div>
                             </div>
                         </div>
                     </div>
@@ -210,7 +215,7 @@
                         <div class="stat-card">
                             <div class="stat-icon orange"><i class="bi bi-telephone-outbound"></i></div>
                             <div class="stat-body">
-                                <div class="stat-val">2</div>
+                                <div class="stat-val">0</div>
                                 <div class="stat-label">En cours</div>
                             </div>
                         </div>
@@ -219,7 +224,7 @@
                         <div class="stat-card">
                             <div class="stat-icon green"><i class="bi bi-cash-stack"></i></div>
                             <div class="stat-body">
-                                <div class="stat-val">6,800 <small>DH</small></div>
+                                <div class="stat-val">0 <small>DH</small></div>
                                 <div class="stat-label">Frais (Mois)</div>
                             </div>
                         </div>
@@ -230,7 +235,7 @@
                 <div class="card w-100" style="padding:0;overflow:hidden; animation: fadeUp 0.4s ease both;">
                     <!-- Card header with search -->
                     <div style="padding:18px 20px;border-bottom:1px solid var(--border-color);display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap">
-                        <h5 style="font-family:'Outfit',sans-serif;font-weight:700;font-size:1rem;margin:0">Historique des dÃ©pannages</h5>
+                        <h5 style="font-family:'Outfit',sans-serif;font-weight:700;font-size:1rem;margin:0">Historique des dépannages</h5>
                         <div style="display:flex;gap:10px;flex-wrap:wrap">
                             <div class="search-bar" style="min-width:200px">
                                 <i class="bi bi-search"></i>
@@ -239,7 +244,7 @@
                             <select class="form-select-custom" style="width:auto;padding:9px 14px">
                                 <option value="all">Tous les statuts</option>
                                 <option value="encours">En cours</option>
-                                <option value="termine">TerminÃ©</option>
+                                <option value="termine">Terminé</option>
                                 <option value="attente">En attente</option>
                             </select>
                         </div>
@@ -250,10 +255,11 @@
                             <thead>
                             <tr>
                                 <th>Véhicule</th>
-                                <th>Conducteur</th>
-                                <th>Date & Heure</th>
+                                <th>Prestataire / Dépanneur</th>
+                                <th>Date</th>
                                 <th>Lieu</th>
                                 <th>Motif</th>
+                                <th>Coût</th>
                                 <th>Statut</th>
                                 <th>Actions</th>
                             </tr>
@@ -284,10 +290,11 @@
         </div>
         <div class="custom-modal-body">
             <div class="view-detail-row"><span class="view-detail-label">Véhicule</span><span class="view-detail-value" id="v_veh"></span></div>
-            <div class="view-detail-row"><span class="view-detail-label">Conducteur</span><span class="view-detail-value" id="v_drv"></span></div>
-            <div class="view-detail-row"><span class="view-detail-label">Date & Heure</span><span class="view-detail-value" id="v_date"></span></div>
+            <div class="view-detail-row"><span class="view-detail-label">Prestataire / Dépanneur</span><span class="view-detail-value" id="v_drv"></span></div>
+            <div class="view-detail-row"><span class="view-detail-label">Date</span><span class="view-detail-value" id="v_date"></span></div>
             <div class="view-detail-row"><span class="view-detail-label">Lieu</span><span class="view-detail-value" id="v_loc"></span></div>
             <div class="view-detail-row"><span class="view-detail-label">Motif</span><span class="view-detail-value" id="v_mot"></span></div>
+            <div class="view-detail-row"><span class="view-detail-label">Coût</span><span class="view-detail-value" id="v_cost"></span></div>
             <div class="view-detail-row"><span class="view-detail-label">Statut</span><span class="view-detail-value" id="v_sta"></span></div>
         </div>
         <div class="custom-modal-footer">
@@ -306,25 +313,54 @@
         </div>
         <div class="custom-modal-body">
             <form id="depanageForm">
-                <div class="form-group">
-                    <label class="form-label">Véhicule</label>
-                    <select class="form-control" id="addVehiculeSelect"><option value="">Chargement...</option></select>
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label class="form-label">Véhicule</label>
+                        <select class="form-control" id="addVehiculeSelect"><option value="">Chargement...</option></select>
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label class="form-label">Date d'intervention</label>
+                        <input type="date" class="form-control" id="addDate">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label class="form-label">Type de Prestataire</label>
+                        <select class="form-control" id="addTypeFournisseur">
+                            <option value="">Tous les types</option>
+                            <option value="Garage">Garage</option>
+                            <option value="Fournisseur">Fournisseur</option>
+                            <option value="Station de Gazoil">Station de Gazoil</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label class="form-label">Prestataire / Dépanneur</label>
+                        <select class="form-control" id="addFournisseurSelect">
+                            <option value="">Choisir un fournisseur...</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Lieu</label>
-                    <input type="text" class="form-control" placeholder="Adresse ou coordonnées">
+                    <label class="form-label">Lieu de la panne</label>
+                    <input type="text" class="form-control" id="addLieu" placeholder="Adresse ou coordonnées">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Motif</label>
-                    <textarea class="form-control" rows="2"></textarea>
+                    <label class="form-label">Motif / Description</label>
+                    <textarea class="form-control" rows="2" id="addMotif"></textarea>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Statut</label>
-                    <select class="form-control">
-                        <option value="encours">En cours</option>
-                        <option value="attente">En attente</option>
-                        <option value="termine">Terminé</option>
-                    </select>
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label class="form-label">Coût (DH)</label>
+                        <input type="number" class="form-control" id="addCost" placeholder="0.00">
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label class="form-label">Statut</label>
+                        <select class="form-control" id="addStatut">
+                            <option value="encours">En cours</option>
+                            <option value="attente">En attente</option>
+                            <option value="termine">Terminé</option>
+                        </select>
+                    </div>
                 </div>
             </form>
         </div>
@@ -344,33 +380,54 @@
         </div>
         <div class="custom-modal-body">
             <form id="editDepanageForm">
-                <div class="form-group">
-                    <label class="form-label">Véhicule</label>
-                    <select class="form-control" id="e_veh"><option>1234-A-6</option><option>5678-B-12</option></select>
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label class="form-label">Véhicule</label>
+                        <select class="form-control" id="e_veh"></select>
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label class="form-label">Date d'intervention</label>
+                        <input type="date" class="form-control" id="e_date">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label class="form-label">Type de Prestataire</label>
+                        <select class="form-control" id="editTypeFournisseur">
+                            <option value="">Tous les types</option>
+                            <option value="Garage">Garage</option>
+                            <option value="Fournisseur">Fournisseur</option>
+                            <option value="Station de Gazoil">Station de Gazoil</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label class="form-label">Prestataire / Dépanneur</label>
+                        <select class="form-control" id="editFournisseurSelect">
+                            <option value="">Choisir un fournisseur...</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Conducteur</label>
-                    <input type="text" class="form-control" id="e_drv">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Date & Heure</label>
-                    <input type="text" class="form-control" id="e_date">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Lieu</label>
+                    <label class="form-label">Lieu de la panne</label>
                     <input type="text" class="form-control" id="e_loc">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Motif</label>
+                    <label class="form-label">Motif / Description</label>
                     <textarea class="form-control" rows="2" id="e_mot"></textarea>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Statut</label>
-                    <select class="form-control" id="e_sta">
-                        <option value="encours">En cours</option>
-                        <option value="termine">Terminé</option>
-                        <option value="attente">En attente</option>
-                    </select>
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label class="form-label">Coût (DH)</label>
+                        <input type="number" class="form-control" id="e_cost" placeholder="0.00">
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label class="form-label">Statut</label>
+                        <select class="form-control" id="e_sta">
+                            <option value="encours">En cours</option>
+                            <option value="termine">Terminé</option>
+                            <option value="attente">En attente</option>
+                        </select>
+                    </div>
                 </div>
             </form>
         </div>
@@ -389,10 +446,10 @@
 <div class="custom-modal-overlay" id="deleteDepanageModal">
     <div class="custom-modal" onclick="event.stopPropagation()" style="max-width:400px;">
         <div class="custom-modal-header">
-            <h3 class="custom-modal-title">Supprimer ce depannage</h3>
+            <h3 class="custom-modal-title">Supprimer ce dépannage</h3>
         </div>
         <div class="custom-modal-body">
-            <p>Etes-vous sur de vouloir supprimer ce depannage ? Cette action est irreversible.</p>
+            <p>Êtes-vous sûr de vouloir supprimer ce dépannage ? Cette action est irréversible.</p>
         </div>
         <div class="custom-modal-footer">
             <button class="btn btn-secondary" onclick="closeModal('deleteDepanageModal')">Annuler</button>

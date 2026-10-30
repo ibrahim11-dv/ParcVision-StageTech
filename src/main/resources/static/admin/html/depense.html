@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="../css/depense.css">
 </head>
 
-<body class="light">
+<body>
 
     <div class="shell">
 
@@ -66,14 +66,16 @@
                 <div class="nav-item">
                     <a href="/admin/assurances" class="nav-link" data-tip="Assurances">
                         <span class="ni"><i class="bi bi-shield-check"></i><span class="pulse p-blue"></span></span>
-                        <span class="nt">Assurances<small class="nt-sub">Gestion</small></span>
+                        <span class="nt">Assurances<small class="nt-sub">Couverture</small></span>
+                        <span class="nb nb-blue" id="nb-total-assurances">--</span>
                     </a>
                 </div>
 
                 <div class="nav-item">
                     <a href="/admin/infractions" class="nav-link" data-tip="Infractions">
-                        <span class="ni"><i class="bi bi-exclamation-triangle"></i><span class="pulse p-red"></span></span>
-                        <span class="nt">Infractions<small class="nt-sub">Suivi</small></span>
+                        <span class="ni"><i class="bi bi-shield-exclamation"></i><span class="pulse p-red"></span></span>
+                        <span class="nt">Infractions<small class="nt-sub">Amendes &amp; suivi</small></span>
+                        <span class="nb nb-red" id="nb-total-infractions">--</span>
                     </a>
                 </div>
 
@@ -133,7 +135,8 @@
                 <div class="nav-item">
                     <a href="/admin/depenses" class="nav-link active" data-tip="Dépenses">
                         <span class="ni"><i class="bi bi-wallet2"></i><span class="pulse p-red"></span></span>
-                        <span class="nt">Dépense<small class="nt-sub">Suivi financier</small></span>
+                        <span class="nt">Dépenses<small class="nt-sub">Suivi financier</small></span>
+                        <span class="nb nb-red">--</span>
                     </a>
                 </div>
 
@@ -151,7 +154,7 @@
                 <div class="nav-item">
                     <a href="/admin/archivage" class="nav-link" data-tip="Archivage">
                         <span class="ni"><i class="bi bi-archive"></i></span>
-                        <span class="nt">Archivage<small class="nt-sub">Documents & historique</small></span>
+                        <span class="nt">Archivage<small class="nt-sub">Documents &amp; OCR</small></span>
                     </a>
                 </div>
 
@@ -175,7 +178,7 @@
                             <span id="themeText">Mode sombre</span>
                         </div>
                         <div class="pp-hr"></div>
-                        <a href="#" id="logout-btn" class="pp-link pp-logout"><i class="bi bi-box-arrow-right"></i> Deconnexion</a>
+                        <a href="#" id="logout-btn" class="pp-link pp-logout"><i class="bi bi-box-arrow-right"></i> Déconnexion</a>
                     </div>
                 </div>
             </div>

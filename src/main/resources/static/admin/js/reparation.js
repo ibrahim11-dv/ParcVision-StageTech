@@ -68,9 +68,6 @@ function fetchReparations(page = 0) {
         });
 }
 
-// Initial load
-fetchReparations(0);
-
 //Chercher
 document.getElementById('searchInput').addEventListener('input', function () {
     const query = this.value.trim();
@@ -98,15 +95,18 @@ document.getElementById('statutFilter').addEventListener('change', function () {
 });
 
 //Les buttons !
+let currentRepair = null;
 
 //Pour remplir le panier d informations quand on clique sur button eye
 function openViewModal(a) {
-    document.getElementById('viewVehicle').textContent = a.vehicule.immatriculation + ' ' + a.vehicule.model;
-    document.getElementById('viewDate').textContent = a.dateIntervention;
-    document.getElementById('viewGarage').textContent = a.garagePrestataire;
-    document.getElementById('viewDescription').textContent = a.descriptionPanne;
-    document.getElementById('viewCost').textContent = a.coutTotal + ' DH';
-    document.getElementById('viewStatus').textContent = a.statut;
+    currentRepair = a;
+    const vText = a.vehicule ? `${a.vehicule.immatriculation} ${a.vehicule.model || ''}` : '-';
+    document.getElementById('viewVehicle').textContent = vText;
+    document.getElementById('viewDate').textContent = a.dateIntervention || '-';
+    document.getElementById('viewGarage').textContent = a.fournisseur ? a.fournisseur.nomFournisseur : (a.garagePrestataire || '-');
+    document.getElementById('viewDescription').textContent = a.descriptionPanne || '-';
+    document.getElementById('viewCost').textContent = (a.coutTotal ?? 0) + ' DH';
+    document.getElementById('viewStatus').textContent = a.statut || '-';
     document.getElementById('viewEstPaye').textContent = a.estPaye ? 'Oui' : 'Non';
     document.getElementById('viewDatePayement').textContent = a.datePayement ? a.datePayement : '-';
 
@@ -130,8 +130,13 @@ function submitDeleteRepair() {
             closeModal('deleteRepairModal');
             fetchReparations(0);
             fetchStats();
+            if (window.loadSidebarStats) window.loadSidebarStats();
+            if (window.showToast) window.showToast('Réparation supprimée avec succès');
         })
-        .catch(err => alert('Erreur : ' + err.message));
+        .catch(err => {
+            if (window.showToast) window.showToast('Erreur : ' + err.message, 'error');
+            else alert('Erreur : ' + err.message);
+        });
 }
 //button de modification :
 //methode openEditModel et subEditModel !
@@ -143,35 +148,43 @@ function goToExpense() {
 }
 
 function openEditModal(a) {
+    if (!a) return;
+    currentRepair = a;
     // Stocker l'id de la réparation
     document.getElementById('editRepairModal').dataset.reparationId = a.id;
 
     // Pré-remplir les champs avec les valeurs actuelles
-    document.getElementById('editDate').value = a.dateIntervention;
+    if (a.vehicule && document.getElementById('editVehicle')) {
+        document.getElementById('editVehicle').value = a.vehicule.id;
+    }
+    document.getElementById('editDate').value = a.dateIntervention || '';
     
     // Fournisseur
     if (a.fournisseur) {
-        document.getElementById('editTypeFournisseur').value = a.fournisseur.typeFournisseur;
-        populateFournisseurSelects(a.fournisseur.typeFournisseur, 'editFournisseurSelect');
+        document.getElementById('editTypeFournisseur').value = a.fournisseur.typeFournisseur || '';
+        populateFournisseurSelects('editTypeFournisseur', 'editFournisseurSelect');
         document.getElementById('editFournisseurSelect').value = a.fournisseur.idFournisseur;
     } else {
         document.getElementById('editTypeFournisseur').value = '';
-        populateFournisseurSelects('', 'editFournisseurSelect');
+        populateFournisseurSelects('editTypeFournisseur', 'editFournisseurSelect');
         document.getElementById('editFournisseurSelect').value = '';
     }
 
-    document.getElementById('editDescription').value = a.descriptionPanne;
-    document.getElementById('editCost').value = a.coutTotal;
-    document.getElementById('editStatus').value = a.statut;
+    document.getElementById('editDescription').value = a.descriptionPanne || '';
+    document.getElementById('editCost').value = a.coutTotal ?? '';
+    document.getElementById('editStatus').value = a.statut || 'encours';
 
     // Ouvrir le modal
-    openModal('editRepairModal')
+    openModal('editRepairModal');
 }
 
 function submitEditModal() {
     const id = document.getElementById('editRepairModal').dataset.reparationId;//recupere l id de la ligne ou il a clique
+    const vehId = document.getElementById('editVehicle') ? document.getElementById('editVehicle').value : null;
     //recupere les donnes
     const body = {
+        vehiculeId: vehId,
+        vehicule: vehId ? { id: parseInt(vehId) } : null,
         dateIntervention: document.getElementById('editDate').value,
         fournisseurId: document.getElementById('editFournisseurSelect').value,
         descriptionPanne: document.getElementById('editDescription').value,
@@ -191,8 +204,14 @@ function submitEditModal() {
         .then(() => {
             closeModal('editRepairModal');
             fetchReparations(0);
+            fetchStats();
+            if (window.loadSidebarStats) window.loadSidebarStats();
+            if (window.showToast) window.showToast('Réparation mise à jour avec succès');
         })
-        .catch(err => alert('Erreur : ' + err.message));
+        .catch(err => {
+            if (window.showToast) window.showToast('Erreur : ' + err.message, 'error');
+            else alert('Erreur : ' + err.message);
+        });
 }
 
 function saveRepair() {
@@ -216,8 +235,14 @@ function saveRepair() {
         .then(() => {
             closeModal('addRepairModal');
             fetchReparations(0);
+            fetchStats();
+            if (window.loadSidebarStats) window.loadSidebarStats();
+            if (window.showToast) window.showToast('Réparation ajoutée avec succès');
         })
-        .catch(err => alert('Erreur : ' + err.message));
+        .catch(err => {
+            if (window.showToast) window.showToast('Erreur : ' + err.message, 'error');
+            else alert('Erreur : ' + err.message);
+        });
 }
 
 function renderPagination(data) {
@@ -281,7 +306,7 @@ function renderTableau(data) {
     if (!data.content || data.content.length === 0) {
         id_tab.innerHTML = `
             <tr>
-                <td colspan="9" style="text-align:center; padding:40px; font-size:18px;">
+                <td colspan="10" style="text-align:center; padding:40px; font-size:18px;">
                     Aucune réparation trouvée
                 </td>
             </tr>

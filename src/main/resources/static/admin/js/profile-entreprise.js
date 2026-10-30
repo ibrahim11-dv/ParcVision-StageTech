@@ -9,17 +9,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('entNom').value = data.nom || '';
             document.getElementById('entSecteur').value = data.secteurActivite || '';
             document.getElementById('entAdresse').value = data.adresse || '';
-            document.getElementById('entEmail').value = data.email || '';
+            const emailInput = document.getElementById('entEmail');
+            if (emailInput) emailInput.value = data.email || '';
             document.getElementById('entTelephone').value = data.telephone || '';
             document.getElementById('entDateCreation').value = data.dateCreation || '';
 
             // Update summary card
             const entName = document.getElementById('entName');
-            const entEmail = document.getElementById('entEmail');
+            const bannerEmailEl = document.getElementById('entBannerEmail');
             const entAvatar = document.getElementById('entAvatar');
 
             if (entName) entName.textContent = data.nom || 'Entreprise';
-            if (entEmail) entEmail.textContent = data.email || '';
+            if (bannerEmailEl) bannerEmailEl.textContent = data.email || '';
 
             // Update avatar with logo or initials
             if (entAvatar) {
@@ -64,6 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         entAvatar.style.backgroundImage = "url('" + data.photoUrl + "')";
                         entAvatar.style.backgroundSize = 'cover';
                         entAvatar.style.backgroundPosition = 'center';
+                        if (window.showToast) window.showToast('Logo mis à jour avec succès');
                     }
                 } catch (err) {
                     console.error('Error uploading logo:', err);
@@ -98,9 +100,12 @@ document.getElementById('entrepriseForm').addEventListener('submit', async (e) =
             btn.classList.replace('btn-primary', 'btn-success');
             // Update summary card
             const entName = document.getElementById('entName');
-            const entEmailEl = document.getElementById('entEmail');
+            const bannerEmailEl = document.getElementById('entBannerEmail');
+            const emailInput = document.getElementById('entEmail');
             if (entName) entName.textContent = data.nom;
-            if (entEmailEl) entEmailEl.textContent = data.email;
+            if (bannerEmailEl) bannerEmailEl.textContent = data.email;
+            if (emailInput) emailInput.value = data.email;
+            if (window.showToast) window.showToast('Profil entreprise mis à jour avec succès');
         } else {
             btn.innerHTML = '<i class="bi bi-x-circle me-2"></i>Erreur';
             btn.classList.replace('btn-primary', 'btn-danger');

@@ -53,8 +53,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     addForm.reset();
                     fetchStats();
                     loadSuppliers();
+                    if (window.loadSidebarStats) window.loadSidebarStats();
+                    if (window.showToast) window.showToast("Fournisseur ajouté avec succès");
                 } else {
-                    alert("Erreur lors de la création du fournisseur.");
+                    if (window.showToast) window.showToast("Erreur lors de la création du fournisseur.", "error");
+                    else alert("Erreur lors de la création du fournisseur.");
                 }
             } catch (err) {
                 console.error(err);
@@ -86,8 +89,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     closeModal("editSupplierModal");
                     fetchStats();
                     loadSuppliers();
+                    if (window.loadSidebarStats) window.loadSidebarStats();
+                    if (window.showToast) window.showToast("Fournisseur modifié avec succès");
                 } else {
-                    alert("Erreur lors de la modification.");
+                    if (window.showToast) window.showToast("Erreur lors de la modification.", "error");
+                    else alert("Erreur lors de la modification.");
                 }
             } catch (err) {
                 console.error(err);
@@ -108,6 +114,16 @@ document.addEventListener("DOMContentLoaded", () => {
             }, 300);
         });
     }
+
+    // Type Filter listener
+    const typeFilter = document.getElementById("typeFilter");
+    if (typeFilter) {
+        typeFilter.addEventListener("change", (e) => {
+            currentTypeFilter = e.target.value;
+            currentPage = 0;
+            loadSuppliers();
+        });
+    }
 });
 
 // ── CRUD Logic ──
@@ -115,7 +131,10 @@ let currentPage = 0;
 const pageSize = 5;
 let totalPages = 0;
 let currentSearch = "";
+let currentTypeFilter = "all";
 let allSuppliers = [];
+let currentViewSupplierId = null;
+let supplierToDelete = null;
 
 // Load stats
 async function fetchStats() {
@@ -140,8 +159,9 @@ async function fetchStats() {
 
 // Load list
 async function loadSuppliers() {
-    const url = currentSearch
-        ? `/admin/fournisseur/search?query=${encodeURIComponent(currentSearch)}&page=${currentPage}&size=${pageSize}`
+    const effectiveQuery = currentSearch || (currentTypeFilter !== "all" ? currentTypeFilter : "");
+    const url = effectiveQuery
+        ? `/admin/fournisseur/search?query=${encodeURIComponent(effectiveQuery)}&page=${currentPage}&size=${pageSize}`
         : `/admin/fournisseur?page=${currentPage}&size=${pageSize}`;
 
     try {
@@ -149,8 +169,12 @@ async function loadSuppliers() {
         if (res.ok) {
             const data = await res.json();
             allSuppliers = data.content || [];
+            let filtered = allSuppliers;
+            if (currentTypeFilter !== "all") {
+                filtered = allSuppliers.filter(s => s.typeFournisseur === currentTypeFilter);
+            }
             totalPages = data.totalPages || 0;
-            renderTable(allSuppliers, data.totalElements, data.number, data.size);
+            renderTable(filtered, currentTypeFilter !== "all" && currentSearch ? filtered.length : data.totalElements, data.number, data.size);
         }
     } catch (err) {
         console.error("Error loading suppliers:", err);
@@ -259,6 +283,7 @@ function updatePaginationUI(start, end, total) {
 function openViewModal(id) {
     const s = allSuppliers.find(x => x.idFournisseur === id);
     if (!s) return;
+    currentViewSupplierId = id;
 
     document.getElementById("viewNomFournisseur").textContent = s.nomFournisseur;
     document.getElementById("viewTypeFournisseur").textContent = s.typeFournisseur;
@@ -285,21 +310,32 @@ function openEditModal(id) {
 }
 
 // Delete Supplier
-async function deleteSupplier(id) {
-    if (!confirm("Êtes-vous sûr de vouloir supprimer ce fournisseur ?")) return;
+function deleteSupplier(id) {
+    supplierToDelete = id;
+    openModal("deleteSupplierModal");
+}
+
+async function submitDeleteSupplier() {
+    if (!supplierToDelete) return;
 
     try {
-        const res = await fetch(`/admin/fournisseur/delete/${id}`, {
+        const res = await fetch(`/admin/fournisseur/delete/${supplierToDelete}`, {
             method: "DELETE"
         });
         if (res.ok) {
+            closeModal("deleteSupplierModal");
+            supplierToDelete = null;
             fetchStats();
             loadSuppliers();
+            if (window.loadSidebarStats) window.loadSidebarStats();
+            if (window.showToast) window.showToast("Fournisseur supprimé avec succès");
         } else {
-            alert("Erreur lors de la suppression.");
+            if (window.showToast) window.showToast("Erreur lors de la suppression.", "error");
+            else alert("Erreur lors de la suppression.");
         }
     } catch (err) {
         console.error(err);
+        if (window.showToast) window.showToast("Erreur lors de la suppression.", "error");
     }
 }
 

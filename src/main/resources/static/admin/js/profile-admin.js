@@ -61,6 +61,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         profileAvatar.style.backgroundImage = 'url(' + data.photoUrl + ')';
                         profileAvatar.style.backgroundSize = 'cover';
                         profileAvatar.style.backgroundPosition = 'center';
+                        if (window.loadMinimalProfile) window.loadMinimalProfile();
+                        if (window.showToast) window.showToast('Photo de profil mise à jour');
                     }
                 } catch (err) {
                     console.error('Error uploading photo:', err);
@@ -96,6 +98,8 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
             const profileEmail = document.getElementById('profileEmail');
             if (profileName) profileName.textContent = data.nom + ' ' + data.prenom;
             if (profileEmail) profileEmail.textContent = data.email;
+            if (window.loadMinimalProfile) window.loadMinimalProfile();
+            if (window.showToast) window.showToast('Profil mis à jour avec succès');
         } else {
             btn.innerHTML = '<i class="bi bi-x-circle me-2"></i>Erreur';
             btn.classList.replace('btn-primary', 'btn-danger');
@@ -139,6 +143,7 @@ document.getElementById('securityForm').addEventListener('submit', async (e) => 
             btn.innerHTML = '<i class="bi bi-check2-circle me-2"></i>Mot de passe mis à jour';
             btn.classList.replace('btn-primary', 'btn-success');
             e.target.reset();
+            if (window.showToast) window.showToast('Mot de passe mis à jour');
         } else {
             btn.innerHTML = '<i class="bi bi-x-circle me-2"></i>Erreur';
             btn.classList.replace('btn-primary', 'btn-danger');

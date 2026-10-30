@@ -371,12 +371,16 @@ async function submitEditDepense() {
             closeModal('editDepenseModal');
             await loadDepenses(currentPage);
             await loadStats();
+            if (window.loadSidebarStats) window.loadSidebarStats();
+            if (window.showToast) window.showToast('Dépense mise à jour avec succès');
         } else {
-            alert('Erreur lors de la modification');
+            if (window.showToast) window.showToast('Erreur lors de la modification', 'error');
+            else alert('Erreur lors de la modification');
         }
     } catch (err) {
         console.error(err);
-        alert('Erreur lors de la modification');
+        if (window.showToast) window.showToast('Erreur lors de la modification', 'error');
+        else alert('Erreur lors de la modification');
     }
 }
 
@@ -391,11 +395,13 @@ async function saveDepense() {
     const sourceDepenseCustom = document.getElementById('addSourceDepenseCustom')?.value || '';
 
     if (!qui) {
-        alert('Veuillez saisir le nom de la personne');
+        if (window.showToast) window.showToast('Veuillez saisir le nom de la personne', 'error');
+        else alert('Veuillez saisir le nom de la personne');
         return;
     }
     if (!montant) {
-        alert('Veuillez saisir le montant');
+        if (window.showToast) window.showToast('Veuillez saisir le montant', 'error');
+        else alert('Veuillez saisir le montant');
         return;
     }
 
@@ -421,12 +427,16 @@ async function saveDepense() {
             document.getElementById('addCustomSourceGroup').style.display = 'none';
             await loadDepenses();
             await loadStats();
+            if (window.loadSidebarStats) window.loadSidebarStats();
+            if (window.showToast) window.showToast('Dépense enregistrée avec succès');
         } else {
-            alert('Erreur lors de l\'enregistrement');
+            if (window.showToast) window.showToast('Erreur lors de l\'enregistrement', 'error');
+            else alert('Erreur lors de l\'enregistrement');
         }
     } catch (err) {
         console.error(err);
-        alert('Erreur lors de l\'enregistrement');
+        if (window.showToast) window.showToast('Erreur lors de l\'enregistrement', 'error');
+        else alert('Erreur lors de l\'enregistrement');
     }
 }
 
@@ -448,10 +458,13 @@ function submitDeleteDepense() {
             closeModal('deleteDepenseModal');
             loadDepenses();
             loadStats();
+            if (window.loadSidebarStats) window.loadSidebarStats();
+            if (window.showToast) window.showToast('Dépense supprimée avec succès');
         })
         .catch(err => {
             console.error(err);
-            alert('Erreur lors de la suppression');
+            if (window.showToast) window.showToast('Erreur lors de la suppression', 'error');
+            else alert('Erreur lors de la suppression');
         });
 }
 

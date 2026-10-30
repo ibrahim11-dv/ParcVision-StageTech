@@ -20,28 +20,60 @@ function closeModal(id) {
 
 
 // ── API Calls ──
+async function loadVidangeStats() {
+    try {
+        const res = await fetch('/api/vidanges/stats');
+        if (res.ok) {
+            const data = await res.json();
+            const statVals = document.querySelectorAll('.stat-val');
+            if (statVals.length >= 4) {
+                statVals[0].textContent = data.total ?? 0;
+                statVals[1].textContent = data.ajour ?? 0;
+                statVals[2].textContent = data.bientot ?? 0;
+                statVals[3].textContent = data.retard ?? 0;
+            }
+            return true;
+        }
+    } catch (err) {
+        console.warn('Fallback KPI calculation from loaded data:', err);
+    }
+    return false;
+}
+
 async function loadVidanges(page = 0) {
     currentPage = page;
     const searchInput = document.querySelector('.search-bar input');
-    const query = searchInput ? searchInput.value : '';
-    const statusSelect = document.querySelector('.form-select-custom');
+    const query = searchInput ? searchInput.value.trim() : '';
+    const statusSelect = document.getElementById('statusFilter') || document.querySelector('.form-select-custom');
     const statusFilter = statusSelect ? statusSelect.value : 'all';
 
     let url = `/api/vidanges?page=${page}&size=${pageSize}`;
     if (query) {
         url = `/api/vidanges/search?query=${encodeURIComponent(query)}&page=${page}&size=${pageSize}`;
     }
+    if (statusFilter && statusFilter !== 'all') {
+        url += `&status=${encodeURIComponent(statusFilter)}`;
+    }
 
     try {
         const response = await fetch(url);
         if (response.ok) {
             const data = await response.json();
-            vidangesData = data.content;
-            renderVidangesTable(vidangesData);
+            vidangesData = data.content || [];
+            let filtered = vidangesData;
+            if (statusFilter && statusFilter !== 'all') {
+                const statusMap = { ajour: 'À jour', bientot: 'Bientôt', retard: 'En retard' };
+                const expectedLabel = statusMap[statusFilter];
+                if (expectedLabel) {
+                    filtered = vidangesData.filter(v => getStatusFromVidange(v) === expectedLabel);
+                }
+            }
+            renderVidangesTable(filtered);
             renderPagination(data);
-            // KPIs are generally based on all data, but here we update with what we have
-            // Or we could have a separate endpoint for KPIs
-            updateKPIs(vidangesData);
+            const statsLoaded = await loadVidangeStats();
+            if (!statsLoaded) {
+                updateKPIs(vidangesData);
+            }
         }
     } catch (err) {
         console.error('Error loading vidanges:', err);
@@ -355,12 +387,16 @@ async function saveOilChange() {
             closeModal('addOilChangeModal');
             form.reset();
             await loadVidanges();
+            if (window.loadSidebarStats) window.loadSidebarStats();
+            if (window.showToast) window.showToast('Vidange enregistrée avec succès');
         } else {
-            alert('Erreur lors de l\'enregistrement');
+            if (window.showToast) window.showToast('Erreur lors de l\'enregistrement', 'error');
+            else alert('Erreur lors de l\'enregistrement');
         }
     } catch (err) {
         console.error(err);
-        alert('Erreur lors de l\'enregistrement');
+        if (window.showToast) window.showToast('Erreur lors de l\'enregistrement', 'error');
+        else alert('Erreur lors de l\'enregistrement');
     }
 }
 
@@ -392,12 +428,16 @@ async function updateOilChange() {
         if (response.ok) {
             closeModal('editOilChangeModal');
             await loadVidanges();
+            if (window.loadSidebarStats) window.loadSidebarStats();
+            if (window.showToast) window.showToast('Vidange mise à jour avec succès');
         } else {
-            alert('Erreur lors de la mise à jour');
+            if (window.showToast) window.showToast('Erreur lors de la mise à jour', 'error');
+            else alert('Erreur lors de la mise à jour');
         }
     } catch (err) {
         console.error(err);
-        alert('Erreur lors de la mise à jour');
+        if (window.showToast) window.showToast('Erreur lors de la mise à jour', 'error');
+        else alert('Erreur lors de la mise à jour');
     }
 }
 
@@ -418,10 +458,13 @@ function submitDeleteVidange() {
             if (!res.ok) throw new Error('Erreur lors de la suppression');
             closeModal('deleteVidangeModal');
             loadVidanges();
+            if (window.loadSidebarStats) window.loadSidebarStats();
+            if (window.showToast) window.showToast('Vidange supprimée avec succès');
         })
         .catch(err => {
             console.error(err);
-            alert('Erreur lors de la suppression');
+            if (window.showToast) window.showToast('Erreur lors de la suppression', 'error');
+            else alert('Erreur lors de la suppression');
         });
 }
 

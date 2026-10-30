@@ -48,14 +48,14 @@ body.dark {
     --card-bg: #1a1d24;
 }
 
-html, body { height: 100%; overflow: hidden; }
+html, body { min-height: 100%; }
 
 body {
     font-family: 'Inter', 'Outfit', sans-serif;
     background: var(--bg-body);
     color: var(--text-main);
-    height: 100vh;
-    overflow: hidden;
+    min-height: 100vh;
+    overflow-x: hidden;
     transition: background 0.2s ease, color 0.2s ease;
 }
 
@@ -205,6 +205,16 @@ body {
     border: 1.5px solid var(--bg-sidebar);
 }
 
+.p-green { background: #10b981; box-shadow: 0 0 5px rgba(16, 185, 129, 0.5); }
+.p-amber { background: #f59e0b; box-shadow: 0 0 5px rgba(245, 158, 11, 0.5); }
+.p-red   { background: #ef4444; box-shadow: 0 0 5px rgba(239, 68, 68, 0.5); animation: blink 1.2s ease-in-out infinite; }
+.p-blue  { background: #3b82f6; box-shadow: 0 0 5px rgba(59, 130, 246, 0.5); }
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .3; }
+}
+
 .nt { flex: 1; overflow: hidden; transition: opacity .2s; line-height: 1.2; }
 .sidebar.mini .nt { opacity: 0; pointer-events: none; }
 .nt-sub {
@@ -346,7 +356,6 @@ body {
 .page {
     flex: 1; padding: 40px;
     display: flex; align-items: flex-start; justify-content: center;
-    overflow-y: auto; height: 100vh;
 }
 .overlay {
     display: none; position: fixed; inset: 0;

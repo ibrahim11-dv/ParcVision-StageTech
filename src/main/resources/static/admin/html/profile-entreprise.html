@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -13,156 +13,172 @@
 
 <div class="shell">
 
-    <aside class="sidebar" id="sidebar">
-        <a href="/admin/dashboard" class="sb-brand">
-            <div class="brand-icon"><i class="bi bi-car-front-fill"></i></div>
-            <div class="brand-text">
-                <strong>Parc Auto</strong>
-                <small>Gestion de flotte</small>
-            </div>
-        </a>
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
 
-        <div class="sb-body">
-            <div class="sb-section">Principal</div>
-            <div class="nav-item">
-                <a href="/admin/dashboard" class="nav-link" data-tip="Dashboard">
-                    <span class="ni"><i class="bi bi-speedometer2"></i></span>
-                    <span class="nt">Dashboard<small class="nt-sub">Vue générale</small></span>
-                </a>
-            </div>
-
-            <div class="sb-section">Gestion</div>
-            <div class="nav-item">
-                <a href="/admin/conducteurs" class="nav-link" data-tip="Conducteurs">
-                    <span class="ni">
-                        <i class="bi bi-person-badge"></i>
-                        <span class="pulse p-green"></span>
-                    </span>
-                    <span class="nt">Conducteurs<small class="nt-sub">Chargement...</small></span>
-                    <span class="nb nb-blue">--</span>
-                </a>
-            </div>
-            <div class="nav-item">
-                <a href="/admin/vehicules" class="nav-link" data-tip="Véhicules">
-                    <span class="ni">
-                        <i class="bi bi-truck"></i>
-                        <span class="pulse p-amber"></span>
-                    </span>
-                    <span class="nt">Véhicules<small class="nt-sub">Chargement...</small></span>
-                    <span class="nb nb-blue">--</span>
-                </a>
-            </div>
-
-            <div class="nav-item">
-                <a href="/admin/assurances" class="nav-link" data-tip="Assurances">
-                    <span class="ni"><i class="bi bi-shield-check"></i><span class="pulse p-blue"></span></span>
-                    <span class="nt">Assurances<small class="nt-sub">Gestion</small></span>
-                </a>
-            </div>
-
-            <div class="nav-item">
-                <a href="/admin/infractions" class="nav-link" data-tip="Infractions">
-                    <span class="ni"><i class="bi bi-exclamation-triangle"></i><span class="pulse p-red"></span></span>
-                    <span class="nt">Infractions<small class="nt-sub">Suivi</small></span>
-                </a>
-            </div>
-
-
-            <div class="nav-item">
-                <a href="/admin/depenses" class="nav-link" data-tip="Dépenses">
-                    <span class="ni"><i class="bi bi-wallet2"></i><span class="pulse p-red"></span></span>
-                    <span class="nt">Dépense<small class="nt-sub">Suivi financier</small></span>
-                </a>
-            </div>
-            <div class="nav-item">
-                <a href="/admin/fournisseurs" class="nav-link" data-tip="Fournisseurs">
-                    <span class="ni"><i class="bi bi-people-fill"></i><span class="pulse p-green"></span></span>
-                    <span class="nt">Fournisseurs<small class="nt-sub">Chargement...</small></span>
-                    <span class="nb nb-blue">--</span>
-                </a>
-            </div>
-
-            <div class="nav-item">
-                <a href="/admin/gps" class="nav-link" data-tip="Suivi GPS">
-                    <span class="ni"><i class="bi bi-geo-alt"></i><span class="pulse p-green"></span></span>
-                    <span class="nt">Missions<small class="nt-sub">Chargement...</small></span>
-                    <span class="nb nb-green" style="background:rgba(34,197,94,0.1);color:#15803d;border-color:rgba(34,197,94,0.2);">LIVE</span>
-                </a>
-            </div>
-
-            <div class="sb-hr"></div>
-            <div class="sb-section">Interventions</div>
-            <div class="nav-item">
-                <a href="/admin/reparations" class="nav-link" data-tip="Réparation">
-                    <span class="ni">
-                        <i class="bi bi-wrench-adjustable"></i>
-                        <span class="pulse p-amber"></span>
-                    </span>
-                    <span class="nt">Réparation<small class="nt-sub">Chargement...</small></span>
-                    <span class="nb nb-amber">--</span>
-                </a>
-            </div>
-
-            <div class="nav-item">
-                <a href="/admin/accidents" class="nav-link" data-tip="Accident">
-                    <span class="ni">
-                        <i class="bi bi-exclamation-triangle"></i>
-                        <span class="pulse p-red"></span>
-                    </span>
-                    <span class="nt">Accident<small class="nt-sub">Chargement...</small></span>
-                    <span class="nb nb-red">--</span>
-                </a>
-            </div>
-
-            <div class="nav-item">
-                <a href="/admin/depannage" class="nav-link" data-tip="Dépannage">
-                    <span class="ni"><i class="bi bi-cone-striped"></i><span class="pulse p-amber"></span></span>
-                    <span class="nt">Dépannage<small class="nt-sub">Chargement...</small></span>
-                    <span class="nb nb-amber">--</span>
-                </a>
-            </div>
-
-            <div class="nav-item">
-                <a href="/admin/vidanges" class="nav-link" data-tip="Vidange">
-                    <span class="ni"><i class="bi bi-droplet-half"></i><span class="pulse p-blue"></span></span>
-                    <span class="nt">Vidange<small class="nt-sub">Chargement...</small></span>
-                    <span class="nb nb-blue">--</span>
-                </a>
-            </div>
-
-            <div class="sb-hr"></div>
-            <div class="sb-section">Données</div>
-            <div class="nav-item">
-                <a href="/admin/archivage" class="nav-link" data-tip="Archivage">
-                    <span class="ni"><i class="bi bi-archive"></i></span>
-                    <span class="nt">Archivage<small class="nt-sub">Documents & historique</small></span>
-                </a>
-            </div>
-        </div>
-
-        <div class="sb-foot">
-            <div class="profile-row" id="profileRow">
-                <div class="profile-av">AD</div>
-                <div class="profile-info">
-                    <b id="user-name"></b>
-                    <small id="user-email"></small>
+            <a href="/admin/dashboard" class="sb-brand">
+                <div class="brand-icon"><i class="bi bi-car-front-fill"></i></div>
+                <div class="brand-text">
+                    <strong>Parc Auto</strong>
+                    <small>Gestion de flotte</small>
                 </div>
-                <i class="bi bi-three-dots-vertical profile-more"></i>
+            </a>
 
-                <div class="profile-popup" id="profilePopup" onclick="event.stopPropagation()">
-                    <a href="/admin/profil" class="pp-link"><i class="bi bi-person-gear"></i> Mon profil</a>
-                    <a href="/admin/profil-entreprise" class="pp-link"><i class="bi bi-building"></i> Entreprise</a>
-                    <div class="pp-hr"></div>
-                    <div class="pp-link" id="themeToggleBtn">
-                        <i class="bi bi-moon-stars" id="themeIcon"></i>
-                        <span id="themeText">Mode sombre</span>
+            <div class="sb-body">
+
+                <div class="sb-section">Principal</div>
+
+                <div class="nav-item">
+                    <a href="/admin/dashboard" class="nav-link" data-tip="Dashboard">
+                        <span class="ni"><i class="bi bi-speedometer2"></i></span>
+                        <span class="nt">Dashboard<small class="nt-sub">Vue générale</small></span>
+                    </a>
+                </div>
+
+                <div class="sb-section">Gestion</div>
+
+                <div class="nav-item">
+                    <a href="/admin/conducteurs" class="nav-link" data-tip="Conducteurs">
+                        <span class="ni">
+                            <i class="bi bi-person-badge"></i>
+                            <span class="pulse p-green"></span>
+                        </span>
+                        <span class="nt">Conducteurs<small class="nt-sub">Chargement...</small></span>
+                        <span class="nb nb-blue">--</span>
+                    </a>
+                </div>
+
+                <div class="nav-item">
+                    <a href="/admin/vehicules" class="nav-link" data-tip="Véhicules">
+                        <span class="ni">
+                            <i class="bi bi-truck"></i>
+                            <span class="pulse p-amber"></span>
+                        </span>
+                        <span class="nt">Véhicules<small class="nt-sub">Chargement...</small></span>
+                        <span class="nb nb-blue">--</span>
+                    </a>
+                </div>
+
+                <div class="nav-item">
+                    <a href="/admin/assurances" class="nav-link" data-tip="Assurances">
+                        <span class="ni"><i class="bi bi-shield-check"></i><span class="pulse p-blue"></span></span>
+                        <span class="nt">Assurances<small class="nt-sub">Couverture</small></span>
+                        <span class="nb nb-blue" id="nb-total-assurances">--</span>
+                    </a>
+                </div>
+
+                <div class="nav-item">
+                    <a href="/admin/infractions" class="nav-link" data-tip="Infractions">
+                        <span class="ni"><i class="bi bi-shield-exclamation"></i><span class="pulse p-red"></span></span>
+                        <span class="nt">Infractions<small class="nt-sub">Amendes &amp; suivi</small></span>
+                        <span class="nb nb-red" id="nb-total-infractions">--</span>
+                    </a>
+                </div>
+
+                <div class="nav-item">
+                    <a href="/admin/gps" class="nav-link" data-tip="Suivi GPS">
+                        <span class="ni">
+                            <i class="bi bi-geo-alt"></i>
+                            <span class="pulse p-green"></span>
+                        </span>
+                        <span class="nt">Missions<small class="nt-sub">Chargement...</small></span>
+                        <span class="nb nb-green" style="background:rgba(34,197,94,0.1); color:#15803d; border-color:rgba(34,197,94,0.2);">LIVE</span>
+                    </a>
+                </div>
+
+                <div class="sb-hr"></div>
+                <div class="sb-section">Interventions</div>
+
+                <div class="nav-item">
+                    <a href="/admin/reparations" class="nav-link" data-tip="Réparation">
+                        <span class="ni">
+                            <i class="bi bi-wrench-adjustable"></i>
+                            <span class="pulse p-amber"></span>
+                        </span>
+                        <span class="nt">Réparation<small class="nt-sub">Chargement...</small></span>
+                        <span class="nb nb-amber">--</span>
+                    </a>
+                </div>
+
+                <div class="nav-item">
+                    <a href="/admin/accidents" class="nav-link" data-tip="Accident">
+                        <span class="ni">
+                            <i class="bi bi-exclamation-triangle"></i>
+                            <span class="pulse p-red"></span>
+                        </span>
+                        <span class="nt">Accident<small class="nt-sub">Chargement...</small></span>
+                        <span class="nb nb-red">--</span>
+                    </a>
+                </div>
+
+                <div class="nav-item">
+                    <a href="/admin/depannage" class="nav-link" data-tip="Dépannage">
+                        <span class="ni"><i class="bi bi-cone-striped"></i><span class="pulse p-amber"></span></span>
+                        <span class="nt">Dépannage<small class="nt-sub">Chargement...</small></span>
+                        <span class="nb nb-amber">--</span>
+                    </a>
+                </div>
+
+                <div class="nav-item">
+                    <a href="/admin/vidanges" class="nav-link" data-tip="Vidange">
+                        <span class="ni"><i class="bi bi-droplet-half"></i><span class="pulse p-blue"></span></span>
+                        <span class="nt">Vidange<small class="nt-sub">Chargement...</small></span>
+                        <span class="nb nb-blue">--</span>
+                    </a>
+                </div>
+
+                <div class="nav-item">
+                    <a href="/admin/depenses" class="nav-link" data-tip="Dépenses">
+                        <span class="ni"><i class="bi bi-wallet2"></i><span class="pulse p-red"></span></span>
+                        <span class="nt">Dépenses<small class="nt-sub">Suivi financier</small></span>
+                        <span class="nb nb-red">--</span>
+                    </a>
+                </div>
+
+                <div class="nav-item">
+                    <a href="/admin/fournisseurs" class="nav-link" data-tip="Fournisseurs">
+                        <span class="ni"><i class="bi bi-people-fill"></i><span class="pulse p-green"></span></span>
+                        <span class="nt">Fournisseurs<small class="nt-sub">Chargement...</small></span>
+                        <span class="nb nb-blue">--</span>
+                    </a>
+                </div>
+
+                <div class="sb-hr"></div>
+                <div class="sb-section">Données</div>
+
+                <div class="nav-item">
+                    <a href="/admin/archivage" class="nav-link" data-tip="Archivage">
+                        <span class="ni"><i class="bi bi-archive"></i></span>
+                        <span class="nt">Archivage<small class="nt-sub">Documents &amp; OCR</small></span>
+                    </a>
+                </div>
+
+            </div>
+
+            <div class="sb-foot">
+                <div class="profile-row" id="profileRow">
+                    <div class="profile-av">AD</div>
+                    <div class="profile-info">
+                        <b id="user-name"></b>
+                        <small id="user-email"></small>
                     </div>
-                    <div class="pp-hr"></div>
-                    <a href="#" id="logout-btn" class="pp-link pp-logout"><i class="bi bi-box-arrow-right"></i> Deconnexion</a>
+                    <i class="bi bi-three-dots-vertical profile-more"></i>
+
+                    <div class="profile-popup" id="profilePopup" onclick="event.stopPropagation()">
+                        <a href="/admin/profil" class="pp-link"><i class="bi bi-person-gear"></i> Mon profil</a>
+                        <a href="/admin/profil-entreprise" class="pp-link"><i class="bi bi-building"></i> Entreprise</a>
+                        <div class="pp-hr"></div>
+                        <div class="pp-link" id="themeToggleBtn">
+                            <i class="bi bi-moon-stars" id="themeIcon"></i>
+                            <span id="themeText">Mode sombre</span>
+                        </div>
+                        <div class="pp-hr"></div>
+                        <a href="#" id="logout-btn" class="pp-link pp-logout"><i class="bi bi-box-arrow-right"></i> Déconnexion</a>
+                    </div>
                 </div>
             </div>
-        </div>
-    </aside>
+
+        </aside>
 
     <div class="overlay" id="overlay" onclick="closeMobile()"></div>
 
@@ -193,7 +209,7 @@
                             </div>
                             <div>
                                 <h4 class="fw-bold mb-1 text-dark" id="entName">Chargement...</h4>
-                                <p class="text-muted mb-2 small" id="entEmail">...</p>
+                                <p class="text-muted mb-2 small" id="entBannerEmail">...</p>
                             </div>
                         </div>
                     </div>
@@ -263,7 +279,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../js/profile-entreprise.js"></script>
-<script src="../js/logout.js"></script>
 <script src="../js/navbarInfo.js"></script>
 
 </body>

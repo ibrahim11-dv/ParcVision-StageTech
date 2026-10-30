@@ -81,6 +81,40 @@ body {
 }
 
 .sidebar.mini { width: var(--sw-mini); }
+.main.mini { margin-left: var(--sw-mini); }
+.sidebar.mini .profile-info,
+.sidebar.mini .profile-more { opacity: 0; pointer-events: none; width: 0; }
+.sidebar.mini .nav-link { justify-content: center; }
+.sidebar.mini .nav-link[data-tip]:hover::after {
+    content: attr(data-tip);
+    position: fixed; left: calc(var(--sw-mini) + 10px);
+    background: var(--gray-800); color: white;
+    font-size: 0.75rem; font-weight: 500;
+    padding: 5px 11px; border-radius: 8px;
+    white-space: nowrap; z-index: 9999;
+    pointer-events: none; box-shadow: var(--shadow-sm);
+}
+.sidebar.mini .nav-link[data-tip]:hover::before {
+    content: '';
+    position: fixed; left: calc(var(--sw-mini) + 4px);
+    border: 5px solid transparent; border-right-color: var(--gray-800);
+    z-index: 9999; pointer-events: none;
+}
+
+.overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(15,23,42,0.4); backdrop-filter: blur(2px);
+    z-index: 190; opacity: 0; transition: opacity .25s; pointer-events: none;
+}
+.overlay.show { opacity: 1; pointer-events: all; }
+
+.mob-toggle {
+    display: none; position: fixed; top: 14px; left: 14px; z-index: 300;
+    width: 38px; height: 38px; border-radius: 10px;
+    background: var(--primary); border: none; color: white; font-size: 18px;
+    align-items: center; justify-content: center; cursor: pointer;
+    box-shadow: 0 4px 12px rgba(26,42,108,0.3);
+}
 
 .sb-brand {
     display: flex; align-items: center; gap: 10px;
@@ -195,6 +229,7 @@ body {
 .p-green { background: #10b981; box-shadow: 0 0 5px rgba(16,185,129,0.5); }
 .p-amber { background: #f59e0b; box-shadow: 0 0 5px rgba(245,158,11,0.5); }
 .p-red   { background: #ef4444; box-shadow: 0 0 5px rgba(239,68,68,0.5); animation: blink 1.2s ease-in-out infinite; }
+.p-blue  { background: #3b82f6; box-shadow: 0 0 5px rgba(59,130,246,0.5); }
 
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
 
@@ -455,9 +490,11 @@ body {
 .view-detail-value { font-weight: 600; color: var(--text-main); font-size: 0.9rem; text-align: right; max-width: 65%; }
 
 @media (max-width: 900px) {
-    .main { margin-left: 0; padding: 20px; padding-top: 70px; }
+    .main { margin-left: 0 !important; padding: 20px; padding-top: 70px; }
     .sidebar { transform: translateX(-100%); width: var(--sw) !important; transition: transform .28s ease; }
     .sidebar.open { transform: translateX(0); }
+    .overlay { display: block; }
+    .mob-toggle { display: flex; }
 }
 
 /* ══════════════════════════════════════════════════════════

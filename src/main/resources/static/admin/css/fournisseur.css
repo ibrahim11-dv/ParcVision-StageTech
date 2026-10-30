@@ -73,6 +73,22 @@ body {
     overflow: hidden;
 }
 .sidebar.mini { width: var(--sw-mini); }
+.sidebar.mini .nav-link { justify-content: center; }
+.sidebar.mini .nav-link[data-tip]:hover::after {
+    content: attr(data-tip);
+    position: fixed; left: calc(var(--sw-mini) + 10px);
+    background: var(--gray-800); color: white;
+    font-size: 0.75rem; font-weight: 500;
+    padding: 5px 11px; border-radius: 8px;
+    white-space: nowrap; z-index: 9999;
+    pointer-events: none; box-shadow: var(--shadow-sm);
+}
+.sidebar.mini .nav-link[data-tip]:hover::before {
+    content: '';
+    position: fixed; left: calc(var(--sw-mini) + 4px);
+    border: 5px solid transparent; border-right-color: var(--gray-800);
+    z-index: 9999; pointer-events: none;
+}
 
 .sb-brand {
     display: flex; align-items: center; gap: 10px;
@@ -207,6 +223,7 @@ body {
 .p-green { background: #10b981; box-shadow: 0 0 5px rgba(16,185,129,0.5); }
 .p-amber { background: #f59e0b; box-shadow: 0 0 5px rgba(245,158,11,0.5); }
 .p-red   { background: #ef4444; box-shadow: 0 0 5px rgba(239,68,68,0.5); animation: blink 1.2s ease-in-out infinite; }
+.p-blue  { background: #3b82f6; box-shadow: 0 0 5px rgba(59,130,246,0.5); }
 
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
 
@@ -453,6 +470,17 @@ body {
 .btn-primary:hover { background: var(--primary-light); transform: translateY(-2px); }
 .btn-secondary { background: var(--gray-100); border: 1px solid var(--border-color); color: var(--gray-600); }
 .btn-secondary:hover { background: var(--gray-200); }
+.btn-danger { background: #ef4444; color: white; border: none; }
+.btn-danger:hover { background: #dc2626; transform: translateY(-2px); }
+
+.form-select-custom {
+    width: 100%; padding: 9px 12px;
+    border: 1px solid var(--border-color); border-radius: 8px;
+    background: var(--card-bg); color: var(--text-main);
+    font-size: 0.875rem; transition: all 0.2s; outline: none;
+}
+.form-select-custom:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+body.dark .form-select-custom { background: var(--gray-100); border-color: var(--border-color); color: white; }
 
 .btn-action {
     width: 34px; height: 34px;

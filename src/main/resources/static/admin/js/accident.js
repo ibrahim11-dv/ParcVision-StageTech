@@ -190,16 +190,18 @@ async function loadVehicles() {
         if (!res.ok) throw new Error('Erreur chargement véhicules');
         const vehicules = await res.json();
         
-        const select = document.getElementById('vehicule');
-        if (select) {
-            select.innerHTML = '<option value="">Sélectionnez un véhicule</option>';
-            vehicules.forEach(v => {
-                const opt = document.createElement('option');
-                opt.value = v.id;
-                opt.textContent = `${v.immatriculation} (${v.marque} ${v.model})`;
-                select.appendChild(opt);
-            });
-        }
+        ['vehicule', 'editVehicule'].forEach(id => {
+            const select = document.getElementById(id);
+            if (select) {
+                select.innerHTML = '<option value="">Sélectionnez un véhicule</option>';
+                vehicules.forEach(v => {
+                    const opt = document.createElement('option');
+                    opt.value = v.id;
+                    opt.textContent = `${v.immatriculation} (${v.marque} ${v.model})`;
+                    select.appendChild(opt);
+                });
+            }
+        });
     } catch (err) {
         console.error('Erreur chargement véhicules:', err);
     }
@@ -211,17 +213,19 @@ async function loadDrivers() {
         if (!res.ok) throw new Error('Erreur chargement conducteurs');
         const conducteurs = await res.json();
         
-        const select = document.getElementById('conducteur');
-        if (select) {
-            select.innerHTML = '<option value="">Sélectionnez un conducteur</option>';
-            conducteurs.forEach(c => {
-                const opt = document.createElement('option');
-                opt.value = c.id;
-                const user = c.utilisateur || {};
-                opt.textContent = `${user.nom} ${user.prenom}`;
-                select.appendChild(opt);
-            });
-        }
+        ['conducteur', 'editConducteur'].forEach(id => {
+            const select = document.getElementById(id);
+            if (select) {
+                select.innerHTML = '<option value="">Sélectionnez un conducteur</option>';
+                conducteurs.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.id;
+                    const user = c.utilisateur || {};
+                    opt.textContent = `${user.nom || ''} ${user.prenom || ''}`.trim();
+                    select.appendChild(opt);
+                });
+            }
+        });
     } catch (err) {
         console.error('Erreur chargement conducteurs:', err);
     }
@@ -261,8 +265,13 @@ function submitDeleteAccident() {
             closeModal('deleteModal');
             fetchAccidents(0);
             fetchStats();
+            if (window.loadSidebarStats) window.loadSidebarStats();
+            if (window.showToast) window.showToast('Accident supprimé avec succès');
         })
-        .catch(err => alert('Erreur : ' + err.message));
+        .catch(err => {
+            if (window.showToast) window.showToast('Erreur : ' + err.message, 'error');
+            else alert('Erreur : ' + err.message);
+        });
 }
 
 function renderTableau(data) {
@@ -618,9 +627,34 @@ function openViewModal(a) {
 }
 
 function openEditModal(a) {
+    if (!a) return;
+    currentAccident = a;
     document.getElementById('editModal').dataset.accidentId = a.id;
+    if (document.getElementById('editVehicule')) {
+        document.getElementById('editVehicule').value = a.vehicule?.id || '';
+    }
+    if (document.getElementById('editConducteur')) {
+        document.getElementById('editConducteur').value = a.conducteur?.id || '';
+    }
+    if (document.getElementById('editTime')) {
+        let dt = a.dateIntervention || '';
+        if (dt && dt.length === 10) dt += 'T00:00';
+        document.getElementById('editTime').value = dt;
+    }
+    if (document.getElementById('editLieu')) {
+        document.getElementById('editLieu').value = a.lieu || '';
+    }
+    if (document.getElementById('editContexte')) {
+        document.getElementById('editContexte').value = a.contexte || 'en-mission';
+    }
+    if (document.getElementById('editGravite')) {
+        document.getElementById('editGravite').value = a.gravite || 'mineur';
+    }
+    if (document.getElementById('editDescription')) {
+        document.getElementById('editDescription').value = a.descriptionPanne || '';
+    }
     document.getElementById('statutSelectEdit').value = a.etat || 'En expertise';
-    document.getElementById('budgetInputEdit').value = a.budgetEstime || '';
+    document.getElementById('budgetInputEdit').value = a.budgetEstime ?? '';
     document.getElementById('notesTextarea').value = a.notes || '';
     
     // Reset new photos
@@ -648,8 +682,25 @@ function submitEditModal() {
     const id = document.getElementById('editModal').dataset.accidentId;
     const formData = new FormData();
     
+    const editVeh = document.getElementById('editVehicule')?.value;
+    const editCond = document.getElementById('editConducteur')?.value;
+    const editTime = document.getElementById('editTime')?.value;
+    const editLieu = document.getElementById('editLieu')?.value;
+    const editContexte = document.getElementById('editContexte')?.value;
+    const editGravite = document.getElementById('editGravite')?.value;
+    const editDescription = document.getElementById('editDescription')?.value;
+
+    if (editVeh) formData.append("vehiculeId", editVeh);
+    if (editCond) formData.append("conducteurId", editCond);
+    if (editTime) formData.append("dateIntervention", editTime);
+    if (editLieu !== undefined) formData.append("lieu", editLieu);
+    if (editContexte) formData.append("contexte", editContexte);
+    if (editGravite) formData.append("gravite", editGravite);
+    if (editDescription !== undefined) formData.append("descriptionPanne", editDescription);
+
     formData.append("etat", document.getElementById('statutSelectEdit').value);
-    formData.append("budgetEstime", document.getElementById('budgetInputEdit').value);
+    const budgetVal = document.getElementById('budgetInputEdit').value;
+    formData.append("budgetEstime", isNaN(parseFloat(budgetVal)) ? 0 : parseFloat(budgetVal));
     formData.append("notes", document.getElementById('notesTextarea').value);
     
     editDeletedPhotos.forEach(url => {
@@ -677,11 +728,16 @@ function submitEditModal() {
             closeModal('editModal');
             fetchAccidents(0);
             fetchStats();
+            if (window.loadSidebarStats) window.loadSidebarStats();
+            if (window.showToast) window.showToast('Accident mis à jour avec succès');
             editSelectedFiles = [];
             editDeletedPhotos = [];
             document.getElementById('editPhotosPreview').innerHTML = '';
         })
-        .catch(err => alert('Erreur : ' + err.message))
+        .catch(err => {
+            if (window.showToast) window.showToast('Erreur : ' + err.message, 'error');
+            else alert('Erreur : ' + err.message);
+        })
         .finally(() => {
             btn.textContent = originalText;
             btn.disabled = false;
@@ -745,8 +801,13 @@ function submitAddModal() {
 
             fetchAccidents(0);
             fetchStats();
+            if (window.loadSidebarStats) window.loadSidebarStats();
+            if (window.showToast) window.showToast('Accident déclaré avec succès');
         })
-        .catch(err => alert('Erreur : ' + err.message))
+        .catch(err => {
+            if (window.showToast) window.showToast('Erreur : ' + err.message, 'error');
+            else alert('Erreur : ' + err.message);
+        })
         .finally(() => {
             btn.textContent = originalText;
             btn.disabled = false;
