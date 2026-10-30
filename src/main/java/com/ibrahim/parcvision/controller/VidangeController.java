@@ -6,7 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -20,10 +19,26 @@ public class VidangeController {
         this.vidangeService = vidangeService;
     }
 
+    @GetMapping("/stats")
+    public Map<String, Object> getStats() {
+        return vidangeService.getStats();
+    }
+
     @GetMapping
     public Page<Vidange> findAll(@RequestParam(defaultValue = "0") int page,
-                                 @RequestParam(defaultValue = "5") int size) {
+                                 @RequestParam(defaultValue = "5") int size,
+                                 @RequestParam(required = false) String status) {
+        if (status != null && !status.isBlank() && !"Tous".equalsIgnoreCase(status)) {
+            return vidangeService.findByStatus(status, page, size);
+        }
         return vidangeService.findAll(page, size);
+    }
+
+    @GetMapping("/filter")
+    public Page<Vidange> filter(@RequestParam String status,
+                                @RequestParam(defaultValue = "0") int page,
+                                @RequestParam(defaultValue = "5") int size) {
+        return vidangeService.findByStatus(status, page, size);
     }
 
     @GetMapping("/search")

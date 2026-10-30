@@ -28,7 +28,7 @@ public class AuthController {
     public String login(
             @RequestBody AuthRequestDao authReqest,
             HttpServletResponse response
-    ){
+    ) {
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         authReqest.getEmail(),
@@ -36,18 +36,12 @@ public class AuthController {
                 )
         );
         UserDetails userDetails = (UserDetails) auth.getPrincipal();
-        String token = jwtService.generateToken(userDetails);
-        Cookie cookie = new Cookie("jwt_token",token);
+        long customExpiration = authReqest.isRememberMe() ? 2592000000L : 86400000L;
+        String token = jwtService.generateToken(userDetails, customExpiration);
+        Cookie cookie = new Cookie("jwt_token", token);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
-        if(authReqest.isRememberMe()){
-            // set to 30 day
-            cookie.setMaxAge(60*60*24*30);
-            jwtService.setExpiration(2592000000L);
-        }else{
-            //already 8h par default so no need for setting it
-            cookie.setMaxAge(60*60*8);
-        }
+        cookie.setMaxAge(authReqest.isRememberMe() ? 30 * 24 * 60 * 60 : 24 * 60 * 60);
         response.addCookie(cookie);
         return token;
     }
@@ -55,14 +49,12 @@ public class AuthController {
     @PostMapping("/logout")
     public ResponseEntity<?> logout(
             HttpServletResponse response
-    ){
-        Cookie cookie = new Cookie("jwt_token",null);
+    ) {
+        Cookie cookie = new Cookie("jwt_token", null);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
         cookie.setMaxAge(0);
         response.addCookie(cookie);
         return ResponseEntity.ok("loggedOut");
     }
-
-
 }

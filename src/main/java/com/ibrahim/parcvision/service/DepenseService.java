@@ -3,8 +3,12 @@ package com.ibrahim.parcvision.service;
 import com.ibrahim.parcvision.entity.Depense;
 import com.ibrahim.parcvision.entity.Entreprise;
 import com.ibrahim.parcvision.entity.Utilisateur;
+import com.ibrahim.parcvision.repository.AssuranceRepository;
 import com.ibrahim.parcvision.repository.DepenseRepository;
+import com.ibrahim.parcvision.repository.InfractionRepository;
+import com.ibrahim.parcvision.repository.ReparationRepository;
 import com.ibrahim.parcvision.repository.UtilisateurRepository;
+import com.ibrahim.parcvision.repository.VidangeRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,11 +24,23 @@ public class DepenseService {
 
     private final DepenseRepository depenseRepository;
     private final UtilisateurRepository utilisateurRepository;
+    private final ReparationRepository reparationRepository;
+    private final VidangeRepository vidangeRepository;
+    private final AssuranceRepository assuranceRepository;
+    private final InfractionRepository infractionRepository;
 
     public DepenseService(DepenseRepository depenseRepository,
-                          UtilisateurRepository utilisateurRepository) {
+                          UtilisateurRepository utilisateurRepository,
+                          ReparationRepository reparationRepository,
+                          VidangeRepository vidangeRepository,
+                          AssuranceRepository assuranceRepository,
+                          InfractionRepository infractionRepository) {
         this.depenseRepository = depenseRepository;
         this.utilisateurRepository = utilisateurRepository;
+        this.reparationRepository = reparationRepository;
+        this.vidangeRepository = vidangeRepository;
+        this.assuranceRepository = assuranceRepository;
+        this.infractionRepository = infractionRepository;
     }
 
     public Page<Depense> findAll(int page, int size) {
@@ -34,7 +50,6 @@ public class DepenseService {
 
     public Page<Depense> search(String query, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
-        System.out.println("Executing Search: query='" + query + "', enterprise=" + getCurrentEntreprise().getNom());
         return depenseRepository.search(query, getCurrentEntreprise(), pageable);
     }
 
@@ -48,7 +63,7 @@ public class DepenseService {
                 .orElseThrow(() -> new RuntimeException("Dépense non trouvée"));
 
         if (updates.containsKey("typePaiement")) {
-            if (updates.get("typePaiement") != null) {
+            if (updates.get("typePaiement") != null && !updates.get("typePaiement").toString().isBlank()) {
                 depense.setTypePaiement(com.ibrahim.parcvision.enums.TypePaiement.valueOf(updates.get("typePaiement").toString()));
             } else {
                 depense.setTypePaiement(null);
@@ -65,10 +80,53 @@ public class DepenseService {
             depense.setSourceDepense((String) updates.get("sourceDepense"));
         if (updates.containsKey("sourceDepenseCustom"))
             depense.setSourceDepenseCustom((String) updates.get("sourceDepenseCustom"));
-        if (updates.containsKey("dateDepense") && updates.get("dateDepense") != null)
+        if (updates.containsKey("dateDepense") && updates.get("dateDepense") != null && !updates.get("dateDepense").toString().isBlank())
             depense.setDateDepense(LocalDate.parse(updates.get("dateDepense").toString()));
 
-        return depenseRepository.save(depense);
+        Depense saved = depenseRepository.save(depense);
+        syncBackToSourceEntity(saved);
+        return saved;
+    }
+
+    private void syncBackToSourceEntity(Depense depense) {
+        String custom = depense.getSourceDepenseCustom();
+        if (custom == null || !custom.contains("#")) {
+            return;
+        }
+        try {
+            String[] parts = custom.split("#", 2);
+            String prefix = parts[0].trim();
+            Long sourceId = Long.parseLong(parts[1].trim());
+            boolean paid = depense.isEstPayee();
+            LocalDate paymentDate = paid ? (depense.getDateDepense() != null ? depense.getDateDepense() : LocalDate.now()) : null;
+
+            if ("Reparation".equalsIgnoreCase(prefix) || "Réparation".equalsIgnoreCase(prefix)) {
+                reparationRepository.findById(sourceId).ifPresent(rep -> {
+                    rep.setEstPaye(paid);
+                    rep.setDatePayement(paymentDate);
+                    reparationRepository.save(rep);
+                });
+            } else if ("Vidange".equalsIgnoreCase(prefix)) {
+                vidangeRepository.findById(sourceId).ifPresent(vid -> {
+                    vid.setEstPaye(paid);
+                    vid.setDatePayement(paymentDate);
+                    vidangeRepository.save(vid);
+                });
+            } else if ("Assurance".equalsIgnoreCase(prefix)) {
+                assuranceRepository.findById(sourceId).ifPresent(ass -> {
+                    ass.setEstPayee(paid);
+                    ass.setDatePaiement(paymentDate);
+                    assuranceRepository.save(ass);
+                });
+            } else if ("Infraction".equalsIgnoreCase(prefix)) {
+                infractionRepository.findById(sourceId).ifPresent(inf -> {
+                    inf.setEstPayee(paid);
+                    inf.setDatePaiement(paymentDate);
+                    infractionRepository.save(inf);
+                });
+            }
+        } catch (Exception ignored) {
+        }
     }
 
     public void delete(Long id) {

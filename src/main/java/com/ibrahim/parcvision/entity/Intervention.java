@@ -1,8 +1,6 @@
 package com.ibrahim.parcvision.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
@@ -29,14 +27,14 @@ public abstract class Intervention {
     @Column(name = "kilometrage_au_moment")
     private Long kilometrageAuMoment;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "vehicule_id", nullable = false)
-    @JsonIgnoreProperties({"interventions", "documents"})
+    @JsonIgnoreProperties({"intervention", "interventions", "documents", "entreprise", "mission", "hibernateLazyInitializer", "handler"})
     private Vehicule vehicule;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fournisseur_id")
-    @JsonIgnoreProperties({"entreprise"})
+    @JsonIgnoreProperties({"entreprise", "hibernateLazyInitializer", "handler"})
     private Fournisseur fournisseur;
 
     // Getters and Setters

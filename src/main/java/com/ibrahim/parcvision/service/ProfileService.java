@@ -6,7 +6,9 @@ import com.ibrahim.parcvision.entity.Utilisateur;
 import com.ibrahim.parcvision.repository.AdminRepository;
 import com.ibrahim.parcvision.repository.EntrepriseRepository;
 import com.ibrahim.parcvision.repository.UtilisateurRepository;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,7 +22,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -31,7 +32,7 @@ public class ProfileService {
     JwtService jwtService;
     PasswordEncoder passwordEncoder;
 
-    public ProfileService(JwtService jwtService,UtilisateurRepository utilisateurRepository, AdminRepository adminRepository, EntrepriseRepository entrepriseRepository, PasswordEncoder passwordEncoder) {
+    public ProfileService(JwtService jwtService, UtilisateurRepository utilisateurRepository, AdminRepository adminRepository, EntrepriseRepository entrepriseRepository, PasswordEncoder passwordEncoder) {
         this.utilisateurRepository = utilisateurRepository;
         this.adminRepository = adminRepository;
         this.entrepriseRepository = entrepriseRepository;
@@ -41,7 +42,7 @@ public class ProfileService {
 
     public ResponseEntity<ProfileMinimalInfoDao> getMinimalUserInfo(
             HttpServletRequest request
-    ){
+    ) {
         String email = jwtService.extractEmailFromCookie(request);
         Utilisateur user = utilisateurRepository.findByEmail(email)
                 .orElseThrow();
@@ -50,7 +51,7 @@ public class ProfileService {
         reponseInfo.setNom(user.getNom());
         reponseInfo.setPrenom(user.getPrenom());
         reponseInfo.setPhotoProfileUrl(user.getPhotoProfileUrl());
-        return new ResponseEntity<>(reponseInfo,HttpStatus.OK);
+        return new ResponseEntity<>(reponseInfo, HttpStatus.OK);
     }
 
     public ResponseEntity<Map<String, Object>> getAdminProfile(HttpServletRequest request) {
@@ -67,13 +68,33 @@ public class ProfileService {
     }
 
     public ResponseEntity<Map<String, Object>> updateAdminProfile(HttpServletRequest request, Map<String, String> data) {
+        return updateAdminProfile(request, null, data);
+    }
+
+    public ResponseEntity<Map<String, Object>> updateAdminProfile(HttpServletRequest request, HttpServletResponse response, Map<String, String> data) {
         String email = jwtService.extractEmailFromCookie(request);
         Utilisateur user = utilisateurRepository.findByEmail(email).orElseThrow();
+        boolean emailChanged = false;
         if (data.get("nom") != null) user.setNom(data.get("nom"));
         if (data.get("prenom") != null) user.setPrenom(data.get("prenom"));
-        if (data.get("email") != null) user.setEmail(data.get("email"));
+        if (data.get("email") != null && !data.get("email").isBlank()) {
+            if (!data.get("email").equals(user.getEmail())) {
+                emailChanged = true;
+            }
+            user.setEmail(data.get("email"));
+        }
         if (data.get("telephone") != null) user.setTelephone(data.get("telephone"));
         utilisateurRepository.save(user);
+
+        if (emailChanged && response != null) {
+            String newToken = jwtService.generateToken(user);
+            Cookie cookie = new Cookie("jwt_token", newToken);
+            cookie.setPath("/");
+            cookie.setHttpOnly(true);
+            cookie.setMaxAge(24 * 60 * 60);
+            response.addCookie(cookie);
+        }
+
         Map<String, Object> result = new HashMap<>();
         result.put("message", "Profil mis à jour avec succès");
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -202,6 +223,4 @@ public class ProfileService {
             return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-
 }

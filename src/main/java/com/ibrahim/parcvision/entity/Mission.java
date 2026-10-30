@@ -42,7 +42,7 @@ public class Mission {
 
     @Column(
             name = "instructions_speciales",
-            nullable = false,
+            nullable = true,
             length = 500
     )
     private String instructionsSpeciales;
@@ -84,7 +84,6 @@ public class Mission {
     @JsonIgnore
     private List<PointGPS> PointGPS;
 
-
     @OneToMany(mappedBy = "mission", cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<Colis> colis;
@@ -100,7 +99,6 @@ public class Mission {
 
     @Column(name = "is_gps_enabled")
     private boolean isGpsEnabled = false;
-
 
     public Long getId() {
         return id;
@@ -213,7 +211,6 @@ public class Mission {
     public void setPointGPS(List<PointGPS> PointGPS) {
         this.PointGPS = PointGPS;
     }
-
 
     public List<Colis> getColis() {
         return colis;

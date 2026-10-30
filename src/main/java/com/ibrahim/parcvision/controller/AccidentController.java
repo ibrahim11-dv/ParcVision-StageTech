@@ -3,12 +3,11 @@ package com.ibrahim.parcvision.controller;
 import com.ibrahim.parcvision.entity.Accident;
 import com.ibrahim.parcvision.service.AccidentService;
 import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +22,6 @@ public class AccidentController {
         this.accidentService = accidentService;
     }
 
-
     @GetMapping("/admin/stats")
     public Map<String, Object> getStats() {
         Map<String, Object> stats = new HashMap<>();
@@ -36,33 +34,42 @@ public class AccidentController {
     @GetMapping("/admin/search")
     public Page<Accident> SearchCond(@RequestParam String query,
                                      @RequestParam(defaultValue = "0") int page,
-                                     @RequestParam(defaultValue = "5") int size){
+                                     @RequestParam(defaultValue = "5") int size) {
         return accidentService.Search(query, page, size);
     }
 
     @GetMapping("/admin/findByEtat")
     public Page<Accident> findEtat(@RequestParam String etat,
                                    @RequestParam(defaultValue = "0") int page,
-                                   @RequestParam(defaultValue = "5") int size){
+                                   @RequestParam(defaultValue = "5") int size) {
         return accidentService.findByetat(etat, page, size);
     }
 
     @GetMapping("/admin/list")
     public Page<Accident> findall(@RequestParam(defaultValue = "0") int page,
-                                  @RequestParam(defaultValue = "5") int size){
+                                  @RequestParam(defaultValue = "5") int size) {
         return accidentService.AffichAll(page, size);
     }
 
     @PutMapping(value = "/admin/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateAccident(
             @PathVariable Long id,
-            @RequestParam("etat") String etat,
-            @RequestParam("budgetEstime") Double budgetEstime,
-            @RequestParam("notes") String notes,
+            @RequestParam(value = "vehiculeId", required = false) Long vehiculeId,
+            @RequestParam(value = "conducteurId", required = false) Long conducteurId,
+            @RequestParam(value = "dateIntervention", required = false) String dateIntervention,
+            @RequestParam(value = "lieu", required = false) String lieu,
+            @RequestParam(value = "contexte", required = false) String contexte,
+            @RequestParam(value = "gravite", required = false) String gravite,
+            @RequestParam(value = "descriptionPanne", required = false) String descriptionPanne,
+            @RequestParam(value = "etat", required = false) String etat,
+            @RequestParam(value = "budgetEstime", required = false) Double budgetEstime,
+            @RequestParam(value = "notes", required = false) String notes,
             @RequestParam(value = "deletedPhotos", required = false) List<String> deletedPhotos,
             @RequestParam(value = "photos", required = false) MultipartFile[] photos) {
         try {
-            Accident updated = accidentService.updateAccident(id, etat, budgetEstime, notes, deletedPhotos, photos);
+            Accident updated = accidentService.updateAccident(
+                    id, vehiculeId, conducteurId, dateIntervention, lieu, contexte, gravite,
+                    descriptionPanne, etat, budgetEstime, notes, deletedPhotos, photos);
             return ResponseEntity.ok(updated);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));

@@ -34,7 +34,7 @@ public class Depense {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "entreprise_id", nullable = false)
-    @JsonIgnoreProperties({"utilisateur", "vehicule", "mission"})
+    @JsonIgnoreProperties({"utilisateur", "utilisateurs", "vehicule", "vehicules", "mission", "missions", "dossiersArchivage", "hibernateLazyInitializer", "handler"})
     private Entreprise entreprise;
 
     @Column(name = "est_payee")
@@ -42,6 +42,7 @@ public class Depense {
 
     // Getters and Setters
     public boolean isEstPayee() { return estPayee != null && estPayee; }
+    public Boolean getEstPayee() { return estPayee; }
     public void setEstPayee(Boolean estPayee) { this.estPayee = estPayee; }
 
     public Long getId() { return id; }

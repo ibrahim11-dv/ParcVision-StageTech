@@ -9,6 +9,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Optional;
+
 @Repository
 public interface DepenseRepository extends JpaRepository<Depense, Long> {
 
@@ -18,7 +21,7 @@ public interface DepenseRepository extends JpaRepository<Depense, Long> {
            "LOWER(d.qui) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
            "LOWER(d.sourceDepense) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
            "LOWER(d.sourceDepenseCustom) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
-           "LOWER(d.typePaiement) LIKE LOWER(CONCAT('%', :query, '%')))")
+           "LOWER(CAST(d.typePaiement AS string)) LIKE LOWER(CONCAT('%', :query, '%')))")
     Page<Depense> search(@Param("query") String query, @Param("entreprise") Entreprise entreprise, Pageable pageable);
 
     long countByEntreprise(Entreprise entreprise);
@@ -26,7 +29,12 @@ public interface DepenseRepository extends JpaRepository<Depense, Long> {
     @Query("SELECT COALESCE(SUM(d.montant), 0) FROM Depense d WHERE d.entreprise = :entreprise")
     Double sumMontantByEntreprise(@Param("entreprise") Entreprise entreprise);
 
-    java.util.Optional<Depense> findBySourceDepenseCustom(String sourceDepenseCustom);
+    List<Depense> findAllBySourceDepenseCustom(String sourceDepenseCustom);
+
+    default Optional<Depense> findBySourceDepenseCustom(String sourceDepenseCustom) {
+        return findAllBySourceDepenseCustom(sourceDepenseCustom).stream().findFirst();
+    }
+
     @Query("SELECT COUNT(d) FROM Depense d WHERE d.entreprise = :entreprise AND d.typePaiement = 'CARTE_CREDIT'")
     long countByEntrepriseAndTypePaiementCarte(@Param("entreprise") Entreprise entreprise);
 

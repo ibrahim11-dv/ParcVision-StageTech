@@ -8,6 +8,7 @@ import com.ibrahim.parcvision.entity.Mission;
 import com.ibrahim.parcvision.entity.Utilisateur;
 import com.ibrahim.parcvision.entity.Vehicule;
 import com.ibrahim.parcvision.repository.ConducteurRepository;
+import com.ibrahim.parcvision.repository.DepenseRepository;
 import com.ibrahim.parcvision.repository.InfractionRepository;
 import com.ibrahim.parcvision.repository.MissionRepository;
 import com.ibrahim.parcvision.repository.UtilisateurRepository;
@@ -33,7 +34,7 @@ public class InfractionService {
     private final MissionRepository missionRepository;
     private final FileStorageService fileStorageService;
     private final UtilisateurRepository utilisateurRepository;
-    private final com.ibrahim.parcvision.repository.DepenseRepository depenseRepository;
+    private final DepenseRepository depenseRepository;
 
     @Autowired
     public InfractionService(InfractionRepository infractionRepository,
@@ -42,7 +43,7 @@ public class InfractionService {
                              MissionRepository missionRepository,
                              FileStorageService fileStorageService,
                              UtilisateurRepository utilisateurRepository,
-                             com.ibrahim.parcvision.repository.DepenseRepository depenseRepository) {
+                             DepenseRepository depenseRepository) {
         this.infractionRepository = infractionRepository;
         this.vehiculeRepository = vehiculeRepository;
         this.conducteurRepository = conducteurRepository;
@@ -76,7 +77,6 @@ public class InfractionService {
         } else {
             infraction = new Infraction();
             infraction.setEntreprise(entreprise);
-            // Initialisation des champs liés aux paiements pour une nouvelle infraction
             infraction.setDatePaiement(null);
             infraction.setEstPayee(false);
         }
@@ -105,7 +105,7 @@ public class InfractionService {
             infraction.setMission(null);
         }
 
-        String fichierUrl = null;
+        String fichierUrl;
         if (dto.getFichier() != null && !dto.getFichier().isEmpty()) {
             String dossier = extractDossier(infraction.getFichierInfractionUrl());
             if (dossier == null) {
@@ -133,28 +133,27 @@ public class InfractionService {
     public Page<Infraction> listerInfractions(int page, int size, String search) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
         Entreprise entreprise = getCurrentEntreprise();
-        
+
         if (search != null && !search.isBlank()) {
             return infractionRepository.findBySearch(search, entreprise, pageable);
         } else {
             return infractionRepository.findByEntreprise(entreprise, pageable);
         }
     }
-    
+
     @Transactional
     public void supprimerInfraction(Long id) {
         Infraction infraction = infractionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Infraction introuvable"));
-                
+
         Entreprise currentEntreprise = getCurrentEntreprise();
         if (!infraction.getEntreprise().getId().equals(currentEntreprise.getId())) {
             throw new RuntimeException("Accès refusé pour cette infraction");
         }
 
-        // Supprimer la dépense associée
         String sourceCustom = "Infraction #" + id;
-        depenseRepository.findBySourceDepenseCustom(sourceCustom)
-                .ifPresent(d -> depenseRepository.delete(d));
+        depenseRepository.findAllBySourceDepenseCustom(sourceCustom)
+                .forEach(depenseRepository::delete);
 
         infractionRepository.delete(infraction);
     }
@@ -169,9 +168,13 @@ public class InfractionService {
         depense.setQui("Amende — " + (inf.getCategorie() != null ? inf.getCategorie() : "Inconnue"));
         depense.setSourceDepense("Infraction");
         depense.setSourceDepenseCustom(sourceCustom);
-        
-        depense.setEstPayee(Boolean.TRUE.equals(inf.getEstPayee()));
-        
+
+        if (depense.getId() == null) {
+            depense.setEstPayee(Boolean.TRUE.equals(inf.getEstPayee()));
+        } else if (Boolean.TRUE.equals(inf.getEstPayee())) {
+            depense.setEstPayee(true);
+        }
+
         depense.setEntreprise(inf.getEntreprise());
         depenseRepository.save(depense);
     }

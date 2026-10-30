@@ -14,9 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,24 +28,26 @@ public class MissionService {
     private final VehiculeRepository vehiculeRepository;
     private final ColisRepository colisRepository;
     private final PointGpsRepository pointGpsRepository;
+    private final InfractionRepository infractionRepository;
 
-    public MissionService(MissionRepository missionRepository, 
-                          ConducteurRepository conducteurRepository, 
-                          VehiculeRepository vehiculeRepository, 
+    public MissionService(MissionRepository missionRepository,
+                          ConducteurRepository conducteurRepository,
+                          VehiculeRepository vehiculeRepository,
                           ColisRepository colisRepository,
-                          PointGpsRepository pointGpsRepository) {
+                          PointGpsRepository pointGpsRepository,
+                          InfractionRepository infractionRepository) {
         this.missionRepository = missionRepository;
         this.conducteurRepository = conducteurRepository;
         this.vehiculeRepository = vehiculeRepository;
         this.colisRepository = colisRepository;
         this.pointGpsRepository = pointGpsRepository;
+        this.infractionRepository = infractionRepository;
     }
 
     @Transactional
     public Mission addMission(AddMissionDao addMissionDao) {
         Mission mission = new Mission();
-        
-        // Basic fields
+
         mission.setDataDebut(addMissionDao.getDateDepart());
         mission.setDateFinEstimee(addMissionDao.getDateArrivee());
         mission.setAdresseDepart(addMissionDao.getAdressDepart());
@@ -55,29 +55,23 @@ public class MissionService {
         mission.setInstructionsSpeciales(addMissionDao.getInstructionSpeciales());
         mission.setStatut(StatutMission.PLANIFIEE);
 
-        // Tracker info
         mission.setTrackerId(addMissionDao.getTrackerId());
         mission.setTrackerImei(addMissionDao.getTrackerImei());
         mission.setTrackerSimNumber(addMissionDao.getTrackerSimNumber());
         mission.setGpsEnabled(addMissionDao.getIsGpsEnabled() != null ? addMissionDao.getIsGpsEnabled() : false);
-        
-        // Link Conducteur
+
         Conducteur conducteur = conducteurRepository.findById(addMissionDao.getConducteurId())
                 .orElseThrow(() -> new RuntimeException("Conducteur not found"));
         mission.setConducteur(conducteur);
-        
-        // Link Vehicule
+
         Vehicule vehicule = vehiculeRepository.findById(addMissionDao.getVehiculeId())
                 .orElseThrow(() -> new RuntimeException("Vehicule not found"));
         mission.setVehicule(vehicule);
-        
-        // Set Enterprise from Conducteur (assuming they belong to the same enterprise)
+
         mission.setEntreprise(conducteur.getEntreprise());
 
-        // Save Mission first to get an ID for related entities
         Mission savedMission = missionRepository.save(mission);
 
-        // Create Start Point
         PointGPS startPoint = new PointGPS();
         startPoint.setLaltitude(addMissionDao.getLatitudeDepart());
         startPoint.setLongitude(addMissionDao.getLongitudeDepart());
@@ -86,7 +80,6 @@ public class MissionService {
         startPoint.setMission(savedMission);
         pointGpsRepository.save(startPoint);
 
-        // Create End Point
         PointGPS endPoint = new PointGPS();
         endPoint.setLaltitude(addMissionDao.getLatitudeDestination());
         endPoint.setLongitude(addMissionDao.getLongitudeDestination());
@@ -95,16 +88,15 @@ public class MissionService {
         endPoint.setMission(savedMission);
         pointGpsRepository.save(endPoint);
 
-        // Create and Link Colis
         Colis colis = new Colis();
         colis.setDescription(addMissionDao.getDescription());
         colis.setPoids(addMissionDao.getPoids());
         colis.setVolume(addMissionDao.getVolume());
         colis.setType(TypeColis.valueOf(addMissionDao.getTypeColis().toUpperCase()));
         colis.setMission(savedMission);
-        
+
         colisRepository.save(colis);
-        
+
         return savedMission;
     }
 
@@ -131,7 +123,7 @@ public class MissionService {
         MissionResponseDao response = new MissionResponseDao();
         response.setId(mission.getId());
         response.setReference(mission.getReference() != null ? mission.getReference() : "#MSN-" + String.format("%03d", mission.getId()));
-        
+
         if (mission.getConducteur() != null) {
             response.setConducteurId(mission.getConducteur().getId());
             if (mission.getConducteur().getUtilisateur() != null) {
@@ -140,14 +132,14 @@ public class MissionService {
                 response.setConducteurPhotoUrl(mission.getConducteur().getPhotoProfileUrl());
             }
         }
-        
+
         if (mission.getVehicule() != null) {
             Vehicule v = mission.getVehicule();
             response.setVehiculeId(v.getId());
             response.setVehiculeMarqueModele(v.getMarque() + " " + v.getModel());
             response.setVehiculeImmatriculation(v.getImmatriculation());
         }
-        
+
         if (mission.getColis() != null && !mission.getColis().isEmpty()) {
             Colis c = mission.getColis().get(0);
             response.setColisId(c.getId());
@@ -157,8 +149,7 @@ public class MissionService {
             response.setColisCodeSuivi(c.getCodeSuivi());
             response.setColisType(c.getType());
         }
-        
-        // Coordinates from PointGPS
+
         if (mission.getPointGPS() != null && !mission.getPointGPS().isEmpty()) {
             PointGPS start = null;
             PointGPS end = null;
@@ -185,7 +176,6 @@ public class MissionService {
                 response.setLongitudeDestination(end.getLongitude());
             }
 
-            // Determine current logical position
             PointGPS current = null;
             if (mission.getStatut() == StatutMission.TERMINEE) {
                 current = end;
@@ -200,7 +190,7 @@ public class MissionService {
                 response.setCurrentLongitude(current.getLongitude());
             }
         }
-        
+
         response.setAdresseDepart(mission.getAdresseDepart());
         response.setAdresseArrivee(mission.getAdressArrivee());
         response.setStatut(mission.getStatut());
@@ -210,12 +200,11 @@ public class MissionService {
         response.setInstructionsSpeciales(mission.getInstructionsSpeciales());
         response.setPreuveLivraisonUrl(mission.getPreuveLivraisonUrl());
 
-        // Tracker info
         response.setTrackerId(mission.getTrackerId());
         response.setTrackerImei(mission.getTrackerImei());
         response.setTrackerSimNumber(mission.getTrackerSimNumber());
         response.setGpsEnabled(mission.isGpsEnabled());
-        
+
         return response;
     }
 
@@ -241,10 +230,14 @@ public class MissionService {
 
     @Transactional
     public void deleteMission(Long id) {
-        if (!missionRepository.existsById(id)) {
-            throw new RuntimeException("Mission non trouvée");
+        Mission mission = missionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Mission non trouvée"));
+        List<Infraction> linkedInfractions = infractionRepository.findByMission(mission);
+        for (Infraction infraction : linkedInfractions) {
+            infraction.setMission(null);
         }
-        missionRepository.deleteById(id);
+        infractionRepository.saveAll(linkedInfractions);
+        missionRepository.delete(mission);
     }
 
     @Transactional
@@ -263,34 +256,29 @@ public class MissionService {
         Mission mission = missionRepository.findById(updateDao.getId())
                 .orElseThrow(() -> new RuntimeException("Mission not found"));
 
-        // Update basic fields
         mission.setDataDebut(updateDao.getDateDepart());
         mission.setDateFinEstimee(updateDao.getDateArrivee());
         mission.setAdresseDepart(updateDao.getAdressDepart());
         mission.setAdressArrivee(updateDao.getAdressDestination());
         mission.setInstructionsSpeciales(updateDao.getInstructionSpeciales());
 
-        // Update Tracker info
         mission.setTrackerId(updateDao.getTrackerId());
         mission.setTrackerImei(updateDao.getTrackerImei());
         mission.setTrackerSimNumber(updateDao.getTrackerSimNumber());
         mission.setGpsEnabled(updateDao.getIsGpsEnabled() != null ? updateDao.getIsGpsEnabled() : false);
 
-        // Update Conducteur
         if (!mission.getConducteur().getId().equals(updateDao.getConducteurId())) {
             Conducteur conducteur = conducteurRepository.findById(updateDao.getConducteurId())
                     .orElseThrow(() -> new RuntimeException("Conducteur not found"));
             mission.setConducteur(conducteur);
         }
 
-        // Update Vehicule
         if (!mission.getVehicule().getId().equals(updateDao.getVehiculeId())) {
             Vehicule vehicule = vehiculeRepository.findById(updateDao.getVehiculeId())
                     .orElseThrow(() -> new RuntimeException("Vehicule not found"));
             mission.setVehicule(vehicule);
         }
 
-        // Update Colis (assuming one colis per mission as per addMission)
         if (mission.getColis() != null && !mission.getColis().isEmpty()) {
             Colis colis = mission.getColis().get(0);
             colis.setDescription(updateDao.getDescription());
@@ -300,7 +288,6 @@ public class MissionService {
             colisRepository.save(colis);
         }
 
-        // Update GPS Points
         if (mission.getPointGPS() != null) {
             for (PointGPS p : mission.getPointGPS()) {
                 if (p.getTypePoint() == TypePoint.DEPART) {
@@ -329,7 +316,7 @@ public class MissionService {
     public PointGPS addTrackerLocation(Long missionId, PointGPS pointData) {
         Mission mission = missionRepository.findById(missionId)
                 .orElseThrow(() -> new RuntimeException("Mission non trouvée"));
-        
+
         PointGPS point = new PointGPS();
         point.setLaltitude(pointData.getLaltitude());
         point.setLongitude(pointData.getLongitude());
@@ -338,7 +325,7 @@ public class MissionService {
         point.setTimeStamp(LocalDateTime.now());
         point.setTypePoint(pointData.getTypePoint() != null ? pointData.getTypePoint() : TypePoint.EN_COURS);
         point.setMission(mission);
-        
+
         return pointGpsRepository.save(point);
     }
 }

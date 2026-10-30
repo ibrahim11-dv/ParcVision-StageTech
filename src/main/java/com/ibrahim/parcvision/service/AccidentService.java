@@ -1,14 +1,16 @@
 package com.ibrahim.parcvision.service;
 
 import com.ibrahim.parcvision.entity.Accident;
+import com.ibrahim.parcvision.entity.Conducteur;
 import com.ibrahim.parcvision.entity.Entreprise;
 import com.ibrahim.parcvision.entity.Utilisateur;
-import com.ibrahim.parcvision.repository.AccidentRepository;
-import com.ibrahim.parcvision.repository.UtilisateurRepository;
 import com.ibrahim.parcvision.entity.Vehicule;
-import com.ibrahim.parcvision.entity.Conducteur;
-import com.ibrahim.parcvision.repository.VehiculeRepository;
+import com.ibrahim.parcvision.repository.AccidentRepository;
 import com.ibrahim.parcvision.repository.ConducteurRepository;
+import com.ibrahim.parcvision.repository.DepenseRepository;
+import com.ibrahim.parcvision.repository.FournisseurRepository;
+import com.ibrahim.parcvision.repository.UtilisateurRepository;
+import com.ibrahim.parcvision.repository.VehiculeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,10 +43,10 @@ public class AccidentService {
     private FileStorageService fileStorageService;
 
     @Autowired
-    private com.ibrahim.parcvision.repository.DepenseRepository depenseRepository;
+    private DepenseRepository depenseRepository;
 
     @Autowired
-    private com.ibrahim.parcvision.repository.FournisseurRepository fournisseurRepository;
+    private FournisseurRepository fournisseurRepository;
 
     public AccidentService(AccidentRepository accidentRepository) {
         this.accidentRepository = accidentRepository;
@@ -79,20 +81,70 @@ public class AccidentService {
     }
 
     @Transactional
-    public Accident updateAccident(Long id, String etat, Double budgetEstime, String notes, List<String> deletedPhotos, MultipartFile[] newPhotos) throws IOException {
+    public Accident updateAccident(Long id, String etat, Double budgetEstime, String notes,
+                                   List<String> deletedPhotos, MultipartFile[] newPhotos) throws IOException {
+        return updateAccident(id, null, null, null, null, null, null, null, etat, budgetEstime, notes, deletedPhotos, newPhotos);
+    }
+
+    @Transactional
+    public Accident updateAccident(Long id,
+                                   Long vehiculeId,
+                                   Long conducteurId,
+                                   String dateIntervention,
+                                   String lieu,
+                                   String contexte,
+                                   String gravite,
+                                   String descriptionPanne,
+                                   String etat,
+                                   Double budgetEstime,
+                                   String notes,
+                                   List<String> deletedPhotos,
+                                   MultipartFile[] newPhotos) throws IOException {
         Accident accident = accidentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Accident non trouvé"));
 
-        accident.setEtat(etat);
-        accident.setBudgetEstime(budgetEstime);
-        accident.setNotes(notes);
+        if (vehiculeId != null) {
+            Vehicule vehicule = vehiculeRepository.findById(vehiculeId)
+                    .orElseThrow(() -> new RuntimeException("Véhicule non trouvé"));
+            accident.setVehicule(vehicule);
+        }
+        if (conducteurId != null) {
+            Conducteur conducteur = conducteurRepository.findById(conducteurId)
+                    .orElseThrow(() -> new RuntimeException("Conducteur non trouvé"));
+            accident.setConducteur(conducteur);
+        }
+        if (dateIntervention != null && !dateIntervention.isBlank()) {
+            String cleanDate = dateIntervention.contains("T") ? dateIntervention.split("T")[0] : dateIntervention;
+            accident.setDateIntervention(LocalDate.parse(cleanDate));
+        }
+        if (lieu != null) {
+            accident.setLieu(lieu);
+        }
+        if (contexte != null) {
+            accident.setContexte(contexte);
+        }
+        if (gravite != null) {
+            accident.setGravite(gravite);
+        }
+        if (descriptionPanne != null) {
+            accident.setDescriptionPanne(descriptionPanne);
+        }
+        if (etat != null) {
+            accident.setEtat(etat);
+        }
+        if (budgetEstime != null) {
+            accident.setBudgetEstime(budgetEstime);
+            accident.setCoutTotal(budgetEstime);
+        }
+        if (notes != null) {
+            accident.setNotes(notes);
+        }
 
         List<String> currentPhotos = accident.getPhotosUrl();
         if (currentPhotos == null) {
             currentPhotos = new ArrayList<>();
         }
 
-        // Supprimer les photos cochées/sélectionnées pour suppression
         if (deletedPhotos != null && !deletedPhotos.isEmpty()) {
             for (String url : deletedPhotos) {
                 fileStorageService.deleteFile(url);
@@ -100,9 +152,8 @@ public class AccidentService {
             }
         }
 
-        // Enregistrer les nouvelles photos
         if (newPhotos != null && newPhotos.length > 0) {
-            String dossier = null;
+            String dossier;
             if (!currentPhotos.isEmpty()) {
                 dossier = extractDossier(currentPhotos.get(0));
             } else {
@@ -136,16 +187,16 @@ public class AccidentService {
                 }
             }
             String sourceCustom = "Accident #" + id;
-            depenseRepository.findBySourceDepenseCustom(sourceCustom)
-                    .ifPresent(d -> depenseRepository.delete(d));
+            depenseRepository.findAllBySourceDepenseCustom(sourceCustom)
+                    .forEach(depenseRepository::delete);
             accidentRepository.delete(accident);
         }
     }
 
     @Transactional
     public Accident addAccident(Long vehiculeId, Long conducteurId, String dateIntervention, String descriptionPanne,
-                                 String lieu, String contexte, String gravite, String etat, Double budgetEstime,
-                                 MultipartFile[] photos) throws IOException {
+                                String lieu, String contexte, String gravite, String etat, Double budgetEstime,
+                                MultipartFile[] photos) throws IOException {
         Vehicule vehicule = vehiculeRepository.findById(vehiculeId)
                 .orElseThrow(() -> new RuntimeException("Véhicule non trouvé"));
         Conducteur conducteur = conducteurRepository.findById(conducteurId)
@@ -164,7 +215,9 @@ public class AccidentService {
         accident.setContexte(contexte);
         accident.setGravite(gravite);
         accident.setEtat(etat);
-        accident.setBudgetEstime(budgetEstime != null ? budgetEstime : 0.0);
+        double budget = budgetEstime != null ? budgetEstime : 0.0;
+        accident.setBudgetEstime(budget);
+        accident.setCoutTotal(budget);
 
         String dossier = "accidents/" + UUID.randomUUID().toString();
         List<String> photoUrls = new ArrayList<>();
@@ -193,15 +246,17 @@ public class AccidentService {
 
         depense.setMontant(acc.getBudgetEstime());
         depense.setDateDepense(acc.getDateIntervention());
-        
-        String providerName = "Conducteur: " + (acc.getConducteur() != null && acc.getConducteur().getUtilisateur() != null 
-                ? acc.getConducteur().getUtilisateur().getNom() + " " + acc.getConducteur().getUtilisateur().getPrenom() 
+
+        String providerName = "Conducteur: " + (acc.getConducteur() != null && acc.getConducteur().getUtilisateur() != null
+                ? acc.getConducteur().getUtilisateur().getNom() + " " + acc.getConducteur().getUtilisateur().getPrenom()
                 : "Inconnu");
-        
+
         depense.setQui(providerName);
         depense.setSourceDepense("Accident");
         depense.setSourceDepenseCustom(sourceCustom);
-        depense.setEstPayee(false);
+        if (depense.getId() == null) {
+            depense.setEstPayee(false);
+        }
         depense.setEntreprise(getCurrentEntreprise());
 
         depenseRepository.save(depense);

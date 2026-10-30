@@ -22,7 +22,23 @@ public class FileController {
     @GetMapping
     public ResponseEntity<Resource> getFile(@RequestParam("path") String filePath) {
         try {
-            Path file = Paths.get(filePath).normalize();
+            if (filePath == null || filePath.isBlank()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
+            Path uploadsRoot = Paths.get("uploads").toAbsolutePath().normalize();
+            String cleaned = filePath.replace("\\", "/");
+            while (cleaned.startsWith("/")) {
+                cleaned = cleaned.substring(1);
+            }
+            Path file;
+            if (cleaned.startsWith("uploads/")) {
+                file = Paths.get(cleaned).toAbsolutePath().normalize();
+            } else {
+                file = uploadsRoot.resolve(cleaned).normalize();
+            }
+            if (!file.startsWith(uploadsRoot)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
             Resource resource = new UrlResource(file.toUri());
 
             if (resource.exists() || resource.isReadable()) {

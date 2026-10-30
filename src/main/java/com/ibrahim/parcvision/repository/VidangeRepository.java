@@ -16,6 +16,8 @@ public interface VidangeRepository extends JpaRepository<Vidange, Long> {
     
     Page<Vidange> findByVehiculeEntreprise(Entreprise entreprise, Pageable pageable);
 
+    List<Vidange> findByVehiculeEntrepriseOrderByIdDesc(Entreprise entreprise);
+
     @Query("SELECT v FROM Vidange v JOIN v.vehicule veh WHERE (LOWER(veh.immatriculation) LIKE LOWER(CONCAT('%', :query, '%')) OR LOWER(v.descriptionPanne) LIKE LOWER(CONCAT('%', :query, '%'))) AND veh.entreprise = :entreprise")
     Page<Vidange> search(@Param("query") String query, @Param("entreprise") Entreprise entreprise, Pageable pageable);
 }

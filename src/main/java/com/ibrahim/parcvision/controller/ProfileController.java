@@ -1,12 +1,9 @@
 package com.ibrahim.parcvision.controller;
 
 import com.ibrahim.parcvision.dao.ProfileMinimalInfoDao;
-import com.ibrahim.parcvision.repository.AdminRepository;
-import com.ibrahim.parcvision.repository.EntrepriseRepository;
-import com.ibrahim.parcvision.repository.UtilisateurRepository;
 import com.ibrahim.parcvision.service.ProfileService;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.http.HttpStatus;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,7 +22,7 @@ public class ProfileController {
     @PostMapping("/info-minimal")
     public ResponseEntity<ProfileMinimalInfoDao> minimalInfo(
             HttpServletRequest request
-    ){
+    ) {
         return profileService.getMinimalUserInfo(request);
     }
 
@@ -37,9 +34,10 @@ public class ProfileController {
     @PutMapping("/admin")
     public ResponseEntity<Map<String, Object>> updateAdminProfile(
             HttpServletRequest request,
+            HttpServletResponse response,
             @RequestBody Map<String, String> data
     ) {
-        return profileService.updateAdminProfile(request, data);
+        return profileService.updateAdminProfile(request, response, data);
     }
 
     @PutMapping("/password")
@@ -78,6 +76,4 @@ public class ProfileController {
     ) {
         return profileService.uploadEntrepriseLogo(request, file);
     }
-
-
 }
