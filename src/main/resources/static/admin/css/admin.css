@@ -75,6 +75,22 @@ body.dark .bg-white { background-color: var(--card-bg) !important; }
 body.dark .bg-light { background-color: var(--gray-100) !important; }
 body.dark .border { border-color: var(--border-color) !important; }
 
+/* ── Brand Logo & Text Styling ── */
+.sb-brand .brand-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+    display: block;
+}
+.sidebar.mini .sb-brand .brand-text {
+    display: none !important;
+}
+.sidebar.mini .sb-brand .brand-icon {
+    margin: 0 auto;
+}
+
+
 /* ── DARK MODE FORM FIXES (Universal) ── */
 body.dark .form-control,
 body.dark .form-select,
@@ -146,3 +162,19 @@ body.dark .text-muted { color: var(--gray-400) !important; }
 body.dark .bg-white { background-color: var(--card-bg) !important; }
 body.dark .bg-light { background-color: var(--gray-100) !important; }
 body.dark .border { border-color: var(--border-color) !important; }
+
+/* ── Brand Logo & Text Styling ── */
+.sb-brand .brand-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+    display: block;
+}
+.sidebar.mini .sb-brand .brand-text {
+    display: none !important;
+}
+.sidebar.mini .sb-brand .brand-icon {
+    margin: 0 auto;
+}
+

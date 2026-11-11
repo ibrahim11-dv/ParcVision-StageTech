@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class ViewController {
 
     // ── Home ──────────────────────────────────────────────────────────────────
-    @GetMapping("/")
+    @GetMapping({"/", "/services", "/about", "/tarifs", "/pricing", "/faq", "/contact"})
     public String home() {
         return "forward:/home/html/index.html";
     }

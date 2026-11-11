@@ -3,10 +3,10 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <title>Parc Vision — Gestion de Flotte Intelligente</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Parc Vision — Gestion de Flotte Intelligente & Télématique</title>
     <link href="../css/index.css" rel="stylesheet">
 </head>
 <body>
@@ -15,8 +15,8 @@
 <nav class="navbar fixed-top navbar-expand-lg bg-white">
     <div class="container">
         <a class="navbar-brand" href="/">
-            <img src="../../assets/logo.jpg" alt="Logo" />
-            Parc Vision
+            <img src="../../assets/logo.jpg" alt="Logo Parc Vision" style="height: 40px; border-radius: 8px;" />
+            <span>Parc Vision</span>
         </a>
         <button class="navbar-toggler" type="button"
                 data-bs-toggle="collapse" data-bs-target="#mainNav"
@@ -24,13 +24,16 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="mainNav">
-            <ul class="navbar-nav gap-3 ms-auto align-items-center">
-                <li class="nav-item"><a class="nav-link active" href="/">Accueil</a></li>
+            <ul class="navbar-nav gap-2 ms-auto align-items-center">
+                <li class="nav-item"><a class="nav-link active" href="#hero">Accueil</a></li>
                 <li class="nav-item"><a class="nav-link" href="#services">Services</a></li>
-                <li class="nav-item"><a class="nav-link" href="#about">À propos</a></li>
                 <li class="nav-item"><a class="nav-link" href="#why-us">Pourquoi nous</a></li>
+                <li class="nav-item"><a class="nav-link" href="#about">À propos</a></li>
+                <li class="nav-item"><a class="nav-link" href="#pricing">Tarifs</a></li>
                 <li class="nav-item"><a class="nav-link" href="#testimonials">Témoignages</a></li>
-                <li class="btns-auth">
+                <li class="nav-item"><a class="nav-link" href="#faq">FAQ</a></li>
+                <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+                <li class="btns-auth ms-lg-2">
                     <a href="/login" class="btn btn-outline-primary">Connexion</a>
                     <a href="/register" class="btn btn-primary">Inscription</a>
                 </li>
@@ -40,7 +43,8 @@
 </nav>
 
 <main>
-    <section class="main-section" id="about">
+    <!-- ========== HERO SECTION ========== -->
+    <section class="main-section" id="hero">
         <video class="hero-video-background" autoplay loop muted playsinline>
             <source src="../../assets/background-vid-index.mp4" type="video/mp4">
             Votre navigateur ne supporte pas la lecture vidéo.
@@ -48,105 +52,80 @@
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-10 text-center">
-                    <span class="badge">Plateforme mobile d'inspection et de maintenance</span>
+                    <span class="badge">Plateforme mobile d'inspection &amp; télématique de flotte</span>
 
-                    <h2>Visualisez votre chemin vers des inspections d'équipement plus faciles et plus rapides</h2>
+                    <h2>Visualisez votre chemin vers une gestion de parc plus agile et rentable</h2>
 
                     <div class="subtitle-wrapper">
-                        <h3>Gestion de flotte et d'actifs simplifiée</h3>
+                        <h3>Gestion de flotte, suivi GPS en direct et maintenance préventive</h3>
                     </div>
 
-                    <p>Intégrez plus rapidement vos employés, assurez le respect rigoureux des procédures standard,
-                        imposez un entretien régulier et renforcez la conformité aux inspections DOT et OSHA.
-                        Parc Vision propose le logiciel le plus intuitif pour la saisie automatisée des données,
-                        la création des ordres de travail et la génération de rapports.</p>
+                    <p>Centralisez le suivi de vos véhicules et conducteurs en temps réel. Réduisez vos coûts opérationnels, imposez un entretien régulier, automatisez l'archivage avec reconnaissance OCR et garantissez la conformité aux normes réglementaires.</p>
 
                     <div class="main-links">
-                        <a href="/register" class="btn btn-primary btn-lg">Commencer maintenant !</a>
-                        <a href="#services" class="btn btn-outline-light btn-lg">Nos services</a>
+                        <a href="/register" class="btn btn-primary btn-lg">Commencer maintenant</a>
+                        <a href="#services" class="btn btn-outline-light btn-lg">Découvrir nos solutions</a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
     <!-- ========== SERVICES SECTION ========== -->
     <section class="services-section" id="services">
         <div class="container">
             <div class="section-header">
                 <span class="section-tag">Solutions intégrées</span>
                 <h2>Une plateforme unifiée pour<br>l'ensemble de votre flotte</h2>
-                <p>Des outils puissants conçus pour les gestionnaires de parc exigeants</p>
+                <p>Des modules performants conçus pour répondre aux défis quotidiens des gestionnaires de parc</p>
             </div>
             <div class="services-grid">
                 <div class="service-item">
                     <div class="service-icon">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                            <polyline points="14 2 14 8 20 8"/>
-                            <line x1="16" y1="13" x2="8" y2="13"/>
-                            <line x1="16" y1="17" x2="8" y2="17"/>
-                            <polyline points="10 9 9 9 8 9"/>
-                        </svg>
+                        <i class="bi bi-card-checklist" style="font-size: 26px;"></i>
                     </div>
-                    <h3>Ordres de travail</h3>
-                    <p>Assignez conducteurs et véhicules en quelques clics. Suivez l'avancement des missions en temps réel avec statuts personnalisables.</p>
+                    <h3>Ordres de travail &amp; Missions</h3>
+                    <p>Assignez conducteurs, véhicules et marchandises en quelques clics. Suivez l'avancement des livraisons en direct avec étapes horodatées.</p>
                     <a href="/register" class="service-arrow">Découvrir →</a>
                 </div>
                 <div class="service-item">
                     <div class="service-icon">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                            <circle cx="12" cy="10" r="3"/>
-                        </svg>
+                        <i class="bi bi-geo-alt-fill" style="font-size: 26px;"></i>
                     </div>
-                    <h3>Géolocalisation</h3>
-                    <p>Visualisation cartographique des véhicules en mouvement. Historique des trajets et alertes de déviation.</p>
+                    <h3>Géolocalisation GPS en Direct</h3>
+                    <p>Visualisation cartographique des véhicules en mouvement sur les corridors nationaux. Historique des trajets, vitesses et alertes de déviation.</p>
                     <a href="/register" class="service-arrow">Découvrir →</a>
                 </div>
                 <div class="service-item">
                     <div class="service-icon">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                            <polyline points="22 4 12 14.01 9 11.01"/>
-                        </svg>
+                        <i class="bi bi-tools" style="font-size: 26px;"></i>
                     </div>
-                    <h3>Maintenance proactive</h3>
-                    <p>Planification automatique des vidanges, réparations et dépannages. Alertes kilométriques intelligentes.</p>
+                    <h3>Maintenance &amp; Vidanges</h3>
+                    <p>Planification automatique des vidanges, réparations et dépannages. Alertes kilométriques intelligentes avant toute panne immobilisante.</p>
                     <a href="/register" class="service-arrow">Découvrir →</a>
                 </div>
                 <div class="service-item">
                     <div class="service-icon">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
-                            <line x1="8" y1="21" x2="16" y2="21"/>
-                            <line x1="12" y1="17" x2="12" y2="21"/>
-                        </svg>
+                        <i class="bi bi-folder-check" style="font-size: 26px;"></i>
                     </div>
-                    <h3>Archivage intelligent</h3>
-                    <p>GED complète avec arborescence paramétrable. OCR intégré pour indexation automatique des documents.</p>
+                    <h3>Archivage GED &amp; OCR</h3>
+                    <p>Gestion électronique des documents avec arborescence paramétrable. Indexation automatique des factures, devis, cartes grises et contrats.</p>
                     <a href="/register" class="service-arrow">Découvrir →</a>
                 </div>
                 <div class="service-item">
                     <div class="service-icon">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M18 20V10M12 20V4M6 20v-6"/>
-                            <path d="M2 20h20"/>
-                        </svg>
+                        <i class="bi bi-graph-up-arrow" style="font-size: 26px;"></i>
                     </div>
-                    <h3>Tableaux de bord</h3>
-                    <p>Indicateurs clés en temps réel : taux d'utilisation, conformité DOT/OSHA, coûts opérationnels.</p>
+                    <h3>Tableaux de Bord Décisionnels</h3>
+                    <p>Indicateurs clés en temps réel : taux d'utilisation de la flotte, coûts au kilomètre, suivi des assurances et infractions.</p>
                     <a href="/register" class="service-arrow">Découvrir →</a>
                 </div>
                 <div class="service-item">
                     <div class="service-icon">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-                            <path d="M12 22V12"/>
-                            <polyline points="9 10 12 13 15 10"/>
-                        </svg>
+                        <i class="bi bi-people-fill" style="font-size: 26px;"></i>
                     </div>
-                    <h3>Reporting avancé</h3>
-                    <p>Export PDF/Excel automatisé. Conformité aux normes avec génération de rapports d'inspection.</p>
+                    <h3>Fournisseurs &amp; Dépenses</h3>
+                    <p>Annuaire des garages partenaires, stations-services et assureurs. Contrôle rigoureux de chaque dépense et facture avec validation.</p>
                     <a href="/register" class="service-arrow">Découvrir →</a>
                 </div>
             </div>
@@ -158,52 +137,44 @@
         <div class="container">
             <div class="features-grid">
                 <div class="features-content">
-                    <span class="section-tag dark-tag">Avantages clés</span>
-                    <h2>Une gestion centralisée<br>sans friction</h2>
-                    <p>Notre plateforme élimine la complexité des outils traditionnels. Une interface unique pour piloter l'intégralité de vos opérations de parc.</p>
+                    <span class="section-tag dark-tag">Pourquoi Parc Vision</span>
+                    <h2>Une gestion centralisée<br>sans complexité inutile</h2>
+                    <p>Notre plateforme élimine les logiciels archaïques et les feuilles de calcul dispersées. Pilotez l'intégralité de vos opérations depuis un centre de commande sécurisé.</p>
                     <div class="features-list">
                         <div class="feature-point">
                             <div class="feature-check">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                    <polyline points="20 6 9 17 4 12"/>
-                                </svg>
+                                <i class="bi bi-check-lg"></i>
                             </div>
                             <div>
-                                <strong>Pas d'espace conducteur</strong>
-                                <span>Tout est centralisé pour l'administrateur uniquement</span>
+                                <strong>Pilotage centralisé pour managers</strong>
+                                <span>Toutes les données de maintenance, missions et coûts sur un même écran</span>
                             </div>
                         </div>
                         <div class="feature-point">
                             <div class="feature-check">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                    <polyline points="20 6 9 17 4 12"/>
-                                </svg>
+                                <i class="bi bi-check-lg"></i>
                             </div>
                             <div>
-                                <strong>Suivi des indisponibilités</strong>
-                                <span>Véhicules et conducteurs : statuts automatiques</span>
+                                <strong>Disponibilité de flotte en temps réel</strong>
+                                <span>Statuts automatisés : Disponible, En mission, En révision ou En réparation</span>
                             </div>
                         </div>
                         <div class="feature-point">
                             <div class="feature-check">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                    <polyline points="20 6 9 17 4 12"/>
-                                </svg>
+                                <i class="bi bi-check-lg"></i>
                             </div>
                             <div>
-                                <strong>Preuve électronique</strong>
-                                <span>Photos, signatures, accusés de livraison intégrés</span>
+                                <strong>Traçabilité légale &amp; preuve électronique</strong>
+                                <span>Photos des réceptions, signatures de livraison et historique inaltérable</span>
                             </div>
                         </div>
                         <div class="feature-point">
                             <div class="feature-check">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                    <polyline points="20 6 9 17 4 12"/>
-                                </svg>
+                                <i class="bi bi-check-lg"></i>
                             </div>
                             <div>
-                                <strong>Arborescence paramétrable</strong>
-                                <span>GED adaptable sans développement sur mesure</span>
+                                <strong>GED paramétrable &amp; OCR instantané</strong>
+                                <span>Recherche plein texte dans vos documents numérisés sans développement custom</span>
                             </div>
                         </div>
                     </div>
@@ -214,7 +185,7 @@
                             <div class="mockup-dots">
                                 <span></span><span></span><span></span>
                             </div>
-                            <span>Dashboard Manager</span>
+                            <span>Parc Vision Intelligence — Command Center</span>
                         </div>
                         <div class="mockup-stats">
                             <div class="stat-card">
@@ -234,14 +205,134 @@
                         <div class="mockup-tasks">
                             <div class="task-row">
                                 <span class="task-status active"></span>
-                                <span>Vidange - VHC-342</span>
+                                <span>Casablanca → Rabat : Convoi express en transit</span>
                             </div>
                             <div class="task-row">
                                 <span class="task-status warning"></span>
-                                <span>Réparation freins - VHC-871</span>
+                                <span>Vidange planifiée — Véhicule Renault Master (VHC-342)</span>
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== SECTION: À PROPOS (ABOUT) ========== -->
+    <section class="about-section" id="about">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Notre Mission &amp; Histoire</span>
+                <h2>Pionnier de la gestion de flotte<br>intelligente &amp; connectée</h2>
+                <p>Parc Vision accompagne les transporteurs, entreprises de logistique et PME vers la digitalisation totale de leur parc automobile.</p>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="about-stats-grid">
+                <div class="about-stat-card">
+                    <div class="about-stat-number">+500</div>
+                    <div class="about-stat-label">Véhicules connectés &amp; suivis</div>
+                </div>
+                <div class="about-stat-card">
+                    <div class="about-stat-number">99.8%</div>
+                    <div class="about-stat-label">Taux de disponibilité télématique</div>
+                </div>
+                <div class="about-stat-card">
+                    <div class="about-stat-number">-28%</div>
+                    <div class="about-stat-label">Réduction des coûts de maintenance</div>
+                </div>
+                <div class="about-stat-card">
+                    <div class="about-stat-number">24/7</div>
+                    <div class="about-stat-label">Téléassistance &amp; support proactif</div>
+                </div>
+            </div>
+
+            <!-- Pillars Grid -->
+            <div class="about-pillars-grid">
+                <div class="about-pillar-card">
+                    <div class="about-pillar-icon">
+                        <i class="bi bi-broadcast"></i>
+                    </div>
+                    <h3>Télématique de Précision</h3>
+                    <p>Des données GPS captées à haute fréquence le long des autoroutes et routes nationales. Suivi en temps réel de la vitesse, des arrêts et des temps de conduite pour une sécurité maximale.</p>
+                </div>
+                <div class="about-pillar-card">
+                    <div class="about-pillar-icon">
+                        <i class="bi bi-shield-lock-fill"></i>
+                    </div>
+                    <h3>Sécurité &amp; Conformité CNDP</h3>
+                    <p>Vos données d'entreprise et les trajectoires de vos conducteurs sont cryptées de bout en bout et hébergées conformément aux normes les plus strictes de protection de la vie privée.</p>
+                </div>
+                <div class="about-pillar-card">
+                    <div class="about-pillar-icon">
+                        <i class="bi bi-cash-stack"></i>
+                    </div>
+                    <h3>Contrôle Financier Total</h3>
+                    <p>Chaque dirham investi dans le carburant, les révisions ou les pièces détachées est traçable. Identifiez les surconsommations et prévenez les pannes avant qu'elles ne coûtent cher.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== SECTION: TARIFS (PRICING) ========== -->
+    <section class="pricing-section" id="pricing">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Tarifs clairs &amp; transparents</span>
+                <h2>Une formule adaptée à la taille<br>de votre entreprise</h2>
+                <p>Aucun coût caché. Mises à jour incluses, activation rapide et sans engagement de durée.</p>
+            </div>
+
+            <div class="pricing-grid">
+                <!-- Plan Starter -->
+                <div class="pricing-card">
+                    <h3>Starter</h3>
+                    <p class="pricing-card-desc">Idéal pour les artisans et PME souhaitant digitaliser leur premier parc de véhicules.</p>
+                    <div class="pricing-price">290 <small>MAD / mois / véh.</small></div>
+                    <div class="pricing-period">Facturation mensuelle sans engagement</div>
+                    <ul class="pricing-features">
+                        <li><i class="bi bi-check-circle-fill"></i> Jusqu'à 5 véhicules gérés</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Suivi GPS temps réel</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Gestion des entretiens &amp; vidanges</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Suivi des conducteurs &amp; permis</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Support technique par email 5j/7</li>
+                    </ul>
+                    <a href="/register" class="btn btn-outline-primary w-100">Démarrer avec Starter</a>
+                </div>
+
+                <!-- Plan Professionnel (Populaire) -->
+                <div class="pricing-card popular">
+                    <div class="pricing-badge-popular">Le Plus Populaire</div>
+                    <h3>Professionnel</h3>
+                    <p class="pricing-card-desc">Conçu pour les entreprises de transport et flottes commerciales en pleine expansion.</p>
+                    <div class="pricing-price text-primary">450 <small>MAD / mois / véh.</small></div>
+                    <div class="pricing-period">Recommandé pour 6 à 30 véhicules</div>
+                    <ul class="pricing-features">
+                        <li><i class="bi bi-check-circle-fill"></i> Jusqu'à 30 véhicules gérés</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Télématique GPS &amp; alertes vitesse</li>
+                        <li><i class="bi bi-check-circle-fill"></i> GED avec reconnaissance OCR des factures</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Gestion des sinistres &amp; réparations</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Rapports financiers automatisés</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Support prioritaire par téléphone 6j/7</li>
+                    </ul>
+                    <a href="/register" class="btn btn-primary w-100">Choisir Professionnel</a>
+                </div>
+
+                <!-- Plan Entreprise -->
+                <div class="pricing-card">
+                    <h3>Entreprise</h3>
+                    <p class="pricing-card-desc">Solution sur mesure pour grands groupes, transporteurs nationaux et régies logistiques.</p>
+                    <div class="pricing-price">Sur Mesure</div>
+                    <div class="pricing-period">Pour flottes de plus de 30 véhicules</div>
+                    <ul class="pricing-features">
+                        <li><i class="bi bi-check-circle-fill"></i> Flotte illimitée (Camions, Utilitaires, VL)</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Intégration API &amp; connecteurs ERP</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Boîtiers télématiques CAN-Bus avancés</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Gestionnaire de compte dédié &amp; SLA 99.9%</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Formation complète sur site</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Téléassistance technique 24/7</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-outline-primary w-100">Contacter nos experts</a>
                 </div>
             </div>
         </div>
@@ -257,18 +348,18 @@
             <div class="testimonials-grid">
                 <div class="testimonial-card">
                     <div class="testimonial-quote">"</div>
-                    <p>La centralisation des ordres de travail et de la maintenance nous fait gagner plus de 10 heures par semaine. L'interface est d'une clarté remarquable."</p>
+                    <p>La centralisation des ordres de travail et de la maintenance nous fait gagner plus de 10 heures par semaine. L'interface est d'une clarté remarquable.</p>
                     <div class="testimonial-author">
                         <div class="author-avatar">TM</div>
                         <div>
                             <strong>Thomas Martin</strong>
-                            <span>Responsable flotte, LogiTrans</span>
+                            <span>Responsable flotte, LogiTrans Maroc</span>
                         </div>
                     </div>
                 </div>
                 <div class="testimonial-card">
                     <div class="testimonial-quote">"</div>
-                    <p>L'archivage avec OCR a transformé notre gestion documentaire. Plus besoin de chercher des factures pendant des heures, tout est indexé et accessible."</p>
+                    <p>L'archivage avec OCR a transformé notre gestion documentaire. Plus besoin de chercher des factures pendant des heures, tout est indexé et accessible en 1 clic.</p>
                     <div class="testimonial-author">
                         <div class="author-avatar">SK</div>
                         <div>
@@ -279,13 +370,201 @@
                 </div>
                 <div class="testimonial-card">
                     <div class="testimonial-quote">"</div>
-                    <p>Le suivi GPS et les rapports de conformité DOT/OSHA nous ont permis de passer nos audits avec brio. Un outil indispensable.</p>
+                    <p>Le suivi GPS en direct et les alertes kilométriques nous ont permis de réduire notre consommation de carburant de 18% dès les trois premiers mois.</p>
                     <div class="testimonial-author">
                         <div class="author-avatar">DL</div>
                         <div>
                             <strong>David Lefèvre</strong>
-                            <span>Gestionnaire parc, CityLog</span>
+                            <span>Gestionnaire parc, CityLog Casablanca</span>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== SECTION: FAQ ========== -->
+    <section class="faq-section" id="faq">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Questions fréquentes</span>
+                <h2>Tout ce que vous devez savoir<br>sur Parc Vision</h2>
+                <p>Retrouvez les réponses aux questions les plus fréquemment posées par nos clients.</p>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-lg-9">
+                    <div class="accordion faq-accordion" id="faqAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    Comment s'installe la télématique GPS sur nos véhicules ?
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    L'installation s'effectue en quelques minutes soit par connexion plug-and-play sur la prise OBD-II standard de vos véhicules, soit par boîtier discret raccordé à la batterie par nos techniciens agréés partout au Maroc.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingTwo">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    Comment fonctionne la reconnaissance OCR pour l'archivage ?
+                                </button>
+                            </h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Lorsque vous importez une facture de garage, un constat ou un devis sous format PDF ou photo, notre moteur OCR scanne automatiquement le texte, extrait les montants, prestataires et immatriculations, puis classe le fichier dans le dossier approprié.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingThree">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                    Nos données de géolocalisation sont-elles protégées ?
+                                </button>
+                            </h2>
+                            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Absolument. Parc Vision applique des protocoles de chiffrement bancaire TLS 1.3 et stocke les données dans des centres de données sécurisés, en parfaite conformité avec la loi 09-08 de la CNDP relative à la protection des données personnelles.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingFour">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                    Puis-je exporter mes rapports pour le contrôle fiscal et technique ?
+                                </button>
+                            </h2>
+                            <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Oui, l'ensemble des historiques de maintenance, fiches conducteurs, relevés kilométriques et dépenses peuvent être exportés en format Excel ou PDF prêt à l'impression en un clic.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingFive">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                                    Existe-t-il une période d'essai gratuite ?
+                                </button>
+                            </h2>
+                            <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Oui ! Vous bénéficiez de 14 jours d'essai gratuit sans carte bancaire requise pour tester toutes les fonctionnalités sur vos propres véhicules avec l'aide d'un de nos conseillers.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== SECTION: CONTACT & DEMO ========== -->
+    <section class="contact-section" id="contact">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Prenez Contact</span>
+                <h2>Prêt à optimiser la gestion de votre flotte ?</h2>
+                <p>Demandez une démonstration personnalisée ou posez-nous vos questions. Nos conseillers vous répondent sous 2 heures ouvrées.</p>
+            </div>
+
+            <div class="row g-4 justify-content-center">
+                <!-- Info Column -->
+                <div class="col-lg-5">
+                    <div class="contact-card-info">
+                        <h4 class="fw-bold mb-4 text-dark">Nos Coordonnées</h4>
+                        
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="bi bi-geo-alt-fill"></i>
+                            </div>
+                            <div>
+                                <strong class="d-block text-dark">Siège Social</strong>
+                                <span>123 Boulevard Mohammed V, Centre d'Affaires, Casablanca, Maroc</span>
+                            </div>
+                        </div>
+
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="bi bi-telephone-fill"></i>
+                            </div>
+                            <div>
+                                <strong class="d-block text-dark">Téléphone</strong>
+                                <span>+212 522 00 11 22 / +212 661 00 11 22</span>
+                            </div>
+                        </div>
+
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="bi bi-envelope-fill"></i>
+                            </div>
+                            <div>
+                                <strong class="d-block text-dark">Email Commercial &amp; Support</strong>
+                                <span>contact@parcvision.com</span>
+                            </div>
+                        </div>
+
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="bi bi-clock-fill"></i>
+                            </div>
+                            <div>
+                                <strong class="d-block text-dark">Heures d'Ouverture</strong>
+                                <span>Lundi – Vendredi : 08h30 – 18h30 (Support d'urgence 24/7)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Column -->
+                <div class="col-lg-7">
+                    <div class="contact-form-card">
+                        <h4 class="fw-bold mb-3 text-dark">Demander une Démonstration Gratuite</h4>
+                        <form onsubmit="event.preventDefault(); if(window.alert) alert('Merci ! Votre demande de démonstration a été transmise à notre équipe commerciale.'); this.reset();">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Votre Nom &amp; Prénom *</label>
+                                    <input type="text" class="form-control" required placeholder="ex: Karim Bennani">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Nom de l'Entreprise *</label>
+                                    <input type="text" class="form-control" required placeholder="ex: Atlas Logistique Sarl">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Email Professionnel *</label>
+                                    <input type="email" class="form-control" required placeholder="nom@entreprise.ma">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Téléphone de Contact *</label>
+                                    <input type="tel" class="form-control" required placeholder="06XXXXXXXX">
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="form-label fw-semibold">Taille approximative de votre flotte *</label>
+                                    <select class="form-select" required>
+                                        <option value="" selected disabled>Sélectionner...</option>
+                                        <option value="1-5">1 à 5 véhicules</option>
+                                        <option value="6-20">6 à 20 véhicules</option>
+                                        <option value="21-50">21 à 50 véhicules</option>
+                                        <option value="50+">Plus de 50 véhicules</option>
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold">Message ou besoin spécifique</label>
+                                    <textarea class="form-control" rows="3" placeholder="Parlez-nous de vos besoins de suivi GPS, vidanges ou gestion documentaire..."></textarea>
+                                </div>
+                                <div class="col-12 mt-4">
+                                    <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill">
+                                        <i class="bi bi-send-fill me-2"></i> Envoyer ma demande de démo
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -297,16 +576,75 @@
         <div class="container">
             <div class="cta-wrapper">
                 <h3>Prêt à transformer la gestion de votre parc ?</h3>
-                <p>Rejoignez les entreprises qui optimisent leur flotte avec Parc Vision.</p>
+                <p>Rejoignez les entreprises qui optimisent leur flotte dès aujourd'hui avec Parc Vision.</p>
                 <div class="cta-buttons">
-                    <a href="/register" class="btn-primary-glow">Commencer maintenant</a>
-                    <a href="/register" class="btn-outline-white">Demander une démo</a>
+                    <a href="/register" class="btn-primary-glow">Créer mon compte entreprise</a>
+                    <a href="#contact" class="btn-outline-white">Parler à un conseiller</a>
                 </div>
             </div>
         </div>
     </section>
 </main>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<!-- ========== FOOTER ========== -->
+<footer class="footer-main">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+                <a href="/" class="footer-brand">
+                    <img src="../../assets/logo.jpg" alt="Logo Parc Vision">
+                    <span>Parc Vision</span>
+                </a>
+                <p style="font-size: 0.95rem; line-height: 1.6; max-width: 320px;">
+                    La solution SaaS intelligente pour la télématique, le suivi GPS en temps réel et la gestion globale de flottes automobiles au Maroc.
+                </p>
+            </div>
+            <div class="col-lg-2 col-md-6 footer-col">
+                <h5>Navigation</h5>
+                <ul>
+                    <li><a href="#hero">Accueil</a></li>
+                    <li><a href="#services">Nos Services</a></li>
+                    <li><a href="#why-us">Pourquoi Nous</a></li>
+                    <li><a href="#about">À Propos</a></li>
+                    <li><a href="#pricing">Tarifs</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-3 col-md-6 footer-col">
+                <h5>Fonctionnalités</h5>
+                <ul>
+                    <li><a href="#services">Ordres de Travail</a></li>
+                    <li><a href="#services">Suivi GPS Satellitaire</a></li>
+                    <li><a href="#services">Gestion des Vidanges</a></li>
+                    <li><a href="#services">GED &amp; Archivage OCR</a></li>
+                    <li><a href="#services">Contrôle des Assurances</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-3 col-md-6 footer-col">
+                <h5>Espace Client</h5>
+                <ul>
+                    <li><a href="/login">Connexion Administrateur</a></li>
+                    <li><a href="/register">Inscription Entreprise</a></li>
+                    <li><a href="#faq">Foire Aux Questions</a></li>
+                    <li><a href="#contact">Support Client 24/7</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div>
+                © 2026 <strong>Parc Vision Sarl</strong>. Tous droits réservés.
+            </div>
+            <div class="d-flex gap-3">
+                <a href="#about" class="text-secondary text-decoration-none">Confidentialité CNDP</a>
+                <span class="text-secondary">•</span>
+                <a href="#about" class="text-secondary text-decoration-none">Mentions Légales</a>
+                <span class="text-secondary">•</span>
+                <a href="#contact" class="text-secondary text-decoration-none">Contact</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

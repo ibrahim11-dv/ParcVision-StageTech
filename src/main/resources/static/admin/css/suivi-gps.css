@@ -974,8 +974,110 @@ body.dark .text-muted { color: var(--gray-400) !important; }
     100% { transform: scale(1.6); opacity: 0; }
 }
 
+/* ── KPI Mini Cards ── */
+.kpi-mini-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.kpi-mini-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+.kpi-mini-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--gray-100);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+}
+.kpi-mini-val {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-main);
+    line-height: 1.2;
+}
+.kpi-mini-lbl {
+    font-size: 0.78rem;
+    color: var(--gray-400);
+    font-weight: 500;
+}
+
+/* ── Map Toolbar ── */
+.map-toolbar {
+    background: var(--card-bg);
+    border-color: var(--border-color) !important;
+}
+
+/* ── Active Mission Row in Table ── */
+.active-mission-row {
+    background-color: rgba(59, 130, 246, 0.08) !important;
+    border-left: 3px solid #3b82f6 !important;
+}
+
+/* ── Enhanced Leaflet Popups ── */
+.pv-map-popup {
+    min-width: 250px;
+    font-family: 'Inter', sans-serif;
+}
+.pv-map-popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border-color);
+}
+.pv-map-popup-ref {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 1rem;
+}
+.pv-map-popup-speed {
+    background: #ecfdf5;
+    color: #059669;
+    border: 1px solid #a7f3d0;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+.pv-map-popup-item {
+    font-size: 0.82rem;
+    margin-bottom: 4px;
+    color: var(--gray-600);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.pv-map-progress {
+    height: 6px;
+    background: var(--gray-100);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 8px;
+}
+.pv-map-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #3b82f6, #10b981);
+    border-radius: 10px;
+    transition: width 0.4s ease;
+}
+
 #simInfoPanel {
-    display: none !important; /* Fully hidden as simulation is removed */
+    display: none !important;
 }
 
 

@@ -40,6 +40,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth ->
                           auth.requestMatchers(
                                           "/",
+                                          "/services",
+                                          "/about",
+                                          "/tarifs",
+                                          "/pricing",
+                                          "/faq",
+                                          "/contact",
                                           "/login",
                                           "/register",
                                           "/error",

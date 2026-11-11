@@ -89,10 +89,11 @@ public class DatabaseSeeder implements CommandLineRunner {
         // Ensure initial archive folders exist for all enterprises
         for (Entreprise ent : entrepriseRepository.findAll()) {
             seedInitialArchiveFolders(ent);
+            seedRealisticMoroccoMissions(ent);
         }
 
         if (entrepriseRepository.count() > 0 && interventionRepository.count() > 0) {
-            System.out.println("Database already seeded.");
+            System.out.println("Database already seeded with enterprise and realistic corridors.");
         }
     }
 
@@ -498,7 +499,235 @@ public class DatabaseSeeder implements CommandLineRunner {
 
         // Seed Initial Archive Folders
         seedInitialArchiveFolders(ent);
+        seedRealisticMoroccoMissions(ent);
 
         System.out.println("Seeding completed successfully!");
+    }
+
+    private void seedRealisticMoroccoMissions(Entreprise ent) {
+        List<Vehicule> vehicles = vehiculeRepository.findByEntreprise(ent);
+        List<Conducteur> conducteurs = conducteurRepository.findByUtilisateurEntreprise(ent);
+        if (vehicles.isEmpty() || conducteurs.isEmpty()) return;
+
+        List<Mission> existing = missionRepository.findByEntreprise(ent);
+        boolean hasRealistic = existing.stream().anyMatch(m -> m.getReference() != null && m.getReference().startsWith("MSN-MA-"));
+        if (hasRealistic) {
+            return;
+        }
+
+        System.out.println("Seeding 5 realistic Moroccan corridors and live GPS trajectories...");
+
+        LocalDateTime now = LocalDateTime.now();
+
+        // ── 1. Casablanca Port -> Rabat Technopolis (A1) ───────────────────────
+        Mission m1 = new Mission();
+        m1.setReference("MSN-MA-01");
+        m1.setEntreprise(ent);
+        m1.setConducteur(conducteurs.get(0 % conducteurs.size()));
+        m1.setVehicule(vehicles.get(0 % vehicles.size()));
+        m1.setStatut(StatutMission.EN_COURS);
+        m1.setAdresseDepart("Port de Casablanca, Boulevard des Almohades, Casablanca");
+        m1.setAdressArrivee("Campus Technopolis, Sala Al Jadida, Rabat");
+        m1.setInstructionsSpeciales("Transport sécurisé de serveurs Dell PowerEdge et commutateurs réseau Cisco. Fragile.");
+        m1.setDataDebut(now.minusMinutes(55));
+        m1.setDateFinEstimee(now.plusMinutes(25));
+        m1.setGpsEnabled(true);
+        m1.setTrackerId("TRK-A1-001");
+        m1.setTrackerImei("864209048123456");
+        m1.setTrackerSimNumber("+212661001122");
+        m1 = missionRepository.save(m1);
+
+        Colis c1 = new Colis();
+        c1.setDescription("Serveurs Rack 2U & Équipements Réseau Cisco");
+        c1.setPoids(185.0);
+        c1.setVolume(2.4);
+        c1.setType(TypeColis.STANDARD);
+        c1.setCodeSuivi("PKG-MA-100234");
+        c1.setMission(m1);
+        colisRepository.save(c1);
+
+        double[][] coordsM1 = {
+                {33.6015, -7.6080, 0, -55},   // DEPART: Port Casa
+                {33.5980, -7.5520, 65, -45},  // Ain Sebaa
+                {33.6870, -7.3820, 95, -35},  // Mohammedia Péage
+                {33.7880, -7.1610, 105, -25}, // Bouznika
+                {33.8540, -7.0340, 98, -15},  // Skhirat
+                {33.9400, -6.8900, 84, -4},   // Témara / Hay Riad (Current Pos)
+                {33.9922, -6.7214, 0, 25}     // ARRIVEE: Technopolis Rabat
+        };
+        saveWaypointsForMission(m1, coordsM1, now);
+
+        // ── 2. Zenata Casablanca -> Marrakech Sidi Ghanem (A3) ─────────────────
+        Mission m2 = new Mission();
+        m2.setReference("MSN-MA-02");
+        m2.setEntreprise(ent);
+        m2.setConducteur(conducteurs.get(1 % conducteurs.size()));
+        m2.setVehicule(vehicles.get(1 % vehicles.size()));
+        m2.setStatut(StatutMission.EN_COURS);
+        m2.setAdresseDepart("Plateforme Logistique Zenata, Casablanca");
+        m2.setAdressArrivee("Zone Industrielle Sidi Ghanem, Marrakech");
+        m2.setInstructionsSpeciales("Livraison pièces détachées lourdes pour atelier mécanique. Déchargement par hayon.");
+        m2.setDataDebut(now.minusMinutes(130));
+        m2.setDateFinEstimee(now.plusMinutes(50));
+        m2.setGpsEnabled(true);
+        m2.setTrackerId("TRK-A3-002");
+        m2.setTrackerImei("864209048123457");
+        m2.setTrackerSimNumber("+212661001123");
+        m2 = missionRepository.save(m2);
+
+        Colis c2 = new Colis();
+        c2.setDescription("Plaquettes de frein & Filtres industriels pour poids lourds");
+        c2.setPoids(420.0);
+        c2.setVolume(3.8);
+        c2.setType(TypeColis.LOURD);
+        c2.setCodeSuivi("PKG-MA-200541");
+        c2.setMission(m2);
+        colisRepository.save(c2);
+
+        double[][] coordsM2 = {
+                {33.6335, -7.4890, 0, -130},  // DEPART: Zenata
+                {33.4610, -7.6250, 78, -110}, // Bouskoura
+                {33.2655, -7.5875, 92, -90},  // Berrechid
+                {33.0010, -7.6166, 94, -70},  // Settat Péage
+                {32.7230, -7.7850, 88, -45},  // Mechra Ben Abbou
+                {32.4820, -7.9150, 96, -25},  // Skhour Rehamna
+                {32.2355, -7.9530, 88, -5},   // Benguerir Green Energy (Current Pos)
+                {31.6610, -8.0410, 0, 50}     // ARRIVEE: Sidi Ghanem Marrakech
+        };
+        saveWaypointsForMission(m2, coordsM2, now);
+
+        // ── 3. Tanger Med Hub -> Fès Ain Chkef (A4 & A2) ──────────────────────
+        Mission m3 = new Mission();
+        m3.setReference("MSN-MA-03");
+        m3.setEntreprise(ent);
+        m3.setConducteur(conducteurs.get(2 % conducteurs.size()));
+        m3.setVehicule(vehicles.get(2 % vehicles.size()));
+        m3.setStatut(StatutMission.EN_COURS);
+        m3.setAdresseDepart("Terminal Roulier Tanger Med, Ksar El Majaz, Tanger");
+        m3.setAdressArrivee("Parc Industriel Ain Chkef, Route de Sefrou, Fès");
+        m3.setInstructionsSpeciales("Textiles techniques sous scellés douaniers. Vérification température cabine.");
+        m3.setDataDebut(now.minusMinutes(170));
+        m3.setDateFinEstimee(now.plusMinutes(40));
+        m3.setGpsEnabled(true);
+        m3.setTrackerId("TRK-A4-003");
+        m3.setTrackerImei("864209048123458");
+        m3.setTrackerSimNumber("+212661001124");
+        m3 = missionRepository.save(m3);
+
+        Colis c3 = new Colis();
+        c3.setDescription("Rouleaux de tissus techniques & confection haut de gamme");
+        c3.setPoids(650.0);
+        c3.setVolume(5.2);
+        c3.setType(TypeColis.STANDARD);
+        c3.setCodeSuivi("PKG-MA-300892");
+        c3.setMission(m3);
+        colisRepository.save(c3);
+
+        double[][] coordsM3 = {
+                {35.8872, -5.5036, 0, -170},  // DEPART: Tanger Med
+                {35.7595, -5.8340, 80, -145}, // Tanger Ville
+                {35.4650, -6.0350, 92, -120}, // Asilah
+                {35.1932, -6.1557, 86, -95},  // Larache
+                {34.6975, -5.9814, 76, -65},  // Souk El Arbaa
+                {34.2215, -5.7077, 78, -40},  // Sidi Kacem
+                {33.8938, -5.5516, 85, -12},  // Meknès Autoroute (Current Pos)
+                {34.0150, -5.0230, 0, 40}     // ARRIVEE: Fès Ain Chkef
+        };
+        saveWaypointsForMission(m3, coordsM3, now);
+
+        // ── 4. Agadir Anza -> Marrakech Guéliz (A7) ───────────────────────────
+        Mission m4 = new Mission();
+        m4.setReference("MSN-MA-04");
+        m4.setEntreprise(ent);
+        m4.setConducteur(conducteurs.get(3 % conducteurs.size()));
+        m4.setVehicule(vehicles.get(3 % vehicles.size()));
+        m4.setStatut(StatutMission.TERMINEE);
+        m4.setAdresseDepart("Zone Franche Portuaire Anza, Agadir");
+        m4.setAdressArrivee("Centre de Distribution Guéliz, Marrakech");
+        m4.setInstructionsSpeciales("Livraison terminée avec succès. Accusé de réception électronique signé par le client.");
+        m4.setDataDebut(now.minusHours(5));
+        m4.setDateFinEstimee(now.minusMinutes(40));
+        m4.setDateFinReelle(now.minusMinutes(35));
+        m4.setGpsEnabled(true);
+        m4.setTrackerId("TRK-A7-004");
+        m4.setTrackerImei("864209048123459");
+        m4.setTrackerSimNumber("+212661001125");
+        m4 = missionRepository.save(m4);
+
+        Colis c4 = new Colis();
+        c4.setDescription("Huiles d'argan certifiées & produits cosmétiques biologiques");
+        c4.setPoids(320.0);
+        c4.setVolume(2.5);
+        c4.setType(TypeColis.FRAGILE);
+        c4.setCodeSuivi("PKG-MA-400115");
+        c4.setMission(m4);
+        colisRepository.save(c4);
+
+        double[][] coordsM4 = {
+                {30.4430, -9.6410, 0, -300},  // DEPART: Agadir Anza
+                {30.5180, -9.3560, 82, -250}, // Amskroud
+                {30.7850, -9.1240, 68, -200}, // Col d'Argana
+                {31.1820, -8.8490, 88, -150}, // Imin'Tanout
+                {31.5420, -8.7610, 95, -90},  // Chichaoua
+                {31.6340, -8.0120, 0, -35}    // ARRIVEE: Marrakech Guéliz
+        };
+        saveWaypointsForMission(m4, coordsM4, now);
+
+        // ── 5. Casablanca Ain Sebaa -> Tanger TFZ (A1) ────────────────────────
+        Mission m5 = new Mission();
+        m5.setReference("MSN-MA-05");
+        m5.setEntreprise(ent);
+        m5.setConducteur(conducteurs.get(4 % conducteurs.size()));
+        m5.setVehicule(vehicles.get(4 % vehicles.size()));
+        m5.setStatut(StatutMission.PLANIFIEE);
+        m5.setAdresseDepart("Centre Messagerie Ain Sebaa, Casablanca");
+        m5.setAdressArrivee("Zone Franche d'Exportation TFZ, Tanger");
+        m5.setInstructionsSpeciales("Départ planifié à 14h30. Inspection du camion et contrôle des pneumatiques obligatoires.");
+        m5.setDataDebut(now.plusHours(2));
+        m5.setDateFinEstimee(now.plusHours(6));
+        m5.setGpsEnabled(true);
+        m5.setTrackerId("TRK-A1-005");
+        m5.setTrackerImei("864209048123460");
+        m5.setTrackerSimNumber("+212661001126");
+        m5 = missionRepository.save(m5);
+
+        Colis c5 = new Colis();
+        c5.setDescription("Faisceaux de câblage automobile & connecteurs haute précision");
+        c5.setPoids(510.0);
+        c5.setVolume(4.1);
+        c5.setType(TypeColis.STANDARD);
+        c5.setCodeSuivi("PKG-MA-500732");
+        c5.setMission(m5);
+        colisRepository.save(c5);
+
+        double[][] coordsM5 = {
+                {33.6050, -7.5300, 0, 120},   // DEPART: Ain Sebaa
+                {35.7250, -5.9010, 0, 360}    // ARRIVEE: Tanger TFZ
+        };
+        saveWaypointsForMission(m5, coordsM5, now);
+
+        System.out.println("5 realistic Moroccan corridors seeded with high precision!");
+    }
+
+    private void saveWaypointsForMission(Mission mission, double[][] waypoints, LocalDateTime now) {
+        int total = waypoints.length;
+        for (int i = 0; i < total; i++) {
+            PointGPS p = new PointGPS();
+            p.setLaltitude(waypoints[i][0]);
+            p.setLongitude(waypoints[i][1]);
+            p.setVitesse((int) waypoints[i][2]);
+            p.setPrecisionGps(4.5);
+            p.setTimeStamp(now.plusMinutes((long) waypoints[i][3]));
+            p.setMission(mission);
+
+            if (i == 0) {
+                p.setTypePoint(TypePoint.DEPART);
+            } else if (i == total - 1) {
+                p.setTypePoint(TypePoint.ARRIVEE);
+            } else {
+                p.setTypePoint(TypePoint.EN_COURS);
+            }
+            pointGpsRepository.save(p);
+        }
     }
 }

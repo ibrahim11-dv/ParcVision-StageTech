@@ -4,8 +4,10 @@ import com.ibrahim.parcvision.dao.ProfileMinimalInfoDao;
 import com.ibrahim.parcvision.entity.Entreprise;
 import com.ibrahim.parcvision.entity.Utilisateur;
 import com.ibrahim.parcvision.repository.AdminRepository;
+import com.ibrahim.parcvision.repository.ConducteurRepository;
 import com.ibrahim.parcvision.repository.EntrepriseRepository;
 import com.ibrahim.parcvision.repository.UtilisateurRepository;
+import com.ibrahim.parcvision.repository.VehiculeRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,16 +28,26 @@ import java.util.UUID;
 
 @Service
 public class ProfileService {
-    UtilisateurRepository utilisateurRepository;
-    AdminRepository adminRepository;
-    EntrepriseRepository entrepriseRepository;
-    JwtService jwtService;
-    PasswordEncoder passwordEncoder;
+    private final UtilisateurRepository utilisateurRepository;
+    private final AdminRepository adminRepository;
+    private final EntrepriseRepository entrepriseRepository;
+    private final VehiculeRepository vehiculeRepository;
+    private final ConducteurRepository conducteurRepository;
+    private final JwtService jwtService;
+    private final PasswordEncoder passwordEncoder;
 
-    public ProfileService(JwtService jwtService, UtilisateurRepository utilisateurRepository, AdminRepository adminRepository, EntrepriseRepository entrepriseRepository, PasswordEncoder passwordEncoder) {
+    public ProfileService(JwtService jwtService,
+                          UtilisateurRepository utilisateurRepository,
+                          AdminRepository adminRepository,
+                          EntrepriseRepository entrepriseRepository,
+                          VehiculeRepository vehiculeRepository,
+                          ConducteurRepository conducteurRepository,
+                          PasswordEncoder passwordEncoder) {
         this.utilisateurRepository = utilisateurRepository;
         this.adminRepository = adminRepository;
         this.entrepriseRepository = entrepriseRepository;
+        this.vehiculeRepository = vehiculeRepository;
+        this.conducteurRepository = conducteurRepository;
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
     }
@@ -62,8 +74,23 @@ public class ProfileService {
         profile.put("prenom", user.getPrenom());
         profile.put("email", user.getEmail());
         profile.put("telephone", user.getTelephone());
+        profile.put("cin", user.getCin());
+        profile.put("dateNaissance", user.getDateNaissance() != null ? user.getDateNaissance().toString() : "");
         profile.put("photoProfileUrl", user.getPhotoProfileUrl());
         profile.put("role", user.getRole().name());
+
+        if (user.getEntreprise() != null) {
+            Entreprise ent = user.getEntreprise();
+            profile.put("entrepriseNom", ent.getNom());
+            profile.put("entrepriseId", ent.getId());
+            profile.put("vehiculesCount", vehiculeRepository.findByEntreprise(ent).size());
+            profile.put("conducteursCount", conducteurRepository.findByUtilisateurEntreprise(ent).size());
+        } else {
+            profile.put("entrepriseNom", "Parc Vision Sarl");
+            profile.put("vehiculesCount", 0);
+            profile.put("conducteursCount", 0);
+        }
+
         return new ResponseEntity<>(profile, HttpStatus.OK);
     }
 
@@ -84,6 +111,12 @@ public class ProfileService {
             user.setEmail(data.get("email"));
         }
         if (data.get("telephone") != null) user.setTelephone(data.get("telephone"));
+        if (data.get("cin") != null) user.setCin(data.get("cin"));
+        if (data.get("dateNaissance") != null && !data.get("dateNaissance").isBlank()) {
+            try {
+                user.setDateNaissance(java.time.LocalDate.parse(data.get("dateNaissance")));
+            } catch (Exception ignored) {}
+        }
         utilisateurRepository.save(user);
 
         if (emailChanged && response != null) {
